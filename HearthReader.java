@@ -4,7 +4,6 @@ import org.sikuli.api.*;
 import org.sikuli.api.visual.Canvas;
 import org.sikuli.api.visual.DesktopCanvas;
 
-
 public class HearthReader {
 	boolean debugMode = true;
 	int changed_since = 0;
@@ -53,10 +52,19 @@ public class HearthReader {
 	
 	public HearthReader(){
 		debugMode = false;
+		init();
 	}
 	
 	public HearthReader(boolean mode){
 		debugMode = mode;
+		init();
+	}
+	
+	private void init(){
+		for(int i = (winsIT.length - 1); i >= 0; i--)
+		{
+			winsIT[i].setMinScore(0.9);
+		}
 	}
 	
 	public String getHeroLabel(int heroID){
@@ -67,74 +75,58 @@ public class HearthReader {
 		
 		return "?????";
 	}
+	
+	@SuppressWarnings("unused")
+	private boolean findImage(ScreenRegion region, ImageTarget target){
+		return this.findImage(region, target, "");
+	}
+	
+	private boolean findImage(ScreenRegion region, ImageTarget target, String label){
+		Canvas canvas = new DesktopCanvas();
+		ScreenRegion foundRegion;
+
+		if(debugMode)
+		{
+			canvas.addBox(region);
+			canvas.addLabel(region, "Region " + label).display(1);
+		}
+		
+		foundRegion = region.find(target);
+		
+		if((foundRegion != null) && debugMode)
+		{
+			canvas.addBox(region);
+			canvas.addLabel(region, "Found region " + label).display(1);
+		}
+		
+		return (foundRegion != null);
+	}
 
 	public boolean isScoreScreen() {
 		ScreenRegion winsLabelRegion = new DesktopScreenRegion(720,460,140,80);
 		ScreenRegion lossesLabelRegion = new DesktopScreenRegion(520,540,140,80);
-		Canvas canvas = new DesktopCanvas();
-		ScreenRegion found;
 		
-		if(debugMode)
-		{
-			canvas.addBox(winsLabelRegion);
-			canvas.addLabel(winsLabelRegion, "Wins Label").display(1);
-		}
-		
-		found = winsLabelRegion.find(winsLabelImageTarget);
-		
-		if(found != null){
-			if(debugMode){
-				canvas.addBox(winsLabelRegion);
-				canvas.addLabel(winsLabelRegion, "Found Wins label").display(1);
-			}
-			
+		if(this.findImage(winsLabelRegion, winsLabelImageTarget, "Wins Label")){
 			return true;
 		}
 		
-		if(debugMode)
-		{
-			canvas.addBox(lossesLabelRegion);
-			canvas.addLabel(lossesLabelRegion, "Losses Label").display(1);
-		}	
-		
-		found = lossesLabelRegion.find(lossesLabelImageTarget);
-		
-		if(found != null){
-			if(debugMode){
-				canvas.addBox(lossesLabelRegion);
-				canvas.addLabel(lossesLabelRegion, "Found Losses label").display(1);
-			}
-			
+		if(this.findImage(lossesLabelRegion, lossesLabelImageTarget, "Losses Label")){
 			return true;
 		}
-		
+				
 		return false;
 	}
 	
 	public int getWins() {
 		ScreenRegion winsSRegion = new DesktopScreenRegion(740,360,110,100);
-		Canvas canvas = new DesktopCanvas();
-		ScreenRegion foundWins;
-		int i = 0;
+		boolean foundWins = false;
 		
-		if(debugMode)
+		for(int i = (winsIT.length - 1); i >= 0; i--)
 		{
-			canvas.addBox(winsSRegion);
-			canvas.addLabel(winsSRegion, "Wins counter").display(1);
-		}
-		
-		for(i = 9; i >= 0; i--)
-		{
-			winsIT[i].setMinScore(0.9);
-			foundWins = winsSRegion.find(winsIT[i]);
+			foundWins = this.findImage(winsSRegion, winsIT[i], "Wins (" + i + ")");
 			
-			if(foundWins != null)
+			if(foundWins)
 			{
-				if(debugMode){
-					canvas.addBox(winsSRegion);
-					canvas.addLabel(winsSRegion, "Found " + i + " wins").display(1);
-				}
-
 				System.out.println("Found " + i + " wins" );
 				return i;
 			}
@@ -147,55 +139,20 @@ public class HearthReader {
 		ScreenRegion lossesSRegion3 = new DesktopScreenRegion(840,530,80,80);
 		ScreenRegion lossesSRegion2 = new DesktopScreenRegion(750,530,80,80);
 		ScreenRegion lossesSRegion1 = new DesktopScreenRegion(660,530,80,80);
-		Canvas canvas = new DesktopCanvas();
-		ScreenRegion foundChecked;
-		
-		if(debugMode)
-		{
-			canvas.addBox(lossesSRegion3);
-			canvas.addLabel(lossesSRegion3, "Region3").display(1);
-			
-			canvas.addBox(lossesSRegion2);
-			canvas.addLabel(lossesSRegion2, "Region2").display(1);
 
-			canvas.addBox(lossesSRegion1);
-			canvas.addLabel(lossesSRegion1, "Region1").display(1);
-		}
-		
-		foundChecked = lossesSRegion3.find(checkedImageTarget);
-
-		if(foundChecked != null){
-			if(debugMode)
-			{
-				canvas.addBox(lossesSRegion3);
-				canvas.addLabel(lossesSRegion3, "Found 3").display(3);
-			}
+		if(this.findImage(lossesSRegion3, checkedImageTarget, "Losses (3)")){
 			System.out.println("Found 3 losses");
 			return 3;
 		}
 		
-		foundChecked = lossesSRegion2.find(checkedImageTarget);
-		
-		if(foundChecked != null){
-			if(debugMode)
-			{
-				canvas.addBox(lossesSRegion2);
-				canvas.addLabel(lossesSRegion2, "Found 2").display(3);
-			}
+		if(this.findImage(lossesSRegion2, checkedImageTarget, "Losses (2)")){
 			System.out.println("Found 2 losses");
-			return 2;
+			return 3;
 		}
 		
-		foundChecked = lossesSRegion1.find(checkedImageTarget);
-		
-		if(foundChecked != null){
-			if(debugMode)
-			{
-				canvas.addBox(lossesSRegion1);
-				canvas.addLabel(lossesSRegion1, "Found 1").display(3);
-			}
+		if(this.findImage(lossesSRegion1, checkedImageTarget, "Losses (1)")){
 			System.out.println("Found 1 losses");
-			return 1;
+			return 3;
 		}
 		
 		return 0;
@@ -203,30 +160,12 @@ public class HearthReader {
 	
 	public int getHero() {
 		ScreenRegion heroSRegion = new DesktopScreenRegion(340,730,220,120);
-		Canvas canvas = new DesktopCanvas();
-		ScreenRegion foundHero;
-		int i = 0;
 		
-		if(debugMode)
+		for(int i = 0; i < heroesIT.length; i++)
 		{
-			canvas.addBox(heroSRegion);
-			canvas.addLabel(heroSRegion, "Hero region").display(1);
-		}
-		
-		for(i = 0; i < heroesIT.length; i++)
-		{
-			foundHero = heroSRegion.find(heroesIT[i]);
-			
-			if(foundHero != null)
+			if(this.findImage(heroSRegion, heroesIT[i], "Hero (" + heroesLabel[i] + ") "))
 			{
 				System.out.println("Found hero: " + heroesLabel[i]);
-				
-				if(debugMode)
-				{
-					canvas.addBox(heroSRegion);
-					canvas.addLabel(heroSRegion, "Found " + heroesLabel[i]).display(1);
-				}
-				
 				return i;
 			}
 		}
