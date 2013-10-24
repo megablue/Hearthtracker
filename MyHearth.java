@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class MyHearth {
 	static boolean debugMode = true;
 	static HearthReader hearth;
+	static Tracker tracker;
 	
 	static String[] winsLabels = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
 	static String[] lifeLabels = {"0", "1", "2", "3"};
@@ -23,6 +24,7 @@ public class MyHearth {
 		int sleep = 1000;
 		
 		hearth = new HearthReader(debugMode);
+		tracker = new Tracker();
 		
 		clearLines();
 		

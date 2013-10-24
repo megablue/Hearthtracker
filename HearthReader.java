@@ -147,12 +147,12 @@ public class HearthReader {
 		
 		if(this.findImage(lossesSRegion2, checkedImageTarget, "Losses (2)")){
 			System.out.println("Found 2 losses");
-			return 3;
+			return 2;
 		}
 		
 		if(this.findImage(lossesSRegion1, checkedImageTarget, "Losses (1)")){
 			System.out.println("Found 1 losses");
-			return 3;
+			return 1;
 		}
 		
 		return 0;
