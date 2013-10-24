@@ -8,30 +8,34 @@ import org.h2.jdbcx.JdbcDataSource;
 
 public class Tracker {
 	Connection conn;
+	boolean isWorking = false;
+	boolean testMode = false;
 	
 	public Tracker(){
-		this.initDB();
+		
 		try {
-			this.selfTest();
+			this.initDB();
+			if(testMode){
+				this.selfTest();
+			}
+			isWorking = true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			isWorking = false;
 		}
 	}
 	
-	private void initDB(){
+	public boolean isWorking(){
+		return isWorking;
+	}
+	
+	private void initDB() throws SQLException{
 		JdbcDataSource ds = new JdbcDataSource();
 		ds.setURL("jdbc:h2:.//data/database");
 		ds.setUser("tracker");
 		ds.setPassword("tracker");
-		
-		try {
-			conn = ds.getConnection();
-			this.createTables();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		conn = ds.getConnection();
+		this.createTables();
 	}
 	
 	private void selfTest() throws SQLException{
@@ -59,6 +63,7 @@ public class Tracker {
 		stat.close();
 	}
 	
+	@SuppressWarnings("unused")
 	private void closeDB(){
 		try {
 			conn.close();
@@ -135,10 +140,11 @@ public class Tracker {
 		if(found){
 			winrate = (float) wins/(wins+losses);
 			System.out.println("Winrate (" + heroId + "): " + winrate);
-			return winrate;
 		}
 		
-		return -1;
+		stat.close();
+		
+		return winrate;
 	}
 	
 	public float getOverallWinRate() throws SQLException{
@@ -160,10 +166,11 @@ public class Tracker {
 		if(found){
 			winrate = (float) wins/(wins+losses) * 100;
 			System.out.println("Winrate (overall): " + winrate);
-			return winrate;
 		}
 		
-		return -1;
+		stat.close();
+		
+		return winrate;
 	}
 	
 	public float getWinRateByGoesFirst() throws SQLException{
@@ -199,10 +206,10 @@ public class Tracker {
 			} else {
 				System.out.println("Winrate (goes second): " + winrate);
 			}
-			
-			return winrate;
 		}
 		
-		return -1;
+		stat.close();
+		
+		return winrate;
 	}
 }
