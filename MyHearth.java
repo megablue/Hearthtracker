@@ -29,8 +29,8 @@ public class MyHearth {
 		clearLines();
 		
 		while(true){
-			if(hearth.isScoreScreen()){
-				System.out.println("Found score screen..." );
+			if(hearth.isArenaScoreScreen()){
+				System.out.println("Found Arena Score Screen..." );
 				
 				previousWins = currentWins;
 				currentWins = hearth.getWins();

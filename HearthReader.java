@@ -7,6 +7,7 @@ import org.sikuli.api.visual.DesktopCanvas;
 public class HearthReader {
 	boolean debugMode = true;
 	int changed_since = 0;
+	int detectedMode = -1;
 	String lastRunSocre = "";
 	
 	static ImageTarget checkedImageTarget = new ImageTarget(new File(".\\images\\lose-checkbox-checked.png"));
@@ -102,15 +103,17 @@ public class HearthReader {
 		return (foundRegion != null);
 	}
 
-	public boolean isScoreScreen() {
+	public boolean isArenaScoreScreen() {
 		ScreenRegion winsLabelRegion = new DesktopScreenRegion(720,460,140,80);
 		ScreenRegion lossesLabelRegion = new DesktopScreenRegion(520,540,140,80);
 		
 		if(this.findImage(winsLabelRegion, winsLabelImageTarget, "Wins Label")){
+			detectedMode = 0;
 			return true;
 		}
 		
 		if(this.findImage(lossesLabelRegion, lossesLabelImageTarget, "Losses Label")){
+			detectedMode = 0;
 			return true;
 		}
 				
