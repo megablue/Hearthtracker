@@ -47,6 +47,8 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 
 
 public class HearthUI {
@@ -63,6 +65,7 @@ public class HearthUI {
 	static boolean debugMode = false;
 	private static HearthReader hearth;
 	private static Tracker tracker;
+	Thread hearththread;
 	
 	/**
 	 * Launch the application.
@@ -90,6 +93,7 @@ public class HearthUI {
     		} catch (InterruptedException e) {
     			// TODO Auto-generated catch block
     			e.printStackTrace();
+    			break;
     		}
     	}
     }
@@ -106,7 +110,7 @@ public class HearthUI {
 		shlHearthtracker.layout();
 		Date lastUpdate = new Date(); 
 		
-		Thread hearththread = new Thread(new MessageLoop());
+		hearththread = new Thread(new MessageLoop());
 		hearththread.start();
 		
 		while (!shlHearthtracker.isDisposed()) {
@@ -128,6 +132,12 @@ public class HearthUI {
 	 */
 	protected void createContents() {
 		shlHearthtracker = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE) & (~SWT.MAX));
+		shlHearthtracker.addShellListener(new ShellAdapter() {
+			@Override
+			public void shellClosed(ShellEvent arg0) {
+				hearththread.interrupt();
+			}
+		});
 		shlHearthtracker.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -360,7 +370,7 @@ public class HearthUI {
 			e.printStackTrace();
 		}
 		String score = hearth.getLastArenaResult();
-		String hero = hearth.getMyArenaHero() + " ";
+		String hero = hearth.getMyArenaHero();
 		String latest = new String(hearth.getMatchStatus());
 		
 		lblWinrate.setText(winrate);

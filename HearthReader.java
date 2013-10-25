@@ -418,8 +418,6 @@ public class HearthReader {
 		if(paused){
 			return;
 		}
-		
-		System.out.println("running...");
 
 		if(!this.isInGame()){
 			this.scanArenaScoreScreen();
