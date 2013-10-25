@@ -1,4 +1,6 @@
 import java.io.File;
+import java.sql.SQLException;
+import java.util.Date;
 
 import org.sikuli.api.*;
 import org.sikuli.api.visual.Canvas;
@@ -6,13 +8,33 @@ import org.sikuli.api.visual.DesktopCanvas;
 
 public class HearthReader {
 	boolean debugMode = true;
-	int changed_since = 0;
-	int detectedMode = -1;
-	String lastRunSocre = "";
+
+	int wins = -1;
+	int losses = -1;
+	
+	int myHero = -1;
+	int oppHero = -1;
+	
+	int victory = -1;
+	int goFirst = -1;
+	Date startTime = new Date();
+	Date lastUpdate = new Date();
+	
+	String lastArenaResult = "";
+	String lastMatchResult = "";
+	
+	int arenaMode = -1;
+	int inGameMode = -1;
+
+	Tracker tracker = null;
 	
 	static ImageTarget checkedImageTarget = new ImageTarget(new File(".\\images\\lose-checkbox-checked.png"));
 	static ImageTarget lossesLabelImageTarget = new ImageTarget(new File(".\\images\\losses-label.png"));
 	static ImageTarget winsLabelImageTarget = new ImageTarget(new File(".\\images\\wins-label.png"));
+	static ImageTarget goFirstImageTarget = new ImageTarget(new File(".\\images\\go-first.png"));
+	static ImageTarget goSecondImageTarget = new ImageTarget(new File(".\\images\\go-second.png"));
+	static ImageTarget victoryImageTarget = new ImageTarget(new File(".\\images\\victory.png"));
+	static ImageTarget defeatImageTarget = new ImageTarget(new File(".\\images\\defeat.png"));
 
 	static ImageTarget[] winsIT = {	
 		new ImageTarget(new File(".\\images\\0.png")), 
@@ -27,7 +49,7 @@ public class HearthReader {
 		new ImageTarget(new File(".\\images\\9.png"))
 	};
 	
-	static String[] heroesLabel = {
+	String[] heroesLabel = {
 		"mage",
 		"hunter",
 		"warrior",
@@ -39,29 +61,31 @@ public class HearthReader {
 		"warlock"
 	};
 		
-	static ImageTarget[] heroesIT = {	
-		new ImageTarget(new File(".\\images\\" + heroesLabel[0] + ".png")), 
-		new ImageTarget(new File(".\\images\\" + heroesLabel[1] + ".png")), 
-		new ImageTarget(new File(".\\images\\" + heroesLabel[2] + ".png")), 
-		new ImageTarget(new File(".\\images\\" + heroesLabel[3] + ".png")), 
-		new ImageTarget(new File(".\\images\\" + heroesLabel[4] + ".png")), 
-		new ImageTarget(new File(".\\images\\" + heroesLabel[5] + ".png")), 
-		new ImageTarget(new File(".\\images\\" + heroesLabel[6] + ".png")), 
-		new ImageTarget(new File(".\\images\\" + heroesLabel[7] + ".png")), 
-		new ImageTarget(new File(".\\images\\" + heroesLabel[8] + ".png"))
-	};
+	ImageTarget[] heroesIT;
+	ImageTarget[] heroesThumbIT;
 	
-	public HearthReader(){
+	public HearthReader(Tracker t){
 		debugMode = false;
+		tracker = t;
 		init();
 	}
 	
-	public HearthReader(boolean mode){
+	public HearthReader(Tracker t, boolean mode){
 		debugMode = mode;
+		tracker = t;
 		init();
 	}
 	
 	private void init(){
+		heroesIT = new ImageTarget[heroesLabel.length];
+		heroesThumbIT = new ImageTarget[heroesLabel.length];
+		
+		for(int i = 0; i < heroesLabel.length; i++)
+		{
+			heroesIT[i] = new ImageTarget(new File(".\\images\\" + heroesLabel[i] + ".png"));
+			heroesThumbIT[i] = new ImageTarget(new File(".\\images\\" + heroesLabel[i] + "-s.png"));
+		}
+	
 		for(int i = (winsIT.length - 1); i >= 0; i--)
 		{
 			winsIT[i].setMinScore(0.9);
@@ -103,26 +127,36 @@ public class HearthReader {
 		return (foundRegion != null);
 	}
 
-	public boolean isArenaScoreScreen() {
+	private void scanArenaScoreScreen() {
 		ScreenRegion winsLabelRegion = new DesktopScreenRegion(720,460,140,80);
 		ScreenRegion lossesLabelRegion = new DesktopScreenRegion(520,540,140,80);
 		
 		if(this.findImage(winsLabelRegion, winsLabelImageTarget, "Wins Label")){
-			detectedMode = 0;
-			return true;
+			arenaMode = 1;
+			oppHero = -1;
+			return;
 		}
 		
 		if(this.findImage(lossesLabelRegion, lossesLabelImageTarget, "Losses Label")){
-			detectedMode = 0;
-			return true;
+			arenaMode = 1;
+			oppHero = -1;
+			return;
 		}
 				
-		return false;
+		return;
 	}
 	
-	public int getWins() {
+	public boolean isArenaMode(){
+		return arenaMode == 1 ? true : false;
+	}
+	
+	private void scanArenaScore() {
 		ScreenRegion winsSRegion = new DesktopScreenRegion(740,360,110,100);
+		ScreenRegion lossesSRegion3 = new DesktopScreenRegion(840,530,80,80);
+		ScreenRegion lossesSRegion2 = new DesktopScreenRegion(750,530,80,80);
+		ScreenRegion lossesSRegion1 = new DesktopScreenRegion(660,530,80,80);
 		boolean foundWins = false;
+		boolean foundLosses = false;
 		
 		for(int i = (winsIT.length - 1); i >= 0; i--)
 		{
@@ -131,49 +165,202 @@ public class HearthReader {
 			if(foundWins)
 			{
 				System.out.println("Found " + i + " wins" );
-				return i;
+				wins = i;
+				break;
 			}
 		}
 		
-		return -1;
-	}
-	
-	public int getLosses() {
-		ScreenRegion lossesSRegion3 = new DesktopScreenRegion(840,530,80,80);
-		ScreenRegion lossesSRegion2 = new DesktopScreenRegion(750,530,80,80);
-		ScreenRegion lossesSRegion1 = new DesktopScreenRegion(660,530,80,80);
-
 		if(this.findImage(lossesSRegion3, checkedImageTarget, "Losses (3)")){
 			System.out.println("Found 3 losses");
-			return 3;
+			foundLosses = true;
+			losses = 3;
 		}
 		
-		if(this.findImage(lossesSRegion2, checkedImageTarget, "Losses (2)")){
+		if(!foundLosses && this.findImage(lossesSRegion2, checkedImageTarget, "Losses (2)")){
 			System.out.println("Found 2 losses");
-			return 2;
+			foundLosses = true;
+			losses = 2;
 		}
 		
-		if(this.findImage(lossesSRegion1, checkedImageTarget, "Losses (1)")){
+		if(!foundLosses && this.findImage(lossesSRegion1, checkedImageTarget, "Losses (1)")){
 			System.out.println("Found 1 losses");
-			return 1;
+			foundLosses = true;
+			losses = 1;
 		}
 		
-		return 0;
+		if(foundWins && (wins == 9 || losses == 3)){
+			
+			if(!foundLosses){
+				losses = 0;
+			}
+			
+			try {
+				System.out.println("Saving arena result...");
+				tracker.saveArenaResult(myHero, wins, losses);
+				System.out.println("Done saving arena result...");
+				lastArenaResult = wins + " - " + losses;
+				this.resetFlags();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
-	public int getHero() {
+	public String getLastArenaResult(){
+		return lastArenaResult;
+	}
+	
+	private void resetFlags(){
+		arenaMode = -1;
+		inGameMode = -1;
+		victory = -1;
+		myHero = -1;
+		wins = -1;
+		losses = -1;
+		goFirst = -1;
+	}
+	
+	private void scanMyHero() {
 		ScreenRegion heroSRegion = new DesktopScreenRegion(340,730,220,120);
 		
-		for(int i = 0; i < heroesIT.length; i++)
-		{
-			if(this.findImage(heroSRegion, heroesIT[i], "Hero (" + heroesLabel[i] + ") "))
-			{
+		if(this.isInGame() || !this.isArenaMode()){
+			return;
+		}
+		
+		for(int i = 0; i < heroesIT.length; i++){
+			if(this.findImage(heroSRegion, heroesIT[i], "My Hero (" + heroesLabel[i] + ") ")){
 				System.out.println("Found hero: " + heroesLabel[i]);
-				return i;
+				myHero = i;
+				break;
 			}
 		}
 		
-		return -1;
+		return;
+	}
+	
+	private void scanOppHero() {
+		ScreenRegion heroSRegion = new DesktopScreenRegion(850,70,220,200);
+		
+		if(!this.isInGame() || this.foundOppHero()){
+			return;
+		}
+		
+		for(int i = 0; i < heroesThumbIT.length; i++){
+			if(this.findImage(heroSRegion, heroesThumbIT[i], "Opp Hero (" + heroesLabel[i] + ") ")){
+				System.out.println("Found Opp hero: " + heroesLabel[i]);
+				oppHero = i;
+				break;
+			}
+		}
+		
+		return;
+	}
+	
+	private void scanVictory(){
+		ScreenRegion victoryRegion = new DesktopScreenRegion(750,550,400,150);
+		boolean found = false;
+		
+		if(!this.isInGame()){
+			return;
+		}
+		
+		if(this.findImage(victoryRegion, victoryImageTarget, "Victory")){
+			System.out.println("Found Victory");
+			victory = 1;
+			found = true;
+		}
+		
+		if(!found && this.findImage(victoryRegion, defeatImageTarget, "Defeat")){
+			System.out.println("Found Defeat");
+			victory = 0;
+			found = true;
+		}
+		
+		if(found){
+			int totalTime = (int) (new Date().getTime() - startTime.getTime())/1000;
+			String tmp = goFirst == 1 ? "goes first" : "goes second";
+			String tmp2 = victory == 1 ? ", 1 - 0 " : ", 0 - 1 ";
+			lastMatchResult = heroesLabel[myHero] + " (" + tmp + ")" + " vs " + heroesLabel[oppHero] + tmp2;
+			
+			assert goFirst == 1 || goFirst == 0;
+			assert victory == 1 || victory == 0;
+			
+			try {
+				System.out.println("Saving match result...");
+				tracker.saveMatchResult(myHero, oppHero, goFirst, victory, startTime, totalTime);
+				System.out.println("Done saving match result...");
+				inGameMode = 0;
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return;
+	}
+	
+	public boolean isVictory(){
+		return victory == 1 ? true : false;
+	}
+	
+	private void scanCoinScreen() {
+		ScreenRegion coinRegion = new DesktopScreenRegion(1150,550,400,150);
+		
+		if(this.isInGame()){
+			return;
+		}
+		
+		if(this.findImage(coinRegion, goFirstImageTarget, "Go First")){
+			System.out.println("Found go first");
+			goFirst = 1;
+			inGameMode = 1;
+			startTime = new Date();
+			return;
+		}
+		
+		if(this.findImage(coinRegion, goSecondImageTarget, "Go Second")){
+			System.out.println("Found go second");
+			goFirst = 0;
+			inGameMode = 1;
+			startTime = new Date();
+			return;
+		}
+		
+		return;
+	}
+	
+	public boolean foundOppHero(){
+		return oppHero > - 1  ? true : false;
+	}
+	
+	public boolean isGoFirst(){
+		return goFirst == 1 ? true : false;
+	}
+	
+	public boolean isInGame() {
+		return inGameMode == 1 ? true : false;
+	}
+	
+	public void process(){	
+		if(!this.isInGame()){
+			this.scanArenaScoreScreen();
+		}
+		
+		if(this.isArenaMode() && !this.isInGame()){
+			this.scanArenaScore();
+			this.scanMyHero();
+		}
+		
+		if(!this.isInGame()){
+			this.scanCoinScreen();
+		}
+		
+		if(this.isArenaMode() && this.isInGame()){
+			this.scanOppHero();
+			this.scanVictory();
+		}
 	}
 }
 	

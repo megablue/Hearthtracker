@@ -14,45 +14,24 @@ public class MyHearth {
 	static String[] lifeLabels = {"0", "1", "2", "3"};
 		
 	public static void main(String[] args) {
-		int previousLosses = -1;
-		int currentLosses = -1;
-		int previousWins = -1;
-		int currentWins = -1;
-		int previousHero = -1;
-		int currentHero = -1;
-		int heroId = -1;
 		int sleep = 1000;
 		
-		hearth = new HearthReader(debugMode);
 		tracker = new Tracker();
-		
+		hearth = new HearthReader(tracker, debugMode);
+	
 		clearLines();
 		
 		while(true){
-			if(hearth.isArenaScoreScreen()){
-				System.out.println("Found Arena Score Screen..." );
-				
-				previousWins = currentWins;
-				currentWins = hearth.getWins();
-				
-				previousLosses = currentLosses;
-				currentLosses = hearth.getLosses();
-								
-				heroId = hearth.getHero();
-				
-				if(heroId > -1){
-					previousHero = currentHero;
-					currentHero = heroId;
-				}
-				
-				if(currentHero != previousHero || currentWins != previousWins || currentLosses != previousLosses){
-					updateLines(currentWins, currentLosses, currentHero);
-				}
-			}
+			hearth.process();
+
+//			if(currentHero != previousHero || currentWins != previousWins || currentLosses != previousLosses){
+//				updateLines(currentWins, currentLosses, currentHero);
+//			}
 			
 			try {
 				TimeUnit.MILLISECONDS.sleep(sleep);
 			} catch (InterruptedException e) {
+				
 			}
 		}
 
