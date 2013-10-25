@@ -20,8 +20,8 @@ public class HearthReader {
 	Date startTime = new Date();
 	Date lastUpdate = new Date();
 	
-	String lastArenaResult = "";
-	String lastMatchResult = "";
+	static String lastArenaResult = "";
+	static String lastMatchResult = "";
 	
 	int arenaMode = -1;
 	int inGameMode = -1;
@@ -80,10 +80,12 @@ public class HearthReader {
 	
 	public void pause(){
 		paused = true;
+		System.out.println("paused");
 	}
 	
 	public void resume(){
 		paused = false;
+		System.out.println("resumed");
 	}
 	
 	private void init(){
@@ -156,6 +158,14 @@ public class HearthReader {
 		return;
 	}
 	
+	public int getArenaWins(){
+		return wins;
+	}
+	
+	public int getArenaLosses(){
+		return losses;
+	}
+	
 	public boolean isArenaMode(){
 		return arenaMode == 1 ? true : false;
 	}
@@ -198,6 +208,15 @@ public class HearthReader {
 			losses = 1;
 		}
 		
+		if(foundWins){
+			if(!foundLosses){
+				losses = 0;
+			}
+			
+			lastArenaResult = wins + " - " + losses;
+			System.out.println("lastArenaResult: " + lastArenaResult);
+		}
+		
 		if(foundWins && (wins == 9 || losses == 3)){
 			
 			if(!foundLosses){
@@ -219,6 +238,18 @@ public class HearthReader {
 	
 	public String getLastArenaResult(){
 		return lastArenaResult;
+	}
+	
+	public String getMatchStatus(){
+		return lastMatchResult;
+	}
+	
+	public String getMyArenaHero(){
+		if(myHero >= 0 ){
+			return this.getHeroLabel(myHero);
+		}
+		
+		return "Unknown";
 	}
 	
 	private void resetFlags(){
@@ -260,6 +291,7 @@ public class HearthReader {
 			if(this.findImage(heroSRegion, heroesThumbIT[i], "Opp Hero (" + heroesLabel[i] + ") ")){
 				System.out.println("Found Opp hero: " + heroesLabel[i]);
 				oppHero = i;
+				this.formatMatchStatus();
 				break;
 			}
 		}
@@ -289,9 +321,8 @@ public class HearthReader {
 		
 		if(found){
 			int totalTime = (int) (new Date().getTime() - startTime.getTime())/1000;
-			String tmp = goFirst == 1 ? "goes first" : "goes second";
-			String tmp2 = victory == 1 ? ", 1 - 0 " : ", 0 - 1 ";
-			lastMatchResult = heroesLabel[myHero] + " (" + tmp + ")" + " vs " + heroesLabel[oppHero] + tmp2;
+
+			this.formatMatchStatus();
 			
 			assert goFirst == 1 || goFirst == 0;
 			assert victory == 1 || victory == 0;
@@ -311,6 +342,30 @@ public class HearthReader {
 		return;
 	}
 	
+	private void formatMatchStatus(){
+		String tmp = goFirst == 1 ? "goes first" : "goes second";
+		String tmp2 = victory == 1 ? ", 1 - 0 " : ", 0 - 1 ";
+		String output = "Unknown";
+		
+		if(myHero == -1){
+			return;
+		}
+		
+		if(goFirst != -1){
+			output = heroesLabel[myHero] + " (goes first)";
+		}
+		
+		if(goFirst != -1 && oppHero != -1){
+			output = heroesLabel[myHero] + " (" + tmp + ")" + " vs " + heroesLabel[oppHero];
+		}
+		
+		if(goFirst != -1 && oppHero != -1 && victory != -1){
+			output = heroesLabel[myHero] + " (" + tmp + ")" + " vs " + heroesLabel[oppHero] + tmp2;
+		}
+		
+		lastMatchResult = output;
+	}
+	
 	public boolean isVictory(){
 		return victory == 1 ? true : false;
 	}
@@ -327,6 +382,7 @@ public class HearthReader {
 			goFirst = 1;
 			inGameMode = 1;
 			startTime = new Date();
+			this.formatMatchStatus();
 			return;
 		}
 		
@@ -335,6 +391,7 @@ public class HearthReader {
 			goFirst = 0;
 			inGameMode = 1;
 			startTime = new Date();
+			this.formatMatchStatus();
 			return;
 		}
 		
