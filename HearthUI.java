@@ -56,10 +56,10 @@ public class HearthUI {
 	protected Shell shlHearthtracker;
 	private Composite composite_2;
 	private Table tableOverview;
-	private Label lblArenaScoreStatus;
-	private Label lblMyClassStatus;
 	private Label lblLatestGameStatus;
 	private Label lblWinrate;
+	private Label lblMyClassStatus;
+	private Label lblArenaScoreStatus;
 	private Display display;
 	private static HearthUI window;
 	static boolean debugMode = false;
@@ -181,28 +181,12 @@ public class HearthUI {
 		lblArenaScore.setLayoutData(fd_lblArenaScore);
 		lblArenaScore.setText("Arena Score:");
 		
-		lblArenaScoreStatus = new Label(grpCurrentStats, SWT.NONE);
-		FormData fd_lblArenaScoreStatus = new FormData();
-		fd_lblArenaScoreStatus.right = new FormAttachment(lblArenaScore, 66, SWT.RIGHT);
-		fd_lblArenaScoreStatus.top = new FormAttachment(lblArenaScore, 0, SWT.TOP);
-		fd_lblArenaScoreStatus.left = new FormAttachment(lblArenaScore, 21);
-		lblArenaScoreStatus.setLayoutData(fd_lblArenaScoreStatus);
-		lblArenaScoreStatus.setText("......................................................................................");
-		
 		Label lblNewLabel_4 = new Label(grpCurrentStats, SWT.NONE);
 		FormData fd_lblNewLabel_4 = new FormData();
 		fd_lblNewLabel_4.left = new FormAttachment(0, 10);
 		fd_lblNewLabel_4.top = new FormAttachment(lblArenaScore, 6);
 		lblNewLabel_4.setLayoutData(fd_lblNewLabel_4);
 		lblNewLabel_4.setText("Arena Class:");
-		
-		lblMyClassStatus = new Label(grpCurrentStats, SWT.NONE);
-		FormData fd_lblMyClassStatus = new FormData();
-		fd_lblMyClassStatus.top = new FormAttachment(0, 47);
-		fd_lblMyClassStatus.right = new FormAttachment(100, -151);
-		fd_lblMyClassStatus.left = new FormAttachment(lblNewLabel_4, 23);
-		lblMyClassStatus.setLayoutData(fd_lblMyClassStatus);
-		lblMyClassStatus.setText("...........................................");
 		
 		Label lblLatestGame = new Label(grpCurrentStats, SWT.NONE);
 		FormData fd_lblLatestGame = new FormData();
@@ -228,10 +212,29 @@ public class HearthUI {
 		
 		lblWinrate = new Label(grpCurrentStats, SWT.NONE);
 		FormData fd_lblWinrate = new FormData();
-		fd_lblWinrate.top = new FormAttachment(lblNewLabel_3, 0, SWT.TOP);
-		fd_lblWinrate.left = new FormAttachment(lblArenaScoreStatus, 0, SWT.LEFT);
+		fd_lblWinrate.top = new FormAttachment(0, 5);
+		fd_lblWinrate.left = new FormAttachment(0, 97);
 		lblWinrate.setLayoutData(fd_lblWinrate);
 		lblWinrate.setText(".....................");
+		
+		lblMyClassStatus = new Label(grpCurrentStats, SWT.NONE);
+		lblMyClassStatus.setText("...........................................");
+		FormData fd_lblMyClassStatus = new FormData();
+		fd_lblMyClassStatus.bottom = new FormAttachment(lblLatestGameStatus, -6);
+		fd_lblMyClassStatus.top = new FormAttachment(lblWinrate, 27);
+		fd_lblMyClassStatus.right = new FormAttachment(100, -79);
+		fd_lblMyClassStatus.left = new FormAttachment(lblNewLabel_4, 23);
+		lblMyClassStatus.setLayoutData(fd_lblMyClassStatus);
+		
+		lblArenaScoreStatus = new Label(grpCurrentStats, SWT.NONE);
+		lblArenaScoreStatus.setLayoutData(new FormData());
+		lblArenaScoreStatus.setText("...........................................");
+		FormData fd_label = new FormData();
+		fd_label.bottom = new FormAttachment(lblMyClassStatus, -6);
+		fd_label.right = new FormAttachment(100, -73);
+		fd_label.top = new FormAttachment(lblArenaScore, 0, SWT.TOP);
+		fd_label.left = new FormAttachment(lblLatestGameStatus, 0, SWT.LEFT);
+		lblArenaScoreStatus.setLayoutData(fd_label);
 		
 		Composite composite_5 = new Composite(sashForm_1, SWT.NONE);
 		composite_5.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -361,10 +364,17 @@ public class HearthUI {
 	}
 	
 	private void poppulateCurrentStats(){
-		String winrate = "";
+		String winrateStr = "";
+		float winrate = 0;
 		
 		try {
-			winrate = tracker.getOverallWinRate() + " ";
+			winrate = tracker.getOverallWinRate();
+			
+			if(winrate < 0){
+				winrateStr = "N|A";
+			} else {
+				winrateStr = winrate + "";
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -373,7 +383,7 @@ public class HearthUI {
 		String hero = hearth.getMyArenaHero();
 		String latest = new String(hearth.getMatchStatus());
 		
-		lblWinrate.setText(winrate);
+		lblWinrate.setText(winrateStr);
 		lblArenaScoreStatus.setText(score);
 		lblMyClassStatus.setText(hero);
 		lblLatestGameStatus.setText(latest + "");

@@ -20,8 +20,8 @@ public class HearthReader {
 	Date startTime = new Date();
 	Date lastUpdate = new Date();
 	
-	static String lastArenaResult = "";
-	static String lastMatchResult = "";
+	static String lastArenaResult = "Unknown";
+	static String lastMatchResult = "Unknown";
 	
 	int arenaMode = -1;
 	int inGameMode = -1;
