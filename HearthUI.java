@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -78,6 +79,22 @@ public class HearthUI {
 			e.printStackTrace();
 		}
 	}
+	
+    private static class MessageLoop
+    implements Runnable {
+    public void run() {
+    	while(true){
+        	try {
+        		hearth.process();
+    			Thread.sleep(500);
+    		} catch (InterruptedException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    	}
+    }
+}
+
 
 	/**
 	 * Open the window.
@@ -87,9 +104,20 @@ public class HearthUI {
 		createContents();
 		shlHearthtracker.open();
 		shlHearthtracker.layout();
+		Date lastUpdate = new Date(); 
+		
+		Thread hearththread = new Thread(new MessageLoop());
+		hearththread.start();
+		
 		while (!shlHearthtracker.isDisposed()) {
 			if (!display.readAndDispatch()) {
-				hearth.process();
+				if(hearththread.isAlive()){
+					if(new Date().getTime() - lastUpdate.getTime() > 2000){
+						window.poppulateOverviewTable();
+						window.poppulateCurrentStats();
+						lastUpdate = new Date();
+					}
+				}
 				display.sleep();
 			}
 		}

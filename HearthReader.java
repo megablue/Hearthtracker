@@ -80,12 +80,12 @@ public class HearthReader {
 	
 	public void pause(){
 		paused = true;
-		System.out.println("paused");
+		//System.out.println("paused");
 	}
 	
 	public void resume(){
 		paused = false;
-		System.out.println("resumed");
+		//System.out.println("resumed");
 	}
 	
 	private void init(){
@@ -139,7 +139,7 @@ public class HearthReader {
 		return (foundRegion != null);
 	}
 
-	private void scanArenaScoreScreen() {
+	private synchronized void scanArenaScoreScreen() {
 		ScreenRegion winsLabelRegion = new DesktopScreenRegion(720,460,140,80);
 		ScreenRegion lossesLabelRegion = new DesktopScreenRegion(520,540,140,80);
 		
@@ -170,7 +170,7 @@ public class HearthReader {
 		return arenaMode == 1 ? true : false;
 	}
 	
-	private void scanArenaScore() {
+	private synchronized void scanArenaScore() {
 		ScreenRegion winsSRegion = new DesktopScreenRegion(740,360,110,100);
 		ScreenRegion lossesSRegion3 = new DesktopScreenRegion(840,530,80,80);
 		ScreenRegion lossesSRegion2 = new DesktopScreenRegion(750,530,80,80);
@@ -252,7 +252,7 @@ public class HearthReader {
 		return "Unknown";
 	}
 	
-	private void resetFlags(){
+	private synchronized void resetFlags(){
 		arenaMode = -1;
 		inGameMode = -1;
 		victory = -1;
@@ -262,7 +262,7 @@ public class HearthReader {
 		goFirst = -1;
 	}
 	
-	private void scanMyHero() {
+	private synchronized void scanMyHero() {
 		ScreenRegion heroSRegion = new DesktopScreenRegion(340,730,220,120);
 		
 		if(this.isInGame() || !this.isArenaMode()){
@@ -280,7 +280,7 @@ public class HearthReader {
 		return;
 	}
 	
-	private void scanOppHero() {
+	private synchronized void scanOppHero() {
 		ScreenRegion heroSRegion = new DesktopScreenRegion(850,70,220,200);
 		
 		if(!this.isInGame() || this.foundOppHero()){
@@ -299,7 +299,7 @@ public class HearthReader {
 		return;
 	}
 	
-	private void scanVictory(){
+	private synchronized void scanVictory(){
 		ScreenRegion victoryRegion = new DesktopScreenRegion(750,550,400,150);
 		boolean found = false;
 		
@@ -342,7 +342,7 @@ public class HearthReader {
 		return;
 	}
 	
-	private void formatMatchStatus(){
+	private synchronized void formatMatchStatus(){
 		String tmp = goFirst == 1 ? "goes first" : "goes second";
 		String tmp2 = victory == 1 ? ", 1 - 0 " : ", 0 - 1 ";
 		String output = "Unknown";
@@ -370,7 +370,7 @@ public class HearthReader {
 		return victory == 1 ? true : false;
 	}
 	
-	private void scanCoinScreen() {
+	private synchronized void scanCoinScreen() {
 		ScreenRegion coinRegion = new DesktopScreenRegion(1150,550,400,150);
 		
 		if(this.isInGame()){
@@ -418,6 +418,8 @@ public class HearthReader {
 		if(paused){
 			return;
 		}
+		
+		System.out.println("running...");
 
 		if(!this.isInGame()){
 			this.scanArenaScoreScreen();
