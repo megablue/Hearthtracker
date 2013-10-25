@@ -267,10 +267,10 @@ public class HearthUI {
 		Label lblPaypal = new Label(grpSupportTheProject, SWT.NONE);
 		lblPaypal.setText("");
 		FormData fd_lblPaypal = new FormData();
-		fd_lblPaypal.bottom = new FormAttachment(0, 68);
-		fd_lblPaypal.right = new FormAttachment(0, 156);
-		fd_lblPaypal.top = new FormAttachment(0, 10);
-		fd_lblPaypal.left = new FormAttachment(0, 10);
+		fd_lblPaypal.top = new FormAttachment(0);
+		fd_lblPaypal.left = new FormAttachment(0, 71);
+		fd_lblPaypal.bottom = new FormAttachment(0, 58);
+		fd_lblPaypal.right = new FormAttachment(0, 217);
 		lblPaypal.setLayoutData(fd_lblPaypal);
 		lblPaypal.setToolTipText("Your support means a lot to me. Thank you for even hovering over the donate button!");
 		lblPaypal.addMouseListener(new MouseAdapter() {
@@ -288,7 +288,7 @@ public class HearthUI {
 			}
 		});
 		lblPaypal.setImage(new Image( display, ".//images//btn_donate_150wx70h.gif" ));
-		sashForm_1.setWeights(new int[] {132, 258, 78});
+		sashForm_1.setWeights(new int[] {110, 278, 80});
 		
 		tableOverview = new Table(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		tableOverview.setLinesVisible(true);
@@ -342,6 +342,7 @@ public class HearthUI {
 		lblNewLabel_1.setText("Game Language");
 		
 		CCombo combo = new CCombo(composite_1, SWT.BORDER);
+		combo.setEditable(false);
 		combo.setItems(new String[] {"enUS"});
 		combo.setVisibleItemCount(1);
 		combo.setText("enUS");
@@ -353,6 +354,7 @@ public class HearthUI {
 		lblGameResolution.setText("Game Resolution");
 		
 		CCombo combo_1 = new CCombo(composite_1, SWT.BORDER);
+		combo_1.setEditable(false);
 		combo_1.setItems(new String[] {"1920x1080"});
 		combo_1.setVisibleItemCount(1);
 		combo_1.setText("1920x1080");
