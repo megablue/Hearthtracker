@@ -25,6 +25,8 @@ public class HearthReader {
 	
 	int arenaMode = -1;
 	int inGameMode = -1;
+	
+	boolean paused = false;
 
 	Tracker tracker = null;
 	
@@ -74,6 +76,14 @@ public class HearthReader {
 		debugMode = mode;
 		tracker = t;
 		init();
+	}
+	
+	public void pause(){
+		paused = true;
+	}
+	
+	public void resume(){
+		paused = false;
 	}
 	
 	private void init(){
@@ -344,6 +354,10 @@ public class HearthReader {
 	}
 	
 	public void process(){	
+		if(paused){
+			return;
+		}
+
 		if(!this.isInGame()){
 			this.scanArenaScoreScreen();
 		}

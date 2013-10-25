@@ -43,6 +43,8 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 
 
 public class HearthUI {
@@ -50,7 +52,10 @@ public class HearthUI {
 	protected Shell shlHearthtracker;
 	private Table table;
 	private Display display;
-
+	static boolean debugMode = false;
+	private static HearthReader hearth;
+	private static Tracker tracker;
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -58,6 +63,9 @@ public class HearthUI {
 	public static void main(String[] args) {
 		try {
 			HearthUI window = new HearthUI();
+			tracker = new Tracker();
+			hearth = new HearthReader(tracker, debugMode);
+			hearth.pause();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,6 +82,7 @@ public class HearthUI {
 		shlHearthtracker.layout();
 		while (!shlHearthtracker.isDisposed()) {
 			if (!display.readAndDispatch()) {
+				hearth.process();
 				display.sleep();
 			}
 		}
@@ -84,7 +93,17 @@ public class HearthUI {
 	 */
 	protected void createContents() {
 		shlHearthtracker = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE) & (~SWT.MAX));
-		shlHearthtracker.setSize(592, 530);
+		shlHearthtracker.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				hearth.pause();
+			}
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				hearth.resume();
+			}
+		});
+		shlHearthtracker.setSize(590, 530);
 		shlHearthtracker.setText("HearthTracker - Tracks wherever the Hearth goes");
 		shlHearthtracker.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
