@@ -147,6 +147,35 @@ public class Tracker {
 		return winrate;
 	}
 	
+	public float getWinRateByHeroSpecial(int heroId) throws SQLException{
+		Statement stat = conn.createStatement();
+		ResultSet rs;
+		int sixplus = 0;
+		int arenacount = 0;
+		float winrate = -1;
+		boolean found = false;
+		
+		rs = stat.executeQuery("select wins from ARENARESULTS where heroId = " + heroId);
+		
+		while(rs.next()){
+			found = true;
+			arenacount += 1;
+
+			if(rs.getInt("WINS") >= 6){
+				sixplus += 1;
+			}
+		}
+		
+		if(found){
+			winrate = (float) sixplus/arenacount;
+			System.out.println("6+ Wins Rate (" + heroId + "): " + winrate);
+		}
+		
+		stat.close();
+		
+		return winrate;
+	}
+	
 	public float getOverallWinRate() throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;

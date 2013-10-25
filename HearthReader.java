@@ -353,6 +353,10 @@ public class HearthReader {
 		return inGameMode == 1 ? true : false;
 	}
 	
+	public String[] getHeroes(){
+		return heroesLabel;
+	}
+	
 	public void process(){	
 		if(paused){
 			return;

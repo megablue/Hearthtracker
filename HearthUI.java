@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.SQLException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -50,8 +51,9 @@ import org.eclipse.swt.events.FocusEvent;
 public class HearthUI {
 
 	protected Shell shlHearthtracker;
-	private Table table;
+	private Table tableOverview;
 	private Display display;
+	private static HearthUI window;
 	static boolean debugMode = false;
 	private static HearthReader hearth;
 	private static Tracker tracker;
@@ -62,7 +64,7 @@ public class HearthUI {
 	 */
 	public static void main(String[] args) {
 		try {
-			HearthUI window = new HearthUI();
+			window = new HearthUI();
 			tracker = new Tracker();
 			hearth = new HearthReader(tracker, debugMode);
 			hearth.pause();
@@ -97,13 +99,14 @@ public class HearthUI {
 			@Override
 			public void focusGained(FocusEvent arg0) {
 				hearth.pause();
+				window.poppulateOverviewTable();
 			}
 			@Override
 			public void focusLost(FocusEvent arg0) {
 				hearth.resume();
 			}
 		});
-		shlHearthtracker.setSize(590, 530);
+		shlHearthtracker.setSize(615, 530);
 		shlHearthtracker.setText("HearthTracker - Tracks wherever the Hearth goes");
 		shlHearthtracker.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
@@ -145,7 +148,7 @@ public class HearthUI {
 		new Label(composite_3, SWT.NONE);
 		
 		StyledText styledText = new StyledText(composite_3, SWT.READ_ONLY | SWT.WRAP);
-		styledText.setText("HearthTracker is designed specifically to ease score tracking for Hearthstone enthusiasts. It is designed and coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Thanks!");
+		styledText.setText("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is designed and coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Thanks!");
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite composite_4 = new Composite(sashForm_1, SWT.NONE);
@@ -181,22 +184,24 @@ public class HearthUI {
 		lblPaypal.setImage(new Image( display, ".//images//btn_donate_150wx70h.gif" ));
 		sashForm_1.setWeights(new int[] {90, 265, 104});
 		
-		table = new Table(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
+		tableOverview = new Table(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
+		tableOverview.setLinesVisible(true);
+		tableOverview.setHeaderVisible(true);
 		
-		TableColumn tableColumn = new TableColumn(table, SWT.NONE);
+		TableColumn tableColumn = new TableColumn(tableOverview, SWT.NONE);
 		tableColumn.setWidth(92);
 		tableColumn.setText("Classes");
 		
-		TableColumn tblclmnWins = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnWins = new TableColumn(tableOverview, SWT.NONE);
 		tblclmnWins.setWidth(85);
 		tblclmnWins.setText("6+ Wins %");
 		
-		TableColumn tableColumn_2 = new TableColumn(table, SWT.NONE);
+		TableColumn tableColumn_2 = new TableColumn(tableOverview, SWT.NONE);
 		tableColumn_2.setWidth(116);
 		tableColumn_2.setText("Overall Win %");
-		sashForm.setWeights(new int[] {263, 312});
+		
+		//tableItem_1.setT
+		//sashForm.setWeights(new int[] {263, 312});
 		
 		TabItem tbtmPerferences = new TabItem(tabFolder, SWT.NONE);
 		tbtmPerferences.setText("Preferences");
@@ -250,5 +255,35 @@ public class HearthUI {
 		combo_1.setLayoutData(gd_combo_1);
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
+	}
+	
+	private void poppulateOverviewTable(){
+		String[] heroes = hearth.getHeroes();
+		
+		tableOverview.clearAll();
+
+		
+		for(int hero = 0; hero < heroes.length; hero++){
+			TableItem tableItem_1 = new TableItem(tableOverview, SWT.NONE);
+			float sixplus = 0, overall = 0;
+			
+			try {
+				sixplus = tracker.getWinRateByHeroSpecial(hero);
+				overall = tracker.getWinRateByHero(hero);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			tableItem_1.setText(0, heroes[hero]);
+			if(sixplus > -1){
+				tableItem_1.setText(1, (sixplus*100) + "");
+			}
+			
+			if(overall > -1){
+				tableItem_1.setText(2, (overall*100) + "");
+			}
+		}
+		
 	}
 }
