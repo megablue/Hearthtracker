@@ -9,7 +9,10 @@ import org.sikuli.api.visual.DesktopCanvas;
 public class HearthReader {
 	boolean debugMode = true;
 
+	int previousWins = -1;
 	int wins = -1;
+	
+	int previousLosses = -1;
 	int losses = -1;
 	
 	int myHero = -1;
@@ -212,22 +215,26 @@ public class HearthReader {
 			if(!foundLosses){
 				losses = 0;
 			}
-			
-			lastArenaResult = wins + " - " + losses;
+			this.formatArenaStatus();
 			System.out.println("lastArenaResult: " + lastArenaResult);
 		}
 		
-		if(foundWins && (wins == 9 || losses == 3)){
+		if(foundWins && (wins == 9 || losses == 3) && (previousWins != wins || previousLosses != losses) ){
 			
 			if(!foundLosses){
 				losses = 0;
 			}
+
 			
 			try {
 				System.out.println("Saving arena result...");
 				tracker.saveArenaResult(myHero, wins, losses);
 				System.out.println("Done saving arena result...");
-				lastArenaResult = wins + " - " + losses;
+				
+				this.formatArenaStatus();
+				
+				previousWins = wins;
+				previousLosses = losses;
 				this.resetFlags();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
@@ -235,6 +242,7 @@ public class HearthReader {
 			}
 		}
 	}
+	
 	
 	public String getLastArenaResult(){
 		return lastArenaResult;
@@ -322,10 +330,10 @@ public class HearthReader {
 		if(found){
 			int totalTime = (int) (new Date().getTime() - startTime.getTime())/1000;
 
-			this.formatMatchStatus();
-			
 			assert goFirst == 1 || goFirst == 0;
 			assert victory == 1 || victory == 0;
+			
+			this.formatMatchStatus();
 			
 			try {
 				System.out.println("Saving match result...");
@@ -364,6 +372,27 @@ public class HearthReader {
 		}
 		
 		lastMatchResult = output;
+		
+		tracker.saveLiveMatch(output);
+	}
+	
+	private synchronized void formatArenaStatus(){
+		String score = "Unknown";
+		String hero = "Unknown";
+		
+		if(wins != -1){
+			if(losses == -1){
+				losses = 0;
+			}
+			
+			score = lastArenaResult = wins + " - " + losses;
+		}
+		
+		if(myHero != -1){
+			hero = this.getHeroLabel(myHero);
+		}
+		
+		tracker.saveLiveArenaScore(score, hero);
 	}
 	
 	public boolean isVictory(){

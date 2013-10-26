@@ -1,3 +1,6 @@
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +13,11 @@ public class Tracker {
 	Connection conn;
 	boolean isWorking = false;
 	boolean testMode = false;
+	Date lastWrite = new Date();
+	String liveScore = "";
+	String liveHero = "";
+	String liveWinrate = "";
+	String liveGamestats = "";
 	
 	public Tracker(){
 		
@@ -240,5 +248,70 @@ public class Tracker {
 		stat.close();
 		
 		return winrate;
+	}
+	
+	public void saveLiveArenaScore(String score, String hero){
+		liveScore = score;
+		liveHero = hero;
+		this.saveStreamStats();
+	}
+	
+	public void saveLiveMatch(String match){
+		liveGamestats = match;
+		this.saveStreamStats();
+	}
+	
+	private void saveStreamStats(){
+		float winrate = 0;
+		String overall = "Overall win rate: ";
+		String arenaScore = "Arena score: " + liveScore;
+		String arenaClass = "Arena class: " + liveHero;
+		String latestGame = "Arena game: " + liveGamestats;
+		String[] lines = new String[4];
+		
+		try {
+			winrate = this.getOverallWinRate();
+			
+			if(winrate > -1){
+				overall += winrate + " %";
+			} else {
+				overall += " N|A";
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		lines[0] = overall;
+		lines[1] = arenaScore;
+		lines[2] = arenaClass;
+		lines[3] = latestGame;
+		
+		this.writeLines(lines);
+	}
+	
+	private void writeLines(String[] lines){
+		
+		//limit the write frequency to 1 second
+		if(new Date().getTime() < lastWrite.getTime() + 1000){
+			return;
+		}
+		
+		try {
+			for(int i = 0; i < lines.length; i++){
+				PrintWriter lineWriter = new PrintWriter(".\\output\\line" + (i+1) + ".txt", "UTF-8");
+				lineWriter.println(lines[i]);
+				lineWriter.close();
+			}
+			
+			lastWrite = new Date();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
