@@ -33,6 +33,7 @@ public class HearthReader {
 
 	Tracker tracker = null;
 	
+	static ImageTarget questImageTarget = new ImageTarget(new File(".\\images\\quest.png"));
 	static ImageTarget checkedImageTarget = new ImageTarget(new File(".\\images\\lose-checkbox-checked.png"));
 	static ImageTarget lossesLabelImageTarget = new ImageTarget(new File(".\\images\\losses-label.png"));
 	static ImageTarget winsLabelImageTarget = new ImageTarget(new File(".\\images\\wins-label.png"));
@@ -340,6 +341,9 @@ public class HearthReader {
 				tracker.saveMatchResult(myHero, oppHero, goFirst, victory, startTime, totalTime);
 				System.out.println("Done saving match result...");
 				inGameMode = 0;
+				victory = -1;
+				oppHero = -1;
+				goFirst = -1;
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -427,6 +431,21 @@ public class HearthReader {
 		return;
 	}
 	
+	private synchronized void scanMenuScreen(){
+		ScreenRegion coinRegion = new DesktopScreenRegion(430, 850, 200, 200);
+		
+		if(this.isInGame()){
+			return;
+		}
+		
+		if(this.findImage(coinRegion, questImageTarget, "Quest icon")){
+			System.out.println("Found quest icon");
+			arenaMode = 0;
+			inGameMode = 0;
+			return;
+		}
+	}
+	
 	public boolean foundOppHero(){
 		return oppHero > - 1  ? true : false;
 	}
@@ -450,6 +469,7 @@ public class HearthReader {
 
 		if(!this.isInGame()){
 			this.scanArenaScoreScreen();
+			this.scanMenuScreen();
 		}
 		
 		if(this.isArenaMode() && !this.isInGame()){
@@ -457,7 +477,7 @@ public class HearthReader {
 			this.scanMyHero();
 		}
 		
-		if(!this.isInGame()){
+		if(this.isArenaMode() && !this.isInGame()){
 			this.scanCoinScreen();
 		}
 		
