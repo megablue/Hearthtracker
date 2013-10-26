@@ -71,7 +71,6 @@ public class Tracker {
 		stat.close();
 	}
 	
-	@SuppressWarnings("unused")
 	public void closeDB(){
 		try {
 			conn.close();

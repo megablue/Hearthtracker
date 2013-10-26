@@ -248,14 +248,14 @@ public class HearthUI {
 		composite_3.setLayout(new GridLayout(1, false));
 		
 		Label lblVersion = new Label(composite_3, SWT.NONE);
-		lblVersion.setText("HearthTracker v1.0.0");
+		lblVersion.setText("HearthTracker v1.0.0 Beta");
 		
 		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
 		lblCopyrightc.setText("Copyright \u00A9 2013 megablue");
 		new Label(composite_3, SWT.NONE);
 		
 		StyledText styledText = new StyledText(composite_3, SWT.READ_ONLY | SWT.WRAP);
-		styledText.setText("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is designed and coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Thanks!");
+		styledText.setText("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!");
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		Composite composite_4 = new Composite(sashForm_1, SWT.NONE);
