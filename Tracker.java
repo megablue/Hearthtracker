@@ -72,7 +72,7 @@ public class Tracker {
 	}
 	
 	@SuppressWarnings("unused")
-	private void closeDB(){
+	public void closeDB(){
 		try {
 			conn.close();
 		} catch (SQLException e) {

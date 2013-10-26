@@ -92,7 +92,8 @@ public class HearthUI {
     			Thread.sleep(500);
     		} catch (InterruptedException e) {
     			// TODO Auto-generated catch block
-    			e.printStackTrace();
+    			//e.printStackTrace();
+    			tracker.closeDB();
     			break;
     		}
     	}
