@@ -114,13 +114,11 @@ public class HearthReader {
 			heroesThumbIT[i] = new ImageTarget(new File(".\\images\\" + heroesLabel[i] + "-s.png"));
 		}
 	
-		for(int i = (winsImageTarget.length - 1); i >= 0; i--)
-		{
-			winsImageTarget[i].setMinScore(0.9);
-		}
+		winsImageTarget = new ImageTarget[10];
 		
 		for(int i = 0; i < 10; i++){
 			winsImageTarget[i] = new ImageTarget(new File(".\\images\\" + i + ".png"));
+			winsImageTarget[i].setMinScore(0.9);
 		}
 		
 		questImageTarget = new ImageTarget(new File(".\\images\\quest.png"));
