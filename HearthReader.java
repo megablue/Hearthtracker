@@ -33,27 +33,16 @@ public class HearthReader {
 
 	Tracker tracker = null;
 	
-	static ImageTarget questImageTarget = new ImageTarget(new File(".\\images\\quest.png"));
-	static ImageTarget checkedImageTarget = new ImageTarget(new File(".\\images\\lose-checkbox-checked.png"));
-	static ImageTarget lossesLabelImageTarget = new ImageTarget(new File(".\\images\\losses-label.png"));
-	static ImageTarget winsLabelImageTarget = new ImageTarget(new File(".\\images\\wins-label.png"));
-	static ImageTarget goFirstImageTarget = new ImageTarget(new File(".\\images\\go-first.png"));
-	static ImageTarget goSecondImageTarget = new ImageTarget(new File(".\\images\\go-second.png"));
-	static ImageTarget victoryImageTarget = new ImageTarget(new File(".\\images\\victory.png"));
-	static ImageTarget defeatImageTarget = new ImageTarget(new File(".\\images\\defeat.png"));
+	ImageTarget questImageTarget;
+	ImageTarget checkedImageTarget;
+	ImageTarget lossesLabelImageTarget;
+	ImageTarget winsLabelImageTarget;
+	ImageTarget goFirstImageTarget;
+	ImageTarget goSecondImageTarget;
+	ImageTarget victoryImageTarget;
+	ImageTarget defeatImageTarget;
 
-	static ImageTarget[] winsIT = {	
-		new ImageTarget(new File(".\\images\\0.png")), 
-		new ImageTarget(new File(".\\images\\1.png")),
-		new ImageTarget(new File(".\\images\\2.png")),
-		new ImageTarget(new File(".\\images\\3.png")),
-		new ImageTarget(new File(".\\images\\4.png")),
-		new ImageTarget(new File(".\\images\\5.png")),
-		new ImageTarget(new File(".\\images\\6.png")),
-		new ImageTarget(new File(".\\images\\7.png")),
-		new ImageTarget(new File(".\\images\\8.png")),
-		new ImageTarget(new File(".\\images\\9.png"))
-	};
+	ImageTarget[] winsImageTarget;
 	
 	String[] heroesLabel = {
 		"mage",
@@ -102,10 +91,25 @@ public class HearthReader {
 			heroesThumbIT[i] = new ImageTarget(new File(".\\images\\" + heroesLabel[i] + "-s.png"));
 		}
 	
-		for(int i = (winsIT.length - 1); i >= 0; i--)
+		for(int i = (winsImageTarget.length - 1); i >= 0; i--)
 		{
-			winsIT[i].setMinScore(0.9);
+			winsImageTarget[i].setMinScore(0.9);
 		}
+		
+		for(int i = 0; i < 10; i++){
+			winsImageTarget[i] = new ImageTarget(new File(".\\images\\" + i + ".png"));
+		}
+		
+		questImageTarget = new ImageTarget(new File(".\\images\\quest.png"));
+		checkedImageTarget = new ImageTarget(new File(".\\images\\lose-checkbox-checked.png"));
+		
+		//language dependent
+		lossesLabelImageTarget = new ImageTarget(new File(".\\images\\losses-label.png"));
+		winsLabelImageTarget = new ImageTarget(new File(".\\images\\wins-label.png"));
+		goFirstImageTarget = new ImageTarget(new File(".\\images\\go-first.png"));
+		goSecondImageTarget = new ImageTarget(new File(".\\images\\go-second.png"));
+		victoryImageTarget = new ImageTarget(new File(".\\images\\victory.png"));
+		defeatImageTarget = new ImageTarget(new File(".\\images\\defeat.png"));
 	}
 	
 	public String getHeroLabel(int heroID){
@@ -182,9 +186,9 @@ public class HearthReader {
 		boolean foundWins = false;
 		boolean foundLosses = false;
 		
-		for(int i = (winsIT.length - 1); i >= 0; i--)
+		for(int i = (winsImageTarget.length - 1); i >= 0; i--)
 		{
-			foundWins = this.findImage(winsSRegion, winsIT[i], "Wins (" + i + ")");
+			foundWins = this.findImage(winsSRegion, winsImageTarget[i], "Wins (" + i + ")");
 			
 			if(foundWins)
 			{
