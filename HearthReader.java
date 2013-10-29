@@ -8,6 +8,8 @@ import org.sikuli.api.visual.DesktopCanvas;
 
 public class HearthReader {
 	boolean debugMode = true;
+	boolean inited = false;
+	boolean gameLangInited = false;
 
 	int previousWins = -1;
 	int wins = -1;
@@ -32,7 +34,7 @@ public class HearthReader {
 	boolean paused = false;
 
 	Tracker tracker = null;
-	
+
 	ImageTarget questImageTarget;
 	ImageTarget checkedImageTarget;
 	ImageTarget lossesLabelImageTarget;
@@ -43,6 +45,7 @@ public class HearthReader {
 	ImageTarget defeatImageTarget;
 
 	ImageTarget[] winsImageTarget;
+	TextTarget[] scoresTextTarget;
 	
 	String[] heroesLabel = {
 		"mage",
@@ -85,24 +88,15 @@ public class HearthReader {
 		//System.out.println("resumed");
 	}
 	
+	public void setGameLang(String lang){
+		gameLang = lang;
+		this.initGameLang();
+	}
+	
 	private void init(){
-		String[] gameLs = {
-				"enUS",
-				"zhTW"
-		}; 
 		
-		boolean foundLang = false;
-		gameLanguages = gameLs;
-
-		for(int i = 0; i < gameLanguages.length; i++){
-			if(gameLang.toLowerCase() == gameLanguages[i].toLowerCase()){
-				foundLang = true;
-				break;
-			}
-		}
-		
-		if(!foundLang){
-			gameLang = gameLang == null || gameLang == "" ? gameLanguages[0].toLowerCase() : gameLang;
+		if(inited){
+			return;
 		}
 		
 		heroesIT = new ImageTarget[heroesLabel.length];
@@ -113,24 +107,65 @@ public class HearthReader {
 			heroesIT[i] = new ImageTarget(new File(".\\images\\" + heroesLabel[i] + ".png"));
 			heroesThumbIT[i] = new ImageTarget(new File(".\\images\\" + heroesLabel[i] + "-s.png"));
 		}
-	
-		winsImageTarget = new ImageTarget[10];
-		
-		for(int i = 0; i < 10; i++){
-			winsImageTarget[i] = new ImageTarget(new File(".\\images\\" + i + ".png"));
-			winsImageTarget[i].setMinScore(0.9);
-		}
 		
 		questImageTarget = new ImageTarget(new File(".\\images\\quest.png"));
 		checkedImageTarget = new ImageTarget(new File(".\\images\\lose-checkbox-checked.png"));
 		
+		inited = true;
+		
+		this.initGameLang();
+	}
+	
+	private void initGameLang(){		
+		String[] gameLs = {
+				"enUS",
+				"zhTW"
+		};
+		
+		boolean foundLang = false;
+		gameLanguages = gameLs;
+
+		for(int i = 0; i < gameLanguages.length; i++){
+			if(gameLang.toLowerCase().equals(gameLanguages[i].toLowerCase())){
+				foundLang = true;
+				break;
+			}
+		}
+		
+		if(!foundLang){
+			gameLang = gameLang == null || gameLang.equals("") ? gameLanguages[0].toLowerCase() : gameLang;
+		}
+		
 		//language dependent
+		winsImageTarget = new ImageTarget[10];
+		scoresTextTarget = new TextTarget[10];
+		
+		for(int i = 0; i < 10; i++){
+			scoresTextTarget[i] = new TextTarget(i + "");
+		}
+		
+		for(int i = 0; i < 10; i++){
+			winsImageTarget[i] = new ImageTarget(new File(".\\images\\" + i + ".png"));
+			winsImageTarget[i].setMinScore(0.4);
+		}
+
+		if(gameLang.toLowerCase().equals("zhtw")){
+			float scaleFactor = 1.214f;
+			
+			for(int i = 0; i < 10; i++){
+				winsImageTarget[i] = new ImageTarget(HearthHelper.resizeImage(new File(".\\images\\" + i + ".png"), scaleFactor));
+				winsImageTarget[i].setMinScore(0.5);
+			}
+		}
+		
 		lossesLabelImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\losses-label.png"));
 		winsLabelImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\wins-label.png"));
 		goFirstImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\go-first.png"));
 		goSecondImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\go-second.png"));
 		victoryImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\victory.png"));
 		defeatImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\defeat.png"));
+		
+		gameLangInited = true;
 	}
 	
 	public String getHeroLabel(int heroID){
@@ -140,6 +175,28 @@ public class HearthReader {
 		}
 		
 		return "?????";
+	}
+	
+	@SuppressWarnings("unused")
+	private boolean findText(ScreenRegion region, TextTarget target, String label){
+		Canvas canvas = new DesktopCanvas();
+		ScreenRegion foundRegion;
+
+		if(debugMode)
+		{
+			canvas.addBox(region);
+			canvas.addLabel(region, "Region " + label).display(1);
+		}
+		
+		foundRegion = region.find(target);
+		
+		if((foundRegion != null) && debugMode)
+		{
+			canvas.addBox(region);
+			canvas.addLabel(region, "Found region " + label).display(1);
+		}
+		
+		return (foundRegion != null);
 	}
 	
 	@SuppressWarnings("unused")

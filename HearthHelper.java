@@ -25,6 +25,8 @@ public class HearthHelper {
 			                                                    thumbnail.getHeight(null),
 			                                                    BufferedImage.TYPE_INT_RGB);
 			bufferedThumbnail.getGraphics().drawImage(thumbnail, 0, 0, null);
+			
+			return bufferedThumbnail;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
