@@ -62,7 +62,7 @@ public class HearthUI {
 	private Label lblArenaScoreStatus;
 	private Display display;
 	private static HearthUI window;
-	static boolean debugMode = false;
+	static boolean debugMode = HearthHelper.isDevelopmentEnvironment();
 	private static HearthReader hearth;
 	private static Tracker tracker;
 	Thread hearththread;
@@ -75,7 +75,7 @@ public class HearthUI {
 		try {
 			window = new HearthUI();
 			tracker = new Tracker();
-			hearth = new HearthReader(tracker, "enUs", debugMode);
+			hearth = new HearthReader(tracker, "enUS", debugMode);
 			hearth.pause();
 			window.open();
 		} catch (Exception e) {
