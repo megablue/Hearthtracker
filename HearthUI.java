@@ -52,6 +52,8 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
+import com.googlecode.javacv.CameraDevice.Settings;
+
 
 public class HearthUI {
 
@@ -63,6 +65,8 @@ public class HearthUI {
 	private Label lblMyClassStatus;
 	private Label lblArenaScoreStatus;
 	private CCombo cmbGameLang;
+	private Button btnEnableScanner;
+	private Button[] btnScanSpeed = new Button[3];
 	
 	private Display display;
 	private static HearthUI window;
@@ -343,54 +347,121 @@ public class HearthUI {
 		tbtmPerferences.setControl(composite_1);
 		composite_1.setLayout(new GridLayout(2, false));
 		
-		Label lblNewLabel_2 = new Label(composite_1, SWT.NONE);
+		Group grpGeneral = new Group(composite_1, SWT.NONE);
+		grpGeneral.setText("General");
+		grpGeneral.setLayout(new GridLayout(4, false));
+		GridData gd_grpGeneral = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
+		gd_grpGeneral.heightHint = 446;
+		gd_grpGeneral.widthHint = 585;
+		grpGeneral.setLayoutData(gd_grpGeneral);
+		
+		Label lblNewLabel_2 = new Label(grpGeneral, SWT.NONE);
 		lblNewLabel_2.setText("Scanner");
+		new Label(grpGeneral, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
 		
-		Button btnEnable = new Button(composite_1, SWT.CHECK);
-		btnEnable.setSelection(true);
-		btnEnable.setText("Enable");
+		btnEnableScanner = new Button(grpGeneral, SWT.CHECK);
+		btnEnableScanner.setSelection(true);
+		btnEnableScanner.setText("Enable");
 		
-		Label lblNewLabel = new Label(composite_1, SWT.NONE);
-		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_lblNewLabel.widthHint = 156;
-		lblNewLabel.setLayoutData(gd_lblNewLabel);
-		lblNewLabel.setText("Scan Speed (Slow --> Fast )");
+		Label lblNewLabel = new Label(grpGeneral, SWT.NONE);
+		lblNewLabel.setText("Scan Speed");
+		new Label(grpGeneral, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
 		
-		Slider slider = new Slider(composite_1, SWT.NONE);
-		slider.setToolTipText("Adjust this according to your computer performance");
-		slider.setSelection(45);
-		GridData gd_slider = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_slider.widthHint = 243;
-		slider.setLayoutData(gd_slider);
-		new Label(composite_1, SWT.NONE);
-		new Label(composite_1, SWT.NONE);
+		Composite composite_6 = new Composite(grpGeneral, SWT.NONE);
+		composite_6.setLayout(new GridLayout(5, false));
+		GridData gd_composite_6 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_composite_6.heightHint = 27;
+		gd_composite_6.widthHint = 256;
+		composite_6.setLayoutData(gd_composite_6);
 		
-		Label lblNewLabel_1 = new Label(composite_1, SWT.NONE);
+		btnScanSpeed[0] = new Button(composite_6, SWT.RADIO);
+		btnScanSpeed[0].setText("Fast");
+		new Label(composite_6, SWT.NONE);
+		
+		btnScanSpeed[1] = new Button(composite_6, SWT.RADIO);
+		btnScanSpeed[1].setText("Intermediate");
+		new Label(composite_6, SWT.NONE);
+		
+		btnScanSpeed[2] = new Button(composite_6, SWT.RADIO);
+		btnScanSpeed[2].setText("Slow");
+		
+		Label lblNewLabel_1 = new Label(grpGeneral, SWT.NONE);
 		lblNewLabel_1.setText("Game Language");
+		new Label(grpGeneral, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
 		
-		cmbGameLang = new CCombo(composite_1, SWT.BORDER | SWT.READ_ONLY);
+		cmbGameLang = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
+		cmbGameLang.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		cmbGameLang.setEditable(false);
 		cmbGameLang.setItems(new String[] {"enUS"});
 		cmbGameLang.setVisibleItemCount(1);
 		cmbGameLang.setText("enUS");
-		GridData gd_cmbGameLang = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_cmbGameLang.widthHint = 241;
-		cmbGameLang.setLayoutData(gd_cmbGameLang);
 		
-		Label lblGameResolution = new Label(composite_1, SWT.NONE);
+		Label lblGameResolution = new Label(grpGeneral, SWT.NONE);
 		lblGameResolution.setText("Game Resolution");
+		new Label(grpGeneral, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
 		
-		CCombo cmbGameRes = new CCombo(composite_1, SWT.BORDER | SWT.READ_ONLY);
+		CCombo cmbGameRes = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
+		cmbGameRes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		cmbGameRes.setEditable(false);
 		cmbGameRes.setItems(new String[] {"1920x1080"});
 		cmbGameRes.setVisibleItemCount(1);
 		cmbGameRes.setText("1920x1080");
-		GridData gd_cmbGameRes = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_cmbGameRes.widthHint = 248;
-		cmbGameRes.setLayoutData(gd_cmbGameRes);
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
+		poppulateScannerOptions();
 		poppulateGameLangs();
+	}
+	
+	private void savePreferences(){
+		config.save(setting, "./configs/settings.xml");
+	}
+	
+	private void poppulateScannerOptions(){
+		btnEnableScanner.setSelection(setting.scannerEnabled);
+		btnEnableScanner.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setting.scannerEnabled = btnEnableScanner.getSelection();
+				savePreferences();
+			}
+		});
+		
+		switch(setting.scanInterval){
+			case 250:
+				btnScanSpeed[0].setSelection(true);
+				break;
+			case 750:
+				btnScanSpeed[2].setSelection(true);
+				break;
+			case 500:
+			default:
+				btnScanSpeed[1].setSelection(true);
+				break;
+		}
+		
+		
+		for(int i = 0; i < 3; i++){
+			btnScanSpeed[i].addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					
+					if(btnScanSpeed[0].getSelection()){
+						setting.scanInterval = 250;
+					}else if(btnScanSpeed[1].getSelection()){
+						setting.scanInterval = 500;
+					}else if(btnScanSpeed[2].getSelection()){
+						setting.scanInterval = 750;
+					}
+					
+					savePreferences();
+				}
+			});
+		}
+		
 	}
 	
 	private void poppulateGameLangs(){
@@ -413,10 +484,12 @@ public class HearthUI {
 				if(i != -1){
 					String langCode = (String) cmbGameLang.getData(cmbGameLang.getItem(i));
 					System.out.println("preferences game lang selected: " + langCode);
+					setting.gameLang = langCode;
 					
 					if(previousSelection != i){
 						hearth.setGameLang(langCode);
 						previousSelection = i; 
+						savePreferences();
 					}
 				}
 			}
