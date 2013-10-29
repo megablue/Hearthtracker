@@ -49,6 +49,8 @@ import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 
 public class HearthUI {
@@ -60,11 +62,18 @@ public class HearthUI {
 	private Label lblWinrate;
 	private Label lblMyClassStatus;
 	private Label lblArenaScoreStatus;
+	private CCombo cmbGameLang;
+	
 	private Display display;
 	private static HearthUI window;
 	static boolean debugMode = HearthHelper.isDevelopmentEnvironment();
+	
 	private static HearthReader hearth;
 	private static Tracker tracker;
+	private static HearthConfigurator config = new HearthConfigurator();
+	private static HearthGameLangList gameLanguages;
+	private static HearthSetting setting;
+	
 	Thread hearththread;
 	
 	/**
@@ -73,14 +82,31 @@ public class HearthUI {
 	 */
 	public static void main(String[] args) {
 		try {
-			window = new HearthUI();
-			tracker = new Tracker();
-			hearth = new HearthReader(tracker, "enUS", debugMode);
-			hearth.pause();
+			init();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void init(){
+		gameLanguages = (HearthGameLangList) config.load("./configs/gameLangs.xml");
+		setting = (HearthSetting) config.load("./configs/settings.xml");
+		
+		if(gameLanguages == null){
+			gameLanguages = new HearthGameLangList();
+			config.save(gameLanguages, "./configs/gameLangs.xml");
+		}
+		
+		if(setting == null){
+			setting = new HearthSetting();
+			config.save(setting, "./configs/settings.xml");
+		}
+		
+		window = new HearthUI();
+		tracker = new Tracker();
+		hearth = new HearthReader(tracker, setting.gameLang, debugMode);
+		hearth.pause();
 	}
 	
     private static class MessageLoop
@@ -342,28 +368,68 @@ public class HearthUI {
 		Label lblNewLabel_1 = new Label(composite_1, SWT.NONE);
 		lblNewLabel_1.setText("Game Language");
 		
-		CCombo combo = new CCombo(composite_1, SWT.BORDER);
-		combo.setEditable(false);
-		combo.setItems(new String[] {"enUS"});
-		combo.setVisibleItemCount(1);
-		combo.setText("enUS");
-		GridData gd_combo = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_combo.widthHint = 241;
-		combo.setLayoutData(gd_combo);
+		cmbGameLang = new CCombo(composite_1, SWT.BORDER | SWT.READ_ONLY);
+		cmbGameLang.setEditable(false);
+		cmbGameLang.setItems(new String[] {"enUS"});
+		cmbGameLang.setVisibleItemCount(1);
+		cmbGameLang.setText("enUS");
+		GridData gd_cmbGameLang = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_cmbGameLang.widthHint = 241;
+		cmbGameLang.setLayoutData(gd_cmbGameLang);
 		
 		Label lblGameResolution = new Label(composite_1, SWT.NONE);
 		lblGameResolution.setText("Game Resolution");
 		
-		CCombo combo_1 = new CCombo(composite_1, SWT.BORDER);
-		combo_1.setEditable(false);
-		combo_1.setItems(new String[] {"1920x1080"});
-		combo_1.setVisibleItemCount(1);
-		combo_1.setText("1920x1080");
-		GridData gd_combo_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_combo_1.widthHint = 248;
-		combo_1.setLayoutData(gd_combo_1);
+		CCombo cmbGameRes = new CCombo(composite_1, SWT.BORDER | SWT.READ_ONLY);
+		cmbGameRes.setEditable(false);
+		cmbGameRes.setItems(new String[] {"1920x1080"});
+		cmbGameRes.setVisibleItemCount(1);
+		cmbGameRes.setText("1920x1080");
+		GridData gd_cmbGameRes = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_cmbGameRes.widthHint = 248;
+		cmbGameRes.setLayoutData(gd_cmbGameRes);
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
+		poppulateGameLangs();
+	}
+	
+	private void poppulateGameLangs(){
+		cmbGameLang.removeAll();
+		
+		for(int i = 0; i < gameLanguages.langs.length; i++){
+			cmbGameLang.add(gameLanguages.langs[i].label);
+			cmbGameLang.setData(gameLanguages.langs[i].label, gameLanguages.langs[i].code);
+		}
+		
+		cmbGameLang.select(0);
+		
+		cmbGameLang.addSelectionListener(new SelectionAdapter() {
+			
+			int previousSelection = -1;
+			
+			private void selected(SelectionEvent e){
+				int i = cmbGameLang.getSelectionIndex();
+				
+				if(i != -1){
+					String langCode = (String) cmbGameLang.getData(cmbGameLang.getItem(i));
+					System.out.println("preferences game lang selected: " + langCode);
+					
+					if(previousSelection != i){
+						hearth.setGameLang(langCode);
+						previousSelection = i; 
+					}
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				this.selected(e);
+			}
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				this.selected(e);
+			}
+		});
 	}
 	
 	private void poppulateCurrentStats(){

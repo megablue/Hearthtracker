@@ -12,3 +12,12 @@ data/
 /HearthUI$3.class
 /HearthHelper.class
 /HearthGame.class
+/HearthConfigurator.class
+/HearthLangList.class
+/HearthGameLangList.class
+/HearthGameLangList$language.class
+/HearthGameLangList$Language.class
+/HearthSetting.class
+/HearthUI$4.class
+configs/gameLangs.xml
+configs/settings.xml

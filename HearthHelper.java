@@ -2,6 +2,10 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.imageio.ImageIO;
 
@@ -13,6 +17,12 @@ public class HearthHelper {
 	        isEclipse = false;
 	    }
 	    return isEclipse;
+	}
+	
+	static String readFile(String path)  throws IOException {
+		Charset encoding = Charset.forName("UTF8");
+		byte[] encoded = Files.readAllBytes(Paths.get(path));
+		return encoding.decode(ByteBuffer.wrap(encoded)).toString();
 	}
 	
 	public static BufferedImage resizeImage(File imgFile, float scaleFactor){
