@@ -75,7 +75,7 @@ public class HearthUI {
 		try {
 			window = new HearthUI();
 			tracker = new Tracker();
-			hearth = new HearthReader(tracker, debugMode);
+			hearth = new HearthReader(tracker, "enUs", debugMode);
 			hearth.pause();
 			window.open();
 		} catch (Exception e) {

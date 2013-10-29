@@ -55,6 +55,9 @@ public class HearthReader {
 		"paladin",
 		"warlock"
 	};
+	
+	String[] gameLanguages;
+	String gameLang;
 		
 	ImageTarget[] heroesIT;
 	ImageTarget[] heroesThumbIT;
@@ -65,9 +68,10 @@ public class HearthReader {
 		init();
 	}
 	
-	public HearthReader(Tracker t, boolean mode){
+	public HearthReader(Tracker t, String lang, boolean mode){
 		debugMode = mode;
 		tracker = t;
+		gameLang = lang.toLowerCase();
 		init();
 	}
 	
@@ -82,6 +86,25 @@ public class HearthReader {
 	}
 	
 	private void init(){
+		String[] gameLs = {
+				"enUS",
+				"zhTW"
+		}; 
+		
+		boolean foundLang = false;
+		gameLanguages = gameLs;
+
+		for(int i = 0; i < gameLanguages.length; i++){
+			if(gameLang.toLowerCase() == gameLanguages[i].toLowerCase()){
+				foundLang = true;
+				break;
+			}
+		}
+		
+		if(!foundLang){
+			gameLang = gameLang == null || gameLang == "" ? gameLanguages[0].toLowerCase() : gameLang;
+		}
+		
 		heroesIT = new ImageTarget[heroesLabel.length];
 		heroesThumbIT = new ImageTarget[heroesLabel.length];
 		
@@ -104,12 +127,12 @@ public class HearthReader {
 		checkedImageTarget = new ImageTarget(new File(".\\images\\lose-checkbox-checked.png"));
 		
 		//language dependent
-		lossesLabelImageTarget = new ImageTarget(new File(".\\images\\losses-label.png"));
-		winsLabelImageTarget = new ImageTarget(new File(".\\images\\wins-label.png"));
-		goFirstImageTarget = new ImageTarget(new File(".\\images\\go-first.png"));
-		goSecondImageTarget = new ImageTarget(new File(".\\images\\go-second.png"));
-		victoryImageTarget = new ImageTarget(new File(".\\images\\victory.png"));
-		defeatImageTarget = new ImageTarget(new File(".\\images\\defeat.png"));
+		lossesLabelImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\losses-label.png"));
+		winsLabelImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\wins-label.png"));
+		goFirstImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\go-first.png"));
+		goSecondImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\go-second.png"));
+		victoryImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\victory.png"));
+		defeatImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\defeat.png"));
 	}
 	
 	public String getHeroLabel(int heroID){
