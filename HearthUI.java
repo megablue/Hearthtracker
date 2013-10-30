@@ -77,6 +77,8 @@ public class HearthUI {
 	private static HearthConfigurator config = new HearthConfigurator();
 	private static HearthGameLangList gameLanguages;
 	private static HearthSetting setting;
+	private static HearthHeroesList heroesList;
+	
 	
 	Thread hearththread;
 	
@@ -94,8 +96,14 @@ public class HearthUI {
 	}
 	
 	public static void init(){
+		heroesList = (HearthHeroesList) config.load("./configs/heroes.xml");
 		gameLanguages = (HearthGameLangList) config.load("./configs/gameLangs.xml");
 		setting = (HearthSetting) config.load("./configs/settings.xml");
+		
+		if(heroesList == null){
+			heroesList = new HearthHeroesList();
+			config.save(heroesList, "./configs/heroes.xml");
+		}
 		
 		if(gameLanguages == null){
 			gameLanguages = new HearthGameLangList();
@@ -542,24 +550,22 @@ public class HearthUI {
 		composite_2.layout();
 	}
 	
-	private void poppulateOverviewTable(){
-		String[] heroes = hearth.getHeroes();
-		
+	private void poppulateOverviewTable(){	
 		tableOverview.removeAll();
 		
-		for(int hero = 0; hero < heroes.length; hero++){
+		for(int heroId = 0; heroId < heroesList.getTotal(); heroId++){
 			TableItem tableItem_1 = new TableItem(tableOverview, SWT.NONE);
 			float sixplus = 0, overall = 0;
 			
 			try {
-				sixplus = tracker.getWinRateByHeroSpecial(hero);
-				overall = tracker.getWinRateByHero(hero);
+				sixplus = tracker.getWinRateByHeroSpecial(heroId);
+				overall = tracker.getWinRateByHero(heroId);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-			tableItem_1.setText(0, heroes[hero]);
+			tableItem_1.setText(0, heroesList.getHeroLabel(heroId));
 			if(sixplus > -1){
 				tableItem_1.setText(1, (sixplus*100) + "");
 			}

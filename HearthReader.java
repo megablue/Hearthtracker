@@ -46,18 +46,6 @@ public class HearthReader {
 
 	ImageTarget[] winsImageTarget;
 	
-	String[] heroesLabel = {
-		"mage",
-		"hunter",
-		"warrior",
-		"shaman",
-		"druid",
-		"priest",
-		"rogue",
-		"paladin",
-		"warlock"
-	};
-	
 	HearthGameLangList gameLanguages;
 	String gameLang;
 		
@@ -67,6 +55,7 @@ public class HearthReader {
 	HearthReaderSetting readerSettings = null;
 	
 	private HearthConfigurator config = new HearthConfigurator();
+	private HearthHeroesList heroesList;
 	
 	public HearthReader(Tracker t){
 		debugMode = false;
@@ -101,6 +90,13 @@ public class HearthReader {
 			return;
 		}
 		
+		heroesList = (HearthHeroesList) config.load("./configs/heroes.xml");
+		
+		if(heroesList == null){
+			heroesList = new HearthHeroesList();
+			config.save(heroesList, "./configs/heroes.xml");
+		}
+		
 		gameLanguages = (HearthGameLangList) config.load("./configs/gameLangs.xml");
 		
 		if(gameLanguages == null){
@@ -108,13 +104,13 @@ public class HearthReader {
 			config.save(gameLanguages, "./configs/gameLangs.xml");
 		}
 		
-		heroesIT = new ImageTarget[heroesLabel.length];
-		heroesThumbIT = new ImageTarget[heroesLabel.length];
+		heroesIT = new ImageTarget[heroesList.getTotal()];
+		heroesThumbIT = new ImageTarget[heroesList.getTotal()];
 		
-		for(int i = 0; i < heroesLabel.length; i++)
+		for(int i = 0; i < heroesList.getTotal(); i++)
 		{
-			heroesIT[i] = new ImageTarget(new File("./images/" + heroesLabel[i] + ".png"));
-			heroesThumbIT[i] = new ImageTarget(new File("./images/" + heroesLabel[i] + "-s.png"));
+			heroesIT[i] = new ImageTarget(new File("./images/" + heroesList.getHeroName(i) + ".png"));
+			heroesThumbIT[i] = new ImageTarget(new File("./images/" + heroesList.getHeroName(i) + "-s.png"));
 		}
 		
 		questImageTarget = new ImageTarget(new File("./images/quest.png"));
@@ -177,15 +173,6 @@ public class HearthReader {
 		defeatImageTarget = new ImageTarget(new File("./images/" + gameLang + "/defeat.png"));
 		
 		gameLangInited = true;
-	}
-	
-	public String getHeroLabel(int heroID){
-		
-		if(heroID >= 0 && heroID < heroesLabel.length){
-			return heroesLabel[heroID];
-		}
-		
-		return "?????";
 	}
 	
 	@SuppressWarnings("unused")
@@ -348,7 +335,7 @@ public class HearthReader {
 	
 	public String getMyArenaHero(){
 		if(myHero >= 0 ){
-			return this.getHeroLabel(myHero);
+			return heroesList.getHeroLabel(myHero);
 		}
 		
 		return "Unknown";
@@ -372,8 +359,8 @@ public class HearthReader {
 		}
 		
 		for(int i = 0; i < heroesIT.length; i++){
-			if(this.findImage(heroSRegion, heroesIT[i], "My Hero (" + heroesLabel[i] + ") ")){
-				System.out.println("Found hero: " + heroesLabel[i]);
+			if(this.findImage(heroSRegion, heroesIT[i], "My Hero (" + heroesList.getHeroLabel(i) + ") ")){
+				System.out.println("Found hero: " + heroesList.getHeroLabel(i));
 				myHero = i;
 				break;
 			}
@@ -390,8 +377,8 @@ public class HearthReader {
 		}
 		
 		for(int i = 0; i < heroesThumbIT.length; i++){
-			if(this.findImage(heroSRegion, heroesThumbIT[i], "Opp Hero (" + heroesLabel[i] + ") ")){
-				System.out.println("Found Opp hero: " + heroesLabel[i]);
+			if(this.findImage(heroSRegion, heroesThumbIT[i], "Opp Hero (" + heroesList.getHeroLabel(i) + ") ")){
+				System.out.println("Found Opp hero: " + heroesList.getHeroLabel(i));
 				oppHero = i;
 				this.formatMatchStatus();
 				break;
@@ -461,11 +448,11 @@ public class HearthReader {
 		}
 		
 		if(goFirst != -1 && oppHero != -1){
-			output = whosFirst + ", vs " + heroesLabel[oppHero];
+			output = whosFirst + ", vs " + heroesList.getHeroLabel(oppHero);
 		}
 		
 		if(goFirst != -1 && oppHero != -1 && victory != -1){
-			output = whosFirst + ", vs " + heroesLabel[oppHero] + result;
+			output = whosFirst + ", vs " + heroesList.getHeroLabel(oppHero) + result;
 		}
 		
 		lastMatchResult = output;
@@ -485,7 +472,7 @@ public class HearthReader {
 		}
 		
 		if(myHero != -1){
-			hero = this.getHeroLabel(myHero);
+			hero = heroesList.getHeroLabel(myHero);
 		}
 		
 		tracker.saveLiveArenaScore(score, hero);
@@ -548,10 +535,6 @@ public class HearthReader {
 	
 	public boolean isInGame() {
 		return inGameMode == 1 ? true : false;
-	}
-	
-	public String[] getHeroes(){
-		return heroesLabel;
 	}
 	
 	public void process(){	

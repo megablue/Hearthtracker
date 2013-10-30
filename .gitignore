@@ -24,3 +24,7 @@ configs/settings.xml
 /HearthUI$5.class
 /HearthUI$6.class
 /HearthReaderSetting.class
+/HearthHeroesList.class
+/HearthHeroesList$hero.class
+/HearthHeroesList$Hero.class
+images/backup/

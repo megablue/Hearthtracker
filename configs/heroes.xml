@@ -1,0 +1,60 @@
+<HearthHeroesList>
+  <currentId>8</currentId>
+  <totalHeroes>9</totalHeroes>
+  <heroes>
+    <HearthHeroesList_-Hero>
+      <id>0</id>
+      <name>mage</name>
+      <label>Mage</label>
+      <outer-class reference="../../.."/>
+    </HearthHeroesList_-Hero>
+    <HearthHeroesList_-Hero>
+      <id>1</id>
+      <name>hunter</name>
+      <label>Hunter</label>
+      <outer-class reference="../../.."/>
+    </HearthHeroesList_-Hero>
+    <HearthHeroesList_-Hero>
+      <id>2</id>
+      <name>warrior</name>
+      <label>Warrior</label>
+      <outer-class reference="../../.."/>
+    </HearthHeroesList_-Hero>
+    <HearthHeroesList_-Hero>
+      <id>3</id>
+      <name>shaman</name>
+      <label>Shaman</label>
+      <outer-class reference="../../.."/>
+    </HearthHeroesList_-Hero>
+    <HearthHeroesList_-Hero>
+      <id>4</id>
+      <name>druid</name>
+      <label>Druid</label>
+      <outer-class reference="../../.."/>
+    </HearthHeroesList_-Hero>
+    <HearthHeroesList_-Hero>
+      <id>5</id>
+      <name>priest</name>
+      <label>Priest</label>
+      <outer-class reference="../../.."/>
+    </HearthHeroesList_-Hero>
+    <HearthHeroesList_-Hero>
+      <id>6</id>
+      <name>rogue</name>
+      <label>Rogue</label>
+      <outer-class reference="../../.."/>
+    </HearthHeroesList_-Hero>
+    <HearthHeroesList_-Hero>
+      <id>7</id>
+      <name>paladin</name>
+      <label>Paladin</label>
+      <outer-class reference="../../.."/>
+    </HearthHeroesList_-Hero>
+    <HearthHeroesList_-Hero>
+      <id>8</id>
+      <name>warlock</name>
+      <label>Warlock</label>
+      <outer-class reference="../../.."/>
+    </HearthHeroesList_-Hero>
+  </heroes>
+</HearthHeroesList>
