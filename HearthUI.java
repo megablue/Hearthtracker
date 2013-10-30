@@ -43,6 +43,7 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -287,7 +288,7 @@ public class HearthUI {
 		composite_3.setLayout(new GridLayout(1, false));
 		
 		Label lblVersion = new Label(composite_3, SWT.NONE);
-		lblVersion.setText("HearthTracker v1.0.1 Beta");
+		lblVersion.setText("HearthTracker v1.0.2 Beta");
 		
 		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
 		lblCopyrightc.setText("Copyright \u00A9 2013 megablue");
@@ -327,24 +328,37 @@ public class HearthUI {
 				}
 			}
 		});
-		lblPaypal.setImage(new Image( display, ".//images//btn_donate_150wx70h.gif" ));
+		lblPaypal.setImage(new Image( display, "./images/btn_donate_150wx70h.gif" ));
 		sashForm_1.setWeights(new int[] {110, 278, 80});
 		
 		tableOverview = new Table(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
 		tableOverview.setLinesVisible(true);
 		tableOverview.setHeaderVisible(true);
 		
-		TableColumn tableColumn = new TableColumn(tableOverview, SWT.NONE);
-		tableColumn.setWidth(92);
-		tableColumn.setText("Classes");
+		TableColumn tblclmnClass = new TableColumn(tableOverview, SWT.CENTER);
+		tblclmnClass.setText("H");
+		tblclmnClass.setToolTipText("Your class");
+		tblclmnClass.setWidth(34);
 		
-		TableColumn tblclmnWins = new TableColumn(tableOverview, SWT.NONE);
-		tblclmnWins.setWidth(85);
-		tblclmnWins.setText("6+ Wins %");
+		TableColumn tblclmnWins = new TableColumn(tableOverview, SWT.RIGHT);
+		tblclmnWins.setToolTipText("% for 6 wins or more per arena session");
+		tblclmnWins.setWidth(50);
+		tblclmnWins.setText("6+");
 		
-		TableColumn tableColumn_2 = new TableColumn(tableOverview, SWT.NONE);
-		tableColumn_2.setWidth(116);
-		tableColumn_2.setText("Overall Win %");
+		TableColumn tblclmnWin = new TableColumn(tableOverview, SWT.RIGHT);
+		tblclmnWin.setToolTipText("Total wins/losses in %");
+		tblclmnWin.setWidth(48);
+		tblclmnWin.setText("Win %");
+		
+		TableColumn tblclmnTotal = new TableColumn(tableOverview, SWT.RIGHT);
+		tblclmnTotal.setToolTipText("Total wins");
+		tblclmnTotal.setWidth(50);
+		tblclmnTotal.setText("Wins");
+		
+		TableColumn tblclmnNewColumn = new TableColumn(tableOverview, SWT.RIGHT);
+		tblclmnNewColumn.setToolTipText("Total losses");
+		tblclmnNewColumn.setWidth(50);
+		tblclmnNewColumn.setText("Losses");
 		
 		//tableItem_1.setT
 		//sashForm.setWeights(new int[] {263, 312});
@@ -517,8 +531,7 @@ public class HearthUI {
 	private void poppulateCurrentStats(){
 		String winrateStr = "";
 		float winrate = 0;
-		int total = 0; 
-		
+
 		try {
 			winrate = tracker.getOverallWinRate();
 			
@@ -553,9 +566,23 @@ public class HearthUI {
 		fillWinrate(-1);
 	}
 	
+	private Image resize(Image image, int width, int height) {
+		Image scaled = new Image(Display.getDefault(), width, height);
+		GC gc = new GC(scaled);
+		gc.setAntialias(SWT.ON);
+		gc.setInterpolation(SWT.HIGH);
+		gc.drawImage(image, 0, 0, 
+		image.getBounds().width, image.getBounds().height, 
+		0, 0, width, height);
+		gc.dispose();
+		image.dispose(); // don't forget about me!
+		return scaled;
+	}
+	
 	private void fillWinrate(int heroId){
 		TableItem tableItem_1 = new TableItem(tableOverview, SWT.NONE);
 		float sixplus = 0, overall = 0;
+		Image heroImg;
 		
 		try {
 			sixplus = tracker.getWinRateByHeroSpecial(heroId);
@@ -565,16 +592,26 @@ public class HearthUI {
 			e.printStackTrace();
 		}
 		
-		tableItem_1.setText(0, heroesList.getHeroLabel(heroId));
+		heroImg = new Image(display, "./images/" + heroesList.getHeroName(heroId) + "-s.png");
+		heroImg = resize(heroImg, 28, 28);
+		tableItem_1.setImage(0, heroImg);
+
+		//tableItem_1.setText(1, heroesList.getHeroLabel(heroId));
 		
 		if(sixplus > -1){
-			tableItem_1.setText(1,  new DecimalFormat("#.##").format(sixplus*100));
-			
-			
+			tableItem_1.setText(1,  new DecimalFormat("0.00").format(sixplus*100));
 		}
 		
 		if(overall > -1){
-			tableItem_1.setText(2,  new DecimalFormat("#.##").format(overall*100));
+			tableItem_1.setText(2,  new DecimalFormat("0.00").format(overall*100));
+		}
+		
+		try {
+			tableItem_1.setText(3,  tracker.getTotalWinsByHero(heroId) + "");
+			tableItem_1.setText(4,  tracker.getTotalLossesByHero(heroId) + "");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

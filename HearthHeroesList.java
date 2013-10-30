@@ -52,7 +52,7 @@ public class HearthHeroesList {
 			}
 		}
 		
-		return "Unknown";
+		return "unknown";
 	}
 	
 	public String getHeroLabel(int heroId){

@@ -225,12 +225,44 @@ public class Tracker {
 		return total;
 	}
 	
+	public int getTotalWinsByHero(int heroId) throws SQLException{
+		Statement stat = conn.createStatement();
+		ResultSet rs;
+		int total = 0;
+
+		rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId);
+		
+		while(rs.next()){
+			total += rs.getInt("WINS");
+		}
+		
+		stat.close();
+		
+		return total;
+	}
+	
 	public int getTotalLosses() throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int total = 0;
 
 		rs = stat.executeQuery("select wins,losses from ARENARESULTS");
+		
+		while(rs.next()){
+			total += rs.getInt("LOSSES");
+		}
+		
+		stat.close();
+		
+		return total;
+	}
+	
+	public int getTotalLossesByHero(int heroId) throws SQLException{
+		Statement stat = conn.createStatement();
+		ResultSet rs;
+		int total = 0;
+
+		rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId);
 		
 		while(rs.next()){
 			total += rs.getInt("LOSSES");
