@@ -209,6 +209,38 @@ public class Tracker {
 		return winrate;
 	}
 	
+	public int getTotalWins() throws SQLException{
+		Statement stat = conn.createStatement();
+		ResultSet rs;
+		int total = 0;
+
+		rs = stat.executeQuery("select wins,losses from ARENARESULTS");
+		
+		while(rs.next()){
+			total += rs.getInt("WINS");
+		}
+		
+		stat.close();
+		
+		return total;
+	}
+	
+	public int getTotalLosses() throws SQLException{
+		Statement stat = conn.createStatement();
+		ResultSet rs;
+		int total = 0;
+
+		rs = stat.executeQuery("select wins,losses from ARENARESULTS");
+		
+		while(rs.next()){
+			total += rs.getInt("LOSSES");
+		}
+		
+		stat.close();
+		
+		return total;
+	}
+	
 	public float getWinRateByGoesFirst() throws SQLException{
 		return this.getWinRateGoesBy(true, -1, -1);
 	}

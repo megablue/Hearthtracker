@@ -248,7 +248,7 @@ public class HearthUI {
 		fd_lblNewLabel_3.bottom = new FormAttachment(lblArenaScore, -6);
 		fd_lblNewLabel_3.left = new FormAttachment(lblArenaScore, 0, SWT.LEFT);
 		lblNewLabel_3.setLayoutData(fd_lblNewLabel_3);
-		lblNewLabel_3.setText("Total Win %");
+		lblNewLabel_3.setText("Games Played:");
 		
 		lblWinrate = new Label(grpCurrentStats, SWT.NONE);
 		FormData fd_lblWinrate = new FormData();
@@ -517,15 +517,16 @@ public class HearthUI {
 	private void poppulateCurrentStats(){
 		String winrateStr = "";
 		float winrate = 0;
+		int total = 0; 
 		
 		try {
 			winrate = tracker.getOverallWinRate();
 			
-			if(winrate < 0){
-				winrateStr = "N|A";
-			} else {
-				winrateStr = new DecimalFormat("#.##").format(winrate);
+			if(winrate >= 0){
+				winrateStr += " (" + new DecimalFormat("#.##").format(winrate) + "% )";
 			}
+			
+			winrateStr = tracker.getTotalWins() + "-" + tracker.getTotalLosses() + winrateStr;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
