@@ -45,7 +45,6 @@ public class HearthReader {
 	ImageTarget defeatImageTarget;
 
 	ImageTarget[] winsImageTarget;
-	TextTarget[] scoresTextTarget;
 	
 	String[] heroesLabel = {
 		"mage",
@@ -59,11 +58,15 @@ public class HearthReader {
 		"warlock"
 	};
 	
-	String[] gameLanguages;
+	HearthGameLangList gameLanguages;
 	String gameLang;
 		
 	ImageTarget[] heroesIT;
 	ImageTarget[] heroesThumbIT;
+	
+	HearthReaderSetting readerSettings = null;
+	
+	private HearthConfigurator config = new HearthConfigurator();
 	
 	public HearthReader(Tracker t){
 		debugMode = false;
@@ -94,9 +97,15 @@ public class HearthReader {
 	}
 	
 	private void init(){
-		
 		if(inited){
 			return;
+		}
+		
+		gameLanguages = (HearthGameLangList) config.load("./configs/gameLangs.xml");
+		
+		if(gameLanguages == null){
+			gameLanguages = new HearthGameLangList();
+			config.save(gameLanguages, "./configs/gameLangs.xml");
 		}
 		
 		heroesIT = new ImageTarget[heroesLabel.length];
@@ -104,66 +113,68 @@ public class HearthReader {
 		
 		for(int i = 0; i < heroesLabel.length; i++)
 		{
-			heroesIT[i] = new ImageTarget(new File(".\\images\\" + heroesLabel[i] + ".png"));
-			heroesThumbIT[i] = new ImageTarget(new File(".\\images\\" + heroesLabel[i] + "-s.png"));
+			heroesIT[i] = new ImageTarget(new File("./images/" + heroesLabel[i] + ".png"));
+			heroesThumbIT[i] = new ImageTarget(new File("./images/" + heroesLabel[i] + "-s.png"));
 		}
 		
-		questImageTarget = new ImageTarget(new File(".\\images\\quest.png"));
-		checkedImageTarget = new ImageTarget(new File(".\\images\\lose-checkbox-checked.png"));
+		questImageTarget = new ImageTarget(new File("./images/quest.png"));
+		checkedImageTarget = new ImageTarget(new File("./images/lose-checkbox-checked.png"));
 		
 		inited = true;
 		
 		this.initGameLang();
 	}
 	
-	private void initGameLang(){		
-		String[] gameLs = {
-				"enUS",
-				"zhTW"
-		};
-		
+	private String sanitizeGameLang(String gLang){
 		boolean foundLang = false;
-		gameLanguages = gameLs;
 
-		for(int i = 0; i < gameLanguages.length; i++){
-			if(gameLang.toLowerCase().equals(gameLanguages[i].toLowerCase())){
+		for(int i = 0; i < gameLanguages.langs.length; i++){
+			if(gLang.toLowerCase().equals(gameLanguages.langs[i].code.toLowerCase())){
 				foundLang = true;
+				gLang = gameLanguages.langs[i].code; //make sure the cases are exactly the way it should (not an issue with filename case insensitive OS though).
 				break;
 			}
 		}
 		
 		if(!foundLang){
-			gameLang = gameLang == null || gameLang.equals("") ? gameLanguages[0].toLowerCase() : gameLang;
+			gLang = (gameLang == null || gLang.equals("")) ? gameLanguages.langs[0].code: gLang;
+		}
+
+		return gLang;
+	}
+	
+	private void initGameLang(){
+		gameLang = sanitizeGameLang(gameLang);
+		
+		readerSettings = (HearthReaderSetting) config.load("./configs/gameLangs/" + gameLang + ".xml");
+		
+		if(readerSettings == null){
+			readerSettings = new HearthReaderSetting();
+			config.save(readerSettings, "./configs/gameLangs/" + gameLang + ".xml");
 		}
 		
 		//language dependent
 		winsImageTarget = new ImageTarget[10];
-		scoresTextTarget = new TextTarget[10];
 		
 		for(int i = 0; i < 10; i++){
-			scoresTextTarget[i] = new TextTarget(i + "");
-		}
-		
-		for(int i = 0; i < 10; i++){
-			winsImageTarget[i] = new ImageTarget(new File(".\\images\\" + i + ".png"));
-			winsImageTarget[i].setMinScore(0.4);
-		}
-
-		if(gameLang.toLowerCase().equals("zhtw")){
-			float scaleFactor = 1.214f;
+			ImageTarget itarget; 
 			
-			for(int i = 0; i < 10; i++){
-				winsImageTarget[i] = new ImageTarget(HearthHelper.resizeImage(new File(".\\images\\" + i + ".png"), scaleFactor));
-				winsImageTarget[i].setMinScore(0.5);
+			if(readerSettings.winsNumberScaleFactor == 1){
+				itarget = new ImageTarget(new File("./images/" + i + ".png"));
+			}else{
+				itarget = new ImageTarget(HearthHelper.resizeImage(new File("./images/" + i + ".png"), readerSettings.winsNumberScaleFactor));
 			}
+			
+			winsImageTarget[i] = itarget;
+			winsImageTarget[i].setMinScore(readerSettings.winsNumberMatchQuality);
 		}
 		
-		lossesLabelImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\losses-label.png"));
-		winsLabelImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\wins-label.png"));
-		goFirstImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\go-first.png"));
-		goSecondImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\go-second.png"));
-		victoryImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\victory.png"));
-		defeatImageTarget = new ImageTarget(new File(".\\images\\" + gameLang + "\\defeat.png"));
+		lossesLabelImageTarget = new ImageTarget(new File("./images/" + gameLang + "/losses-label.png"));
+		winsLabelImageTarget = new ImageTarget(new File("./images/" + gameLang + "/wins-label.png"));
+		goFirstImageTarget = new ImageTarget(new File("./images/" + gameLang + "/go-first.png"));
+		goSecondImageTarget = new ImageTarget(new File("./images/" + gameLang + "/go-second.png"));
+		victoryImageTarget = new ImageTarget(new File("./images/" + gameLang + "/victory.png"));
+		defeatImageTarget = new ImageTarget(new File("./images/" + gameLang + "/defeat.png"));
 		
 		gameLangInited = true;
 	}
