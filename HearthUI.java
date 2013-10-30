@@ -295,7 +295,23 @@ public class HearthUI {
 		
 		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
 		lblCopyrightc.setText("Copyright \u00A9 2013 megablue");
-		new Label(composite_3, SWT.NONE);
+		
+		Label lblWebsite = new Label(composite_3, SWT.NONE);
+		lblWebsite.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URL("http://hearthtracker.blogspot.com").toURI());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		lblWebsite.setText("Website:  hearthtracker.blogspot.com");
 		
 		StyledText styledText = new StyledText(composite_3, SWT.READ_ONLY | SWT.WRAP);
 		styledText.setText("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!");
