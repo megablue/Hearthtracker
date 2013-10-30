@@ -120,7 +120,10 @@ public class HearthUI {
 		window = new HearthUI();
 		tracker = new Tracker();
 		hearth = new HearthReader(tracker, setting.gameLang, debugMode);
-		hearth.pause();
+		
+		if(!setting.scannerEnabled){
+			hearth.pause();
+		}
 	}
 	
     private static class MessageLoop
@@ -450,6 +453,12 @@ public class HearthUI {
 			public void widgetSelected(SelectionEvent arg0) {
 				setting.scannerEnabled = btnEnableScanner.getSelection();
 				savePreferences();
+				
+				if(setting.scannerEnabled){
+					hearth.resume();
+				} else {
+					hearth.pause();
+				}
 			}
 		});
 		

@@ -72,12 +72,12 @@ public class HearthReader {
 	
 	public void pause(){
 		paused = true;
-		//System.out.println("paused");
+		System.out.println("paused");
 	}
 	
 	public void resume(){
 		paused = false;
-		//System.out.println("resumed");
+		System.out.println("resumed");
 	}
 	
 	public void setGameLang(String lang){
