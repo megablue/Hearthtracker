@@ -554,26 +554,31 @@ public class HearthUI {
 		tableOverview.removeAll();
 		
 		for(int heroId = 0; heroId < heroesList.getTotal(); heroId++){
-			TableItem tableItem_1 = new TableItem(tableOverview, SWT.NONE);
-			float sixplus = 0, overall = 0;
-			
-			try {
-				sixplus = tracker.getWinRateByHeroSpecial(heroId);
-				overall = tracker.getWinRateByHero(heroId);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			tableItem_1.setText(0, heroesList.getHeroLabel(heroId));
-			if(sixplus > -1){
-				tableItem_1.setText(1, (sixplus*100) + "");
-			}
-			
-			if(overall > -1){
-				tableItem_1.setText(2, (overall*100) + "");
-			}
+			fillWinrate(heroId);
 		}
 		
+		fillWinrate(-1);
+	}
+	
+	private void fillWinrate(int heroId){
+		TableItem tableItem_1 = new TableItem(tableOverview, SWT.NONE);
+		float sixplus = 0, overall = 0;
+		
+		try {
+			sixplus = tracker.getWinRateByHeroSpecial(heroId);
+			overall = tracker.getWinRateByHero(heroId);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		tableItem_1.setText(0, heroesList.getHeroLabel(heroId));
+		if(sixplus > -1){
+			tableItem_1.setText(1, (sixplus*100) + "");
+		}
+		
+		if(overall > -1){
+			tableItem_1.setText(2, (overall*100) + "");
+		}
 	}
 }
