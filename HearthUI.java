@@ -195,7 +195,7 @@ public class HearthUI {
 			}
 		});
 		shlHearthtracker.setSize(615, 530);
-		shlHearthtracker.setText("HearthTracker - Automated Score Tracking for Hearthstone players!");
+		shlHearthtracker.setText("HearthTracker - Automated Stats Tracking for Hearthstone players!");
 		shlHearthtracker.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		TabFolder tabFolder = new TabFolder(shlHearthtracker, SWT.NONE);
