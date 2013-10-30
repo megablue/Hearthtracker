@@ -448,8 +448,8 @@ public class HearthReader {
 	}
 	
 	private synchronized void formatMatchStatus(){
-		String tmp = goFirst == 1 ? "goes first" : "goes second";
-		String tmp2 = victory == 1 ? ", 1 - 0 " : ", 0 - 1 ";
+		String whosFirst = goFirst == 1 ? "Goes first" : "Goes second";
+		String result = victory == 1 ? ", 1 - 0 " : ", 0 - 1 ";
 		String output = "Unknown";
 		
 		if(myHero == -1){
@@ -457,19 +457,18 @@ public class HearthReader {
 		}
 		
 		if(goFirst != -1){
-			output = heroesLabel[myHero] + " (goes first)";
+			output = whosFirst;
 		}
 		
 		if(goFirst != -1 && oppHero != -1){
-			output = heroesLabel[myHero] + " (" + tmp + ")" + " vs " + heroesLabel[oppHero];
+			output = whosFirst + ", vs " + heroesLabel[oppHero];
 		}
 		
 		if(goFirst != -1 && oppHero != -1 && victory != -1){
-			output = heroesLabel[myHero] + " (" + tmp + ")" + " vs " + heroesLabel[oppHero] + tmp2;
+			output = whosFirst + ", vs " + heroesLabel[oppHero] + result;
 		}
 		
 		lastMatchResult = output;
-		
 		tracker.saveLiveMatch(output);
 	}
 	
