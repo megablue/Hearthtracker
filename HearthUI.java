@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
@@ -523,7 +524,7 @@ public class HearthUI {
 			if(winrate < 0){
 				winrateStr = "N|A";
 			} else {
-				winrateStr = winrate + "";
+				winrateStr = new DecimalFormat("#.##").format(winrate);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -536,17 +537,7 @@ public class HearthUI {
 		lblWinrate.setText(winrateStr);
 		lblArenaScoreStatus.setText(score);
 		lblMyClassStatus.setText(hero);
-		lblLatestGameStatus.setText(latest + "");
-		
-		lblWinrate.redraw();
-		lblWinrate.update();
-		lblArenaScoreStatus.redraw();
-		lblArenaScoreStatus.update();
-		lblMyClassStatus.redraw();
-		lblMyClassStatus.update();
-		lblLatestGameStatus.redraw();
-		lblLatestGameStatus.update();
-		
+		lblLatestGameStatus.setText(latest + "");	
 		composite_2.layout();
 	}
 	
@@ -557,6 +548,7 @@ public class HearthUI {
 			fillWinrate(heroId);
 		}
 		
+		//fill the unknown heroes as well
 		fillWinrate(-1);
 	}
 	
@@ -573,12 +565,15 @@ public class HearthUI {
 		}
 		
 		tableItem_1.setText(0, heroesList.getHeroLabel(heroId));
+		
 		if(sixplus > -1){
-			tableItem_1.setText(1, (sixplus*100) + "");
+			tableItem_1.setText(1,  new DecimalFormat("#.##").format(sixplus*100));
+			
+			
 		}
 		
 		if(overall > -1){
-			tableItem_1.setText(2, (overall*100) + "");
+			tableItem_1.setText(2,  new DecimalFormat("#.##").format(overall*100));
 		}
 	}
 }
