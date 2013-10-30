@@ -514,13 +514,18 @@ public class HearthUI {
 	
 	private void poppulateGameLangs(){
 		cmbGameLang.removeAll();
+		int selected = 0;
 		
 		for(int i = 0; i < gameLanguages.langs.length; i++){
 			cmbGameLang.add(gameLanguages.langs[i].label);
 			cmbGameLang.setData(gameLanguages.langs[i].label, gameLanguages.langs[i].code);
+			
+			if(setting.gameLang.toLowerCase().equals(gameLanguages.langs[i].code.toLowerCase())){
+				selected = i;
+			}
 		}
 		
-		cmbGameLang.select(0);
+		cmbGameLang.select(selected);
 		
 		cmbGameLang.addSelectionListener(new SelectionAdapter() {
 			
