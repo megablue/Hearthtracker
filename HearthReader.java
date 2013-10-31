@@ -35,27 +35,30 @@ public class HearthReader {
 
 	Tracker tracker = null;
 
-	ImageTarget questImageTarget;
-	ImageTarget checkedImageTarget;
-	ImageTarget lossesLabelImageTarget;
-	ImageTarget winsLabelImageTarget;
-	ImageTarget goFirstImageTarget;
-	ImageTarget goSecondImageTarget;
-	ImageTarget victoryImageTarget;
-	ImageTarget defeatImageTarget;
+	Target questImageTarget;
+	Target checkedImageTarget;
+	Target lossesLabelImageTarget;
+	Target winsLabelImageTarget;
+	Target goFirstImageTarget;
+	Target goSecondImageTarget;
+	Target victoryImageTarget;
+	Target defeatImageTarget;
 
-	ImageTarget[] winsImageTarget;
+	Target[] winsImageTarget;
 	
 	HearthGameLangList gameLanguages;
 	String gameLang;
 		
-	ImageTarget[] heroesIT;
-	ImageTarget[] heroesThumbIT;
+	Target[] heroesIT;
+	Target[] heroesThumbIT;
 	
 	HearthReaderSetting readerSettings = null;
 	
 	private HearthConfigurator config = new HearthConfigurator();
 	private HearthHeroesList heroesList;
+	
+	int gameResX = 1024, gameResY = 768;
+	//int gameResX = 1920, gameResY = 1080;
 	
 	public HearthReader(Tracker t){
 		debugMode = false;
@@ -82,7 +85,7 @@ public class HearthReader {
 	
 	public void setGameLang(String lang){
 		gameLang = lang;
-		this.initGameLang();
+		this.initGameScanner();
 	}
 	
 	private void init(){
@@ -104,21 +107,9 @@ public class HearthReader {
 			config.save(gameLanguages, "./configs/gameLangs.xml");
 		}
 		
-		heroesIT = new ImageTarget[heroesList.getTotal()];
-		heroesThumbIT = new ImageTarget[heroesList.getTotal()];
-		
-		for(int i = 0; i < heroesList.getTotal(); i++)
-		{
-			heroesIT[i] = new ImageTarget(new File("./images/" + heroesList.getHeroName(i) + ".png"));
-			heroesThumbIT[i] = new ImageTarget(new File("./images/" + heroesList.getHeroName(i) + "-s.png"));
-		}
-		
-		questImageTarget = new ImageTarget(new File("./images/quest.png"));
-		checkedImageTarget = new ImageTarget(new File("./images/lose-checkbox-checked.png"));
-		
 		inited = true;
 		
-		this.initGameLang();
+		this.initGameScanner();
 	}
 	
 	private String sanitizeGameLang(String gLang){
@@ -139,7 +130,40 @@ public class HearthReader {
 		return gLang;
 	}
 	
-	private void initGameLang(){
+	private float getScaleFactor(){
+		//do not scale if the height is 1080
+		if(gameResY == 1080){
+			return 1;
+		}
+		
+		return (gameResY/1080f);
+	}
+	
+	private Target prepareImageTarget(HearthReaderSetting.Scanbox sb){
+		Target it = null;
+		File file = null;
+		float scaling = sb.scale * this.getScaleFactor();
+		
+		if(HearthHelper.fileExists("./images/" + gameLang + "/" + sb.imgfile)){
+			file = new File("./images/" + gameLang + "/" + sb.imgfile);
+		} else {
+			file = new File("./images/" + sb.imgfile);
+		}
+		
+		if(scaling != 1){
+			it = new ImageTarget(HearthHelper.resizeImage(file, scaling));
+		} else {
+			it = new ImageTarget(file);
+		}
+		
+		if(sb.matchQuality >= 0 && it != null){
+			it.setMinScore(sb.matchQuality);
+		}
+		
+		return it;
+	}
+	
+	private void initGameScanner(){
 		gameLang = sanitizeGameLang(gameLang);
 		
 		readerSettings = (HearthReaderSetting) config.load("./configs/gameLangs/" + gameLang + ".xml");
@@ -149,28 +173,34 @@ public class HearthReader {
 			config.save(readerSettings, "./configs/gameLangs/" + gameLang + ".xml");
 		}
 		
+		heroesIT = new ImageTarget[heroesList.getTotal()];
+		heroesThumbIT = new ImageTarget[heroesList.getTotal()];
+		
+		for(int i = 0; i < heroesList.getTotal(); i++)
+		{
+			heroesIT[i] = this.prepareImageTarget(readerSettings.arenaHeroScanboxes[i]);
+			heroesThumbIT[i] = this.prepareImageTarget(readerSettings.opponentHeroScanboxes[i]);
+		}
+		
+		questImageTarget 	= this.prepareImageTarget(readerSettings.menuScanbox);
+		checkedImageTarget 	= this.prepareImageTarget(readerSettings.lossesScanboxes[0]);
+		this.initGameLang();
+	}
+		
+	private void initGameLang(){		
 		//language dependent
 		winsImageTarget = new ImageTarget[10];
 		
 		for(int i = 0; i < 10; i++){
-			ImageTarget itarget; 
-			
-			if(readerSettings.winsNumberScaleFactor == 1){
-				itarget = new ImageTarget(new File("./images/" + i + ".png"));
-			}else{
-				itarget = new ImageTarget(HearthHelper.resizeImage(new File("./images/" + i + ".png"), readerSettings.winsNumberScaleFactor));
-			}
-			
-			winsImageTarget[i] = itarget;
-			winsImageTarget[i].setMinScore(readerSettings.winsNumberMatchQuality);
+			winsImageTarget[i] =  this.prepareImageTarget(readerSettings.winsScanboxes[i]);
 		}
 		
-		lossesLabelImageTarget = new ImageTarget(new File("./images/" + gameLang + "/losses-label.png"));
-		winsLabelImageTarget = new ImageTarget(new File("./images/" + gameLang + "/wins-label.png"));
-		goFirstImageTarget = new ImageTarget(new File("./images/" + gameLang + "/go-first.png"));
-		goSecondImageTarget = new ImageTarget(new File("./images/" + gameLang + "/go-second.png"));
-		victoryImageTarget = new ImageTarget(new File("./images/" + gameLang + "/victory.png"));
-		defeatImageTarget = new ImageTarget(new File("./images/" + gameLang + "/defeat.png"));
+		lossesLabelImageTarget	= this.prepareImageTarget(readerSettings.lossesLabelScanbox);
+		winsLabelImageTarget 	= this.prepareImageTarget(readerSettings.winsLabelScanbox);
+		goFirstImageTarget 		= this.prepareImageTarget(readerSettings.goFirstScanbox);
+		goSecondImageTarget 	= this.prepareImageTarget(readerSettings.goSecondScanbox);
+		victoryImageTarget 		= this.prepareImageTarget(readerSettings.victoryScanbox);
+		defeatImageTarget 		= this.prepareImageTarget(readerSettings.defeatScanbox);
 		
 		gameLangInited = true;
 	}
@@ -196,14 +226,18 @@ public class HearthReader {
 		
 		return (foundRegion != null);
 	}
-	
-	@SuppressWarnings("unused")
-	private boolean findImage(ScreenRegion region, ImageTarget target){
-		return this.findImage(region, target, "");
-	}
-	
-	private boolean findImage(ScreenRegion region, ImageTarget target, String label){
+		
+	private boolean findImage(HearthReaderSetting.Scanbox sb, Target target, String label){
 		Canvas canvas = new DesktopCanvas();
+		int x = 0, y = 0, w = 0, h = 0;
+		float scaling = this.getScaleFactor();
+		
+		x = (int) (scaling * sb.xOffset) + this.getBoardX();
+		y = (int) (scaling * sb.yOffset) + this.getBoardY();
+		w = (int) (sb.width * scaling);
+		h = (int) (sb.height * scaling);
+		
+		ScreenRegion region = new DesktopScreenRegion(x, y, w, h);
 		ScreenRegion foundRegion;
 
 		if(debugMode)
@@ -223,17 +257,14 @@ public class HearthReader {
 		return (foundRegion != null);
 	}
 
-	private synchronized void scanArenaScoreScreen() {
-		ScreenRegion winsLabelRegion = new DesktopScreenRegion(720,460,140,80);
-		ScreenRegion lossesLabelRegion = new DesktopScreenRegion(520,540,140,80);
-		
-		if(this.findImage(winsLabelRegion, winsLabelImageTarget, "Wins Label")){
+	private synchronized void scanArenaScoreScreen() {	
+		if(this.findImage(readerSettings.winsLabelScanbox, winsLabelImageTarget, "Wins Label")){
 			arenaMode = 1;
 			oppHero = -1;
 			return;
 		}
 		
-		if(this.findImage(lossesLabelRegion, lossesLabelImageTarget, "Losses Label")){
+		if(this.findImage(readerSettings.lossesLabelScanbox, lossesLabelImageTarget, "Losses Label")){
 			arenaMode = 1;
 			oppHero = -1;
 			return;
@@ -255,16 +286,12 @@ public class HearthReader {
 	}
 	
 	private synchronized void scanArenaScore() {
-		ScreenRegion winsSRegion = new DesktopScreenRegion(740,360,110,100);
-		ScreenRegion lossesSRegion3 = new DesktopScreenRegion(840,530,80,80);
-		ScreenRegion lossesSRegion2 = new DesktopScreenRegion(750,530,80,80);
-		ScreenRegion lossesSRegion1 = new DesktopScreenRegion(660,530,80,80);
 		boolean foundWins = false;
 		boolean foundLosses = false;
 		
 		for(int i = (winsImageTarget.length - 1); i >= 0; i--)
 		{
-			foundWins = this.findImage(winsSRegion, winsImageTarget[i], "Wins (" + i + ")");
+			foundWins = this.findImage(readerSettings.winsScanboxes[i], winsImageTarget[i], "Wins (" + i + ")");
 			
 			if(foundWins)
 			{
@@ -274,22 +301,13 @@ public class HearthReader {
 			}
 		}
 		
-		if(this.findImage(lossesSRegion3, checkedImageTarget, "Losses (3)")){
-			System.out.println("Found 3 losses");
-			foundLosses = true;
-			losses = 3;
-		}
-		
-		if(!foundLosses && this.findImage(lossesSRegion2, checkedImageTarget, "Losses (2)")){
-			System.out.println("Found 2 losses");
-			foundLosses = true;
-			losses = 2;
-		}
-		
-		if(!foundLosses && this.findImage(lossesSRegion1, checkedImageTarget, "Losses (1)")){
-			System.out.println("Found 1 losses");
-			foundLosses = true;
-			losses = 1;
+		for(int i = 2; i <= 0; i ++){
+			if(this.findImage(readerSettings.lossesScanboxes[i], checkedImageTarget, "Losses " + (i+1))){
+				System.out.println("Found " + (i+1) + " losses");
+				foundLosses = true;
+				losses = i+1;
+				break;
+			}
 		}
 		
 		if(foundWins){
@@ -313,7 +331,6 @@ public class HearthReader {
 				System.out.println("Done saving arena result...");
 				
 				this.formatArenaStatus();
-				
 				previousWins = wins;
 				previousLosses = losses;
 				this.resetFlags();
@@ -351,16 +368,14 @@ public class HearthReader {
 		goFirst = -1;
 	}
 	
-	private synchronized void scanMyHero() {
-		ScreenRegion heroSRegion = new DesktopScreenRegion(340,730,220,120);
-		
+	private synchronized void scanArenaHero() {
 		if(this.isInGame() || !this.isArenaMode()){
 			return;
 		}
 		
 		for(int i = 0; i < heroesIT.length; i++){
-			if(this.findImage(heroSRegion, heroesIT[i], "My Hero (" + heroesList.getHeroLabel(i) + ") ")){
-				System.out.println("Found hero: " + heroesList.getHeroLabel(i));
+			if(this.findImage(readerSettings.arenaHeroScanboxes[i], heroesIT[i], "Arena Hero (" + heroesList.getHeroLabel(i) + ") ")){
+				System.out.println("Found arena hero: (" + i + ") " + heroesList.getHeroLabel(i));
 				myHero = i;
 				break;
 			}
@@ -370,15 +385,13 @@ public class HearthReader {
 	}
 	
 	private synchronized void scanOppHero() {
-		ScreenRegion heroSRegion = new DesktopScreenRegion(850,70,220,200);
-		
 		if(!this.isInGame() || this.foundOppHero()){
 			return;
 		}
 		
 		for(int i = 0; i < heroesThumbIT.length; i++){
-			if(this.findImage(heroSRegion, heroesThumbIT[i], "Opp Hero (" + heroesList.getHeroLabel(i) + ") ")){
-				System.out.println("Found Opp hero: " + heroesList.getHeroLabel(i));
+			if(this.findImage(readerSettings.opponentHeroScanboxes[i], heroesThumbIT[i], "Opp Hero (" + heroesList.getHeroLabel(i) + ") ")){
+				System.out.println("Found opp hero: (" + i + ") " + heroesList.getHeroLabel(i));
 				oppHero = i;
 				this.formatMatchStatus();
 				break;
@@ -389,20 +402,19 @@ public class HearthReader {
 	}
 	
 	private synchronized void scanVictory(){
-		ScreenRegion victoryRegion = new DesktopScreenRegion(750,550,400,150);
 		boolean found = false;
 		
 		if(!this.isInGame()){
 			return;
 		}
 		
-		if(this.findImage(victoryRegion, victoryImageTarget, "Victory")){
+		if(this.findImage(readerSettings.victoryScanbox, victoryImageTarget, "Victory")){
 			System.out.println("Found Victory");
 			victory = 1;
 			found = true;
 		}
 		
-		if(!found && this.findImage(victoryRegion, defeatImageTarget, "Defeat")){
+		if(!found && this.findImage(readerSettings.defeatScanbox, defeatImageTarget, "Defeat")){
 			System.out.println("Found Defeat");
 			victory = 0;
 			found = true;
@@ -483,13 +495,11 @@ public class HearthReader {
 	}
 	
 	private synchronized void scanCoinScreen() {
-		ScreenRegion coinRegion = new DesktopScreenRegion(1150,550,400,150);
-		
 		if(this.isInGame()){
 			return;
 		}
 		
-		if(this.findImage(coinRegion, goFirstImageTarget, "Go First")){
+		if(this.findImage(readerSettings.goFirstScanbox, goFirstImageTarget, "Go First")){
 			System.out.println("Found go first");
 			goFirst = 1;
 			inGameMode = 1;
@@ -498,7 +508,7 @@ public class HearthReader {
 			return;
 		}
 		
-		if(this.findImage(coinRegion, goSecondImageTarget, "Go Second")){
+		if(this.findImage(readerSettings.goSecondScanbox, goSecondImageTarget, "Go Second")){
 			System.out.println("Found go second");
 			goFirst = 0;
 			inGameMode = 1;
@@ -511,18 +521,51 @@ public class HearthReader {
 	}
 	
 	private synchronized void scanMenuScreen(){
-		ScreenRegion coinRegion = new DesktopScreenRegion(430, 850, 200, 200);
-		
 		if(this.isInGame()){
 			return;
 		}
 		
-		if(this.findImage(coinRegion, questImageTarget, "Quest icon")){
+		if(this.findImage(readerSettings.menuScanbox, questImageTarget, "Quest icon")){
 			System.out.println("Found quest icon");
 			arenaMode = 0;
 			inGameMode = 0;
 			return;
 		}
+	}
+	
+	public int getBoardWidth(){
+		return (gameResY/3) * 4;
+	}
+	
+	public int getBoardHeight(){
+		return gameResY;
+	}
+	
+	public int getGameWindowX(){
+		return 0;
+	}
+	
+	public int getGameWindowY(){
+		return 0;
+	}
+	
+	public int getBoardX(){
+		int xOffset = this.getGameWindowX();
+		int relativeX = xOffset + (gameResX - this.getBoardWidth()) / 2;
+		return relativeX;
+	}
+	
+	public int getBoardY(){
+		int yOffset = this.getGameWindowY();
+		return yOffset;
+	}
+	
+	public void pingBox(int x, int y, int w, int h){
+		Canvas canvas = new DesktopCanvas();
+		ScreenRegion region = new DesktopScreenRegion(x, y, w, h);
+		canvas.addBox(region);
+		canvas.addLabel(region, x + ", " + y + ", w: " + w + ", h: " + h).display(5);
+		System.out.println(x + ", " + y + ", w: " + w + ", h: " + h);
 	}
 	
 	public boolean foundOppHero(){
@@ -537,19 +580,19 @@ public class HearthReader {
 		return inGameMode == 1 ? true : false;
 	}
 	
-	public void process(){	
+	public void process(){
 		if(paused){
 			return;
 		}
 
 		if(!this.isInGame()){
-			this.scanArenaScoreScreen();
 			this.scanMenuScreen();
+			this.scanArenaScoreScreen();
 		}
 		
 		if(this.isArenaMode() && !this.isInGame()){
 			this.scanArenaScore();
-			this.scanMyHero();
+			this.scanArenaHero();
 		}
 		
 		if(this.isArenaMode() && !this.isInGame()){

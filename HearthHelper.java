@@ -142,4 +142,15 @@ public class HearthHelper {
 		}
 	}
 	
+	public static boolean fileExists(String file)
+	{
+		File theFile = new File(file);
+		
+		if (theFile.exists()) {
+			return true;
+		}
+		
+		return false;
+	}
+	
 }

@@ -132,7 +132,7 @@ public class HearthUI {
     	while(true){
         	try {
         		hearth.process();
-    			Thread.sleep(500);
+    			Thread.sleep(setting.scanInterval);
     		} catch (InterruptedException e) {
     			// TODO Auto-generated catch block
     			//e.printStackTrace();
@@ -185,13 +185,8 @@ public class HearthUI {
 		shlHearthtracker.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
-				hearth.pause();
 				window.poppulateOverviewTable();
 				window.poppulateCurrentStats();
-			}
-			@Override
-			public void focusLost(FocusEvent arg0) {
-				hearth.resume();
 			}
 		});
 		shlHearthtracker.setSize(615, 530);
