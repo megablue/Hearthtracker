@@ -9,7 +9,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import javax.imageio.ImageIO;
 
 public class HearthHelper {
@@ -62,7 +61,7 @@ public class HearthHelper {
 	
 	public static String getArchFilename(String prefix) 
 	{ 
-	   return prefix + "_" + getOSName() + "_" + getArchName() + ".jar"; 
+		return prefix + "-" + getOSName() + "-" + getArchName() + ".jar";
 	} 
 
 	public static String getOSName() 
@@ -111,19 +110,19 @@ public class HearthHelper {
 	}
 
 	public static void addJarToClasspath(File jarFile) 
-	{ 
-	   try 
-	   { 
-	       URL url = jarFile.toURI().toURL(); 
-	       URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader(); 
-	       Class<?> urlClass = URLClassLoader.class; 
-	       Method method = urlClass.getDeclaredMethod("addURL", new Class<?>[] { URL.class }); 
-	       method.setAccessible(true);         
-	       method.invoke(urlClassLoader, new Object[] { url });             
-	   } 
-	   catch (Throwable t) 
-	   { 
-	       t.printStackTrace(); 
-	   }
+	{
+		try 
+		{ 
+			URL url = jarFile.toURI().toURL(); 
+			URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader(); 
+			Class<?> urlClass = URLClassLoader.class; 
+			Method method = urlClass.getDeclaredMethod("addURL", new Class<?>[] { URL.class }); 
+			method.setAccessible(true);         
+			method.invoke(urlClassLoader, new Object[] { url });  
+		} 
+		catch (Throwable t) 
+		{ 
+			t.printStackTrace(); 
+		}
 	}
 }

@@ -29,3 +29,4 @@ configs/settings.xml
 /HearthHeroesList$Hero.class
 images/backup/
 /HearthUI$7.class
+*.class
