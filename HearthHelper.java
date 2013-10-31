@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
 import javax.imageio.ImageIO;
 
 public class HearthHelper {
@@ -125,4 +126,20 @@ public class HearthHelper {
 			t.printStackTrace(); 
 		}
 	}
+	
+	public static void createFolder(String folder)
+	{
+		File theDir = new File(folder);
+
+		// if the directory does not exist, create it
+		if (!theDir.exists()) {
+			System.out.println("creating directory: " + folder);
+			boolean result = theDir.mkdir();  
+		
+			if(result) {    
+				System.out.println("DIR created");  
+			}
+		}
+	}
+	
 }

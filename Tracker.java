@@ -361,9 +361,11 @@ public class Tracker {
 			return;
 		}
 		
+		HearthHelper.createFolder("./output");
+		
 		try {
 			for(int i = 0; i < lines.length; i++){
-				PrintWriter lineWriter = new PrintWriter(".\\output\\line" + (i+1) + ".txt", "UTF-8");
+				PrintWriter lineWriter = new PrintWriter("./output/line" + (i+1) + ".txt", "UTF-8");
 				lineWriter.println(lines[i]);
 				lineWriter.close();
 			}
