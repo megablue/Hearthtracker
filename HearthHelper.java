@@ -153,4 +153,28 @@ public class HearthHelper {
 		return false;
 	}
 	
+	
+	public static int[] getHearthstonePosition(){
+		int[] pos = {0,0};
+
+		if(getOSName().equals("win")){
+			return pos;
+		}
+		
+		try {			
+			int[] rect = HearthWin32Helper.getRect("Hearthstone", "UnityWndClass");
+			
+			pos[0] = rect[0];
+			pos[1] = rect[1];
+			
+			System.out.println(rect[0] + ", " + rect[1] + ", " + rect[2] + ", " + rect[3]);
+			
+		} catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return pos;
+	}
+	
 }

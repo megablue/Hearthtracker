@@ -7,5 +7,7 @@
 	<classpathentry kind="lib" path="lib/swing2swt.jar"/>
 	<classpathentry kind="lib" path="lib/xstream-1.4.5.jar"/>
 	<classpathentry kind="lib" path="lib/swt-win-32.jar"/>
+	<classpathentry kind="lib" path="lib/jna-4.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/jna-platform-4.0.0.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

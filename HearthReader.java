@@ -249,7 +249,7 @@ public class HearthReader {
 		Canvas canvas = new DesktopCanvas();
 		int x = 0, y = 0, w = 0, h = 0;
 		float scaling = this.getScaleFactor();
-		
+
 		x = (int) (scaling * sb.xOffset) + this.getBoardX();
 		y = (int) (scaling * sb.yOffset) + this.getBoardY();
 		w = (int) (sb.width * scaling);
@@ -558,23 +558,17 @@ public class HearthReader {
 	public int getBoardHeight(){
 		return gameResY;
 	}
-	
-	public int getGameWindowX(){
-		return 0;
-	}
-	
-	public int getGameWindowY(){
-		return 0;
-	}
-	
+		
 	public int getBoardX(){
-		int xOffset = this.getGameWindowX();
+		int[] winPos = HearthHelper.getHearthstonePosition();
+		int xOffset = winPos[0];
 		int relativeX = xOffset + (gameResX - this.getBoardWidth()) / 2;
 		return relativeX;
 	}
 	
 	public int getBoardY(){
-		int yOffset = this.getGameWindowY();
+		int[] winPos = HearthHelper.getHearthstonePosition();
+		int yOffset = winPos[1];
 		return yOffset;
 	}
 	
