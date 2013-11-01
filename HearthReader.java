@@ -57,8 +57,7 @@ public class HearthReader {
 	private HearthConfigurator config = new HearthConfigurator();
 	private HearthHeroesList heroesList;
 	
-	int gameResX = 1024, gameResY = 768;
-	//int gameResX = 1920, gameResY = 1080;
+	int gameResX = 1920, gameResY = 1080;
 	
 	public HearthReader(Tracker t){
 		debugMode = false;
@@ -66,9 +65,11 @@ public class HearthReader {
 		init();
 	}
 	
-	public HearthReader(Tracker t, String lang, boolean mode){
+	public HearthReader(Tracker t, String lang, int resX, int resY, boolean mode){
 		debugMode = mode;
 		tracker = t;
+		gameResX = resX;
+		gameResY = resY;
 		gameLang = lang.toLowerCase();
 		init();
 	}
@@ -85,6 +86,12 @@ public class HearthReader {
 	
 	public void setGameLang(String lang){
 		gameLang = lang;
+		this.initGameScanner();
+	}
+	
+	public void setGameRes(int w, int h){
+		gameResX = w;
+		gameResY = h;
 		this.initGameScanner();
 	}
 	

@@ -10,8 +10,6 @@ public class HearthConfigurator {
 
 	public HearthConfigurator() {
 		xstream = new XStream(new DomDriver());
-		xstream.alias("hearthgame", HearthReaderSetting.class);
-		xstream.alias("gamelanglist", HearthReaderSetting.class);
 	}
 	
 	public <t> Object load(String path){

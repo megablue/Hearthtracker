@@ -1,5 +1,8 @@
-<gamelanglist>
+<HearthReaderSetting>
   <lang>enUS</lang>
+  <baseResolutionHeight>1080</baseResolutionHeight>
+  <overwriteAutoScale>false</overwriteAutoScale>
+  <autoScaleFactor>1.0</autoScaleFactor>
   <menuScanbox>
     <xOffset>190</xOffset>
     <yOffset>850</yOffset>
@@ -388,4 +391,4 @@
       <outer-class reference="../../.."/>
     </HearthReaderSetting_-Scanbox>
   </opponentHeroScanboxes>
-</gamelanglist>
+</HearthReaderSetting>

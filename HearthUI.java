@@ -69,6 +69,7 @@ public class HearthUI {
 	private CCombo cmbGameLang;
 	private Button btnEnableScanner;
 	private Button[] btnScanSpeed = new Button[3];
+	private CCombo cmbGameRes;
 	
 	private Display display;
 	private static HearthUI window;
@@ -78,9 +79,9 @@ public class HearthUI {
 	private static Tracker tracker;
 	private static HearthConfigurator config = new HearthConfigurator();
 	private static HearthGameLangList gameLanguages;
+	private static HearthResolutionsList gameResolutions;
 	private static HearthSetting setting;
 	private static HearthHeroesList heroesList;
-	
 	
 	Thread hearththread;
 	
@@ -100,6 +101,7 @@ public class HearthUI {
 	public static void init(){
 		heroesList = (HearthHeroesList) config.load("./configs/heroes.xml");
 		gameLanguages = (HearthGameLangList) config.load("./configs/gameLangs.xml");
+		gameResolutions = (HearthResolutionsList) config.load("./configs/gameResolutions.xml");
 		setting = (HearthSetting) config.load("./configs/settings.xml");
 		
 		if(heroesList == null){
@@ -112,6 +114,11 @@ public class HearthUI {
 			config.save(gameLanguages, "./configs/gameLangs.xml");
 		}
 		
+		if(gameResolutions == null){
+			gameResolutions = new HearthResolutionsList();
+			config.save(gameResolutions, "./configs/gameResolutions.xml");
+		}
+		
 		if(setting == null){
 			setting = new HearthSetting();
 			config.save(setting, "./configs/settings.xml");
@@ -119,7 +126,7 @@ public class HearthUI {
 		
 		window = new HearthUI();
 		tracker = new Tracker();
-		hearth = new HearthReader(tracker, setting.gameLang, debugMode);
+		hearth = new HearthReader(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, debugMode);
 		
 		if(!setting.scannerEnabled){
 			hearth.pause();
@@ -441,20 +448,58 @@ public class HearthUI {
 		new Label(grpGeneral, SWT.NONE);
 		new Label(grpGeneral, SWT.NONE);
 		
-		CCombo cmbGameRes = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
+		cmbGameRes = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
 		cmbGameRes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		cmbGameRes.setEditable(false);
-		cmbGameRes.setItems(new String[] {"1920x1080"});
-		cmbGameRes.setVisibleItemCount(1);
-		cmbGameRes.setText("1920x1080");
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
 		poppulateScannerOptions();
 		poppulateGameLangs();
+		poppulateResolutions();
 	}
 	
 	private void savePreferences(){
 		config.save(setting, "./configs/settings.xml");
+	}
+	
+	private void poppulateResolutions(){
+		cmbGameRes.setVisibleItemCount(gameResolutions.resolutions.length);
+		int selected = -1;
+		
+		for(int i = 0; i < gameResolutions.resolutions.length; i++)
+		{
+			String res = gameResolutions.resolutions[i].width + "x" + gameResolutions.resolutions[i].height;
+			cmbGameRes.add(res);
+			cmbGameRes.setData(res, gameResolutions.resolutions[i]);
+			
+			if(setting.gameWidth == gameResolutions.resolutions[i].width 
+					&& setting.gameHeight == gameResolutions.resolutions[i].height)
+			{
+				selected = i;
+			}
+		}
+		
+		if(selected > -1)
+		{
+			cmbGameRes.select(selected);
+		}
+		
+		cmbGameRes.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int selected = cmbGameRes.getSelectionIndex();
+				HearthResolutionsList.Resolution res = (HearthResolutionsList.Resolution) cmbGameRes.getData(cmbGameRes.getItem(selected));
+				System.out.println("preferences resolution selected: " + res.width + "x" + res.height);
+				
+				setting.gameWidth = res.width;
+				setting.gameHeight = res.height;
+				
+				savePreferences();
+				
+				hearth.setGameRes(res.width, res.height);
+			}
+		});
+		
 	}
 	
 	private void poppulateScannerOptions(){

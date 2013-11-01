@@ -1,0 +1,69 @@
+<HearthResolutionsList>
+  <resolutions>
+    <HearthResolutionsList_-Resolution>
+      <width>1024</width>
+      <height>768</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1152</width>
+      <height>864</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1280</width>
+      <height>800</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1280</width>
+      <height>960</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1360</width>
+      <height>768</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1360</width>
+      <height>1024</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1366</width>
+      <height>768</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1400</width>
+      <height>1050</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1440</width>
+      <height>900</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1600</width>
+      <height>900</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1600</width>
+      <height>1200</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1680</width>
+      <height>1050</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1920</width>
+      <height>1080</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
+  </resolutions>
+</HearthResolutionsList>

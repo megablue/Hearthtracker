@@ -1,6 +1,10 @@
 
 public class HearthReaderSetting {
 	public String lang = "enUS";
+	public int baseResolutionHeight		= 1080;
+	public boolean overwriteAutoScale	= false;
+	public float autoScaleFactor		= 1f;
+	
 	public Scanbox menuScanbox 			= new Scanbox("quest.png", 			190, 850, 200, 200);
 	
 	//Arena related scan boxes

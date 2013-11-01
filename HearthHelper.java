@@ -23,7 +23,7 @@ public class HearthHelper {
 	}
 	
 	static String readFile(String path)  throws IOException {
-		Charset encoding = Charset.forName("UTF8");
+		Charset encoding = Charset.forName("UTF-8");
 		byte[] encoded = Files.readAllBytes(Paths.get(path));
 		return encoding.decode(ByteBuffer.wrap(encoded)).toString();
 	}
