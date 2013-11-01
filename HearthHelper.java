@@ -157,7 +157,7 @@ public class HearthHelper {
 	public static int[] getHearthstonePosition(){
 		int[] pos = {0,0};
 
-		if(getOSName().equals("win")){
+		if(!getOSName().equals("win")){
 			return pos;
 		}
 		
@@ -166,12 +166,9 @@ public class HearthHelper {
 			
 			pos[0] = rect[0];
 			pos[1] = rect[1];
-			
-			System.out.println(rect[0] + ", " + rect[1] + ", " + rect[2] + ", " + rect[3]);
-			
 		} catch (Throwable e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
 		return pos;
