@@ -100,18 +100,18 @@ public class HearthReader {
 			return;
 		}
 		
-		heroesList = (HearthHeroesList) config.load("./configs/heroes.xml");
+		heroesList = (HearthHeroesList) config.load("." + File.separator + "configs" + File.separator + "heroes.xml");
 		
 		if(heroesList == null){
 			heroesList = new HearthHeroesList();
-			config.save(heroesList, "./configs/heroes.xml");
+			config.save(heroesList, "." + File.separator + "configs" + File.separator + "heroes.xml");
 		}
 		
-		gameLanguages = (HearthGameLangList) config.load("./configs/gameLangs.xml");
+		gameLanguages = (HearthGameLangList) config.load("." + File.separator + "configs" + File.separator + "gameLangs.xml");
 		
 		if(gameLanguages == null){
 			gameLanguages = new HearthGameLangList();
-			config.save(gameLanguages, "./configs/gameLangs.xml");
+			config.save(gameLanguages, "." + File.separator + "configs" + File.separator + "gameLangs.xml");
 		}
 		
 		inited = true;
@@ -151,10 +151,10 @@ public class HearthReader {
 		File file = null;
 		float scaling = sb.scale * this.getScaleFactor();
 		
-		if(HearthHelper.fileExists("./images/" + gameLang + "/" + sb.imgfile)){
-			file = new File("./images/" + gameLang + "/" + sb.imgfile);
+		if(HearthHelper.fileExists("." + File.separator + "images" + File.separator + gameLang + File.separator + sb.imgfile)){
+			file = new File("." + File.separator + "images" + File.separator + gameLang + File.separator + sb.imgfile);
 		} else {
-			file = new File("./images/" + sb.imgfile);
+			file = new File("." + File.separator + "images" + File.separator + sb.imgfile);
 		}
 		
 		if(scaling != 1){
@@ -172,12 +172,23 @@ public class HearthReader {
 	
 	private void initGameScanner(){
 		gameLang = sanitizeGameLang(gameLang);
+		String pahtGameSettingByResolution = "." + File.separator + "configs" 
+											+ File.separator + "gameLangs" 
+											+ File.separator + gameLang 
+											+ File.separator + gameResX + "x" + gameResY
+											+ ".xml";
 		
-		readerSettings = (HearthReaderSetting) config.load("./configs/gameLangs/" + gameLang + ".xml");
+		String pathGameSetting = "." + File.separator + "configs" + File.separator + "gameLangs" + File.separator + gameLang + ".xml";
+		
+		readerSettings = (HearthReaderSetting) config.load(pahtGameSettingByResolution);
+		
+		if(readerSettings == null){
+			readerSettings = (HearthReaderSetting) config.load(pathGameSetting);
+		}
 		
 		if(readerSettings == null){
 			readerSettings = new HearthReaderSetting();
-			config.save(readerSettings, "./configs/gameLangs/" + gameLang + ".xml");
+			config.save(readerSettings, pathGameSetting);
 		}
 		
 		heroesIT = new ImageTarget[heroesList.getTotal()];

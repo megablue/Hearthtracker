@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -99,29 +100,29 @@ public class HearthUI {
 	}
 	
 	public static void init(){
-		heroesList = (HearthHeroesList) config.load("./configs/heroes.xml");
-		gameLanguages = (HearthGameLangList) config.load("./configs/gameLangs.xml");
-		gameResolutions = (HearthResolutionsList) config.load("./configs/gameResolutions.xml");
-		setting = (HearthSetting) config.load("./configs/settings.xml");
+		heroesList = (HearthHeroesList) config.load("." + File.separator + "configs" + File.separator + "heroes.xml");
+		gameLanguages = (HearthGameLangList) config.load("." + File.separator + "configs" + File.separator + "gameLangs.xml");
+		gameResolutions = (HearthResolutionsList) config.load("." + File.separator + "configs" + File.separator + "gameResolutions.xml");
+		setting = (HearthSetting) config.load("." + File.separator + "configs" + File.separator + "settings.xml");
 		
 		if(heroesList == null){
 			heroesList = new HearthHeroesList();
-			config.save(heroesList, "./configs/heroes.xml");
+			config.save(heroesList, "." + File.separator + "configs" + File.separator + "heroes.xml");
 		}
 		
 		if(gameLanguages == null){
 			gameLanguages = new HearthGameLangList();
-			config.save(gameLanguages, "./configs/gameLangs.xml");
+			config.save(gameLanguages, "." + File.separator + "configs" + File.separator + "gameLangs.xml");
 		}
 		
 		if(gameResolutions == null){
 			gameResolutions = new HearthResolutionsList();
-			config.save(gameResolutions, "./configs/gameResolutions.xml");
+			config.save(gameResolutions, "." + File.separator + "configs" + File.separator + "gameResolutions.xml");
 		}
 		
 		if(setting == null){
 			setting = new HearthSetting();
-			config.save(setting, "./configs/settings.xml");
+			config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
 		}
 		
 		window = new HearthUI();
@@ -349,7 +350,7 @@ public class HearthUI {
 				}
 			}
 		});
-		lblPaypal.setImage(new Image( display, "./images/btn_donate_150wx70h.gif" ));
+		lblPaypal.setImage(new Image( display, "." + File.separator + "images" + File.separator + "btn_donate_150wx70h.gif" ));
 		sashForm_1.setWeights(new int[] {110, 278, 80});
 		
 		tableOverview = new Table(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
@@ -459,7 +460,7 @@ public class HearthUI {
 	}
 	
 	private void savePreferences(){
-		config.save(setting, "./configs/settings.xml");
+		config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
 	}
 	
 	private void poppulateResolutions(){
@@ -662,7 +663,7 @@ public class HearthUI {
 			e.printStackTrace();
 		}
 		
-		heroImg = new Image(display, "./images/" + heroesList.getHeroName(heroId) + "-s.png");
+		heroImg = new Image(display, "." + File.separator + "images" + File.separator + heroesList.getHeroName(heroId) + "-s.png");
 		heroImg = resize(heroImg, 28, 28);
 		tableItem_1.setImage(0, heroImg);
 

@@ -9,7 +9,7 @@ public class HearthReaderSetting {
 	
 	//Arena related scan boxes
 	public Scanbox winsLabelScanbox		= new Scanbox("wins-label.png", 	480, 460, 140, 80);
-	public Scanbox lossesLabelScanbox	= new Scanbox("losses-label.png", 	480, 460, 140, 80);
+	public Scanbox lossesLabelScanbox	= new Scanbox("losses-label.png", 	265, 520, 140, 80);
 	public Scanbox goFirstScanbox 		= new Scanbox("go-first.png", 		910, 550, 400, 150);
 	public Scanbox goSecondScanbox 		= new Scanbox("go-second.png", 		910, 550, 400, 150);
 	public Scanbox victoryScanbox 		= new Scanbox("victory.png", 		510, 550, 400, 150);

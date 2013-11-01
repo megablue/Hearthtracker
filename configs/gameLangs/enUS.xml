@@ -24,8 +24,8 @@
     <outer-class reference="../.."/>
   </winsLabelScanbox>
   <lossesLabelScanbox>
-    <xOffset>480</xOffset>
-    <yOffset>460</yOffset>
+    <xOffset>265</xOffset>
+    <yOffset>520</yOffset>
     <width>140</width>
     <height>80</height>
     <imgfile>losses-label.png</imgfile>

@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,7 +16,9 @@ public class HearthConfigurator {
 	public <t> Object load(String path){
 		String xmlString;
 		Object obj = null;
+		
 		try {
+			HearthHelper.createFolder(path.substring(0,path.lastIndexOf(File.separator)));
 			xmlString = HearthHelper.readFile(path);
 			obj = xstream.fromXML(xmlString);
 		} catch (IOException e) {
@@ -28,8 +31,9 @@ public class HearthConfigurator {
 	public <T> boolean save(Object obj, String path){
 		if (obj == null) return false;
 		String xmlString = xstream.toXML(obj);
-		
+
 		try {
+			HearthHelper.createFolder(path.substring(0, path.lastIndexOf(File.separator)));
 			PrintWriter out = new PrintWriter(path);
 			out.println(xmlString);
 			out.close();
