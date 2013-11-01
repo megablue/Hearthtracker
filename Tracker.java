@@ -146,7 +146,7 @@ public class Tracker {
 		
 		if(found){
 			winrate = (float) wins/(wins+losses);
-			System.out.println("Winrate (" + heroId + "): " + winrate);
+			//System.out.println("Winrate (" + heroId + "): " + winrate);
 		}
 		
 		stat.close();
@@ -175,7 +175,7 @@ public class Tracker {
 		
 		if(found){
 			winrate = (float) sixplus/arenacount;
-			System.out.println("6+ Wins Rate (" + heroId + "): " + winrate);
+			//System.out.println("6+ Wins Rate (" + heroId + "): " + winrate);
 		}
 		
 		stat.close();
@@ -201,7 +201,7 @@ public class Tracker {
 		
 		if(found){
 			winrate = (float) wins/(wins+losses) * 100;
-			System.out.println("Winrate (overall): " + winrate);
+			//System.out.println("Winrate (overall): " + winrate);
 		}
 		
 		stat.close();
@@ -301,11 +301,11 @@ public class Tracker {
 		if(rs.next()){
 			winrate = rs.getFloat("SUM(WIN)") / rs.getFloat("COUNT(*)") * 100;
 			
-			if(goesFirstFlag){
-				System.out.println("Winrate (goes first): " + winrate);
-			} else {
-				System.out.println("Winrate (goes second): " + winrate);
-			}
+//			if(goesFirstFlag){
+//				System.out.println("Winrate (goes first): " + winrate);
+//			} else {
+//				System.out.println("Winrate (goes second): " + winrate);
+//			}
 		}
 		
 		stat.close();
