@@ -319,7 +319,7 @@ public class HearthReader {
 			}
 		}
 		
-		for(int i = 2; i <= 0; i ++){
+		for(int i = 2; i >= 0; i--){
 			if(this.findImage(readerSettings.lossesScanboxes[i], checkedImageTarget, "Losses " + (i+1))){
 				System.out.println("Found " + (i+1) + " losses");
 				foundLosses = true;
