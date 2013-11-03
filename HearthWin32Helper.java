@@ -15,6 +15,7 @@ private static final int SM_CXBORDER = 5;
 
       int GetWindowRect(HWND handle, int[] rect);
       int GetClientRect(HWND handle, int[] rect);
+      boolean ClientToScreen( HWND hWnd, int[] point);
       int GetSystemMetrics(int something);
    }
 
@@ -27,22 +28,36 @@ private static final int SM_CXBORDER = 5;
          throw new WindowNotFoundException("", windowName);
       }
 
-      int[] rect = {0, 0, 0, 0};  
-      int result = User32.INSTANCE.GetWindowRect(hwnd, rect);
-      int titlebarHeight = User32.INSTANCE.GetSystemMetrics(SM_CYCAPTION);
-      int borderSize = User32.INSTANCE.GetSystemMetrics(SM_CXBORDER);
-
+      int[] cRect = {0, 0, 0, 0};
+      int[] point1 = {0, 0}; 
+      int[] point2 = {0, 0};
+      
+      int result = User32.INSTANCE.GetClientRect(hwnd, cRect);
+      
       if (result == 0) {
          throw new GetWindowRectException(windowName);
       }
-
-      //calculate the absolute position of the client area (exclude the window border)
-      rect[0] += borderSize; 
-      rect[1] += borderSize + titlebarHeight;
-      rect[2] -= borderSize;
-      rect[3] -= borderSize;
       
-      return rect;
+      point1[0] = cRect[0];
+      point1[1] = cRect[1];
+      point2[0] = cRect[2];
+      point2[1] = cRect[3];
+      
+      //calculate the absolute position of the client area (exclude the window borders and title bar)
+      if(User32.INSTANCE.ClientToScreen(hwnd, point1)){
+    	  
+      }
+      
+      if(User32.INSTANCE.ClientToScreen(hwnd, point2)){
+    	  
+      }
+
+      cRect[0] = point1[0]; 
+      cRect[1] = point1[1];
+      cRect[2] = point2[0];
+      cRect[3] = point2[1];
+      
+      return cRect;
    }
 
    @SuppressWarnings("serial")
