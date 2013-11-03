@@ -286,6 +286,9 @@ public class HearthReader {
 		{
 			canvas.addBox(region);
 			canvas.addLabel(region, "Found region " + label).display(1);
+		}
+		
+		if(foundRegion != null){
 			updateLastSeen();
 		}
 		
