@@ -24,5 +24,6 @@ public class HearthResolutionsList {
 			new Resolution(1600,1200),
 			new Resolution(1680,1050),
 			new Resolution(1920,1080),
+			new Resolution(1920,1200),
 	};
 }

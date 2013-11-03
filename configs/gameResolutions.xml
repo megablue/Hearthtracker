@@ -65,5 +65,10 @@
       <height>1080</height>
       <outer-class reference="../../.."/>
     </HearthResolutionsList_-Resolution>
+    <HearthResolutionsList_-Resolution>
+      <width>1920</width>
+      <height>1200</height>
+      <outer-class reference="../../.."/>
+    </HearthResolutionsList_-Resolution>
   </resolutions>
 </HearthResolutionsList>
