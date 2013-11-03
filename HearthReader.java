@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Date;
@@ -58,6 +59,15 @@ public class HearthReader {
 	private HearthHeroesList heroesList;
 	
 	int gameResX = 1920, gameResY = 1080;
+	
+	boolean pingHearthstone = true;
+	boolean seenHearthstone = false;
+	
+	long pingInterval = 60 * 1000;
+	Date lastSeen =  new Date(new Date().getTime() - pingInterval);
+	int[] lastScanArea = {0,0,0,0};
+	int[] lastScanSubArea = {0,0,0,0};
+	Date lastPing = new Date(new Date().getTime() - pingInterval);
 	
 	public HearthReader(Tracker t){
 		debugMode = false;
@@ -249,11 +259,17 @@ public class HearthReader {
 		Canvas canvas = new DesktopCanvas();
 		int x = 0, y = 0, w = 0, h = 0;
 		float scaling = this.getScaleFactor();
-
-		x = (int) (scaling * sb.xOffset) + this.getBoardX();
-		y = (int) (scaling * sb.yOffset) + this.getBoardY();
-		w = (int) (sb.width * scaling);
-		h = (int) (sb.height * scaling);
+		int[] winRect = HearthHelper.getHearthstonePosition();
+		
+		lastScanArea[0]	= winRect[0];
+		lastScanArea[1]	= winRect[1];
+		lastScanArea[2]	= gameResX;
+		lastScanArea[3]	= gameResY;
+		
+		lastScanSubArea[0] = x = (int) (scaling * sb.xOffset) + this.getBoardX();
+		lastScanSubArea[1] = y = (int) (scaling * sb.yOffset) + this.getBoardY();
+		lastScanSubArea[2] = w = (int) (sb.width * scaling);
+		lastScanSubArea[3] = h = (int) (sb.height * scaling);
 		
 		ScreenRegion region = new DesktopScreenRegion(x, y, w, h);
 		ScreenRegion foundRegion;
@@ -270,6 +286,7 @@ public class HearthReader {
 		{
 			canvas.addBox(region);
 			canvas.addLabel(region, "Found region " + label).display(1);
+			updateLastSeen();
 		}
 		
 		return (foundRegion != null);
@@ -572,12 +589,52 @@ public class HearthReader {
 		return yOffset;
 	}
 	
-	public void pingBox(int x, int y, int w, int h){
+	public Date getLastseen(){		
+		return lastSeen;
+	}
+	
+	public int[] getLastScanSubArea(){
+		return lastScanSubArea;
+	}
+	
+	public int[] getLastScanArea(){
+		return lastScanArea;
+	}
+	
+	public void setAutoPing(boolean enabled){
+		pingHearthstone = enabled;
+		seenHearthstone = false;
+		lastPing = new Date(new Date().getTime() - pingInterval);
+	}
+	
+	private void autoPing(){
+		if(pingHearthstone && seenHearthstone ){
+			if( lastPing.getTime() + pingInterval < new Date().getTime() ){
+				pingHearthstone();
+				lastPing = new Date();
+				seenHearthstone = false;
+			}
+		}
+	}
+	
+	public void pingHearthstone(){
 		Canvas canvas = new DesktopCanvas();
-		ScreenRegion region = new DesktopScreenRegion(x, y, w, h);
-		canvas.addBox(region);
-		canvas.addLabel(region, x + ", " + y + ", w: " + w + ", h: " + h).display(5);
-		System.out.println(x + ", " + y + ", w: " + w + ", h: " + h);
+		int lineWidth = 10;
+		ScreenRegion region = new DesktopScreenRegion(lastScanArea[0],
+				lastScanArea[1], 
+				lastScanArea[2] - lineWidth / 2, 
+				lastScanArea[3] - lineWidth / 2
+		);
+		
+		ScreenRegion subregion = new DesktopScreenRegion(lastScanSubArea[0],
+				lastScanSubArea[1], 
+				lastScanSubArea[2] - lineWidth / 2, 
+				lastScanSubArea[3] - lineWidth / 2
+		);
+		
+		canvas.addBox(region).withLineColor(Color.blue).withLineWidth(10);
+		canvas.addBox(subregion).withLineColor(Color.yellow).withLineWidth(10);
+		canvas.display(2);
 	}
 	
 	public boolean foundOppHero(){
@@ -592,11 +649,20 @@ public class HearthReader {
 		return inGameMode == 1 ? true : false;
 	}
 	
+	private void updateLastSeen(){
+		//if more than 1 minutes, force ping
+		if(lastSeen.getTime() + pingInterval < new Date().getTime()){
+			seenHearthstone = true;
+		}
+		
+		lastSeen = new Date();		
+	}
+	
 	public void process(){
 		if(paused){
 			return;
 		}
-
+		
 		if(!this.isInGame()){
 			this.scanMenuScreen();
 			this.scanArenaScoreScreen();
@@ -615,6 +681,8 @@ public class HearthReader {
 			this.scanOppHero();
 			this.scanVictory();
 		}
+		
+		this.autoPing();
 	}
 }
 	

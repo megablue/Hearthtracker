@@ -71,6 +71,11 @@ public class HearthUI {
 	private Button btnEnableScanner;
 	private Button[] btnScanSpeed = new Button[3];
 	private CCombo cmbGameRes;
+	private Button btnAutoPing;
+	private Button btnVisualizeNow;
+	private Label lblLastSeen;
+	private Label lblLastscreencoordinate;
+	private Label lblLastScanSubArea;
 	
 	private Display display;
 	private static HearthUI window;
@@ -171,6 +176,7 @@ public class HearthUI {
 					if(new Date().getTime() - lastUpdate.getTime() > 2000){
 						window.poppulateOverviewTable();
 						window.poppulateCurrentStats();
+						window.poppulateDiagnoticsStatus();
 						lastUpdate = new Date();
 					}
 				}
@@ -390,17 +396,20 @@ public class HearthUI {
 		
 		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
 		tbtmPerferences.setControl(composite_1);
-		composite_1.setLayout(new GridLayout(2, false));
+		composite_1.setLayout(new GridLayout(1, false));
 		
 		Group grpGeneral = new Group(composite_1, SWT.NONE);
 		grpGeneral.setText("General");
 		grpGeneral.setLayout(new GridLayout(4, false));
-		GridData gd_grpGeneral = new GridData(SWT.FILL, SWT.CENTER, false, false, 2, 1);
-		gd_grpGeneral.heightHint = 446;
+		GridData gd_grpGeneral = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+		gd_grpGeneral.heightHint = 114;
 		gd_grpGeneral.widthHint = 585;
 		grpGeneral.setLayoutData(gd_grpGeneral);
 		
 		Label lblNewLabel_2 = new Label(grpGeneral, SWT.NONE);
+		GridData gd_lblNewLabel_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel_2.widthHint = 100;
+		lblNewLabel_2.setLayoutData(gd_lblNewLabel_2);
 		lblNewLabel_2.setText("Scanner");
 		new Label(grpGeneral, SWT.NONE);
 		new Label(grpGeneral, SWT.NONE);
@@ -410,11 +419,15 @@ public class HearthUI {
 		btnEnableScanner.setText("Enable");
 		
 		Label lblNewLabel = new Label(grpGeneral, SWT.NONE);
+		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel.widthHint = 100;
+		lblNewLabel.setLayoutData(gd_lblNewLabel);
 		lblNewLabel.setText("Scan Speed");
 		new Label(grpGeneral, SWT.NONE);
 		new Label(grpGeneral, SWT.NONE);
 		
 		Composite composite_6 = new Composite(grpGeneral, SWT.NONE);
+		composite_6.setToolTipText("Increase the scanner frequency in order to catch stats better. Lower the speed if you experience bad performance.");
 		composite_6.setLayout(new GridLayout(5, false));
 		GridData gd_composite_6 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_composite_6.heightHint = 27;
@@ -433,6 +446,9 @@ public class HearthUI {
 		btnScanSpeed[2].setText("Slow");
 		
 		Label lblNewLabel_1 = new Label(grpGeneral, SWT.NONE);
+		GridData gd_lblNewLabel_1 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel_1.widthHint = 100;
+		lblNewLabel_1.setLayoutData(gd_lblNewLabel_1);
 		lblNewLabel_1.setText("Game Language");
 		new Label(grpGeneral, SWT.NONE);
 		new Label(grpGeneral, SWT.NONE);
@@ -445,6 +461,9 @@ public class HearthUI {
 		cmbGameLang.setText("enUS");
 		
 		Label lblGameResolution = new Label(grpGeneral, SWT.NONE);
+		GridData gd_lblGameResolution = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblGameResolution.widthHint = 100;
+		lblGameResolution.setLayoutData(gd_lblGameResolution);
 		lblGameResolution.setText("Game Resolution");
 		new Label(grpGeneral, SWT.NONE);
 		new Label(grpGeneral, SWT.NONE);
@@ -452,15 +471,117 @@ public class HearthUI {
 		cmbGameRes = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
 		cmbGameRes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		cmbGameRes.setEditable(false);
+		
+		Group grpDiagnostics = new Group(composite_1, SWT.NONE);
+		grpDiagnostics.setText("Diagnostics");
+		grpDiagnostics.setLayout(new GridLayout(4, false));
+		GridData gd_grpDiagnostics = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+		gd_grpDiagnostics.heightHint = 310;
+		gd_grpDiagnostics.widthHint = 585;
+		grpDiagnostics.setLayoutData(gd_grpDiagnostics);
+		
+		Label lblLastSeenLabel = new Label(grpDiagnostics, SWT.NONE);
+		GridData gd_lblLastSeenLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblLastSeenLabel.widthHint = 100;
+		lblLastSeenLabel.setLayoutData(gd_lblLastSeenLabel);
+		lblLastSeenLabel.setText("Last seen");
+		new Label(grpDiagnostics, SWT.NONE);
+		new Label(grpDiagnostics, SWT.NONE);
+		
+		lblLastSeen = new Label(grpDiagnostics, SWT.NONE);
+		GridData gd_lblLastSeen = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblLastSeen.widthHint = 300;
+		lblLastSeen.setLayoutData(gd_lblLastSeen);
+		lblLastSeen.setText("..........");
+		
+		Label lblLastScanCoordinate = new Label(grpDiagnostics, SWT.NONE);
+		lblLastScanCoordinate.setText("Last scan area");
+		new Label(grpDiagnostics, SWT.NONE);
+		new Label(grpDiagnostics, SWT.NONE);
+		
+		lblLastscreencoordinate = new Label(grpDiagnostics, SWT.NONE);
+		GridData gd_lblLastscreencoordinate = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblLastscreencoordinate.widthHint = 300;
+		lblLastscreencoordinate.setLayoutData(gd_lblLastscreencoordinate);
+		lblLastscreencoordinate.setText("..........");
+		
+		Label lblNewLabel_5 = new Label(grpDiagnostics, SWT.NONE);
+		lblNewLabel_5.setText("Last scan sub-area");
+		new Label(grpDiagnostics, SWT.NONE);
+		new Label(grpDiagnostics, SWT.NONE);
+		
+		lblLastScanSubArea = new Label(grpDiagnostics, SWT.NONE);
+		GridData gd_lblLastScanSubArea = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblLastScanSubArea.widthHint = 300;
+		lblLastScanSubArea.setLayoutData(gd_lblLastScanSubArea);
+		lblLastScanSubArea.setText("..........");
+		new Label(grpDiagnostics, SWT.NONE);
+		new Label(grpDiagnostics, SWT.NONE);
+		new Label(grpDiagnostics, SWT.NONE);
+		new Label(grpDiagnostics, SWT.NONE);
+		
+		Label lblAutoPingLabel = new Label(grpDiagnostics, SWT.NONE);
+		lblAutoPingLabel.setText("Visualize scanned area");
+		new Label(grpDiagnostics, SWT.NONE);
+		new Label(grpDiagnostics, SWT.NONE);
+		
+		btnAutoPing = new Button(grpDiagnostics, SWT.CHECK);
+		btnAutoPing.setToolTipText("Visualize scanned areas after Hearthstone being out of sight for more than 1 min.");
+		btnAutoPing.setText("Enable");
+		
+		Label lblNewLabel_6 = new Label(grpDiagnostics, SWT.NONE);
+		lblNewLabel_6.setText("Diagnotic Tool");
+		new Label(grpDiagnostics, SWT.NONE);
+		new Label(grpDiagnostics, SWT.NONE);
+		
+		btnVisualizeNow = new Button(grpDiagnostics, SWT.NONE);
+		btnVisualizeNow.setText("Visualize now");
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
 		poppulateScannerOptions();
 		poppulateGameLangs();
 		poppulateResolutions();
+		poppulateDiagnoticsControls();
+		poppulateDiagnoticsStatus();
 	}
 	
 	private void savePreferences(){
 		config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
+	}
+	
+	private void poppulateDiagnoticsStatus(){
+		Date lastSeen = hearth.getLastseen();
+		int[] area = hearth.getLastScanArea();
+		int[] subArea = hearth.getLastScanSubArea();
+
+		if(lastSeen == null){
+			lblLastSeen.setText("N|A");
+		} else {
+			lblLastSeen.setText( HearthHelper.getPrettyText(lastSeen) );
+		}
+		
+		lblLastscreencoordinate.setText(area[0] + ", " + area[1] + ", w: " + area[2] + ", h: " + area[3]);
+		lblLastScanSubArea.setText(subArea[0] + ", " + subArea[1] + ", w: " + subArea[2] + ", h: " + subArea[3]);
+	}
+	
+	private void poppulateDiagnoticsControls(){
+		btnAutoPing.setSelection(setting.autoPing);
+		
+		btnAutoPing.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setting.autoPing = btnAutoPing.getSelection();
+				hearth.setAutoPing(setting.autoPing);
+				savePreferences();
+			}
+		});
+		
+		btnVisualizeNow.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				hearth.pingHearthstone();
+			}
+		});
 	}
 	
 	private void poppulateResolutions(){

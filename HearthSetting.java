@@ -4,4 +4,5 @@ public class HearthSetting {
 	int gameHeight = 1080;
 	String gameLang = "enUS";
 	boolean scannerEnabled = true;
+	boolean autoPing = true;
 }

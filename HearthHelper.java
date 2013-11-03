@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 
@@ -174,4 +175,29 @@ public class HearthHelper {
 		return pos;
 	}
 	
+	
+	public static String getPrettyText(Date date) {
+	    long diff = (new Date().getTime() - date.getTime()) / 1000;
+	    double dayDiff = Math.floor(diff / 86400);
+
+	    if (diff < 0) {
+	      return "in the future?";
+	    } else if (diff < 60) {
+	      return "moments ago";
+	    } else if (diff < 120) {
+	      return "one minute ago";
+	    } else if (diff < 3600) {
+	      return diff / 60 + " minutes ago";
+	    } else if (diff < 7200) {
+	      return "one hour ago";
+	    } else if (diff < 86400) {
+	      return diff / 3600 + " hours ago";
+	    } else if (dayDiff == 1) {
+	      return "yesterday";
+	    } else if (dayDiff < 7) {
+	      return dayDiff + " days ago";
+	    } else {
+	      return Math.ceil(dayDiff / 7) + " weeks ago";
+	    }
+	  }
 }
