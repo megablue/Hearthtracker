@@ -300,7 +300,7 @@ public class HearthUI {
 		composite_3.setLayout(new GridLayout(1, false));
 		
 		Label lblVersion = new Label(composite_3, SWT.NONE);
-		lblVersion.setText("HearthTracker v1.0.5 Beta");
+		lblVersion.setText("HearthTracker v1.0.6 Beta");
 		
 		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
 		lblCopyrightc.setText("Copyright \u00A9 2013 megablue");
