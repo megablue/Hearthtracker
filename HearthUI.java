@@ -76,6 +76,7 @@ public class HearthUI {
 	private Label lblLastSeen;
 	private Label lblLastscreencoordinate;
 	private Label lblLastScanSubArea;
+	private Button btnAutoDetectGameRes;
 	
 	private Display display;
 	private static HearthUI window;
@@ -127,6 +128,10 @@ public class HearthUI {
 		
 		if(setting == null){
 			setting = new HearthSetting();
+			config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
+		}
+		
+		if(setting.upgrade()){
 			config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
 		}
 		
@@ -402,7 +407,7 @@ public class HearthUI {
 		grpGeneral.setText("General");
 		grpGeneral.setLayout(new GridLayout(4, false));
 		GridData gd_grpGeneral = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_grpGeneral.heightHint = 114;
+		gd_grpGeneral.heightHint = 160;
 		gd_grpGeneral.widthHint = 585;
 		grpGeneral.setLayoutData(gd_grpGeneral);
 		
@@ -460,6 +465,15 @@ public class HearthUI {
 		cmbGameLang.setVisibleItemCount(1);
 		cmbGameLang.setText("enUS");
 		
+		Label lblDetect = new Label(grpGeneral, SWT.NONE);
+		lblDetect.setText("Auto Detect Game Resolution");
+		new Label(grpGeneral, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
+		
+		btnAutoDetectGameRes = new Button(grpGeneral, SWT.CHECK);
+		btnAutoDetectGameRes.setToolTipText("It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.");
+		btnAutoDetectGameRes.setText("Enable");
+		
 		Label lblGameResolution = new Label(grpGeneral, SWT.NONE);
 		GridData gd_lblGameResolution = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblGameResolution.widthHint = 100;
@@ -476,7 +490,7 @@ public class HearthUI {
 		grpDiagnostics.setText("Diagnostics");
 		grpDiagnostics.setLayout(new GridLayout(4, false));
 		GridData gd_grpDiagnostics = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_grpDiagnostics.heightHint = 310;
+		gd_grpDiagnostics.heightHint = 262;
 		gd_grpDiagnostics.widthHint = 585;
 		grpDiagnostics.setLayoutData(gd_grpDiagnostics);
 		
@@ -619,6 +633,17 @@ public class HearthUI {
 				savePreferences();
 				
 				hearth.setGameRes(res.width, res.height);
+			}
+		});
+		
+		btnAutoDetectGameRes.setSelection(setting.autoRes);
+		
+		btnAutoDetectGameRes.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setting.autoRes = btnAutoDetectGameRes.getSelection();
+				savePreferences();
+				hearth.setAutoGameRes(setting.autoRes);
 			}
 		});
 		

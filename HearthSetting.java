@@ -5,4 +5,26 @@ public class HearthSetting {
 	String gameLang = "enUS";
 	boolean scannerEnabled = true;
 	boolean autoPing = true;
+	boolean autoRes = true;
+	int settingVer = 0;
+	
+	public boolean upgrade(){
+		boolean upgraded = false;
+		
+		upgraded = upgrade1();
+
+		return upgraded;
+	}
+	
+	private boolean upgrade1(){
+		boolean upgraded = false;
+		
+		if(settingVer == 0){
+			autoRes = true;
+			settingVer = 1;
+			upgraded = true;
+		}
+	
+		return upgraded;
+	}
 }

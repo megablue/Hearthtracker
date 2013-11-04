@@ -59,9 +59,11 @@ public class HearthReader {
 	private HearthHeroesList heroesList;
 	
 	int gameResX = 1920, gameResY = 1080;
+	int oldGameResX = 1920, oldGameResY = 1080;
 	
 	boolean pingHearthstone = true;
 	boolean seenHearthstone = false;
+	boolean autoDetectGameRes = true;
 	
 	long pingInterval = 60 * 1000;
 	Date lastSeen =  new Date(new Date().getTime() - pingInterval);
@@ -78,8 +80,8 @@ public class HearthReader {
 	public HearthReader(Tracker t, String lang, int resX, int resY, boolean mode){
 		debugMode = mode;
 		tracker = t;
-		gameResX = resX;
-		gameResY = resY;
+		oldGameResX = gameResX = resX;
+		oldGameResY = gameResY = resY;
 		gameLang = lang.toLowerCase();
 		init();
 	}
@@ -102,6 +104,11 @@ public class HearthReader {
 	public void setGameRes(int w, int h){
 		gameResX = w;
 		gameResY = h;
+		this.initGameScanner();
+	}
+	
+	public void setAutoGameRes(boolean flag){
+		autoDetectGameRes = flag;
 		this.initGameScanner();
 	}
 	
@@ -148,12 +155,14 @@ public class HearthReader {
 	}
 	
 	private float getScaleFactor(){
+		int[] gameRes = this.getGameResolution();
+		
 		//do not scale if the height is 1080
-		if(gameResY == 1080){
+		if(gameRes[1] == 1080){
 			return 1;
 		}
 		
-		return (gameResY/1080f);
+		return (gameRes[1]/1080f);
 	}
 	
 	private Target prepareImageTarget(HearthReaderSetting.Scanbox sb){
@@ -181,11 +190,14 @@ public class HearthReader {
 	}
 	
 	private void initGameScanner(){
+		int[] gameRes = this.getGameResolution();
+		
 		gameLang = sanitizeGameLang(gameLang);
+		
 		String pahtGameSettingByResolution = "." + File.separator + "configs" 
 											+ File.separator + "gameLangs" 
 											+ File.separator + gameLang 
-											+ File.separator + gameResX + "x" + gameResY
+											+ File.separator + gameRes[0] + "x" + gameRes[1]
 											+ ".xml";
 		
 		String pathGameSetting = "." + File.separator + "configs" + File.separator + "gameLangs" + File.separator + gameLang + ".xml";
@@ -260,11 +272,12 @@ public class HearthReader {
 		int x = 0, y = 0, w = 0, h = 0;
 		float scaling = this.getScaleFactor();
 		int[] winRect = HearthHelper.getHearthstonePosition();
+		int[] gameRes = this.getGameResolution();
 		
 		lastScanArea[0]	= winRect[0];
 		lastScanArea[1]	= winRect[1];
-		lastScanArea[2]	= gameResX;
-		lastScanArea[3]	= gameResY;
+		lastScanArea[2]	= gameRes[0];
+		lastScanArea[3]	= gameRes[1];
 		
 		lastScanSubArea[0] = x = (int) (scaling * sb.xOffset) + this.getBoardX();
 		lastScanSubArea[1] = y = (int) (scaling * sb.yOffset) + this.getBoardY();
@@ -572,17 +585,20 @@ public class HearthReader {
 	}
 	
 	public int getBoardWidth(){
-		return (gameResY/3) * 4;
+		int[] gameRes = this.getGameResolution();
+		return (gameRes[1]/3) * 4;
 	}
 	
 	public int getBoardHeight(){
-		return gameResY;
+		int[] gameRes = this.getGameResolution();
+		return gameRes[1];
 	}
 		
 	public int getBoardX(){
 		int[] winPos = HearthHelper.getHearthstonePosition();
 		int xOffset = winPos[0];
-		int relativeX = xOffset + (gameResX - this.getBoardWidth()) / 2;
+		int[] gameRes = this.getGameResolution();
+		int relativeX = xOffset + (gameRes[0] - this.getBoardWidth()) / 2;
 		return relativeX;
 	}
 	
@@ -652,6 +668,42 @@ public class HearthReader {
 		return inGameMode == 1 ? true : false;
 	}
 	
+	public int[] getGameResolution(){
+		int[] resolution = {gameResX, gameResY};
+		
+		if(!autoDetectGameRes){
+			return resolution;
+		}
+		
+		int[] winPos = HearthHelper.getHearthstonePosition();
+		
+		if(winPos[0] < 0 && winPos[2] < 0){
+			resolution[0] = (winPos[2] * -1) - (winPos[0] - 1);
+		} else {
+			resolution[0] = winPos[2] - winPos[0];
+		}
+		
+		if(winPos[1] < 0 && winPos[3] < 0){
+			resolution[1] =  (winPos[3] * -1) - (winPos[1] * -1);
+		} else {
+			resolution[1] =  winPos[3] - winPos[1];
+		}
+		
+		//use default resolution if failed to detect
+		if(resolution[0] == 0 || resolution[1] == 0){
+			resolution[0] = gameResX;
+			resolution[1] = gameResY;
+		}
+		
+		if(resolution[0] != oldGameResX || resolution[1] != oldGameResY){
+			oldGameResX = resolution[0];
+			oldGameResY = resolution[1];
+			this.initGameScanner();
+		}
+		
+		return resolution;
+	}
+	
 	private void updateLastSeen(){
 		//if more than 1 minutes, force ping
 		if(lastSeen.getTime() + pingInterval < new Date().getTime()){
@@ -665,7 +717,7 @@ public class HearthReader {
 		if(paused){
 			return;
 		}
-		
+
 		if(!this.isInGame()){
 			this.scanMenuScreen();
 			this.scanArenaScoreScreen();
