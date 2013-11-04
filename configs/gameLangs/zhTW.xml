@@ -177,30 +177,30 @@
   </winsScanboxes>
   <lossesScanboxes>
     <HearthReaderSetting_-Scanbox>
-      <xOffset>420</xOffset>
-      <yOffset>530</yOffset>
-      <width>80</width>
-      <height>80</height>
+      <xOffset>400</xOffset>
+      <yOffset>507</yOffset>
+      <width>110</width>
+      <height>110</height>
       <imgfile>lose-checkbox-checked.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
     </HearthReaderSetting_-Scanbox>
     <HearthReaderSetting_-Scanbox>
-      <xOffset>510</xOffset>
-      <yOffset>530</yOffset>
-      <width>80</width>
-      <height>80</height>
+      <xOffset>492</xOffset>
+      <yOffset>507</yOffset>
+      <width>110</width>
+      <height>110</height>
       <imgfile>lose-checkbox-checked.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
     </HearthReaderSetting_-Scanbox>
     <HearthReaderSetting_-Scanbox>
-      <xOffset>600</xOffset>
-      <yOffset>530</yOffset>
-      <width>80</width>
-      <height>80</height>
+      <xOffset>584</xOffset>
+      <yOffset>507</yOffset>
+      <width>110</width>
+      <height>110</height>
       <imgfile>lose-checkbox-checked.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
