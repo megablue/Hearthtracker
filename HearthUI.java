@@ -5,6 +5,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -89,6 +90,7 @@ public class HearthUI {
 	private static HearthResolutionsList gameResolutions;
 	private static HearthSetting setting;
 	private static HearthHeroesList heroesList;
+	private static Logger logger;
 	
 	Thread hearththread;
 	
@@ -137,7 +139,7 @@ public class HearthUI {
 		
 		window = new HearthUI();
 		tracker = new Tracker();
-		hearth = new HearthReader(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, debugMode);
+		hearth = new HearthReader(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, debugMode);
 		
 		if(!setting.scannerEnabled){
 			hearth.pause();

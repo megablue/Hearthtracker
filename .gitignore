@@ -30,3 +30,4 @@ configs/settings.xml
 images/backup/
 /HearthUI$7.class
 *.class
+logs/

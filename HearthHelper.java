@@ -10,6 +10,16 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.io.File;
+import java.io.IOException;  
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.FileHandler;  
+import java.util.logging.Logger;  
+import java.util.logging.SimpleFormatter;
+import java.util.logging.Level;
+   
+
 
 import javax.imageio.ImageIO;
 
@@ -177,6 +187,29 @@ public class HearthHelper {
 		return pos;
 	}
 	
+	public static Logger getLogger(Level loglevel){
+        Logger logger = Logger.getLogger("HearthTrackerLog");  
+        FileHandler fh;
+        int limit = 1000000; 
+        int rotate = 10;
+        Calendar cal = Calendar.getInstance();
+        String logfile = cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DATE) + "-" + cal.get(Calendar.YEAR) + ".log";
+        
+        try {
+            // This block configure the logger with handler and formatter  
+            fh = new FileHandler("." + File.separator + "logs" + File.separator + logfile, limit, rotate, true);
+            logger.addHandler(fh);  
+            logger.setLevel(loglevel);  
+            SimpleFormatter formatter = new SimpleFormatter();  
+            fh.setFormatter(formatter);     
+        } catch (SecurityException e) {  
+            e.printStackTrace();  
+        } catch (IOException e) {  
+            e.printStackTrace();  
+        }
+        
+        return logger;
+	}
 	
 	public static String getPrettyText(Date date) {
 	    long diff = (new Date().getTime() - date.getTime()) / 1000;

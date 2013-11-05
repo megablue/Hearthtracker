@@ -77,12 +77,13 @@ public class HearthReader {
 		init();
 	}
 	
-	public HearthReader(Tracker t, String lang, int resX, int resY, boolean mode){
+	public HearthReader (Tracker t, String lang, int resX, int resY, boolean autoping, boolean mode){
 		debugMode = mode;
 		tracker = t;
 		oldGameResX = gameResX = resX;
 		oldGameResY = gameResY = resY;
 		gameLang = lang.toLowerCase();
+		setAutoPing(autoping);
 		init();
 	}
 	
