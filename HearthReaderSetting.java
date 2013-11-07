@@ -10,6 +10,16 @@ public class HearthReaderSetting {
 	//Arena related scan boxes
 	public Scanbox winsLabelScanbox		= new Scanbox("wins-label.png", 	480, 440, 140, 140);
 	public Scanbox lossesLabelScanbox	= new Scanbox("losses-label.png", 	250, 510, 160, 150);
+	
+	//Play mode scan boxes
+	public Scanbox playScanbox			= new Scanbox("play-mode.png", 		1200, 100, 120, 120);
+
+	//practice mode scan boxes
+	public Scanbox practiceScanbox		= new Scanbox("practice-mode.png", 	1200, 100, 120, 120);
+	
+	//challenge mode scan boxes
+	public Scanbox challengeScanbox		= new Scanbox("challenge-mode.png", 1200, 100, 120, 120);
+	
 	public Scanbox goFirstScanbox 		= new Scanbox("go-first.png", 		910, 550, 400, 150);
 	public Scanbox goSecondScanbox 		= new Scanbox("go-second.png", 		910, 550, 400, 150);
 	public Scanbox victoryScanbox 		= new Scanbox("victory.png", 		510, 550, 400, 150);
@@ -56,6 +66,18 @@ public class HearthReaderSetting {
 			new Scanbox("rogue-s.png", 		610, 70, 220, 200),
 			new Scanbox("paladin-s.png", 	610, 70, 220, 200),
 			new Scanbox("warlock-s.png", 	610, 70, 220, 200),
+	};
+	
+	public Scanbox[] myHeroScanboxes	= {
+			new Scanbox("mage-s.png",		610, 710, 220, 200),
+			new Scanbox("hunter-s.png", 	610, 710, 220, 200),
+			new Scanbox("warrior-s.png", 	610, 710, 220, 200),
+			new Scanbox("shaman-s.png", 	610, 710, 220, 200),
+			new Scanbox("druid-s.png", 		610, 710, 220, 200),
+			new Scanbox("priest-s.png", 	610, 710, 220, 200),
+			new Scanbox("rogue-s.png", 		610, 710, 220, 200),
+			new Scanbox("paladin-s.png", 	610, 710, 220, 200),
+			new Scanbox("warlock-s.png", 	610, 710, 220, 200),
 	};
 	
 	public class Scanbox{

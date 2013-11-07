@@ -33,6 +33,36 @@
     <matchQuality>-1.0</matchQuality>
     <outer-class reference="../.."/>
   </lossesLabelScanbox>
+  <playScanbox>
+    <xOffset>1200</xOffset>
+    <yOffset>100</yOffset>
+    <width>120</width>
+    <height>120</height>
+    <imgfile>play-mode.png</imgfile>
+    <scale>1.0</scale>
+    <matchQuality>-1.0</matchQuality>
+    <outer-class reference="../.."/>
+  </playScanbox>
+  <practiceScanbox>
+    <xOffset>1200</xOffset>
+    <yOffset>100</yOffset>
+    <width>120</width>
+    <height>120</height>
+    <imgfile>practice-mode.png</imgfile>
+    <scale>1.0</scale>
+    <matchQuality>-1.0</matchQuality>
+    <outer-class reference="../.."/>
+  </practiceScanbox>
+  <challengeScanbox>
+    <xOffset>1200</xOffset>
+    <yOffset>100</yOffset>
+    <width>120</width>
+    <height>120</height>
+    <imgfile>challenge-mode.png</imgfile>
+    <scale>1.0</scale>
+    <matchQuality>-1.0</matchQuality>
+    <outer-class reference="../.."/>
+  </challengeScanbox>
   <goFirstScanbox>
     <xOffset>910</xOffset>
     <yOffset>550</yOffset>
@@ -391,4 +421,96 @@
       <outer-class reference="../../.."/>
     </HearthReaderSetting_-Scanbox>
   </opponentHeroScanboxes>
+  <myHeroScanboxes>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>610</xOffset>
+      <yOffset>710</yOffset>
+      <width>220</width>
+      <height>200</height>
+      <imgfile>mage-s.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>610</xOffset>
+      <yOffset>710</yOffset>
+      <width>220</width>
+      <height>200</height>
+      <imgfile>hunter-s.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>610</xOffset>
+      <yOffset>710</yOffset>
+      <width>220</width>
+      <height>200</height>
+      <imgfile>warrior-s.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>610</xOffset>
+      <yOffset>710</yOffset>
+      <width>220</width>
+      <height>200</height>
+      <imgfile>shaman-s.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>610</xOffset>
+      <yOffset>710</yOffset>
+      <width>220</width>
+      <height>200</height>
+      <imgfile>druid-s.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>610</xOffset>
+      <yOffset>710</yOffset>
+      <width>220</width>
+      <height>200</height>
+      <imgfile>priest-s.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>610</xOffset>
+      <yOffset>710</yOffset>
+      <width>220</width>
+      <height>200</height>
+      <imgfile>rogue-s.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>610</xOffset>
+      <yOffset>710</yOffset>
+      <width>220</width>
+      <height>200</height>
+      <imgfile>paladin-s.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>610</xOffset>
+      <yOffset>710</yOffset>
+      <width>220</width>
+      <height>200</height>
+      <imgfile>warlock-s.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+  </myHeroScanboxes>
 </HearthReaderSetting>

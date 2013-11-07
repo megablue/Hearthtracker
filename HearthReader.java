@@ -8,6 +8,12 @@ import org.sikuli.api.visual.Canvas;
 import org.sikuli.api.visual.DesktopCanvas;
 
 public class HearthReader {
+	private static final int UNKNOWNMODE = -1;
+	private static final int MENUMODE = 0;
+	private static final int ARENAMODE = 1;
+	private static final int PLAYMODE = 2;
+	private static final int CHALLENGEMODE = 3;
+	private static final int PRACTICEMODE = 4;
 	boolean debugMode = true;
 	boolean inited = false;
 	boolean gameLangInited = false;
@@ -29,13 +35,16 @@ public class HearthReader {
 	static String lastArenaResult = "Unknown";
 	static String lastMatchResult = "Unknown";
 	
-	int arenaMode = -1;
+	int gameMode = UNKNOWNMODE;
 	int inGameMode = -1;
 	
 	boolean paused = false;
 
 	Tracker tracker = null;
 
+	Target playImageTarget;
+	Target practiceImageTarget;
+	Target challengeImageTarget;
 	Target questImageTarget;
 	Target checkedImageTarget;
 	Target lossesLabelImageTarget;
@@ -225,6 +234,11 @@ public class HearthReader {
 		
 		questImageTarget 	= this.prepareImageTarget(readerSettings.menuScanbox);
 		checkedImageTarget 	= this.prepareImageTarget(readerSettings.lossesScanboxes[0]);
+		
+		playImageTarget = this.prepareImageTarget(readerSettings.playScanbox);
+		challengeImageTarget = this.prepareImageTarget(readerSettings.challengeScanbox);
+		practiceImageTarget = this.prepareImageTarget(readerSettings.practiceScanbox);
+		
 		this.initGameLang();
 	}
 		
@@ -309,16 +323,39 @@ public class HearthReader {
 		return (foundRegion != null);
 	}
 
-	private synchronized void scanArenaScoreScreen() {	
-		if(this.findImage(readerSettings.winsLabelScanbox, winsLabelImageTarget, "Wins Label")){
-			arenaMode = 1;
-			oppHero = -1;
+	private synchronized void scanMode() {
+		if(this.findImage(readerSettings.menuScanbox, questImageTarget, "Quest icon")){
+			System.out.println("Found quest icon");
+			gameMode = MENUMODE;
+			inGameMode = 0;
 			return;
 		}
 		
-		if(this.findImage(readerSettings.lossesLabelScanbox, lossesLabelImageTarget, "Losses Label")){
-			arenaMode = 1;
+		if(this.findImage(readerSettings.winsLabelScanbox, winsLabelImageTarget, "Wins Label")){
+			gameMode = ARENAMODE;
 			oppHero = -1;
+			inGameMode = 0;
+			return;
+		}
+		
+		if(this.findImage(readerSettings.playScanbox, playImageTarget, "Play mode Label")){
+			gameMode = PLAYMODE;
+			oppHero = -1;
+			inGameMode = 0;
+			return;
+		}
+		
+		if(this.findImage(readerSettings.playScanbox, challengeImageTarget, "Challenge mode Label")){
+			gameMode = CHALLENGEMODE;
+			oppHero = -1;
+			inGameMode = 0;
+			return;
+		}
+		
+		if(this.findImage(readerSettings.playScanbox, practiceImageTarget, "Practice mode Label")){
+			gameMode = PRACTICEMODE;
+			oppHero = -1;
+			inGameMode = 0;
 			return;
 		}
 				
@@ -334,7 +371,19 @@ public class HearthReader {
 	}
 	
 	public boolean isArenaMode(){
-		return arenaMode == 1 ? true : false;
+		return gameMode == 1 ? true : false;
+	}
+	
+	public boolean isPlayMode(){
+		return gameMode == 2 ? true : false;
+	}
+	
+	public boolean isChallengeMode(){
+		return gameMode == 3 ? true : false;
+	}
+	
+	public boolean isPraticeMode(){
+		return gameMode == 4 ? true : false;
 	}
 	
 	private synchronized void scanArenaScore() {
@@ -376,7 +425,6 @@ public class HearthReader {
 				losses = 0;
 			}
 
-			
 			try {
 				System.out.println("Saving arena result...");
 				tracker.saveArenaResult(myHero, wins, losses);
@@ -390,6 +438,9 @@ public class HearthReader {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else {
+			previousWins = wins;
+			previousLosses = losses;
 		}
 	}
 	
@@ -411,7 +462,7 @@ public class HearthReader {
 	}
 	
 	private synchronized void resetFlags(){
-		arenaMode = -1;
+		gameMode = -1;
 		inGameMode = -1;
 		victory = -1;
 		myHero = -1;
@@ -436,9 +487,20 @@ public class HearthReader {
 		return;
 	}
 	
-	private synchronized void scanOppHero() {
-		if(!this.isInGame() || this.foundOppHero()){
+	private synchronized void scanGameHeroes() {
+		if(!this.isInGame() || this.foundGameHero()){
 			return;
+		}
+		
+		if(!this.isArenaMode()){
+			for(int i = 0; i < heroesThumbIT.length; i++){
+				if(this.findImage(readerSettings.myHeroScanboxes[i], heroesThumbIT[i], "My Hero (" + heroesList.getHeroLabel(i) + ") ")){
+					System.out.println("Found my hero: (" + i + ") " + heroesList.getHeroLabel(i));
+					myHero = i;
+					this.formatMatchStatus();
+					break;
+				}
+			}
 		}
 		
 		for(int i = 0; i < heroesThumbIT.length; i++){
@@ -449,7 +511,7 @@ public class HearthReader {
 				break;
 			}
 		}
-		
+
 		return;
 	}
 	
@@ -572,19 +634,6 @@ public class HearthReader {
 		return;
 	}
 	
-	private synchronized void scanMenuScreen(){
-		if(this.isInGame()){
-			return;
-		}
-		
-		if(this.findImage(readerSettings.menuScanbox, questImageTarget, "Quest icon")){
-			System.out.println("Found quest icon");
-			arenaMode = 0;
-			inGameMode = 0;
-			return;
-		}
-	}
-	
 	public int getBoardWidth(){
 		int[] gameRes = this.getGameResolution();
 		return (gameRes[1]/3) * 4;
@@ -657,8 +706,8 @@ public class HearthReader {
 		canvas.display(2);
 	}
 	
-	public boolean foundOppHero(){
-		return oppHero > - 1  ? true : false;
+	public boolean foundGameHero(){
+		return myHero > - 1 && oppHero > - 1  ? true : false;
 	}
 	
 	public boolean isGoFirst(){
@@ -720,22 +769,22 @@ public class HearthReader {
 		}
 
 		if(!this.isInGame()){
-			this.scanMenuScreen();
-			this.scanArenaScoreScreen();
+			this.scanMode();
 		}
 		
-		if(this.isArenaMode() && !this.isInGame()){
-			this.scanArenaScore();
-			this.scanArenaHero();
-		}
-		
-		if(this.isArenaMode() && !this.isInGame()){
-			this.scanCoinScreen();
-		}
-		
-		if(this.isArenaMode() && this.isInGame()){
-			this.scanOppHero();
-			this.scanVictory();
+		if(this.isArenaMode() || this.isPlayMode() || this.isChallengeMode() || this.isPraticeMode()){
+			if(!this.isInGame()){
+				
+				if(this.isArenaMode()){
+					this.scanArenaScore();
+					this.scanArenaHero();
+				}
+
+				this.scanCoinScreen();
+			} else {
+				this.scanGameHeroes();
+				this.scanVictory();
+			}
 		}
 		
 		this.autoPing();
