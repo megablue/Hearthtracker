@@ -62,8 +62,6 @@ import com.googlecode.javacv.CameraDevice.Settings;
 public class HearthUI {
 
 	protected Shell shlHearthtracker;
-	private Composite composite_2;
-	private Table tableOverview;
 	private Label lblLatestGameStatus;
 	private Label lblWinrate;
 	private Label lblMyClassStatus;
@@ -79,6 +77,8 @@ public class HearthUI {
 	private Label lblLastScanSubArea;
 	private Button btnAutoDetectGameRes;
 	
+	private Group grpStats;
+	
 	private Display display;
 	private static HearthUI window;
 	static boolean debugMode = HearthHelper.isDevelopmentEnvironment();
@@ -93,6 +93,7 @@ public class HearthUI {
 	private static Logger logger;
 	
 	Thread hearththread;
+	private Table table;
 	
 	/**
 	 * Launch the application.
@@ -203,13 +204,6 @@ public class HearthUI {
 				hearththread.interrupt();
 			}
 		});
-		shlHearthtracker.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent arg0) {
-				window.poppulateOverviewTable();
-				window.poppulateCurrentStats();
-			}
-		});
 		shlHearthtracker.setSize(615, 530);
 		shlHearthtracker.setText("HearthTracker - Automated Stats Tracking for Hearthstone players!");
 		shlHearthtracker.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -221,17 +215,11 @@ public class HearthUI {
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmDashboard.setControl(composite);
-		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+		composite.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
-		SashForm sashForm = new SashForm(composite, SWT.NONE);
-		
-		composite_2 = new Composite(sashForm, SWT.NONE);
-		composite_2.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		SashForm sashForm_1 = new SashForm(composite_2, SWT.VERTICAL);
-		
-		Group grpCurrentStats = new Group(sashForm_1, SWT.NONE);
-		grpCurrentStats.setText("Current Stats");
+		Group grpCurrentStats = new Group(composite, SWT.NONE);
+		grpCurrentStats.setLayoutData(new RowData(588, 90));
+		grpCurrentStats.setText("Current Status");
 		grpCurrentStats.setLayout(new FormLayout());
 		
 		Label lblArenaScore = new Label(grpCurrentStats, SWT.NONE);
@@ -246,7 +234,7 @@ public class HearthUI {
 		fd_lblNewLabel_4.left = new FormAttachment(0, 10);
 		fd_lblNewLabel_4.top = new FormAttachment(lblArenaScore, 6);
 		lblNewLabel_4.setLayoutData(fd_lblNewLabel_4);
-		lblNewLabel_4.setText("Arena Class:");
+		lblNewLabel_4.setText("Hero Class:");
 		
 		Label lblLatestGame = new Label(grpCurrentStats, SWT.NONE);
 		FormData fd_lblLatestGame = new FormData();
@@ -257,6 +245,7 @@ public class HearthUI {
 		
 		lblLatestGameStatus = new Label(grpCurrentStats, SWT.NONE);
 		FormData fd_lblLatestGameStatus = new FormData();
+		fd_lblLatestGameStatus.width = 200;
 		fd_lblLatestGameStatus.right = new FormAttachment(100, -7);
 		fd_lblLatestGameStatus.left = new FormAttachment(lblLatestGame, 19);
 		fd_lblLatestGameStatus.top = new FormAttachment(lblLatestGame, 0, SWT.TOP);
@@ -272,14 +261,16 @@ public class HearthUI {
 		
 		lblWinrate = new Label(grpCurrentStats, SWT.NONE);
 		FormData fd_lblWinrate = new FormData();
+		fd_lblWinrate.width = 200;
 		fd_lblWinrate.top = new FormAttachment(0, 5);
 		fd_lblWinrate.left = new FormAttachment(0, 97);
 		lblWinrate.setLayoutData(fd_lblWinrate);
-		lblWinrate.setText(".....................");
+		lblWinrate.setText(".................................................");
 		
 		lblMyClassStatus = new Label(grpCurrentStats, SWT.NONE);
 		lblMyClassStatus.setText("...........................................");
 		FormData fd_lblMyClassStatus = new FormData();
+		fd_lblMyClassStatus.width = 200;
 		fd_lblMyClassStatus.bottom = new FormAttachment(lblLatestGameStatus, -6);
 		fd_lblMyClassStatus.top = new FormAttachment(lblWinrate, 27);
 		fd_lblMyClassStatus.right = new FormAttachment(100, -79);
@@ -290,110 +281,62 @@ public class HearthUI {
 		lblArenaScoreStatus.setLayoutData(new FormData());
 		lblArenaScoreStatus.setText("...........................................");
 		FormData fd_label = new FormData();
+		fd_label.width = 200;
 		fd_label.bottom = new FormAttachment(lblMyClassStatus, -6);
 		fd_label.right = new FormAttachment(100, -73);
 		fd_label.top = new FormAttachment(lblArenaScore, 0, SWT.TOP);
 		fd_label.left = new FormAttachment(lblLatestGameStatus, 0, SWT.LEFT);
 		lblArenaScoreStatus.setLayoutData(fd_label);
 		
-		Composite composite_5 = new Composite(sashForm_1, SWT.NONE);
-		composite_5.setLayout(new FillLayout(SWT.HORIZONTAL));
+		grpStats = new Group(composite, SWT.NONE);
+		grpStats.setText("Stats");
+		grpStats.setLayout(new FormLayout());
+		grpStats.setLayoutData(new RowData(588, 340));
 		
-		Group grpAbout = new Group(composite_5, SWT.NONE);
-		grpAbout.setText("About");
-		grpAbout.setLayout(new FillLayout(SWT.VERTICAL));
+		Combo combo = new Combo(grpStats, SWT.READ_ONLY);
+		FormData fd_combo = new FormData();
+		fd_combo.top = new FormAttachment(0);
+		fd_combo.right = new FormAttachment(100, -440);
+		combo.setLayoutData(fd_combo);
+		combo.setItems(new String[] {"Arena (as)", "Play (as)"});
+		combo.select(0);
 		
-		Composite composite_3 = new Composite(grpAbout, SWT.NONE);
-		composite_3.setLayout(new GridLayout(1, false));
+		table = new Table(grpStats, SWT.FULL_SELECTION);
+		fd_combo.left = new FormAttachment(table, 0, SWT.LEFT);
+		table.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+		FormData fd_table = new FormData();
+		fd_table.bottom = new FormAttachment(100, -7);
+		fd_table.top = new FormAttachment(0, 29);
+		fd_table.right = new FormAttachment(0, 578);
+		fd_table.left = new FormAttachment(0, 7);
+		table.setLayoutData(fd_table);
 		
-		Label lblVersion = new Label(composite_3, SWT.NONE);
-		lblVersion.setText("HearthTracker v1.0.7 Beta");
+		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn.setWidth(40);
 		
-		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
-		lblCopyrightc.setText("Copyright \u00A9 2013 megablue");
+		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn_1.setWidth(55);
+		tblclmnNewColumn_1.setText("Wins");
 		
-		Label lblWebsite = new Label(composite_3, SWT.NONE);
-		lblWebsite.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseUp(MouseEvent arg0) {
-				try {
-					java.awt.Desktop.getDesktop().browse(new URL("http://hearthtracker.blogspot.com").toURI());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		lblWebsite.setText("Website:  hearthtracker.blogspot.com");
+		TableColumn tblclmnNewColumn_2 = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn_2.setWidth(55);
+		tblclmnNewColumn_2.setText("Losses");
 		
-		StyledText styledText = new StyledText(composite_3, SWT.READ_ONLY | SWT.WRAP);
-		styledText.setText("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!");
-		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
-		Composite composite_4 = new Composite(sashForm_1, SWT.NONE);
-		composite_4.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		Group grpSupportTheProject = new Group(composite_4, SWT.NONE);
-		grpSupportTheProject.setText("Support the project!");
-		grpSupportTheProject.setLayout(new FormLayout());
-		
-		Label lblPaypal = new Label(grpSupportTheProject, SWT.NONE);
-		lblPaypal.setText("");
-		FormData fd_lblPaypal = new FormData();
-		fd_lblPaypal.top = new FormAttachment(0);
-		fd_lblPaypal.left = new FormAttachment(0, 71);
-		fd_lblPaypal.bottom = new FormAttachment(0, 58);
-		fd_lblPaypal.right = new FormAttachment(0, 217);
-		lblPaypal.setLayoutData(fd_lblPaypal);
-		lblPaypal.setToolTipText("Your support means a lot to me. Thank you for even hovering over the donate button!");
-		lblPaypal.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseUp(MouseEvent arg0) {
-				try {
-					java.awt.Desktop.getDesktop().browse(new URL("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2NK7Y4PU86UK2").toURI());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		lblPaypal.setImage(new Image( display, "." + File.separator + "images" + File.separator + "btn_donate_150wx70h.gif" ));
-		sashForm_1.setWeights(new int[] {110, 278, 80});
-		
-		tableOverview = new Table(sashForm, SWT.BORDER | SWT.FULL_SELECTION);
-		tableOverview.setLinesVisible(true);
-		tableOverview.setHeaderVisible(true);
-		
-		TableColumn tblclmnClass = new TableColumn(tableOverview, SWT.CENTER);
-		tblclmnClass.setText("H");
-		tblclmnClass.setToolTipText("Your class");
-		tblclmnClass.setWidth(34);
-		
-		TableColumn tblclmnWins = new TableColumn(tableOverview, SWT.RIGHT);
-		tblclmnWins.setToolTipText("% for 6 wins or more per arena session");
-		tblclmnWins.setWidth(50);
-		tblclmnWins.setText("6+");
-		
-		TableColumn tblclmnWin = new TableColumn(tableOverview, SWT.RIGHT);
-		tblclmnWin.setToolTipText("Total wins/losses in %");
-		tblclmnWin.setWidth(48);
+		TableColumn tblclmnWin = new TableColumn(table, SWT.NONE);
+		tblclmnWin.setWidth(55);
 		tblclmnWin.setText("Win %");
 		
-		TableColumn tblclmnTotal = new TableColumn(tableOverview, SWT.RIGHT);
-		tblclmnTotal.setToolTipText("Total wins");
-		tblclmnTotal.setWidth(50);
-		tblclmnTotal.setText("Wins");
+		TableColumn tblclmnNewColumn_3 = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn_3.setWidth(55);
+		tblclmnNewColumn_3.setText("6+");
 		
-		TableColumn tblclmnNewColumn = new TableColumn(tableOverview, SWT.RIGHT);
-		tblclmnNewColumn.setToolTipText("Total losses");
-		tblclmnNewColumn.setWidth(50);
-		tblclmnNewColumn.setText("Losses");
+		TableColumn tblclmnNewColumn_4 = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn_4.setWidth(72);
+		tblclmnNewColumn_4.setText("Total Runs");
+		GridData gd_lblNewLabel_15 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel_15.widthHint = 60;
 		
 		//tableItem_1.setT
 		//sashForm.setWeights(new int[] {263, 312});
@@ -552,6 +495,82 @@ public class HearthUI {
 		
 		btnVisualizeNow = new Button(grpDiagnostics, SWT.NONE);
 		btnVisualizeNow.setText("Visualize now");
+		
+		TabItem tbtmAbout = new TabItem(tabFolder, SWT.NONE);
+		tbtmAbout.setText("About");
+		
+		Group grpAbout = new Group(tabFolder, SWT.NONE);
+		tbtmAbout.setControl(grpAbout);
+		grpAbout.setText("About");
+		grpAbout.setLayout(new FillLayout(SWT.VERTICAL));
+		
+		Composite composite_3 = new Composite(grpAbout, SWT.NONE);
+		composite_3.setLayout(new GridLayout(1, false));
+		
+		Label lblVersion = new Label(composite_3, SWT.NONE);
+		lblVersion.setText("HearthTracker v1.0.7 Beta");
+		
+		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
+		lblCopyrightc.setText("Copyright \u00A9 2013 megablue");
+		
+		Label lblWebsite = new Label(composite_3, SWT.NONE);
+		lblWebsite.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URL("http://hearthtracker.blogspot.com").toURI());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		lblWebsite.setText("Website:  hearthtracker.blogspot.com");
+		
+		Label lblNewLabel_7 = new Label(composite_3, SWT.NONE);
+		lblNewLabel_7.setText("");
+		
+		Composite composite_7 = new Composite(composite_3, SWT.NONE);
+		GridData gd_composite_7 = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_composite_7.widthHint = 583;
+		composite_7.setLayoutData(gd_composite_7);
+		
+		StyledText styledText = new StyledText(composite_7, SWT.READ_ONLY | SWT.WRAP);
+		styledText.setText("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!");
+		styledText.setBounds(0, 0, 583, 119);
+		
+		Label lblNewLabel_8 = new Label(composite_3, SWT.NONE);
+		lblNewLabel_8.setText("");
+		
+		Label lblSupportTheProject = new Label(composite_3, SWT.NONE);
+		lblSupportTheProject.setText("Support the project!");
+		
+		Label lblPaypal = new Label(composite_3, SWT.NONE);
+		lblPaypal.setSize(146, 58);
+		lblPaypal.setText("");
+		lblPaypal.setToolTipText("Your support means a lot to me. Thank you for even hovering over the donate button!");
+		lblPaypal.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URL("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2NK7Y4PU86UK2").toURI());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		lblPaypal.setImage(new Image( display, "." + File.separator + "images" + File.separator + "btn_donate_150wx70h.gif" ));
+		
+
+		
+		
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
 		poppulateScannerOptions();
@@ -770,19 +789,21 @@ public class HearthUI {
 		lblWinrate.setText(winrateStr);
 		lblArenaScoreStatus.setText(score);
 		lblMyClassStatus.setText(hero);
-		lblLatestGameStatus.setText(latest + "");	
-		composite_2.layout();
+		lblLatestGameStatus.setText(latest + "");
 	}
 	
-	private void poppulateOverviewTable(){	
-		tableOverview.removeAll();
+	private void poppulateOverviewTable(){
+		int selected = table.getSelectionIndex();
+		table.removeAll();
 		
 		for(int heroId = 0; heroId < heroesList.getTotal(); heroId++){
-			fillWinrate(heroId);
+			fillTable(heroId);
 		}
 		
 		//fill the unknown heroes as well
-		fillWinrate(-1);
+		fillTable(-1);
+		
+		table.select(selected);
 	}
 	
 	private Image resize(Image image, int width, int height) {
@@ -798,39 +819,40 @@ public class HearthUI {
 		return scaled;
 	}
 	
-	private void fillWinrate(int heroId){
-		TableItem tableItem_1 = new TableItem(tableOverview, SWT.NONE);
+	private void fillTable(int heroId){
+		TableItem tableItem_1 = new TableItem(table, SWT.NONE);
 		float sixplus = 0, overall = 0;
+		int wins = 0;
+		int losses = 0;
 		Image heroImg;
 		
 		try {
+			wins = tracker.getTotalWinsByHero(heroId);
+			losses = tracker.getTotalLossesByHero(heroId);
 			sixplus = tracker.getWinRateByHeroSpecial(heroId);
 			overall = tracker.getWinRateByHero(heroId);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		heroImg = new Image(display, "." + File.separator + "images" + File.separator + heroesList.getHeroName(heroId) + "-s.png");
-		heroImg = resize(heroImg, 28, 28);
+		heroImg = resize(heroImg, 24, 24);
 		tableItem_1.setImage(0, heroImg);
-
-		//tableItem_1.setText(1, heroesList.getHeroLabel(heroId));
 		
-		if(sixplus > -1){
-			tableItem_1.setText(1,  new DecimalFormat("0.00").format(sixplus*100));
+		if( !(overall > -1 && sixplus > -1) ){
+			return;
 		}
+		
+		tableItem_1.setText(1,   wins + "");
+		tableItem_1.setText(2,   losses + "");
 		
 		if(overall > -1){
-			tableItem_1.setText(2,  new DecimalFormat("0.00").format(overall*100));
+			tableItem_1.setText(3,  new DecimalFormat("0.00").format(overall*100));
 		}
 		
-		try {
-			tableItem_1.setText(3,  tracker.getTotalWinsByHero(heroId) + "");
-			tableItem_1.setText(4,  tracker.getTotalLossesByHero(heroId) + "");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(sixplus > -1){
+			tableItem_1.setText(4,  new DecimalFormat("0.00").format(sixplus*100));
 		}
+		
 	}
 }
