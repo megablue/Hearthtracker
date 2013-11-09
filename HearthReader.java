@@ -726,18 +726,9 @@ public class HearthReader {
 		}
 		
 		int[] winPos = HearthHelper.getHearthstonePosition();
-		
-		if(winPos[0] < 0 && winPos[2] < 0){
-			resolution[0] = (winPos[2] * -1) - (winPos[0] - 1);
-		} else {
-			resolution[0] = winPos[2] - winPos[0];
-		}
-		
-		if(winPos[1] < 0 && winPos[3] < 0){
-			resolution[1] =  (winPos[3] * -1) - (winPos[1] * -1);
-		} else {
-			resolution[1] =  winPos[3] - winPos[1];
-		}
+
+		resolution[0] = winPos[2] - winPos[0];
+		resolution[1] =  winPos[3] - winPos[1];
 		
 		//use default resolution if failed to detect
 		if(resolution[0] == 0 || resolution[1] == 0){
