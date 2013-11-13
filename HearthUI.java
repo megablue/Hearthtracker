@@ -57,15 +57,12 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 import com.googlecode.javacv.CameraDevice.Settings;
+import org.eclipse.swt.widgets.DateTime;
 
 
 public class HearthUI {
 
 	protected Shell shlHearthtracker;
-	private Label lblLatestGameStatus;
-	private Label lblWinrate;
-	private Label lblMyClassStatus;
-	private Label lblArenaScoreStatus;
 	private CCombo cmbGameLang;
 	private Button btnEnableScanner;
 	private Button[] btnScanSpeed = new Button[3];
@@ -76,6 +73,9 @@ public class HearthUI {
 	private Label lblLastscreencoordinate;
 	private Label lblLastScanSubArea;
 	private Button btnAutoDetectGameRes;
+	private Group grpCurrentStats;
+	private Label[] lblStatus = new Label[17]; 
+	private Combo cmbStatsMode;
 	
 	private Group grpStats;
 	
@@ -94,6 +94,10 @@ public class HearthUI {
 	
 	Thread hearththread;
 	private Table table;
+	private Table table_1;
+	private Text text;
+	private Text text_1;
+	private Text text_2;
 	
 	/**
 	 * Launch the application.
@@ -204,8 +208,8 @@ public class HearthUI {
 				hearththread.interrupt();
 			}
 		});
-		shlHearthtracker.setSize(615, 530);
-		shlHearthtracker.setText("HearthTracker - Automated Stats Tracking for Hearthstone players!");
+		shlHearthtracker.setSize(615, 432);
+		shlHearthtracker.setText("HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!");
 		shlHearthtracker.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		TabFolder tabFolder = new TabFolder(shlHearthtracker, SWT.NONE);
@@ -217,100 +221,26 @@ public class HearthUI {
 		tbtmDashboard.setControl(composite);
 		composite.setLayout(new RowLayout(SWT.HORIZONTAL));
 		
-		Group grpCurrentStats = new Group(composite, SWT.NONE);
-		grpCurrentStats.setLayoutData(new RowData(588, 90));
+		SashForm sashForm = new SashForm(composite, SWT.NONE);
+		sashForm.setLayoutData(new RowData(598, 373));
+		
+		grpCurrentStats = new Group(sashForm, SWT.NONE);
 		grpCurrentStats.setText("Current Status");
-		grpCurrentStats.setLayout(new FormLayout());
+		grpCurrentStats.setLayout(new GridLayout(1, false));
 		
-		Label lblArenaScore = new Label(grpCurrentStats, SWT.NONE);
-		FormData fd_lblArenaScore = new FormData();
-		fd_lblArenaScore.top = new FormAttachment(0, 26);
-		fd_lblArenaScore.left = new FormAttachment(0, 10);
-		lblArenaScore.setLayoutData(fd_lblArenaScore);
-		lblArenaScore.setText("Arena Score:");
-		
-		Label lblNewLabel_4 = new Label(grpCurrentStats, SWT.NONE);
-		FormData fd_lblNewLabel_4 = new FormData();
-		fd_lblNewLabel_4.left = new FormAttachment(0, 10);
-		fd_lblNewLabel_4.top = new FormAttachment(lblArenaScore, 6);
-		lblNewLabel_4.setLayoutData(fd_lblNewLabel_4);
-		lblNewLabel_4.setText("Hero Class:");
-		
-		Label lblLatestGame = new Label(grpCurrentStats, SWT.NONE);
-		FormData fd_lblLatestGame = new FormData();
-		fd_lblLatestGame.top = new FormAttachment(lblNewLabel_4, 6);
-		fd_lblLatestGame.left = new FormAttachment(lblArenaScore, 0, SWT.LEFT);
-		lblLatestGame.setLayoutData(fd_lblLatestGame);
-		lblLatestGame.setText("Latest Game:");
-		
-		lblLatestGameStatus = new Label(grpCurrentStats, SWT.NONE);
-		FormData fd_lblLatestGameStatus = new FormData();
-		fd_lblLatestGameStatus.width = 200;
-		fd_lblLatestGameStatus.right = new FormAttachment(100, -7);
-		fd_lblLatestGameStatus.left = new FormAttachment(lblLatestGame, 19);
-		fd_lblLatestGameStatus.top = new FormAttachment(lblLatestGame, 0, SWT.TOP);
-		lblLatestGameStatus.setLayoutData(fd_lblLatestGameStatus);
-		lblLatestGameStatus.setText("...........................................");
-		
-		Label lblNewLabel_3 = new Label(grpCurrentStats, SWT.NONE);
-		FormData fd_lblNewLabel_3 = new FormData();
-		fd_lblNewLabel_3.bottom = new FormAttachment(lblArenaScore, -6);
-		fd_lblNewLabel_3.left = new FormAttachment(lblArenaScore, 0, SWT.LEFT);
-		lblNewLabel_3.setLayoutData(fd_lblNewLabel_3);
-		lblNewLabel_3.setText("Games Played:");
-		
-		lblWinrate = new Label(grpCurrentStats, SWT.NONE);
-		FormData fd_lblWinrate = new FormData();
-		fd_lblWinrate.width = 200;
-		fd_lblWinrate.top = new FormAttachment(0, 5);
-		fd_lblWinrate.left = new FormAttachment(0, 97);
-		lblWinrate.setLayoutData(fd_lblWinrate);
-		lblWinrate.setText(".................................................");
-		
-		lblMyClassStatus = new Label(grpCurrentStats, SWT.NONE);
-		lblMyClassStatus.setText("...........................................");
-		FormData fd_lblMyClassStatus = new FormData();
-		fd_lblMyClassStatus.width = 200;
-		fd_lblMyClassStatus.bottom = new FormAttachment(lblLatestGameStatus, -6);
-		fd_lblMyClassStatus.top = new FormAttachment(lblWinrate, 27);
-		fd_lblMyClassStatus.right = new FormAttachment(100, -79);
-		fd_lblMyClassStatus.left = new FormAttachment(lblNewLabel_4, 23);
-		lblMyClassStatus.setLayoutData(fd_lblMyClassStatus);
-		
-		lblArenaScoreStatus = new Label(grpCurrentStats, SWT.NONE);
-		lblArenaScoreStatus.setLayoutData(new FormData());
-		lblArenaScoreStatus.setText("...........................................");
-		FormData fd_label = new FormData();
-		fd_label.width = 200;
-		fd_label.bottom = new FormAttachment(lblMyClassStatus, -6);
-		fd_label.right = new FormAttachment(100, -73);
-		fd_label.top = new FormAttachment(lblArenaScore, 0, SWT.TOP);
-		fd_label.left = new FormAttachment(lblLatestGameStatus, 0, SWT.LEFT);
-		lblArenaScoreStatus.setLayoutData(fd_label);
-		
-		grpStats = new Group(composite, SWT.NONE);
+		grpStats = new Group(sashForm, SWT.NONE);
 		grpStats.setText("Stats");
 		grpStats.setLayout(new FormLayout());
-		grpStats.setLayoutData(new RowData(588, 340));
-		
-		Combo combo = new Combo(grpStats, SWT.READ_ONLY);
-		FormData fd_combo = new FormData();
-		fd_combo.top = new FormAttachment(0);
-		fd_combo.right = new FormAttachment(100, -440);
-		combo.setLayoutData(fd_combo);
-		combo.setItems(new String[] {"Arena (as)", "Play (as)"});
-		combo.select(0);
 		
 		table = new Table(grpStats, SWT.FULL_SELECTION);
-		fd_combo.left = new FormAttachment(table, 0, SWT.LEFT);
 		table.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		FormData fd_table = new FormData();
-		fd_table.bottom = new FormAttachment(100, -7);
-		fd_table.top = new FormAttachment(0, 29);
-		fd_table.right = new FormAttachment(0, 578);
-		fd_table.left = new FormAttachment(0, 7);
+		fd_table.bottom = new FormAttachment(100, -10);
+		fd_table.left = new FormAttachment(0, 13);
+		fd_table.right = new FormAttachment(100, -13);
+		fd_table.top = new FormAttachment(0, 48);
 		table.setLayoutData(fd_table);
 		
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
@@ -335,8 +265,222 @@ public class HearthUI {
 		TableColumn tblclmnNewColumn_4 = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn_4.setWidth(72);
 		tblclmnNewColumn_4.setText("Total Runs");
+		
+		cmbStatsMode = new Combo(grpStats, SWT.READ_ONLY);
+		cmbStatsMode.setItems(new String[] {"Arena mode (played as)", "Ranked mode (played as)", "Unranked mode (played as)"});
+		FormData fd_cmbStatsMode = new FormData();
+		fd_cmbStatsMode.top = new FormAttachment(0, 10);
+		fd_cmbStatsMode.left = new FormAttachment(0, 10);
+		cmbStatsMode.setLayoutData(fd_cmbStatsMode);
+		cmbStatsMode.select(0);
+		sashForm.setWeights(new int[] {229, 366});
 		GridData gd_lblNewLabel_15 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblNewLabel_15.widthHint = 60;
+		
+		TabItem tbtmRecords = new TabItem(tabFolder, SWT.NONE);
+		tbtmRecords.setText("Records");
+		
+		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
+		tbtmRecords.setControl(composite_2);
+		composite_2.setLayout(new RowLayout(SWT.HORIZONTAL));
+		
+		SashForm sashForm_1 = new SashForm(composite_2, SWT.NONE);
+		sashForm_1.setLayoutData(new RowData(598, 373));
+		
+		Composite composite_5 = new Composite(sashForm_1, SWT.NONE);
+		composite_5.setLayout(new FormLayout());
+		
+		table_1 = new Table(composite_5, SWT.FULL_SELECTION);
+		FormData fd_table_1 = new FormData();
+		fd_table_1.bottom = new FormAttachment(0, 373);
+		fd_table_1.right = new FormAttachment(0, 250);
+		fd_table_1.top = new FormAttachment(0, 27);
+		fd_table_1.left = new FormAttachment(0);
+		table_1.setLayoutData(fd_table_1);
+		table_1.setHeaderVisible(true);
+		table_1.setLinesVisible(true);
+		
+		Combo combo_1 = new Combo(composite_5, SWT.READ_ONLY);
+		combo_1.setItems(new String[] {"Arena Results", "Match Results"});
+		FormData fd_combo_1 = new FormData();
+		fd_combo_1.left = new FormAttachment(0);
+		fd_combo_1.top = new FormAttachment(0);
+		
+		TableColumn tblclmnAs = new TableColumn(table_1, SWT.NONE);
+		tblclmnAs.setWidth(40);
+		tblclmnAs.setText("as");
+		
+		TableColumn tblclmnNewColumn_5 = new TableColumn(table_1, SWT.NONE);
+		tblclmnNewColumn_5.setWidth(40);
+		tblclmnNewColumn_5.setText("vs");
+		
+		TableColumn tblclmnNewColumn_6 = new TableColumn(table_1, SWT.NONE);
+		tblclmnNewColumn_6.setWidth(60);
+		tblclmnNewColumn_6.setText("result");
+		
+		TableColumn tblclmnNewColumn_7 = new TableColumn(table_1, SWT.NONE);
+		tblclmnNewColumn_7.setWidth(100);
+		tblclmnNewColumn_7.setText("on");
+		combo_1.setLayoutData(fd_combo_1);
+		combo_1.select(0);
+		
+		Composite composite_8 = new Composite(sashForm_1, SWT.NONE);
+		composite_8.setLayout(new GridLayout(1, false));
+		
+		Label lblId = new Label(composite_8, SWT.RIGHT);
+		GridData gd_lblId = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblId.heightHint = 23;
+		gd_lblId.widthHint = 65;
+		lblId.setLayoutData(gd_lblId);
+		lblId.setText("Id");
+		
+		Composite composite_4 = new Composite(sashForm_1, SWT.NONE);
+		composite_4.setLayout(new GridLayout(3, false));
+		
+		Label lblGameMode = new Label(composite_8, SWT.RIGHT);
+		GridData gd_lblGameMode = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblGameMode.heightHint = 23;
+		gd_lblGameMode.widthHint = 65;
+		lblGameMode.setLayoutData(gd_lblGameMode);
+		lblGameMode.setText("Game Mode");
+		
+		Label lblAs = new Label(composite_8, SWT.RIGHT);
+		GridData gd_lblAs = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblAs.heightHint = 23;
+		gd_lblAs.widthHint = 65;
+		lblAs.setLayoutData(gd_lblAs);
+		lblAs.setText("As");
+		
+		Label lblNewLabel_3 = new Label(composite_8, SWT.NONE);
+		GridData gd_lblNewLabel_3 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel_3.heightHint = 23;
+		gd_lblNewLabel_3.widthHint = 65;
+		lblNewLabel_3.setLayoutData(gd_lblNewLabel_3);
+		lblNewLabel_3.setAlignment(SWT.RIGHT);
+		lblNewLabel_3.setText("Against");
+		
+		Label lblNewLabel_12 = new Label(composite_8, SWT.NONE);
+		GridData gd_lblNewLabel_12 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel_12.heightHint = 23;
+		gd_lblNewLabel_12.widthHint = 65;
+		lblNewLabel_12.setLayoutData(gd_lblNewLabel_12);
+		lblNewLabel_12.setAlignment(SWT.RIGHT);
+		lblNewLabel_12.setText("Goes");
+		
+		Label lblNewLabel_4 = new Label(composite_8, SWT.NONE);
+		GridData gd_lblNewLabel_4 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel_4.heightHint = 23;
+		gd_lblNewLabel_4.widthHint = 65;
+		lblNewLabel_4.setLayoutData(gd_lblNewLabel_4);
+		lblNewLabel_4.setAlignment(SWT.RIGHT);
+		lblNewLabel_4.setText("Result");
+		
+		Label lblNewLabel_9 = new Label(composite_8, SWT.NONE);
+		GridData gd_lblNewLabel_9 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel_9.heightHint = 23;
+		gd_lblNewLabel_9.widthHint = 65;
+		lblNewLabel_9.setLayoutData(gd_lblNewLabel_9);
+		lblNewLabel_9.setAlignment(SWT.RIGHT);
+		lblNewLabel_9.setText("On");
+		
+		Label lblNewLabel_10 = new Label(composite_8, SWT.NONE);
+		GridData gd_lblNewLabel_10 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel_10.heightHint = 23;
+		gd_lblNewLabel_10.widthHint = 65;
+		lblNewLabel_10.setLayoutData(gd_lblNewLabel_10);
+		lblNewLabel_10.setAlignment(SWT.RIGHT);
+		lblNewLabel_10.setText("Time played");
+		
+		Label lblNewLabel_11 = new Label(composite_4, SWT.NONE);
+		GridData gd_lblNewLabel_11 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel_11.heightHint = 23;
+		lblNewLabel_11.setLayoutData(gd_lblNewLabel_11);
+		lblNewLabel_11.setText("           ");
+		new Label(composite_4, SWT.NONE);
+		new Label(composite_4, SWT.NONE);
+		
+		Button btnRadioButton = new Button(composite_4, SWT.RADIO);
+		GridData gd_btnRadioButton = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
+		gd_btnRadioButton.heightHint = 23;
+		btnRadioButton.setLayoutData(gd_btnRadioButton);
+		btnRadioButton.setText("Arena");
+		
+		Button btnRadioButton_1 = new Button(composite_4, SWT.RADIO);
+		GridData gd_btnRadioButton_1 = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
+		gd_btnRadioButton_1.heightHint = 23;
+		btnRadioButton_1.setLayoutData(gd_btnRadioButton_1);
+		btnRadioButton_1.setText("Ranked");
+		
+		Button btnRadioButton_2 = new Button(composite_4, SWT.RADIO);
+		GridData gd_btnRadioButton_2 = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
+		gd_btnRadioButton_2.heightHint = 23;
+		btnRadioButton_2.setLayoutData(gd_btnRadioButton_2);
+		btnRadioButton_2.setText("Unranked");
+		
+		Combo combo_2 = new Combo(composite_4, SWT.NONE);
+		GridData gd_combo_2 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		gd_combo_2.heightHint = 23;
+		combo_2.setLayoutData(gd_combo_2);
+		new Label(composite_4, SWT.NONE);
+		
+		Combo combo_3 = new Combo(composite_4, SWT.NONE);
+		GridData gd_combo_3 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+		gd_combo_3.heightHint = 23;
+		combo_3.setLayoutData(gd_combo_3);
+		new Label(composite_4, SWT.NONE);
+		
+		Button btnRadioButton_3 = new Button(composite_4, SWT.RADIO);
+		GridData gd_btnRadioButton_3 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnRadioButton_3.heightHint = 23;
+		btnRadioButton_3.setLayoutData(gd_btnRadioButton_3);
+		btnRadioButton_3.setText("First");
+		
+		Button btnSecond = new Button(composite_4, SWT.RADIO);
+		GridData gd_btnSecond = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnSecond.heightHint = 23;
+		btnSecond.setLayoutData(gd_btnSecond);
+		btnSecond.setText("Second");
+		
+		Button btnRadioButton_4 = new Button(composite_4, SWT.RADIO);
+		GridData gd_btnRadioButton_4 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_btnRadioButton_4.heightHint = 23;
+		btnRadioButton_4.setLayoutData(gd_btnRadioButton_4);
+		btnRadioButton_4.setText("Unknown");
+		
+		text = new Text(composite_4, SWT.BORDER);
+		
+		text_1 = new Text(composite_4, SWT.BORDER);
+		new Label(composite_4, SWT.NONE);
+		
+		DateTime dateTime = new DateTime(composite_4, SWT.BORDER);
+		
+		DateTime dateTime_1 = new DateTime(composite_4, SWT.BORDER | SWT.TIME);
+		new Label(composite_4, SWT.NONE);
+		
+		text_2 = new Text(composite_4, SWT.BORDER);
+		
+		Label lblSeconds = new Label(composite_4, SWT.NONE);
+		lblSeconds.setText("seconds");
+		new Label(composite_4, SWT.NONE);
+		new Label(composite_4, SWT.NONE);
+		new Label(composite_4, SWT.NONE);
+		new Label(composite_4, SWT.NONE);
+		new Label(composite_4, SWT.NONE);
+		
+		Button btnNewButton = new Button(composite_4, SWT.NONE);
+		btnNewButton.setText("Modify");
+		new Label(composite_4, SWT.NONE);
+		new Label(composite_4, SWT.NONE);
+		
+		Button btnSaveAsNew = new Button(composite_4, SWT.NONE);
+		btnSaveAsNew.setText("Save as new");
+		new Label(composite_4, SWT.NONE);
+		new Label(composite_4, SWT.NONE);
+		
+		Button btnNewButton_1 = new Button(composite_4, SWT.NONE);
+		btnNewButton_1.setText("Delete");
+		new Label(composite_4, SWT.NONE);
+		sashForm_1.setWeights(new int[] {259, 72, 261});
 		
 		//tableItem_1.setT
 		//sashForm.setWeights(new int[] {263, 312});
@@ -435,7 +579,7 @@ public class HearthUI {
 		grpDiagnostics.setText("Diagnostics");
 		grpDiagnostics.setLayout(new GridLayout(4, false));
 		GridData gd_grpDiagnostics = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_grpDiagnostics.heightHint = 262;
+		gd_grpDiagnostics.heightHint = 168;
 		gd_grpDiagnostics.widthHint = 585;
 		grpDiagnostics.setLayoutData(gd_grpDiagnostics);
 		
@@ -573,6 +717,7 @@ public class HearthUI {
 		
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
+		createLabels();
 		poppulateScannerOptions();
 		poppulateGameLangs();
 		poppulateResolutions();
@@ -786,12 +931,12 @@ public class HearthUI {
 		String hero = hearth.getMyArenaHero();
 		String latest = new String(hearth.getMatchStatus());
 		
-		lblWinrate.setText(winrateStr);
-		lblArenaScoreStatus.setText(score);
-		lblMyClassStatus.setText(hero);
-		lblLatestGameStatus.setText(latest + "");
+//		lblWinrate.setText(winrateStr);
+//		lblArenaScoreStatus.setText(score);
+//		lblMyClassStatus.setText(hero);
+//		lblLatestGameStatus.setText(latest + "");
 	}
-	
+		
 	private void poppulateOverviewTable(){
 		int selected = table.getSelectionIndex();
 		table.removeAll();
@@ -804,6 +949,16 @@ public class HearthUI {
 		fillTable(-1);
 		
 		table.select(selected);
+	}
+	
+	private void createLabels(){
+		//Label lblStatus = new Label(grpCurrentStats, SWT.NONE);
+		//+-lblNewLabel_3.setText("...................................................................");
+		
+		for(int i = 0; i < lblStatus.length; i++){
+			lblStatus[i] = new Label(grpCurrentStats, SWT.NONE);
+			lblStatus[i].setText("...................................................................");
+		}
 	}
 	
 	private Image resize(Image image, int width, int height) {
@@ -820,6 +975,7 @@ public class HearthUI {
 	}
 	
 	private void fillTable(int heroId){
+		int mode = cmbStatsMode.getSelectionIndex();
 		TableItem tableItem_1 = new TableItem(table, SWT.NONE);
 		float sixplus = 0, overall = 0;
 		int wins = 0;
