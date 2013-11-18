@@ -914,15 +914,16 @@ public class HearthUI {
 	private void poppulateCurrentStats(){
 		String winrateStr = "";
 		float winrate = 0;
+		int mode = this.getMode();
 
 		try {
-			winrate = tracker.getOverallWinRate();
+			winrate = tracker.getOverallWinRate(mode);
 			
 			if(winrate >= 0){
 				winrateStr += " (" + new DecimalFormat("#.##").format(winrate) + "% )";
 			}
 			
-			winrateStr = tracker.getTotalWins() + "-" + tracker.getTotalLosses() + winrateStr;
+			winrateStr = tracker.getTotalWins() + "-" + tracker.getTotalLosses(mode) + winrateStr;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -951,10 +952,7 @@ public class HearthUI {
 		table.select(selected);
 	}
 	
-	private void createLabels(){
-		//Label lblStatus = new Label(grpCurrentStats, SWT.NONE);
-		//+-lblNewLabel_3.setText("...................................................................");
-		
+	private void createLabels(){	
 		for(int i = 0; i < lblStatus.length; i++){
 			lblStatus[i] = new Label(grpCurrentStats, SWT.NONE);
 			lblStatus[i].setText("...................................................................");
@@ -974,19 +972,34 @@ public class HearthUI {
 		return scaled;
 	}
 	
-	private void fillTable(int heroId){
+	private int getMode(){
 		int mode = cmbStatsMode.getSelectionIndex();
+		
+		switch(mode){
+			case 0:
+				return HearthReader.ARENAMODE;
+			case 1:
+				return HearthReader.RANKEDMODE;
+			case 2:
+				return HearthReader.UNRANKEDMODE;
+		}
+		
+		return HearthReader.UNKNOWNMODE;
+	}
+	
+	private void fillTable(int heroId){
 		TableItem tableItem_1 = new TableItem(table, SWT.NONE);
 		float sixplus = 0, overall = 0;
 		int wins = 0;
 		int losses = 0;
 		Image heroImg;
+		int mode = this.getMode();
 		
 		try {
-			wins = tracker.getTotalWinsByHero(heroId);
-			losses = tracker.getTotalLossesByHero(heroId);
-			sixplus = tracker.getWinRateByHeroSpecial(heroId);
-			overall = tracker.getWinRateByHero(heroId);
+			wins = tracker.getTotalWinsByHero(mode, heroId);
+			losses = tracker.getTotalLossesByHero(mode, heroId);
+			sixplus = tracker.getWinRateByHeroSpecial(mode, heroId);
+			overall = tracker.getWinRateByHero(mode, heroId);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

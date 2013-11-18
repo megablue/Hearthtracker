@@ -8,12 +8,13 @@ import org.sikuli.api.visual.Canvas;
 import org.sikuli.api.visual.DesktopCanvas;
 
 public class HearthReader {
-	private static final int UNKNOWNMODE = -1;
-	private static final int MENUMODE = 0;
-	private static final int ARENAMODE = 1;
-	private static final int PLAYMODE = 2;
-	private static final int CHALLENGEMODE = 3;
-	private static final int PRACTICEMODE = 4;
+	public static final int UNKNOWNMODE = -1;
+	public static final int MENUMODE = 0;
+	public static final int ARENAMODE = 1;
+	public static final int RANKEDMODE = 2;
+	public static final int UNRANKEDMODE = 3;
+	public static final int CHALLENGEMODE = 4;
+	public static final int PRACTICEMODE = 5;
 	boolean debugMode = true;
 	boolean inited = false;
 	boolean gameLangInited = false;
@@ -339,7 +340,7 @@ public class HearthReader {
 		}
 		
 		if(this.findImage(readerSettings.playScanbox, playImageTarget, "Play mode Label")){
-			gameMode = PLAYMODE;
+			gameMode = RANKEDMODE;
 			oppHero = -1;
 			inGameMode = 0;
 			return;
@@ -544,7 +545,7 @@ public class HearthReader {
 			
 			try {
 				System.out.println("Saving match result...");
-				tracker.saveMatchResult(myHero, oppHero, goFirst, victory, startTime, totalTime);
+				tracker.saveMatchResult(ARENAMODE, myHero, oppHero, goFirst, victory, startTime, totalTime);
 				System.out.println("Done saving match result...");
 				inGameMode = 0;
 				victory = -1;
@@ -582,13 +583,13 @@ public class HearthReader {
 		}
 		
 		lastMatchResult = output;
-		tracker.saveLiveMatch(output);
+		tracker.ouputMatchStatus(HearthReader.ARENAMODE, output);
 	}
 	
 	private synchronized void formatArenaStatus(){
 		String score = "Unknown";
 		String hero = "Unknown";
-		
+
 		if(wins != -1){
 			if(losses == -1){
 				losses = 0;
@@ -601,7 +602,7 @@ public class HearthReader {
 			hero = heroesList.getHeroLabel(myHero);
 		}
 		
-		tracker.saveLiveArenaScore(score, hero);
+		tracker.outputArenaStatus(ARENAMODE, score, hero);
 	}
 	
 	public boolean isVictory(){

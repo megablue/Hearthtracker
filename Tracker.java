@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -9,7 +10,7 @@ import java.util.Date;
 
 import org.h2.jdbcx.JdbcDataSource;
 
-public class Tracker {
+public class Tracker {	
 	Connection conn;
 	boolean isWorking = false;
 	boolean testMode = false;
@@ -18,6 +19,8 @@ public class Tracker {
 	String liveHero = "";
 	String liveWinrate = "";
 	String liveGamestats = "";
+	HearthDatabase dbSetting;
+	private static HearthConfigurator config = new HearthConfigurator();
 	
 	public Tracker(){
 		
@@ -51,23 +54,23 @@ public class Tracker {
 		this.saveArenaResult(0, 9, 0);
 		this.saveArenaResult(0, 9, 0);
 		this.saveArenaResult(0, 9, 9);
-		assert this.getOverallWinRate() == 75.0f;
+		assert this.getOverallWinRate(HearthReader.ARENAMODE) == 75.0f;
 		
-		this.saveMatchResult(0, 0, 1, 1, new Date(), 0);
-		this.saveMatchResult(1, 0, 1, 0, new Date(), 0);
-		this.saveMatchResult(2, 0, 0, 0, new Date(), 0);
-		this.saveMatchResult(3, 0, 0, 1, new Date(), 0);
-		this.saveMatchResult(4, 0, 0, 1, new Date(), 0);
-		this.saveMatchResult(5, 0, 0, 1, new Date(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 0, 0, 1, 1, new Date(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 1, 0, 1, 0, new Date(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 2, 0, 0, 0, new Date(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 3, 0, 0, 1, new Date(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 4, 0, 0, 1, new Date(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 5, 0, 0, 1, new Date(), 0);
 		
-		assert this.getWinRateByGoesFirst() == 50.0f;
-		assert this.getWinRateByGoesSecond() == 75.0f;
+		assert this.getWinRateByGoesFirst(HearthReader.ARENAMODE) == 50.0f;
+		assert this.getWinRateByGoesSecond(HearthReader.ARENAMODE) == 75.0f;
 	}
 	
 	private void truncateDB() throws SQLException{
 		Statement stat = conn.createStatement();
 		stat.execute("TRUNCATE TABLE ARENARESULTS");
-		stat.execute("TRUNCATE TABLE ARENAMATCHES");
+		stat.execute("TRUNCATE TABLE MATCHES");
 		stat.close();
 	}
 	
@@ -75,34 +78,54 @@ public class Tracker {
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	public void createTables() throws SQLException{
-		 Statement stat = conn.createStatement();
-		 ResultSet rs;
-	     
-		 rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'ARENARESULTS'");
+		Statement stat = conn.createStatement();
+		ResultSet rs;
+		
+		dbSetting = (HearthDatabase) config.load("." + File.separator + "data" + File.separator + "database.xml");
+		
+		if(dbSetting == null){
+			dbSetting = new HearthDatabase();
+			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		}
+		
+		if(dbSetting.version == 0){
+			stat.execute("ALTER TABLE ARENAMATCHES RENAME to MATCHES");
+			stat.execute("ALTER TABLE MATCHES ADD MODE INT");
+			stat.execute("ALTER TABLE MATCHES ADD MODIFIED INT");
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODE SET DEFAULT " + HearthReader.ARENAMODE);
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODIFIED SET DEFAULT " + HearthReader.ARENAMODE);
+			stat.execute("CREATE INDEX MODE ON MATCHES(MODE)");
+			stat.execute("CREATE INDEX MYHERO_MODE ON MATCHES(MYHEROID, MODE)");
+			stat.execute("CREATE INDEX OPPHERO_MODE ON MATCHES(OPPHEROID, MODE)");
+			stat.execute("CREATE INDEX HEROES_MODE ON MATCHES(MYHEROID, OPPHEROID, MODE)");
+			dbSetting.version = 1;
+			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		}
+    
+		rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'ARENARESULTS'");
 		 
-		 if(rs.next()){
-			 if(rs.getInt("COUNT(*)") == 0){
-				 stat.execute("create table arenaResults(id int primary key auto_increment, heroId int, wins int, losses int, timeCaptured TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-				 stat.execute("CREATE INDEX heroId ON arenaResults(heroId)");
-			 }
-		 }
+		if(rs.next()){
+			if(rs.getInt("COUNT(*)") == 0){
+				stat.execute("create table arenaResults(id int primary key auto_increment, heroId int, wins int, losses int, timeCaptured TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
+				stat.execute("CREATE INDEX heroId ON arenaResults(heroId)");
+			}
+		}
 		 
-		 rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'ARENAMATCHES'");
+		rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'MATCHES'");
 		 
-		 if(rs.next()){
-			 if(rs.getInt("COUNT(*)") == 0){
-				 stat.execute("create table arenaMatches(id int primary key auto_increment, myHeroId int, oppHeroId int, goesFirst int, win int, startTime TIMESTAMP, totalTime int)");
-				 stat.execute("CREATE INDEX myHeroId ON arenaMatches(myHeroId)");
-			 }
-		 }
+		if(rs.next()){
+			if(rs.getInt("COUNT(*)") == 0){
+				stat.execute("create table MATCHES(id int primary key auto_increment, myHeroId int, oppHeroId int, goesFirst int, win int, startTime TIMESTAMP, totalTime int)");
+				stat.execute("CREATE INDEX myHeroId ON MATCHES(myHeroId)");
+			}
+		}
 
-		 stat.close();
+		stat.close();
 	}
 	
 	public void saveArenaResult(int heroId, int wins, int losses) throws SQLException{
@@ -112,10 +135,11 @@ public class Tracker {
 		stat.close();
 	}
 	
-	public void saveMatchResult(int myHeroId, int oppHeroId, int goesFirst, int win, Date startTime, int totalTime) throws SQLException{
+	public void saveMatchResult(int mode, int myHeroId, int oppHeroId, int goesFirst, int win, Date startTime, int totalTime) throws SQLException{
 		java.sql.Timestamp sqlDate = new java.sql.Timestamp(startTime.getTime());
+		String table = "MATCHES";
 		
-		String sql = "INSERT INTO arenaMatches(myHeroId, oppHeroId, goesFirst, win, startTime, totalTime) " 
+		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, totalTime) " 
 					+ "VALUES(" + myHeroId + "," 
 					+ oppHeroId + "," 
 					+ goesFirst + "," 
@@ -128,7 +152,7 @@ public class Tracker {
 		stat.close();
 	}
 	
-	public float getWinRateByHero(int heroId) throws SQLException{
+	public float getWinRateByHero(int mode, int heroId) throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int wins = 0;
@@ -154,7 +178,7 @@ public class Tracker {
 		return winrate;
 	}
 	
-	public float getWinRateByHeroSpecial(int heroId) throws SQLException{
+	public float getWinRateByHeroSpecial(int mode, int heroId) throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int sixplus = 0;
@@ -183,7 +207,7 @@ public class Tracker {
 		return winrate;
 	}
 	
-	public float getOverallWinRate() throws SQLException{
+	public float getOverallWinRate(int mode) throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int wins = 0;
@@ -201,7 +225,6 @@ public class Tracker {
 		
 		if(found){
 			winrate = (float) wins/(wins+losses) * 100;
-			//System.out.println("Winrate (overall): " + winrate);
 		}
 		
 		stat.close();
@@ -225,7 +248,7 @@ public class Tracker {
 		return total;
 	}
 	
-	public int getTotalWinsByHero(int heroId) throws SQLException{
+	public int getTotalWinsByHero(int mode, int heroId) throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int total = 0;
@@ -241,7 +264,7 @@ public class Tracker {
 		return total;
 	}
 	
-	public int getTotalLosses() throws SQLException{
+	public int getTotalLosses(int mode) throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int total = 0;
@@ -257,7 +280,7 @@ public class Tracker {
 		return total;
 	}
 	
-	public int getTotalLossesByHero(int heroId) throws SQLException{
+	public int getTotalLossesByHero(int mode, int heroId) throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int total = 0;
@@ -273,20 +296,22 @@ public class Tracker {
 		return total;
 	}
 	
-	public float getWinRateByGoesFirst() throws SQLException{
-		return this.getWinRateGoesBy(true, -1, -1);
+	public float getWinRateByGoesFirst(int mode) throws SQLException{
+		return this.getWinRateGoesBy(mode, true, -1, -1);
 	}
 	
-	public float getWinRateByGoesSecond() throws SQLException{
-		return this.getWinRateGoesBy(false, -1, -1);
+	public float getWinRateByGoesSecond(int mode) throws SQLException{
+		return this.getWinRateGoesBy(mode, false, -1, -1);
 	}
 	
-	public float getWinRateGoesBy(boolean goesFirstFlag, int heroId, int against) throws SQLException{
+	public float getWinRateGoesBy(int mode, boolean goesFirstFlag, int heroId, int against) throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
 		float winrate = -1;
 		int goesFirst = goesFirstFlag ? 1 : 0;
-		String sql = "select SUM(WIN), COUNT(*) from ARENAMATCHES where goesFirst = " + goesFirst;
+		String table = "MATCHES";
+		String sqlWhere = " WHERE goesFirst = " + goesFirst + " AND mode = " + mode;
+		String sql = "select SUM(WIN), COUNT(*) from " + table + sqlWhere;
 		
 		if(heroId > -1){
 			sql += " AND myHeroId = " + heroId;
@@ -300,12 +325,6 @@ public class Tracker {
 		
 		if(rs.next()){
 			winrate = rs.getFloat("SUM(WIN)") / rs.getFloat("COUNT(*)") * 100;
-			
-//			if(goesFirstFlag){
-//				System.out.println("Winrate (goes first): " + winrate);
-//			} else {
-//				System.out.println("Winrate (goes second): " + winrate);
-//			}
 		}
 		
 		stat.close();
@@ -313,18 +332,18 @@ public class Tracker {
 		return winrate;
 	}
 	
-	public void saveLiveArenaScore(String score, String hero){
+	public void outputArenaStatus(int mode, String score, String hero){
 		liveScore = score;
 		liveHero = hero;
-		this.saveStreamStats();
+		this.saveStreamStats(mode);
 	}
 	
-	public void saveLiveMatch(String match){
+	public void ouputMatchStatus(int mode, String match){
 		liveGamestats = match;
-		this.saveStreamStats();
+		this.saveStreamStats(mode);
 	}
 	
-	private void saveStreamStats(){
+	private void saveStreamStats(int mode){
 		float winrate = 0;
 		String overall = "Overall win rate: ";
 		String arenaScore = "Arena score: " + liveScore;
@@ -333,16 +352,14 @@ public class Tracker {
 		String[] lines = new String[4];
 		
 		try {
-			winrate = this.getOverallWinRate();
+			winrate = this.getOverallWinRate(mode);
 			
 			if(winrate > -1){
 				overall += winrate + " %";
 			} else {
 				overall += " N|A";
 			}
-			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -372,10 +389,8 @@ public class Tracker {
 			
 			lastWrite = new Date();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
