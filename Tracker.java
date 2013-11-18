@@ -139,12 +139,13 @@ public class Tracker {
 		java.sql.Timestamp sqlDate = new java.sql.Timestamp(startTime.getTime());
 		String table = "MATCHES";
 		
-		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, totalTime) " 
+		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, totalTime, mode) " 
 					+ "VALUES(" + myHeroId + "," 
 					+ oppHeroId + "," 
 					+ goesFirst + "," 
 					+ win + ","
 					+ "'" + sqlDate.toString() + "'" + ","
+					+ mode + ","
 					+ totalTime + ")";
 
 		Statement stat = conn.createStatement();

@@ -32,10 +32,7 @@ public class HearthReader {
 	int goFirst = -1;
 	Date startTime = new Date();
 	Date lastUpdate = new Date();
-	
-	static String lastArenaResult = "Unknown";
-	static String lastMatchResult = "Unknown";
-	
+
 	int gameMode = UNKNOWNMODE;
 	int inGameMode = -1;
 	
@@ -48,6 +45,7 @@ public class HearthReader {
 	Target challengeImageTarget;
 	Target questImageTarget;
 	Target checkedImageTarget;
+	Target uncheckedImageTarget;
 	Target lossesLabelImageTarget;
 	Target winsLabelImageTarget;
 	Target goFirstImageTarget;
@@ -76,7 +74,7 @@ public class HearthReader {
 	boolean autoDetectGameRes = true;
 	
 	long pingInterval = 60 * 1000;
-	Date lastSeen =  new Date(new Date().getTime() - pingInterval);
+	Date lastSeen =  new Date(0);
 	int[] lastScanArea = {0,0,0,0};
 	int[] lastScanSubArea = {0,0,0,0};
 	Date lastPing = new Date(new Date().getTime() - pingInterval);
@@ -227,14 +225,14 @@ public class HearthReader {
 		heroesIT = new ImageTarget[heroesList.getTotal()];
 		heroesThumbIT = new ImageTarget[heroesList.getTotal()];
 		
-		for(int i = 0; i < heroesList.getTotal(); i++)
-		{
+		for(int i = 0; i < heroesList.getTotal(); i++){
 			heroesIT[i] = this.prepareImageTarget(readerSettings.arenaHeroScanboxes[i]);
 			heroesThumbIT[i] = this.prepareImageTarget(readerSettings.opponentHeroScanboxes[i]);
 		}
 		
 		questImageTarget 	= this.prepareImageTarget(readerSettings.menuScanbox);
 		checkedImageTarget 	= this.prepareImageTarget(readerSettings.lossesScanboxes[0]);
+		uncheckedImageTarget 	= this.prepareImageTarget(readerSettings.lossesUncheckedScanboxes[0]);
 		
 		playImageTarget = this.prepareImageTarget(readerSettings.playScanbox);
 		challengeImageTarget = this.prepareImageTarget(readerSettings.challengeScanbox);
@@ -247,7 +245,7 @@ public class HearthReader {
 		//language dependent
 		winsImageTarget = new ImageTarget[10];
 		
-		for(int i = 0; i < 10; i++){
+		for(int i = 0; i < readerSettings.winsScanboxes.length; i++){
 			winsImageTarget[i] =  this.prepareImageTarget(readerSettings.winsScanboxes[i]);
 		}
 		
@@ -364,39 +362,43 @@ public class HearthReader {
 	}
 	
 	public int getArenaWins(){
-		return wins;
+		return previousWins;
 	}
 	
 	public int getArenaLosses(){
-		return losses;
+		return previousLosses;
 	}
 	
 	public boolean isArenaMode(){
-		return gameMode == 1 ? true : false;
+		return gameMode == ARENAMODE ? true : false;
 	}
 	
-	public boolean isPlayMode(){
-		return gameMode == 2 ? true : false;
+	public boolean isRankedMode(){
+		return gameMode == RANKEDMODE ? true : false;
+	}
+	
+	public boolean isUnrankedMode(){
+		return gameMode == UNRANKEDMODE ? true : false;
 	}
 	
 	public boolean isChallengeMode(){
-		return gameMode == 3 ? true : false;
+		return gameMode == CHALLENGEMODE ? true : false;
 	}
 	
-	public boolean isPraticeMode(){
-		return gameMode == 4 ? true : false;
+	public boolean isPracticeMode(){
+		return gameMode == PRACTICEMODE ? true : false;
 	}
 	
 	private synchronized void scanArenaScore() {
 		boolean foundWins = false;
 		boolean foundLosses = false;
+		boolean foundUncheckedLosses = false;
+		int uncheckedLossesCount = 0;
 		
-		for(int i = (winsImageTarget.length - 1); i >= 0; i--)
-		{
+		for(int i = (winsImageTarget.length - 1); i >= 0; i--){
 			foundWins = this.findImage(readerSettings.winsScanboxes[i], winsImageTarget[i], "Wins (" + i + ")");
 			
-			if(foundWins)
-			{
+			if(foundWins){
 				System.out.println("Found " + i + " wins" );
 				wins = i;
 				break;
@@ -412,51 +414,75 @@ public class HearthReader {
 			}
 		}
 		
-		if(foundWins){
-			if(!foundLosses){
-				losses = 0;
+		if(!foundLosses){
+			for(int i = 0; i < 3; i++){
+				if(this.findImage(readerSettings.lossesUncheckedScanboxes[i], uncheckedImageTarget, "Unchecked Losses " + (i+1))){
+					System.out.println("Found " + (i+1) + "unchecked losses");
+					foundUncheckedLosses = true;
+					++uncheckedLossesCount;
+					break;
+				}
 			}
-			this.formatArenaStatus();
-			System.out.println("lastArenaResult: " + lastArenaResult);
+		}
+		
+		if(!foundLosses && foundUncheckedLosses && uncheckedLossesCount == 3){
+			losses = 0;
 		}
 		
 		if(foundWins && (wins == 9 || losses == 3) && (previousWins != wins || previousLosses != losses) ){
-			
-			if(!foundLosses){
-				losses = 0;
-			}
 
 			try {
 				System.out.println("Saving arena result...");
 				tracker.saveArenaResult(myHero, wins, losses);
 				System.out.println("Done saving arena result...");
-				
 				this.formatArenaStatus();
-				previousWins = wins;
-				previousLosses = losses;
 				this.resetFlags();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
+		}
+		
+		if(foundWins && (previousWins != wins || previousLosses != losses)){
 			previousWins = wins;
 			previousLosses = losses;
 		}
 	}
 	
-	
-	public String getLastArenaResult(){
-		return lastArenaResult;
+	public String getGameMode(){
+		if(this.isArenaMode()){
+			return "Arena";
+		}
+		
+		if(this.isRankedMode()){
+			return "Ranked";
+		}
+		
+		if(this.isUnrankedMode()){
+			return "Unranked";
+		}
+		
+		if(this.isPracticeMode()){
+			return "Practice";
+		}
+		
+		if(this.isChallengeMode()){
+			return "Challenge";
+		}
+		
+		return "Unknown";
 	}
-	
-	public String getMatchStatus(){
-		return lastMatchResult;
-	}
-	
-	public String getMyArenaHero(){
+
+	public String getMyHero(){
 		if(myHero >= 0 ){
 			return heroesList.getHeroLabel(myHero);
+		}
+		
+		return "Unknown";
+	}
+	
+	public String getOppHero(){
+		if(myHero >= 0 ){
+			return heroesList.getHeroLabel(oppHero);
 		}
 		
 		return "Unknown";
@@ -467,6 +493,7 @@ public class HearthReader {
 		inGameMode = -1;
 		victory = -1;
 		myHero = -1;
+		oppHero = -1;
 		wins = -1;
 		losses = -1;
 		goFirst = -1;
@@ -545,14 +572,13 @@ public class HearthReader {
 			
 			try {
 				System.out.println("Saving match result...");
-				tracker.saveMatchResult(ARENAMODE, myHero, oppHero, goFirst, victory, startTime, totalTime);
+				tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime, totalTime);
 				System.out.println("Done saving match result...");
 				inGameMode = 0;
 				victory = -1;
 				oppHero = -1;
 				goFirst = -1;
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -582,7 +608,6 @@ public class HearthReader {
 			output = whosFirst + ", vs " + heroesList.getHeroLabel(oppHero) + result;
 		}
 		
-		lastMatchResult = output;
 		tracker.ouputMatchStatus(HearthReader.ARENAMODE, output);
 	}
 	
@@ -595,7 +620,7 @@ public class HearthReader {
 				losses = 0;
 			}
 			
-			score = lastArenaResult = wins + " - " + losses;
+			score = wins + " - " + losses;
 		}
 		
 		if(myHero != -1){
@@ -715,6 +740,10 @@ public class HearthReader {
 		return goFirst == 1 ? true : false;
 	}
 	
+	public boolean isGoSecond(){
+		return goFirst == 0 ? true : false;
+	}
+	
 	public boolean isInGame() {
 		return inGameMode == 1 ? true : false;
 	}
@@ -764,7 +793,7 @@ public class HearthReader {
 			this.scanMode();
 		}
 		
-		if(this.isArenaMode() || this.isPlayMode() || this.isChallengeMode() || this.isPraticeMode()){
+		if(this.isArenaMode() || this.isRankedMode() || this.isUnrankedMode() || this.isChallengeMode() || this.isPracticeMode()){
 			if(!this.isInGame()){
 				
 				if(this.isArenaMode()){

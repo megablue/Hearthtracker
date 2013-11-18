@@ -237,6 +237,38 @@
       <outer-class reference="../../.."/>
     </HearthReaderSetting_-Scanbox>
   </lossesScanboxes>
+  <lossesUncheckedScanboxes>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>400</xOffset>
+      <yOffset>507</yOffset>
+      <width>110</width>
+      <height>110</height>
+      <imgfile>lose-checkbox-unchecked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>492</xOffset>
+      <yOffset>507</yOffset>
+      <width>110</width>
+      <height>110</height>
+      <imgfile>lose-checkbox-unchecked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+    <HearthReaderSetting_-Scanbox>
+      <xOffset>584</xOffset>
+      <yOffset>507</yOffset>
+      <width>110</width>
+      <height>110</height>
+      <imgfile>lose-checkbox-unchecked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <outer-class reference="../../.."/>
+    </HearthReaderSetting_-Scanbox>
+  </lossesUncheckedScanboxes>
   <arenaHeroScanboxes>
     <HearthReaderSetting_-Scanbox>
       <xOffset>80</xOffset>

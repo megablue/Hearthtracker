@@ -188,6 +188,7 @@ public class HearthUI {
 					if(new Date().getTime() - lastUpdate.getTime() > 2000){
 						window.poppulateOverviewTable();
 						window.poppulateCurrentStats();
+						window.updateStatus();
 						window.poppulateDiagnoticsStatus();
 						lastUpdate = new Date();
 					}
@@ -208,7 +209,7 @@ public class HearthUI {
 				hearththread.interrupt();
 			}
 		});
-		shlHearthtracker.setSize(615, 432);
+		shlHearthtracker.setSize(620, 438);
 		shlHearthtracker.setText("HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!");
 		shlHearthtracker.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
@@ -223,10 +224,6 @@ public class HearthUI {
 		
 		SashForm sashForm = new SashForm(composite, SWT.NONE);
 		sashForm.setLayoutData(new RowData(598, 373));
-		
-		grpCurrentStats = new Group(sashForm, SWT.NONE);
-		grpCurrentStats.setText("Current Status");
-		grpCurrentStats.setLayout(new GridLayout(1, false));
 		
 		grpStats = new Group(sashForm, SWT.NONE);
 		grpStats.setText("Stats");
@@ -273,7 +270,11 @@ public class HearthUI {
 		fd_cmbStatsMode.left = new FormAttachment(0, 10);
 		cmbStatsMode.setLayoutData(fd_cmbStatsMode);
 		cmbStatsMode.select(0);
-		sashForm.setWeights(new int[] {229, 366});
+		
+		grpCurrentStats = new Group(sashForm, SWT.NONE);
+		grpCurrentStats.setText("Current Status");
+		grpCurrentStats.setLayout(new GridLayout(1, false));
+		sashForm.setWeights(new int[] {365, 230});
 		GridData gd_lblNewLabel_15 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblNewLabel_15.widthHint = 60;
 		
@@ -550,9 +551,8 @@ public class HearthUI {
 		cmbGameLang = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
 		cmbGameLang.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		cmbGameLang.setEditable(false);
-		cmbGameLang.setItems(new String[] {"enUS"});
+		cmbGameLang.setItems(new String[] {});
 		cmbGameLang.setVisibleItemCount(1);
-		cmbGameLang.setText("enUS");
 		
 		Label lblDetect = new Label(grpGeneral, SWT.NONE);
 		lblDetect.setText("Auto Detect Game Resolution");
@@ -664,10 +664,8 @@ public class HearthUI {
 				try {
 					java.awt.Desktop.getDesktop().browse(new URL("http://hearthtracking.com").toURI());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -928,14 +926,56 @@ public class HearthUI {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String score = hearth.getLastArenaResult();
-		String hero = hearth.getMyArenaHero();
-		String latest = new String(hearth.getMatchStatus());
 		
 //		lblWinrate.setText(winrateStr);
 //		lblArenaScoreStatus.setText(score);
 //		lblMyClassStatus.setText(hero);
 //		lblLatestGameStatus.setText(latest + "");
+	}
+	
+	private void updateStatus(){
+		Date lastSeen = hearth.getLastseen();
+		String seen = lastSeen.getTime() == 0 ? "Not yet" : HearthHelper.getPrettyText(lastSeen);
+		String goes = "Unknown";
+		int line = 0;
+		
+		if(hearth.isGoFirst()){
+			goes = "first";
+		}
+		
+		if(hearth.isGoSecond()){
+			goes = "second";
+		}
+		
+		lblStatus[line++].setText("Detected: " + seen);
+		lblStatus[line++].setText("Game mode: " + hearth.getGameMode());
+		lblStatus[line++].setText("Arena Win%: ");
+		lblStatus[line++].setText("Ranked Win%: ");
+		lblStatus[line++].setText("Unranked Win%: ");
+		
+		if(hearth.isArenaMode()){
+			lblStatus[line++].setText("");
+			lblStatus[line++].setText("Live Arena status");
+			lblStatus[line++].setText("Score: " + hearth.getArenaWins() + "-" + hearth.getArenaLosses());
+			lblStatus[line++].setText("Playing as " + hearth.getMyHero());
+		}
+				
+		if(hearth.isInGame()){
+			lblStatus[line++].setText("");
+			lblStatus[line++].setText("Live match status");
+			lblStatus[line++].setText(hearth.getMyHero() + " vs " + hearth.getOppHero());
+			lblStatus[line++].setText("Go " + goes);
+		}
+		
+		lblStatus[line++].setText("");
+		lblStatus[line++].setText("Previous match status");
+		lblStatus[line++].setText(hearth.getMyHero() + " vs " + hearth.getOppHero());
+		lblStatus[line++].setText("Go " + goes);
+		lblStatus[line++].setText("Victory/Defeat");
+				
+		for(int i = line; i < lblStatus.length; i++){
+			lblStatus[i].setText("");
+		}
 	}
 		
 	private void poppulateOverviewTable(){

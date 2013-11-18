@@ -44,6 +44,12 @@ public class HearthReaderSetting {
 			new Scanbox("lose-checkbox-checked.png", 	584, 507, 110, 110),
 	};
 	
+	public Scanbox[] lossesUncheckedScanboxes  = { 
+			new Scanbox("lose-checkbox-unchecked.png", 	400, 507, 110, 110),
+			new Scanbox("lose-checkbox-unchecked.png", 	492, 507, 110, 110),
+			new Scanbox("lose-checkbox-unchecked.png", 	584, 507, 110, 110),
+	};
+	
 	public Scanbox[] arenaHeroScanboxes	= {
 			new Scanbox("mage.png", 	80, 720, 240, 160),
 			new Scanbox("hunter.png", 	80, 720, 240, 160),
