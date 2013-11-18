@@ -662,7 +662,7 @@ public class HearthUI {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
 				try {
-					java.awt.Desktop.getDesktop().browse(new URL("http://hearthtracker.blogspot.com").toURI());
+					java.awt.Desktop.getDesktop().browse(new URL("http://hearthtracking.com").toURI());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -672,7 +672,7 @@ public class HearthUI {
 				}
 			}
 		});
-		lblWebsite.setText("Website:  hearthtracker.blogspot.com");
+		lblWebsite.setText("Website:  HearthTracking.com");
 		
 		Label lblNewLabel_7 = new Label(composite_3, SWT.NONE);
 		lblNewLabel_7.setText("");
