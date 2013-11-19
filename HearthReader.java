@@ -28,6 +28,9 @@ public class HearthReader {
 	int myHero = -1;
 	int oppHero = -1;
 	
+	int exMyHero = -1;
+	int exOppHero = -1;
+	
 	int victory = -1;
 	int goFirst = -1;
 	Date startTime = new Date();
@@ -40,7 +43,8 @@ public class HearthReader {
 
 	Tracker tracker = null;
 
-	Target playImageTarget;
+	Target rankedImageTarget;
+	Target unrankedImageTarget;
 	Target practiceImageTarget;
 	Target challengeImageTarget;
 	Target questImageTarget;
@@ -234,7 +238,8 @@ public class HearthReader {
 		checkedImageTarget 	= this.prepareImageTarget(readerSettings.lossesScanboxes[0]);
 		uncheckedImageTarget 	= this.prepareImageTarget(readerSettings.lossesUncheckedScanboxes[0]);
 		
-		playImageTarget = this.prepareImageTarget(readerSettings.playScanbox);
+		rankedImageTarget = this.prepareImageTarget(readerSettings.rankedScanbox);
+		unrankedImageTarget = this.prepareImageTarget(readerSettings.unrankedScanbox);
 		challengeImageTarget = this.prepareImageTarget(readerSettings.challengeScanbox);
 		practiceImageTarget = this.prepareImageTarget(readerSettings.practiceScanbox);
 		
@@ -337,21 +342,28 @@ public class HearthReader {
 			return;
 		}
 		
-		if(this.findImage(readerSettings.playScanbox, playImageTarget, "Play mode Label")){
+		if(this.findImage(readerSettings.rankedScanbox, rankedImageTarget, "Ranked mode Label")){
 			gameMode = RANKEDMODE;
 			oppHero = -1;
 			inGameMode = 0;
 			return;
 		}
 		
-		if(this.findImage(readerSettings.playScanbox, challengeImageTarget, "Challenge mode Label")){
+		if(this.findImage(readerSettings.unrankedScanbox, unrankedImageTarget, "Unranked mode Label")){
 			gameMode = CHALLENGEMODE;
 			oppHero = -1;
 			inGameMode = 0;
 			return;
 		}
 		
-		if(this.findImage(readerSettings.playScanbox, practiceImageTarget, "Practice mode Label")){
+		if(this.findImage(readerSettings.challengeScanbox, challengeImageTarget, "Challenge mode Label")){
+			gameMode = CHALLENGEMODE;
+			oppHero = -1;
+			inGameMode = 0;
+			return;
+		}
+		
+		if(this.findImage(readerSettings.practiceScanbox, practiceImageTarget, "Practice mode Label")){
 			gameMode = PRACTICEMODE;
 			oppHero = -1;
 			inGameMode = 0;
@@ -473,16 +485,16 @@ public class HearthReader {
 	}
 
 	public String getMyHero(){
-		if(myHero >= 0 ){
-			return heroesList.getHeroLabel(myHero);
+		if(exMyHero >= 0 ){
+			return heroesList.getHeroLabel(exMyHero);
 		}
 		
 		return "Unknown";
 	}
 	
 	public String getOppHero(){
-		if(myHero >= 0 ){
-			return heroesList.getHeroLabel(oppHero);
+		if(exOppHero >= 0 ){
+			return heroesList.getHeroLabel(exOppHero);
 		}
 		
 		return "Unknown";
@@ -508,6 +520,11 @@ public class HearthReader {
 			if(this.findImage(readerSettings.arenaHeroScanboxes[i], heroesIT[i], "Arena Hero (" + heroesList.getHeroLabel(i) + ") ")){
 				System.out.println("Found arena hero: (" + i + ") " + heroesList.getHeroLabel(i));
 				myHero = i;
+				
+				if(myHero != exMyHero){
+					exMyHero = myHero;
+				}
+				
 				break;
 			}
 		}
@@ -525,6 +542,9 @@ public class HearthReader {
 				if(this.findImage(readerSettings.myHeroScanboxes[i], heroesThumbIT[i], "My Hero (" + heroesList.getHeroLabel(i) + ") ")){
 					System.out.println("Found my hero: (" + i + ") " + heroesList.getHeroLabel(i));
 					myHero = i;
+					if(myHero != exMyHero){
+						exMyHero = myHero;
+					}
 					this.formatMatchStatus();
 					break;
 				}
@@ -535,6 +555,9 @@ public class HearthReader {
 			if(this.findImage(readerSettings.opponentHeroScanboxes[i], heroesThumbIT[i], "Opp Hero (" + heroesList.getHeroLabel(i) + ") ")){
 				System.out.println("Found opp hero: (" + i + ") " + heroesList.getHeroLabel(i));
 				oppHero = i;
+				if(oppHero != exOppHero){
+					exOppHero = oppHero;
+				}
 				this.formatMatchStatus();
 				break;
 			}

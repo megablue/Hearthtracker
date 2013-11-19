@@ -11,8 +11,11 @@ public class HearthReaderSetting {
 	public Scanbox winsLabelScanbox		= new Scanbox("wins-label.png", 	480, 440, 140, 140);
 	public Scanbox lossesLabelScanbox	= new Scanbox("losses-label.png", 	250, 510, 160, 150);
 	
+	//Ranked mode scan boxes
+	public Scanbox rankedScanbox		= new Scanbox("play-mode.png", 		1200, 100, 120, 120);
+
 	//Play mode scan boxes
-	public Scanbox playScanbox			= new Scanbox("play-mode.png", 		1200, 100, 120, 120);
+	public Scanbox unrankedScanbox		= new Scanbox("play-mode.png", 		1200, 100, 120, 120);
 
 	//practice mode scan boxes
 	public Scanbox practiceScanbox		= new Scanbox("practice-mode.png", 	1200, 100, 120, 120);
