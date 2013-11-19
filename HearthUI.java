@@ -153,18 +153,25 @@ public class HearthUI {
 	
     private static class MessageLoop
     implements Runnable {
-    public void run() {
-    	while(true){
-        	try {
-        		hearth.process();
-    			Thread.sleep(setting.scanInterval);
-    		} catch (InterruptedException e) {
-    			tracker.closeDB();
-    			break;
-    		}
-    	}
+	    public void run() {
+	    	while(true){
+	        	try {
+	        		long sleepTime;
+	        		Date lastScan = new Date();
+	        		hearth.process();
+	        		
+	        		sleepTime = setting.scanInterval - (new Date().getTime() - lastScan.getTime());
+        			
+        			if(sleepTime > 0){
+        				Thread.sleep(sleepTime);
+        			}
+	    		} catch (InterruptedException e) {
+	    			tracker.closeDB();
+	    			break;
+	    		}
+	    	}
+	    }
     }
-}
 
 
 	/**
