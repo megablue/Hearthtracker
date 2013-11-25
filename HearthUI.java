@@ -563,7 +563,7 @@ public class HearthUI {
 		btnVisualizeNow.setText("Visualize now");
 		
 		TabItem tbtmAbout = new TabItem(tabFolder, SWT.NONE);
-		tbtmAbout.setText("&About");
+		tbtmAbout.setText("A&bout");
 		
 		Group grpAbout = new Group(tabFolder, SWT.NONE);
 		tbtmAbout.setControl(grpAbout);
