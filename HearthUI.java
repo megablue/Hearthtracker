@@ -221,7 +221,7 @@ public class HearthUI {
 		TabFolder tabFolder = new TabFolder(shlHearthtracker, SWT.NONE);
 		
 		TabItem tbtmDashboard = new TabItem(tabFolder, SWT.NONE);
-		tbtmDashboard.setText("Overview");
+		tbtmDashboard.setText("&Overview");
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmDashboard.setControl(composite);
@@ -284,7 +284,7 @@ public class HearthUI {
 		gd_lblNewLabel_15.widthHint = 60;
 		
 		TabItem tbtmRecords = new TabItem(tabFolder, SWT.NONE);
-		tbtmRecords.setText("Matches");
+		tbtmRecords.setText("&Matches");
 		
 		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
 		tbtmRecords.setControl(composite_2);
@@ -316,7 +316,7 @@ public class HearthUI {
 		TabFolder tabFolder_1 = new TabFolder(sashForm_1, SWT.NONE);
 		
 		TabItem tbtmEdi = new TabItem(tabFolder_1, SWT.NONE);
-		tbtmEdi.setText("Modify");
+		tbtmEdi.setText("&Edit");
 		
 		Composite composite_4 = new Composite(tabFolder_1, SWT.NONE);
 		tbtmEdi.setControl(composite_4);
@@ -358,7 +358,7 @@ public class HearthUI {
 		combo_2.setLayoutData(fd_combo_2);
 		
 		TabItem tbtmNew = new TabItem(tabFolder_1, SWT.NONE);
-		tbtmNew.setText("New");
+		tbtmNew.setText("&New");
 		
 		Composite composite_5 = new Composite(tabFolder_1, SWT.NONE);
 		tbtmNew.setControl(composite_5);
@@ -366,7 +366,7 @@ public class HearthUI {
 		sashForm_1.setWeights(new int[] {220, 375});
 		
 		TabItem tbtmArena = new TabItem(tabFolder, 0);
-		tbtmArena.setText("Arena");
+		tbtmArena.setText("&Arena");
 		
 		Composite composite_8 = new Composite(tabFolder, SWT.NONE);
 		tbtmArena.setControl(composite_8);
@@ -393,23 +393,23 @@ public class HearthUI {
 		
 		TabFolder tabFolder_2 = new TabFolder(sashForm_2, SWT.NONE);
 		
-		TabItem tabItem = new TabItem(tabFolder_2, 0);
-		tabItem.setText("Edit");
+		TabItem tbtmModify = new TabItem(tabFolder_2, 0);
+		tbtmModify.setText("&Edit");
 		
 		Composite composite_9 = new Composite(tabFolder_2, SWT.NONE);
-		tabItem.setControl(composite_9);
+		tbtmModify.setControl(composite_9);
 		composite_9.setLayout(new FormLayout());
 		
-		TabItem tabItem_1 = new TabItem(tabFolder_2, 0);
-		tabItem_1.setText("New");
+		TabItem tbtmnew = new TabItem(tabFolder_2, 0);
+		tbtmnew.setText("&New");
 		
 		Composite composite_10 = new Composite(tabFolder_2, SWT.NONE);
-		tabItem_1.setControl(composite_10);
+		tbtmnew.setControl(composite_10);
 		composite_10.setLayout(new FormLayout());
 		sashForm_2.setWeights(new int[] {220, 375});
 			
 		TabItem tbtmPerferences = new TabItem(tabFolder, SWT.NONE);
-		tbtmPerferences.setText("Preferences");
+		tbtmPerferences.setText("&Preferences");
 		
 		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
 		tbtmPerferences.setControl(composite_1);
@@ -563,7 +563,7 @@ public class HearthUI {
 		btnVisualizeNow.setText("Visualize now");
 		
 		TabItem tbtmAbout = new TabItem(tabFolder, SWT.NONE);
-		tbtmAbout.setText("About");
+		tbtmAbout.setText("&About");
 		
 		Group grpAbout = new Group(tabFolder, SWT.NONE);
 		tbtmAbout.setControl(grpAbout);
