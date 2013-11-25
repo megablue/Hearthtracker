@@ -847,11 +847,6 @@ public class HearthUI {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-//		lblWinrate.setText(winrateStr);
-//		lblArenaScoreStatus.setText(score);
-//		lblMyClassStatus.setText(hero);
-//		lblLatestGameStatus.setText(latest + "");
 	}
 	
 	private void updateStatus(){
@@ -897,6 +892,15 @@ public class HearthUI {
 		for(int i = line; i < lblStatus.length; i++){
 			lblStatus[i].setText("");
 		}
+	}
+	
+	private void setupModeSelection(){
+		cmbStatsMode.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				poppulateOverviewTable();
+			}
+		});
 	}
 		
 	private void poppulateOverviewTable(){
@@ -950,26 +954,32 @@ public class HearthUI {
 	
 	private void fillTable(int heroId){
 		TableItem tableItem_1 = new TableItem(table, SWT.NONE);
-		float sixplus = 0, overall = 0;
+		float sevenplus = 0, overall = 0;
 		int wins = 0;
 		int losses = 0;
+		int totalrun = 0;
 		Image heroImg;
 		int mode = this.getMode();
 		
 		try {
 			wins = tracker.getTotalWinsByHero(mode, heroId);
 			losses = tracker.getTotalLossesByHero(mode, heroId);
-			sixplus = tracker.getWinRateByHeroSpecial(mode, heroId);
+			sevenplus = tracker.getWinRateByHeroSpecial(mode, heroId);
 			overall = tracker.getWinRateByHero(mode, heroId);
+			totalrun = tracker.getTotalRunsByHero(mode, heroId);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		
+		if(heroId == -1 && !(overall > -1)){
+			return;
 		}
 		
 		heroImg = new Image(display, "." + File.separator + "images" + File.separator + heroesList.getHeroName(heroId) + "-s.png");
 		heroImg = resize(heroImg, 24, 24);
 		tableItem_1.setImage(0, heroImg);
 		
-		if( !(overall > -1 && sixplus > -1) ){
+		if( !(overall > -1) ){
 			return;
 		}
 		
@@ -980,9 +990,11 @@ public class HearthUI {
 			tableItem_1.setText(3,  new DecimalFormat("0.00").format(overall*100));
 		}
 		
-		if(sixplus > -1){
-			tableItem_1.setText(4,  new DecimalFormat("0.00").format(sixplus*100));
+		if(sevenplus > -1){
+			tableItem_1.setText(4,  new DecimalFormat("0.00").format(sevenplus*100));
 		}
+		
+		tableItem_1.setText(5,  totalrun + "");
 		
 	}
 }

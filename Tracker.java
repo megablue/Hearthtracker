@@ -167,6 +167,30 @@ public class Tracker {
 		stat.close();
 	}
 	
+	public int getTotalRunsByHero(int mode, int heroid) throws SQLException{
+		Statement stat = conn.createStatement();
+		ResultSet rs;
+		int total = 0;
+
+		if(mode == HearthReader.ARENAMODE){
+			rs = stat.executeQuery("select count(*) as TOTAL from ARENARESULTS WHERE heroid = " + heroid);
+			
+			if(rs.next()){
+				total += rs.getInt("TOTAL");
+			}
+		} else {
+			rs = stat.executeQuery("select count(*) as TOTAL from MATCHES WHERE myheroid = " + heroid + " AND MODE=" + mode);
+			
+			if(rs.next()){
+				total += rs.getInt("TOTAL");
+			}
+		}
+		
+		stat.close();
+		
+		return total;
+	}
+	
 	public float getWinRateByHero(int mode, int heroId) throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
@@ -175,17 +199,30 @@ public class Tracker {
 		float winrate = -1;
 		boolean found = false;
 		
-		rs = stat.executeQuery("select wins,losses from ARENARESULTS where heroId = " + heroId);
-		
-		while(rs.next()){
-			found = true;
-			wins += rs.getInt("WINS");
-			losses += rs.getInt("LOSSES");
+		if(mode == HearthReader.ARENAMODE){
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS where heroId = " + heroId);
+			
+			while(rs.next()){
+				found = true;
+				wins += rs.getInt("WINS");
+				losses += rs.getInt("LOSSES");
+			}
+		} else {
+			rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + heroId + " AND MODE=" + mode);
+			
+			while(rs.next()){
+				found = true;
+				
+				if(rs.getInt("WIN") == 1){
+					wins += 1;
+				} else {
+					losses += 1;
+				}
+			}
 		}
 		
 		if(found){
 			winrate = (float) wins/(wins+losses);
-			//System.out.println("Winrate (" + heroId + "): " + winrate);
 		}
 		
 		stat.close();
@@ -220,7 +257,7 @@ public class Tracker {
 		
 		stat.close();
 		
-		return winrate;
+		return found ? winrate : -1;
 	}
 	
 	public float getOverallWinRate(int mode) throws SQLException{
@@ -231,12 +268,25 @@ public class Tracker {
 		float winrate = -1;
 		boolean found = false;
 		
-		rs = stat.executeQuery("select wins,losses from ARENARESULTS");
-		
-		while(rs.next()){
-			found = true;
-			wins += rs.getInt("WINS");
-			losses += rs.getInt("LOSSES");
+		if(mode == HearthReader.ARENAMODE){
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS");
+			
+			while(rs.next()){
+				found = true;
+				wins += rs.getInt("WINS");
+				losses += rs.getInt("LOSSES");
+			}
+		} else {
+			rs = stat.executeQuery("select WIN from MATCHES WHERE MODE=" + mode);
+			while(rs.next()){
+				found = true;
+				
+				if(rs.getInt("WINS") == 1){
+					wins += 1;
+				} else {
+					losses += 1;
+				}	
+			}
 		}
 		
 		if(found){
@@ -281,7 +331,7 @@ public class Tracker {
 				total += rs.getInt("WINS");
 			}
 		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE heroid=" + heroId + " AND mode=" + mode);
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode);
 			while(rs.next()){
 				total += rs.getInt("WIN");
 			}
@@ -324,7 +374,7 @@ public class Tracker {
 				total += rs.getInt("LOSSES");
 			}
 		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE heroid=" + heroId + " AND mode=" + mode);
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode);
 			while(rs.next()){
 				total += rs.getInt("WIN") == 0 ? 1 : 0;
 			}
