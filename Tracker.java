@@ -94,15 +94,29 @@ public class Tracker {
 		}
 		
 		if(dbSetting.version == 0){
+			stat.execute("ALTER TABLE ARENARESULTS ADD MODIFIED INT");
+			stat.execute("ALTER TABLE ARENARESULTS ADD SUBMITTED INT");
+			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN MODIFIED SET DEFAULT 0");
+			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN SUBMITTED SET DEFAULT 0");
+			
 			stat.execute("ALTER TABLE ARENAMATCHES RENAME to MATCHES");
 			stat.execute("ALTER TABLE MATCHES ADD MODE INT");
 			stat.execute("ALTER TABLE MATCHES ADD MODIFIED INT");
+			stat.execute("ALTER TABLE MATCHES ADD SUBMITTED INT");
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODE SET DEFAULT " + HearthReader.ARENAMODE);
-			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODIFIED SET DEFAULT " + HearthReader.ARENAMODE);
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODIFIED SET DEFAULT 0");
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN SUBMITTED SET DEFAULT 0");
 			stat.execute("CREATE INDEX MODE ON MATCHES(MODE)");
 			stat.execute("CREATE INDEX MYHERO_MODE ON MATCHES(MYHEROID, MODE)");
 			stat.execute("CREATE INDEX OPPHERO_MODE ON MATCHES(OPPHEROID, MODE)");
 			stat.execute("CREATE INDEX HEROES_MODE ON MATCHES(MYHEROID, OPPHEROID, MODE)");
+			
+			stat.execute("UPDATE MATCHES SET MODE=" + HearthReader.ARENAMODE);
+			stat.execute("UPDATE MATCHES SET MODIFIED=0");
+			stat.execute("UPDATE MATCHES SET SUBMITTED=0");
+			stat.execute("UPDATE ARENARESULTS SET MODIFIED=0");
+			stat.execute("UPDATE ARENARESULTS SET SUBMITTED=0");
+			
 			dbSetting.version = 1;
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
 		}
@@ -182,25 +196,26 @@ public class Tracker {
 	public float getWinRateByHeroSpecial(int mode, int heroId) throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
-		int sixplus = 0;
+		int sevenplus = 0;
 		int arenacount = 0;
 		float winrate = -1;
 		boolean found = false;
 		
-		rs = stat.executeQuery("select wins from ARENARESULTS where heroId = " + heroId);
-		
-		while(rs.next()){
-			found = true;
-			arenacount += 1;
+		if(mode == HearthReader.ARENAMODE){
+			rs = stat.executeQuery("select wins from ARENARESULTS where heroId = " + heroId);
+			
+			while(rs.next()){
+				found = true;
+				arenacount += 1;
 
-			if(rs.getInt("WINS") >= 6){
-				sixplus += 1;
+				if(rs.getInt("WINS") >= 7){
+					sevenplus += 1;
+				}
 			}
 		}
 		
 		if(found){
-			winrate = (float) sixplus/arenacount;
-			//System.out.println("6+ Wins Rate (" + heroId + "): " + winrate);
+			winrate = (float) sevenplus/arenacount;
 		}
 		
 		stat.close();
@@ -233,15 +248,21 @@ public class Tracker {
 		return winrate;
 	}
 	
-	public int getTotalWins() throws SQLException{
+	public int getTotalWins(int mode) throws SQLException{
 		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int total = 0;
 
-		rs = stat.executeQuery("select wins,losses from ARENARESULTS");
-		
-		while(rs.next()){
-			total += rs.getInt("WINS");
+		if(mode == HearthReader.ARENAMODE){
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS");
+			while(rs.next()){
+				total += rs.getInt("WINS");
+			}
+		} else {
+			rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode);
+			while(rs.next()){
+				total += rs.getInt("WIN");
+			}
 		}
 		
 		stat.close();
@@ -254,10 +275,16 @@ public class Tracker {
 		ResultSet rs;
 		int total = 0;
 
-		rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId);
-		
-		while(rs.next()){
-			total += rs.getInt("WINS");
+		if(mode == HearthReader.ARENAMODE){
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId);
+			while(rs.next()){
+				total += rs.getInt("WINS");
+			}
+		} else {
+			rs = stat.executeQuery("select WIN from MATCHES WHERE heroid=" + heroId + " AND mode=" + mode);
+			while(rs.next()){
+				total += rs.getInt("WIN");
+			}
 		}
 		
 		stat.close();
@@ -270,12 +297,17 @@ public class Tracker {
 		ResultSet rs;
 		int total = 0;
 
-		rs = stat.executeQuery("select wins,losses from ARENARESULTS");
-		
-		while(rs.next()){
-			total += rs.getInt("LOSSES");
+		if(mode == HearthReader.ARENAMODE){
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS");
+			while(rs.next()){
+				total += rs.getInt("LOSSES");
+			}
+		} else {
+			rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode);
+			while(rs.next()){
+				total += rs.getInt("WIN") == 0 ? 1 : 0;
+			}
 		}
-		
 		stat.close();
 		
 		return total;
@@ -286,10 +318,16 @@ public class Tracker {
 		ResultSet rs;
 		int total = 0;
 
-		rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId);
-		
-		while(rs.next()){
-			total += rs.getInt("LOSSES");
+		if(mode == HearthReader.ARENAMODE){
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId);
+			while(rs.next()){
+				total += rs.getInt("LOSSES");
+			}
+		} else {
+			rs = stat.executeQuery("select WIN from MATCHES WHERE heroid=" + heroId + " AND mode=" + mode);
+			while(rs.next()){
+				total += rs.getInt("WIN") == 0 ? 1 : 0;
+			}
 		}
 		
 		stat.close();

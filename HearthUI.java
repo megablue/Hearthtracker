@@ -262,7 +262,7 @@ public class HearthUI {
 		
 		TableColumn tblclmnNewColumn_3 = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn_3.setWidth(55);
-		tblclmnNewColumn_3.setText("6+");
+		tblclmnNewColumn_3.setText("7+");
 		
 		TableColumn tblclmnNewColumn_4 = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn_4.setWidth(72);
@@ -843,7 +843,7 @@ public class HearthUI {
 				winrateStr += " (" + new DecimalFormat("#.##").format(winrate) + "% )";
 			}
 			
-			winrateStr = tracker.getTotalWins() + "-" + tracker.getTotalLosses(mode) + winrateStr;
+			winrateStr = tracker.getTotalWins(mode) + "-" + tracker.getTotalLosses(mode) + winrateStr;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
