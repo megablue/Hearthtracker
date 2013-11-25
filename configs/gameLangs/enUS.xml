@@ -38,7 +38,7 @@
     <yOffset>100</yOffset>
     <width>120</width>
     <height>120</height>
-    <imgfile>play-mode.png</imgfile>
+    <imgfile>ranked-mode.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
     <outer-class reference="../.."/>
@@ -48,7 +48,7 @@
     <yOffset>100</yOffset>
     <width>120</width>
     <height>120</height>
-    <imgfile>play-mode.png</imgfile>
+    <imgfile>unranked-mode.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
     <outer-class reference="../.."/>

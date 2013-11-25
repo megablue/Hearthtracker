@@ -37,6 +37,7 @@ public class HearthReader {
 	Date lastUpdate = new Date();
 
 	int gameMode = UNKNOWNMODE;
+	int exGameMode = UNKNOWNMODE;
 	int inGameMode = -1;
 	
 	boolean paused = false;
@@ -332,13 +333,26 @@ public class HearthReader {
 			System.out.println("Found quest icon");
 			gameMode = MENUMODE;
 			inGameMode = 0;
+			
+			if(exGameMode != gameMode){
+				exGameMode = gameMode; 
+				System.out.println("Mode: Menu Mode");
+			}
+
 			return;
 		}
 		
-		if(this.findImage(readerSettings.winsLabelScanbox, winsLabelImageTarget, "Wins Label")){
+		if(this.findImage(readerSettings.winsLabelScanbox, winsLabelImageTarget, "Wins Label") 
+				|| this.findImage(readerSettings.lossesLabelScanbox, lossesLabelImageTarget, "Losses Label")){
 			gameMode = ARENAMODE;
 			oppHero = -1;
 			inGameMode = 0;
+			
+			if(exGameMode != gameMode){
+				exGameMode = gameMode; 
+				System.out.println("Mode: Arena Mode");
+			}
+			
 			return;
 		}
 		
@@ -346,29 +360,53 @@ public class HearthReader {
 			gameMode = RANKEDMODE;
 			oppHero = -1;
 			inGameMode = 0;
+			
+			if(exGameMode != gameMode){
+				exGameMode = gameMode; 
+				System.out.println("Mode: Ranked Mode");
+			}
+			
 			return;
 		}
 		
 		if(this.findImage(readerSettings.unrankedScanbox, unrankedImageTarget, "Unranked mode Label")){
-			gameMode = CHALLENGEMODE;
+			gameMode = UNRANKEDMODE;
 			oppHero = -1;
 			inGameMode = 0;
+			
+			if(exGameMode != gameMode){
+				exGameMode = gameMode; 
+				System.out.println("Mode: Unranked Mode");
+			}
+			
 			return;
 		}
 		
-		if(this.findImage(readerSettings.challengeScanbox, challengeImageTarget, "Challenge mode Label")){
-			gameMode = CHALLENGEMODE;
-			oppHero = -1;
-			inGameMode = 0;
-			return;
-		}
-		
-		if(this.findImage(readerSettings.practiceScanbox, practiceImageTarget, "Practice mode Label")){
-			gameMode = PRACTICEMODE;
-			oppHero = -1;
-			inGameMode = 0;
-			return;
-		}
+//		if(this.findImage(readerSettings.challengeScanbox, challengeImageTarget, "Challenge mode Label")){
+//			gameMode = CHALLENGEMODE;
+//			oppHero = -1;
+//			inGameMode = 0;
+//			
+//			if(exGameMode != gameMode){
+//				exGameMode = gameMode; 
+//				System.out.println("Mode: Challenge Mode");
+//			}
+//
+//			return;
+//		}
+//		
+//		if(this.findImage(readerSettings.practiceScanbox, practiceImageTarget, "Practice mode Label")){
+//			gameMode = PRACTICEMODE;
+//			oppHero = -1;
+//			inGameMode = 0;
+//			
+//			if(exGameMode != gameMode){
+//				exGameMode = gameMode; 
+//				System.out.println("Mode: Practice Mode");
+//			}
+//			
+//			return;
+//		}
 				
 		return;
 	}
