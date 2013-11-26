@@ -64,6 +64,8 @@ import org.eclipse.swt.widgets.DateTime;
 @SuppressWarnings({ "unused", "deprecation" })
 public class HearthUI {
 
+	private static final int SAVEMODE = 0;
+	private static final int NEWMODE = 1;
 	protected Shell shlHearthtracker;
 	private CCombo cmbGameLang;
 	private Button btnEnableScanner;
@@ -98,6 +100,19 @@ public class HearthUI {
 	private Table table;
 	private Table table_1;
 	private Table table_2;
+	private TabFolder tabFolder_1;
+	private TabItem tbtmMatchesEdit;
+	private TabItem tbtmMatchesNew;
+	private TabItem tbtmArenaEdit;
+	private TabItem tbtmArenaNew;
+	private Combo combo_2;
+	private Spinner spinner_2;
+	private Combo combo_3;
+	private Button btnNewButton_2;
+	private Button btnNewButton_3;
+	private Button btnNewButton_1;
+	private Button btnNewButton;
+	private FormData fd_btnNewButton_1;
 	
 	/**
 	 * Launch the application.
@@ -189,16 +204,17 @@ public class HearthUI {
 		
 		while (!shlHearthtracker.isDisposed()) {
 			if (!display.readAndDispatch()) {
-				if(hearththread.isAlive()){
-					if(new Date().getTime() - lastUpdate.getTime() > 2000){
-						window.poppulateOverviewTable();
-						window.poppulateCurrentStats();
-						window.updateStatus();
-						window.poppulateDiagnoticsStatus();
-						lastUpdate = new Date();
-					}
-				}
 				display.sleep();
+			}
+			
+			if(hearththread.isAlive()){
+				if(new Date().getTime() - lastUpdate.getTime() > 2000){
+					window.poppulateOverviewTable();
+					window.poppulateCurrentStats();
+					window.updateStatus();
+					window.poppulateDiagnoticsStatus();
+					lastUpdate = new Date();
+				}
 			}
 		}
 	}
@@ -245,31 +261,31 @@ public class HearthUI {
 		fd_table.top = new FormAttachment(0, 48);
 		table.setLayoutData(fd_table);
 		
-		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.CENTER);
 		tblclmnNewColumn.setWidth(40);
 		
-		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_1.setWidth(55);
 		tblclmnNewColumn_1.setText("Wins");
 		
-		TableColumn tblclmnNewColumn_2 = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnNewColumn_2 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_2.setWidth(55);
 		tblclmnNewColumn_2.setText("Losses");
 		
-		TableColumn tblclmnWin = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnWin = new TableColumn(table, SWT.RIGHT);
 		tblclmnWin.setWidth(55);
 		tblclmnWin.setText("Win %");
 		
-		TableColumn tblclmnNewColumn_3 = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnNewColumn_3 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_3.setWidth(55);
 		tblclmnNewColumn_3.setText("7+");
 		
-		TableColumn tblclmnNewColumn_4 = new TableColumn(table, SWT.NONE);
+		TableColumn tblclmnNewColumn_4 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_4.setWidth(72);
 		tblclmnNewColumn_4.setText("Total Runs");
 		
 		cmbStatsMode = new Combo(grpStats, SWT.READ_ONLY);
-		cmbStatsMode.setItems(new String[] {"Arena mode (played as)", "Ranked mode (played as)", "Unranked mode (played as)"});
+		cmbStatsMode.setItems(new String[] {"Arena mode (played as)", "Ranked mode (played as)", "Unranked mode (played as)", "Challenge/Pratice mode (played as)"});
 		FormData fd_cmbStatsMode = new FormData();
 		fd_cmbStatsMode.top = new FormAttachment(0, 10);
 		fd_cmbStatsMode.left = new FormAttachment(0, 10);
@@ -313,56 +329,18 @@ public class HearthUI {
 		tblclmnOn.setWidth(60);
 		tblclmnOn.setText("On");
 		
-		TabFolder tabFolder_1 = new TabFolder(sashForm_1, SWT.NONE);
+		tabFolder_1 = new TabFolder(sashForm_1, SWT.NONE);
 		
-		TabItem tbtmEdi = new TabItem(tabFolder_1, SWT.NONE);
-		tbtmEdi.setText("&Edit");
+		tbtmMatchesEdit = new TabItem(tabFolder_1, SWT.NONE);
+		tbtmMatchesEdit.setText("&Edit");
 		
-		Composite composite_4 = new Composite(tabFolder_1, SWT.NONE);
-		tbtmEdi.setControl(composite_4);
-		composite_4.setLayout(new FormLayout());
+		tbtmMatchesNew = new TabItem(tabFolder_1, SWT.NONE);
+		tbtmMatchesNew.setText("&New");
 		
-		Combo combo = new Combo(composite_4, SWT.NONE);
-		FormData fd_combo = new FormData();
-		fd_combo.left = new FormAttachment(0, 72);
-		combo.setLayoutData(fd_combo);
-		
-		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
-		fd_combo.right = new FormAttachment(lblNewLabel_3, -12);
-		FormData fd_lblNewLabel_3 = new FormData();
-		fd_lblNewLabel_3.left = new FormAttachment(0, 172);
-		lblNewLabel_3.setLayoutData(fd_lblNewLabel_3);
-		lblNewLabel_3.setText("vs");
-		
-		Combo combo_1 = new Combo(composite_4, SWT.NONE);
-		FormData fd_combo_1 = new FormData();
-		fd_combo_1.left = new FormAttachment(lblNewLabel_3, 15);
-		combo_1.setLayoutData(fd_combo_1);
-		
-		Label lblNewLabel_4 = new Label(composite_4, SWT.NONE);
-		fd_combo.bottom = new FormAttachment(100, -290);
-		FormData fd_lblNewLabel_4 = new FormData();
-		fd_lblNewLabel_4.top = new FormAttachment(combo, 30);
-		fd_lblNewLabel_4.left = new FormAttachment(0, 116);
-		lblNewLabel_4.setLayoutData(fd_lblNewLabel_4);
-		lblNewLabel_4.setText("Goes");
-		
-		Combo combo_2 = new Combo(composite_4, SWT.NONE);
-		fd_combo_1.bottom = new FormAttachment(combo_2, -27);
-		fd_lblNewLabel_3.bottom = new FormAttachment(combo_2, -27);
-		fd_lblNewLabel_4.right = new FormAttachment(combo_2, -20);
-		combo_2.setItems(new String[] {"First", "Second", "Unknown"});
-		FormData fd_combo_2 = new FormData();
-		fd_combo_2.top = new FormAttachment(combo, 27);
-		fd_combo_2.left = new FormAttachment(0, 162);
-		combo_2.setLayoutData(fd_combo_2);
-		
-		TabItem tbtmNew = new TabItem(tabFolder_1, SWT.NONE);
-		tbtmNew.setText("&New");
-		
-		Composite composite_5 = new Composite(tabFolder_1, SWT.NONE);
-		tbtmNew.setControl(composite_5);
+		Composite composite_5  = new Composite(tabFolder_1, SWT.NONE);
+		tbtmMatchesNew.setControl(composite_5);
 		composite_5.setLayout(new FormLayout());
+		
 		sashForm_1.setWeights(new int[] {220, 375});
 		
 		TabItem tbtmArena = new TabItem(tabFolder, 0);
@@ -393,18 +371,14 @@ public class HearthUI {
 		
 		TabFolder tabFolder_2 = new TabFolder(sashForm_2, SWT.NONE);
 		
-		TabItem tbtmModify = new TabItem(tabFolder_2, 0);
-		tbtmModify.setText("&Edit");
+		tbtmArenaEdit = new TabItem(tabFolder_2, 0);
+		tbtmArenaEdit.setText("&Edit");
 		
-		Composite composite_9 = new Composite(tabFolder_2, SWT.NONE);
-		tbtmModify.setControl(composite_9);
-		composite_9.setLayout(new FormLayout());
-		
-		TabItem tbtmnew = new TabItem(tabFolder_2, 0);
-		tbtmnew.setText("&New");
+		TabItem tbtmArenaNew = new TabItem(tabFolder_2, 0);
+		tbtmArenaNew.setText("&New");
 		
 		Composite composite_10 = new Composite(tabFolder_2, SWT.NONE);
-		tbtmnew.setControl(composite_10);
+		tbtmArenaNew.setControl(composite_10);
 		composite_10.setLayout(new FormLayout());
 		sashForm_2.setWeights(new int[] {220, 375});
 			
@@ -631,18 +605,252 @@ public class HearthUI {
 			}
 		});
 		lblPaypal.setImage(new Image( display, "." + File.separator + "images" + File.separator + "btn_donate_150wx70h.gif" ));
-		
 
-		
-		
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
 		createLabels();
+		Composite composite_4 = new Composite(tabFolder_1, SWT.NONE);
+		createMatchesForm(composite_4, tbtmMatchesEdit,	SAVEMODE);
+		
+		Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
+		FormData fd_btnNewButton_4 = new FormData();
+		fd_btnNewButton_4.top = new FormAttachment(btnNewButton_3, 0, SWT.TOP);
+		fd_btnNewButton_4.left = new FormAttachment(btnNewButton_2, 50);
+		btnNewButton_4.setLayoutData(fd_btnNewButton_4);
+		btnNewButton_4.setText("&Delete");
+		//createMatchesForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesNew,		NEWMODE);
+		Composite composite_9 = new Composite(tabFolder_2, SWT.NONE);
+		createArenaForm(composite_9, tbtmArenaEdit,		SAVEMODE);
+		
+		Button btnNewButton_5 = new Button(composite_9, SWT.NONE);
+		fd_btnNewButton_1.right = new FormAttachment(100, -157);
+		FormData fd_btnNewButton_5 = new FormData();
+		fd_btnNewButton_5.top = new FormAttachment(btnNewButton, 0, SWT.TOP);
+		fd_btnNewButton_5.right = new FormAttachment(100, -52);
+		btnNewButton_5.setLayoutData(fd_btnNewButton_5);
+		btnNewButton_5.setText("&Delete");
+		//createArenaForm(new Composite(tabFolder_2, SWT.NONE), tbtmArenaNew,			NEWMODE);
+		
 		poppulateScannerOptions();
 		poppulateGameLangs();
 		poppulateResolutions();
 		poppulateDiagnoticsControls();
 		poppulateDiagnoticsStatus();
+		
+		poppulateOverviewTable();
+		poppulateCurrentStats();
+		updateStatus();
+		poppulateDiagnoticsStatus();
+	}
+	
+	private void createMatchesForm(Composite composite_4, TabItem tabitem, int mode){
+		tabitem.setControl(composite_4);
+		composite_4.setLayout(new FormLayout());
+		
+		Combo combo = new Combo(composite_4, SWT.NONE);
+		FormData fd_combo = new FormData();
+		fd_combo.left = new FormAttachment(0, 68);
+		combo.setLayoutData(fd_combo);
+		
+		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
+		FormData fd_lblNewLabel_3 = new FormData();
+		fd_lblNewLabel_3.left = new FormAttachment(combo, 16);
+		fd_lblNewLabel_3.top = new FormAttachment(combo, 3, SWT.TOP);
+		lblNewLabel_3.setLayoutData(fd_lblNewLabel_3);
+		lblNewLabel_3.setText("vs");
+		
+		Combo combo_1 = new Combo(composite_4, SWT.NONE);
+		fd_combo.right = new FormAttachment(100, -211);
+		FormData fd_combo_1 = new FormData();
+		fd_combo_1.top = new FormAttachment(combo, 0, SWT.TOP);
+		fd_combo_1.left = new FormAttachment(combo, 47);
+		combo_1.setLayoutData(fd_combo_1);
+		
+		Label lblNewLabel_4 = new Label(composite_4, SWT.NONE);
+		FormData fd_lblNewLabel_4 = new FormData();
+		fd_lblNewLabel_4.left = new FormAttachment(0, 168);
+		fd_lblNewLabel_4.right = new FormAttachment(100, -173);
+		lblNewLabel_4.setLayoutData(fd_lblNewLabel_4);
+		lblNewLabel_4.setText("Goes");
+		
+		combo_2 = new Combo(composite_4, SWT.NONE);
+		fd_lblNewLabel_4.bottom = new FormAttachment(100, -229);
+		combo_2.setItems(new String[] {"First", "Second", "Unknown"});
+		FormData fd_combo_2 = new FormData();
+		fd_combo_2.top = new FormAttachment(lblNewLabel_4, 6);
+		fd_combo_2.left = new FormAttachment(0, 144);
+		combo_2.setLayoutData(fd_combo_2);
+		
+		combo_3 = new Combo(composite_4, SWT.NONE);
+		fd_combo.top = new FormAttachment(combo_3, 16);
+		combo_3.setItems(new String[] {"Arena", "Ranked", "Unranked", "Challenge", "Practice"});
+		FormData fd_combo_3 = new FormData();
+		fd_combo_3.right = new FormAttachment(combo_2, 0, SWT.RIGHT);
+		combo_3.setLayoutData(fd_combo_3);
+		
+		Combo combo_4 = new Combo(composite_4, SWT.NONE);
+		combo_4.setItems(new String[] {"win", "loss"});
+		FormData fd_combo_4 = new FormData();
+		fd_combo_4.top = new FormAttachment(combo_2, 20);
+		fd_combo_4.left = new FormAttachment(0, 155);
+		combo_4.setLayoutData(fd_combo_4);
+		
+		DateTime dateTime = new DateTime(composite_4, SWT.NONE);
+		FormData fd_dateTime = new FormData();
+		dateTime.setLayoutData(fd_dateTime);
+		
+		DateTime dateTime_1 = new DateTime(composite_4, SWT.TIME);
+		fd_dateTime.right = new FormAttachment(100, -190);
+		FormData fd_dateTime_1 = new FormData();
+		fd_dateTime_1.bottom = new FormAttachment(dateTime, 0, SWT.BOTTOM);
+		fd_dateTime_1.left = new FormAttachment(dateTime, 17);
+		dateTime_1.setLayoutData(fd_dateTime_1);
+		
+		spinner_2 = new Spinner(composite_4, SWT.BORDER);
+		fd_dateTime.bottom = new FormAttachment(100, -110);
+		FormData fd_spinner_2 = new FormData();
+		fd_spinner_2.left = new FormAttachment(lblNewLabel_4, 0, SWT.LEFT);
+		spinner_2.setLayoutData(fd_spinner_2);
+		
+		Label lblNewLabel_9 = new Label(composite_4, SWT.NONE);
+		fd_spinner_2.top = new FormAttachment(lblNewLabel_9, -3, SWT.TOP);
+		FormData fd_lblNewLabel_9 = new FormData();
+		fd_lblNewLabel_9.top = new FormAttachment(0, 257);
+		fd_lblNewLabel_9.right = new FormAttachment(spinner_2, -15);
+		lblNewLabel_9.setLayoutData(fd_lblNewLabel_9);
+		lblNewLabel_9.setText("Played");
+		
+		Label lblMinutes = new Label(composite_4, SWT.NONE);
+		FormData fd_lblMinutes = new FormData();
+		fd_lblMinutes.top = new FormAttachment(spinner_2, 3, SWT.TOP);
+		fd_lblMinutes.left = new FormAttachment(spinner_2, 14);
+		lblMinutes.setLayoutData(fd_lblMinutes);
+		lblMinutes.setText("minutes");
+		
+		btnNewButton_3 = new Button(composite_4, SWT.NONE);
+		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+			}
+		});
+		FormData fd_btnNewButton_3 = new FormData();
+		btnNewButton_3.setLayoutData(fd_btnNewButton_3);
+		btnNewButton_3.setText("&Save");
+		btnNewButton_3.setData("mode", mode);
+		
+		btnNewButton_2 = new Button(composite_4, SWT.NONE);
+		fd_btnNewButton_3.top = new FormAttachment(btnNewButton_2, 0, SWT.TOP);
+		fd_btnNewButton_3.right = new FormAttachment(btnNewButton_2, -49);
+		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+			}
+		});
+		FormData fd_btnNewButton_2 = new FormData();
+		fd_btnNewButton_2.bottom = new FormAttachment(100, -10);
+		fd_btnNewButton_2.left = new FormAttachment(lblNewLabel_3, 0, SWT.LEFT);
+		btnNewButton_2.setLayoutData(fd_btnNewButton_2);
+		btnNewButton_2.setText("S&ync");
+		btnNewButton_2.setData("mode", mode);
+		
+		final Label lblID = new Label(composite_4, SWT.NONE);
+		fd_combo_4.right = new FormAttachment(lblID, 0, SWT.RIGHT);
+		fd_combo_3.top = new FormAttachment(lblID, 6);
+		FormData fd_lblID = new FormData();
+		fd_lblID.top = new FormAttachment(0, 5);
+		fd_lblID.left = new FormAttachment(0, 154);
+		lblID.setLayoutData(fd_lblID);
+		lblID.setText("ID #00000");
+		
+		table_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if((int) btnNewButton_3.getData("mode") == SAVEMODE){
+					TableItem[] titems = table_1.getSelection();
+					
+					if(titems.length > 0){
+						int id = (int) titems[0].getData("id");
+						lblID.setText("ID #" + id);
+						lblID.setData("id", id);
+					}
+					
+				}
+			}
+		});
+	}
+
+	private void createArenaForm(Composite composite_4, TabItem tabitem, int mode){
+		tbtmArenaEdit.setControl(composite_4);
+		composite_4.setLayout(new FormLayout());
+		
+		Combo combo = new Combo(composite_4, SWT.NONE);
+		FormData fd_combo = new FormData();
+		fd_combo.top = new FormAttachment(0, 24);
+		fd_combo.left = new FormAttachment(0, 134);
+		fd_combo.right = new FormAttachment(100, -145);
+		combo.setLayoutData(fd_combo);
+		
+		DateTime dateTime = new DateTime(composite_4, SWT.NONE);
+		FormData fd_dateTime = new FormData();
+		dateTime.setLayoutData(fd_dateTime);
+		
+		DateTime dateTime_1 = new DateTime(composite_4, SWT.TIME);
+		fd_dateTime.right = new FormAttachment(100, -197);
+		FormData fd_dateTime_1 = new FormData();
+		fd_dateTime_1.top = new FormAttachment(dateTime, 0, SWT.TOP);
+		fd_dateTime_1.left = new FormAttachment(dateTime, 17);
+		dateTime_1.setLayoutData(fd_dateTime_1);
+		
+		btnNewButton = new Button(composite_4, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+			}
+		});
+		FormData fd_btnNewButton = new FormData();
+		fd_btnNewButton.bottom = new FormAttachment(100, -10);
+		btnNewButton.setLayoutData(fd_btnNewButton);
+		btnNewButton.setText("&Save");
+		btnNewButton.setData("mode", mode);
+		
+		btnNewButton_1 = new Button(composite_4, SWT.NONE);
+		fd_btnNewButton.right = new FormAttachment(100, -253);
+		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+			}
+		});
+		fd_btnNewButton_1 = new FormData();
+		fd_btnNewButton_1.top = new FormAttachment(btnNewButton, 0, SWT.TOP);
+		btnNewButton_1.setLayoutData(fd_btnNewButton_1);
+		btnNewButton_1.setText("S&ync");
+		btnNewButton_1.setData("mode", mode);
+		
+		Spinner spinner = new Spinner(composite_4, SWT.BORDER);
+		fd_dateTime.top = new FormAttachment(spinner, 25);
+		FormData fd_spinner = new FormData();
+		fd_spinner.top = new FormAttachment(combo, 24);
+		fd_spinner.left = new FormAttachment(0, 113);
+		spinner.setLayoutData(fd_spinner);
+		
+		Spinner spinner_1 = new Spinner(composite_4, SWT.BORDER);
+		FormData fd_spinner_1 = new FormData();
+		fd_spinner_1.bottom = new FormAttachment(spinner, 0, SWT.BOTTOM);
+		fd_spinner_1.left = new FormAttachment(spinner, 46);
+		spinner_1.setLayoutData(fd_spinner_1);
+		
+		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
+		FormData fd_lblNewLabel_3 = new FormData();
+		fd_lblNewLabel_3.top = new FormAttachment(spinner, 3, SWT.TOP);
+		fd_lblNewLabel_3.left = new FormAttachment(spinner, 20);
+		fd_lblNewLabel_3.right = new FormAttachment(spinner_1, -6);
+		lblNewLabel_3.setLayoutData(fd_lblNewLabel_3);
+		lblNewLabel_3.setText("-");
+		
 	}
 	
 	private void savePreferences(){
@@ -914,7 +1122,9 @@ public class HearthUI {
 		//fill the unknown heroes as well
 		fillTable(-1);
 		
-		table.select(selected);
+		if(selected > 0){
+			table.select(selected);
+		}
 	}
 	
 	private void createLabels(){	
@@ -947,6 +1157,8 @@ public class HearthUI {
 				return HearthReader.RANKEDMODE;
 			case 2:
 				return HearthReader.UNRANKEDMODE;
+			case 3:
+				return HearthReader.CHALLENGEMODE;
 		}
 		
 		return HearthReader.UNKNOWNMODE;
