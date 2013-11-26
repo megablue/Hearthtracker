@@ -421,6 +421,14 @@ public class Tracker {
 		return winrate;
 	}
 	
+	public ResultSet getMatches() throws SQLException{
+		Statement stat = conn.createStatement();
+		ResultSet rs;
+		rs = stat.executeQuery("select * from MATCHES ORDER BY ID DESC LIMIT 50");
+		//stat.close();
+		return rs;
+	}
+	
 	public void outputArenaStatus(int mode, String score, String hero){
 		liveScore = score;
 		liveHero = hero;

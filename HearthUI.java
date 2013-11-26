@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -83,7 +84,7 @@ public class HearthUI {
 	
 	private Group grpStats;
 	
-	private Display display;
+	private static Display display;
 	private static HearthUI window;
 	static boolean debugMode = HearthHelper.isDevelopmentEnvironment();
 	
@@ -105,14 +106,7 @@ public class HearthUI {
 	private TabItem tbtmMatchesNew;
 	private TabItem tbtmArenaEdit;
 	private TabItem tbtmArenaNew;
-	private Combo combo_2;
-	private Spinner spinner_2;
-	private Combo combo_3;
-	private Button btnNewButton_2;
-	private Button btnNewButton_3;
-	private Button btnNewButton_1;
-	private Button btnNewButton;
-	private FormData fd_btnNewButton_1;
+	private static Image[] heroImgs;
 	
 	/**
 	 * Launch the application.
@@ -164,6 +158,14 @@ public class HearthUI {
 		if(!setting.scannerEnabled){
 			hearth.pause();
 		}
+		
+		heroImgs = new Image[heroesList.getTotal()+1];
+		
+		for(int i = -1; i < heroesList.getTotal(); i++){
+			heroImgs[i+1] = new Image(display, "." + File.separator + "images" + File.separator + heroesList.getHeroName(i) + "-s.png");
+			heroImgs[i+1] = resize(heroImgs[i+1], 24, 24);
+		}
+
 	}
 	
     private static class MessageLoop
@@ -314,12 +316,13 @@ public class HearthUI {
 		table_1.setHeaderVisible(true);
 		table_1.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 		
-		TableColumn tableColumn = new TableColumn(table_1, SWT.NONE);
-		tableColumn.setWidth(40);
+		TableColumn tblclmnAs = new TableColumn(table_1, SWT.NONE);
+		tblclmnAs.setText("As");
+		tblclmnAs.setWidth(25);
 		
 		TableColumn tblclmnVs = new TableColumn(table_1, SWT.NONE);
-		tblclmnVs.setWidth(40);
-		tblclmnVs.setText("vs");
+		tblclmnVs.setWidth(25);
+		tblclmnVs.setText("Vs");
 		
 		TableColumn tblclmnResult = new TableColumn(table_1, SWT.NONE);
 		tblclmnResult.setWidth(60);
@@ -358,8 +361,9 @@ public class HearthUI {
 		table_2.setHeaderVisible(true);
 		table_2.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 		
-		TableColumn tableColumn_1 = new TableColumn(table_2, SWT.NONE);
-		tableColumn_1.setWidth(40);
+		TableColumn tblclmnAs_1 = new TableColumn(table_2, SWT.NONE);
+		tblclmnAs_1.setText("As");
+		tblclmnAs_1.setWidth(25);
 		
 		TableColumn tableColumn_3 = new TableColumn(table_2, SWT.NONE);
 		tableColumn_3.setWidth(60);
@@ -609,27 +613,10 @@ public class HearthUI {
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
 		createLabels();
-		Composite composite_4 = new Composite(tabFolder_1, SWT.NONE);
-		createMatchesForm(composite_4, tbtmMatchesEdit,	SAVEMODE);
-		
-		Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
-		FormData fd_btnNewButton_4 = new FormData();
-		fd_btnNewButton_4.top = new FormAttachment(btnNewButton_3, 0, SWT.TOP);
-		fd_btnNewButton_4.left = new FormAttachment(btnNewButton_2, 50);
-		btnNewButton_4.setLayoutData(fd_btnNewButton_4);
-		btnNewButton_4.setText("&Delete");
+		createMatchesForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesEdit,	SAVEMODE);
 		//createMatchesForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesNew,		NEWMODE);
-		Composite composite_9 = new Composite(tabFolder_2, SWT.NONE);
-		createArenaForm(composite_9, tbtmArenaEdit,		SAVEMODE);
-		
-		Button btnNewButton_5 = new Button(composite_9, SWT.NONE);
-		fd_btnNewButton_1.right = new FormAttachment(100, -157);
-		FormData fd_btnNewButton_5 = new FormData();
-		fd_btnNewButton_5.top = new FormAttachment(btnNewButton, 0, SWT.TOP);
-		fd_btnNewButton_5.right = new FormAttachment(100, -52);
-		btnNewButton_5.setLayoutData(fd_btnNewButton_5);
-		btnNewButton_5.setText("&Delete");
-		//createArenaForm(new Composite(tabFolder_2, SWT.NONE), tbtmArenaNew,			NEWMODE);
+		createArenaForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit,		SAVEMODE);
+		//createArenaForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaNew,			NEWMODE);
 		
 		poppulateScannerOptions();
 		poppulateGameLangs();
@@ -641,6 +628,23 @@ public class HearthUI {
 		poppulateCurrentStats();
 		updateStatus();
 		poppulateDiagnoticsStatus();
+		
+		fillMatchesTable();
+	}
+	
+	private void fillMatchesTable(){
+		try {
+			ResultSet rs = tracker.getMatches();
+			while(rs.next()){
+				TableItem tableItem = new TableItem(table_1, SWT.NONE);
+				tableItem.setData("id", rs.getInt("ID"));
+				tableItem.setImage(0, heroImgs[rs.getInt("MYHEROID")+1]);
+				tableItem.setImage(1, heroImgs[rs.getInt("OPPHEROID")+1]);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void createMatchesForm(Composite composite_4, TabItem tabitem, int mode){
@@ -673,7 +677,7 @@ public class HearthUI {
 		lblNewLabel_4.setLayoutData(fd_lblNewLabel_4);
 		lblNewLabel_4.setText("Goes");
 		
-		combo_2 = new Combo(composite_4, SWT.NONE);
+		Combo combo_2 = new Combo(composite_4, SWT.NONE);
 		fd_lblNewLabel_4.bottom = new FormAttachment(100, -229);
 		combo_2.setItems(new String[] {"First", "Second", "Unknown"});
 		FormData fd_combo_2 = new FormData();
@@ -681,7 +685,7 @@ public class HearthUI {
 		fd_combo_2.left = new FormAttachment(0, 144);
 		combo_2.setLayoutData(fd_combo_2);
 		
-		combo_3 = new Combo(composite_4, SWT.NONE);
+		Combo combo_3 = new Combo(composite_4, SWT.NONE);
 		fd_combo.top = new FormAttachment(combo_3, 16);
 		combo_3.setItems(new String[] {"Arena", "Ranked", "Unranked", "Challenge", "Practice"});
 		FormData fd_combo_3 = new FormData();
@@ -706,7 +710,7 @@ public class HearthUI {
 		fd_dateTime_1.left = new FormAttachment(dateTime, 17);
 		dateTime_1.setLayoutData(fd_dateTime_1);
 		
-		spinner_2 = new Spinner(composite_4, SWT.BORDER);
+		Spinner spinner_2 = new Spinner(composite_4, SWT.BORDER);
 		fd_dateTime.bottom = new FormAttachment(100, -110);
 		FormData fd_spinner_2 = new FormData();
 		fd_spinner_2.left = new FormAttachment(lblNewLabel_4, 0, SWT.LEFT);
@@ -727,7 +731,7 @@ public class HearthUI {
 		lblMinutes.setLayoutData(fd_lblMinutes);
 		lblMinutes.setText("minutes");
 		
-		btnNewButton_3 = new Button(composite_4, SWT.NONE);
+		Button btnNewButton_3 = new Button(composite_4, SWT.NONE);
 		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -739,7 +743,7 @@ public class HearthUI {
 		btnNewButton_3.setText("&Save");
 		btnNewButton_3.setData("mode", mode);
 		
-		btnNewButton_2 = new Button(composite_4, SWT.NONE);
+		Button btnNewButton_2 = new Button(composite_4, SWT.NONE);
 		fd_btnNewButton_3.top = new FormAttachment(btnNewButton_2, 0, SWT.TOP);
 		fd_btnNewButton_3.right = new FormAttachment(btnNewButton_2, -49);
 		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
@@ -755,19 +759,26 @@ public class HearthUI {
 		btnNewButton_2.setText("S&ync");
 		btnNewButton_2.setData("mode", mode);
 		
-		final Label lblID = new Label(composite_4, SWT.NONE);
-		fd_combo_4.right = new FormAttachment(lblID, 0, SWT.RIGHT);
-		fd_combo_3.top = new FormAttachment(lblID, 6);
-		FormData fd_lblID = new FormData();
-		fd_lblID.top = new FormAttachment(0, 5);
-		fd_lblID.left = new FormAttachment(0, 154);
-		lblID.setLayoutData(fd_lblID);
-		lblID.setText("ID #00000");
+		Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
+		FormData fd_btnNewButton_4 = new FormData();
+		fd_btnNewButton_4.top = new FormAttachment(btnNewButton_3, 0, SWT.TOP);
+		fd_btnNewButton_4.left = new FormAttachment(btnNewButton_2, 50);
+		btnNewButton_4.setLayoutData(fd_btnNewButton_4);
+		btnNewButton_4.setText("&Delete");
 		
-		table_1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				if((int) btnNewButton_3.getData("mode") == SAVEMODE){
+		if(mode == SAVEMODE){
+			final Label lblID = new Label(composite_4, SWT.NONE);
+			fd_combo_4.right = new FormAttachment(lblID, 0, SWT.RIGHT);
+			fd_combo_3.top = new FormAttachment(lblID, 6);
+			FormData fd_lblID = new FormData();
+			fd_lblID.top = new FormAttachment(0, 5);
+			fd_lblID.left = new FormAttachment(0, 154);
+			lblID.setLayoutData(fd_lblID);
+			lblID.setText("ID #00000");
+			
+			table_1.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
 					TableItem[] titems = table_1.getSelection();
 					
 					if(titems.length > 0){
@@ -775,10 +786,12 @@ public class HearthUI {
 						lblID.setText("ID #" + id);
 						lblID.setData("id", id);
 					}
-					
 				}
-			}
-		});
+			});
+		}
+		
+
+		
 	}
 
 	private void createArenaForm(Composite composite_4, TabItem tabitem, int mode){
@@ -803,7 +816,7 @@ public class HearthUI {
 		fd_dateTime_1.left = new FormAttachment(dateTime, 17);
 		dateTime_1.setLayoutData(fd_dateTime_1);
 		
-		btnNewButton = new Button(composite_4, SWT.NONE);
+		Button btnNewButton = new Button(composite_4, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -816,7 +829,7 @@ public class HearthUI {
 		btnNewButton.setText("&Save");
 		btnNewButton.setData("mode", mode);
 		
-		btnNewButton_1 = new Button(composite_4, SWT.NONE);
+		Button btnNewButton_1 = new Button(composite_4, SWT.NONE);
 		fd_btnNewButton.right = new FormAttachment(100, -253);
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -824,11 +837,19 @@ public class HearthUI {
 				
 			}
 		});
-		fd_btnNewButton_1 = new FormData();
+		FormData fd_btnNewButton_1 = new FormData();
 		fd_btnNewButton_1.top = new FormAttachment(btnNewButton, 0, SWT.TOP);
 		btnNewButton_1.setLayoutData(fd_btnNewButton_1);
 		btnNewButton_1.setText("S&ync");
 		btnNewButton_1.setData("mode", mode);
+		
+		Button btnNewButton_5 = new Button(composite_4, SWT.NONE);
+		fd_btnNewButton_1.right = new FormAttachment(100, -157);
+		FormData fd_btnNewButton_5 = new FormData();
+		fd_btnNewButton_5.top = new FormAttachment(btnNewButton, 0, SWT.TOP);
+		fd_btnNewButton_5.right = new FormAttachment(100, -52);
+		btnNewButton_5.setLayoutData(fd_btnNewButton_5);
+		btnNewButton_5.setText("&Delete");
 		
 		Spinner spinner = new Spinner(composite_4, SWT.BORDER);
 		fd_dateTime.top = new FormAttachment(spinner, 25);
@@ -1134,7 +1155,7 @@ public class HearthUI {
 		}
 	}
 	
-	private Image resize(Image image, int width, int height) {
+	private static Image resize(Image image, int width, int height) {
 		Image scaled = new Image(Display.getDefault(), width, height);
 		GC gc = new GC(scaled);
 		gc.setAntialias(SWT.ON);
@@ -1187,9 +1208,7 @@ public class HearthUI {
 			return;
 		}
 		
-		heroImg = new Image(display, "." + File.separator + "images" + File.separator + heroesList.getHeroName(heroId) + "-s.png");
-		heroImg = resize(heroImg, 24, 24);
-		tableItem_1.setImage(0, heroImg);
+		tableItem_1.setImage(0, heroImgs[heroId+1]);
 		
 		if( !(overall > -1) ){
 			return;
