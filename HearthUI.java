@@ -5,6 +5,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -107,6 +108,7 @@ public class HearthUI {
 	private TabItem tbtmArenaEdit;
 	private TabItem tbtmArenaNew;
 	private static Image[] heroImgs;
+	private Composite composite_9;
 	
 	/**
 	 * Launch the application.
@@ -211,7 +213,7 @@ public class HearthUI {
 			
 			if(hearththread.isAlive()){
 				if(new Date().getTime() - lastUpdate.getTime() > 2000){
-					window.poppulateOverviewTable();
+					window.fillOverviewTable();
 					window.poppulateCurrentStats();
 					window.updateStatus();
 					window.poppulateDiagnoticsStatus();
@@ -264,7 +266,7 @@ public class HearthUI {
 		table.setLayoutData(fd_table);
 		
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.CENTER);
-		tblclmnNewColumn.setWidth(40);
+		tblclmnNewColumn.setWidth(29);
 		
 		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_1.setWidth(55);
@@ -296,7 +298,8 @@ public class HearthUI {
 		
 		grpCurrentStats = new Group(sashForm, SWT.NONE);
 		grpCurrentStats.setText("Current Status");
-		grpCurrentStats.setLayout(new GridLayout(1, false));
+		grpCurrentStats.setLayout(new FillLayout(SWT.VERTICAL));
+		
 		sashForm.setWeights(new int[] {365, 230});
 		GridData gd_lblNewLabel_15 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblNewLabel_15.widthHint = 60;
@@ -318,21 +321,26 @@ public class HearthUI {
 		
 		TableColumn tblclmnAs = new TableColumn(table_1, SWT.NONE);
 		tblclmnAs.setText("As");
-		tblclmnAs.setWidth(25);
+		tblclmnAs.setWidth(29);
 		
 		TableColumn tblclmnVs = new TableColumn(table_1, SWT.NONE);
-		tblclmnVs.setWidth(25);
+		tblclmnVs.setWidth(29);
 		tblclmnVs.setText("Vs");
 		
+		TableColumn tblclmnMode = new TableColumn(table_1, SWT.NONE);
+		tblclmnMode.setWidth(55);
+		tblclmnMode.setText("Mode");
+		
 		TableColumn tblclmnResult = new TableColumn(table_1, SWT.NONE);
-		tblclmnResult.setWidth(60);
+		tblclmnResult.setWidth(45);
 		tblclmnResult.setText("Result");
 		
 		TableColumn tblclmnOn = new TableColumn(table_1, SWT.NONE);
-		tblclmnOn.setWidth(60);
+		tblclmnOn.setWidth(88);
 		tblclmnOn.setText("On");
 		
 		tabFolder_1 = new TabFolder(sashForm_1, SWT.NONE);
+		sashForm_1.setWeights(new int[] {264, 331});
 		
 		tbtmMatchesEdit = new TabItem(tabFolder_1, SWT.NONE);
 		tbtmMatchesEdit.setText("&Edit");
@@ -343,8 +351,6 @@ public class HearthUI {
 		Composite composite_5  = new Composite(tabFolder_1, SWT.NONE);
 		tbtmMatchesNew.setControl(composite_5);
 		composite_5.setLayout(new FormLayout());
-		
-		sashForm_1.setWeights(new int[] {220, 375});
 		
 		TabItem tbtmArena = new TabItem(tabFolder, 0);
 		tbtmArena.setText("&Arena");
@@ -613,8 +619,8 @@ public class HearthUI {
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
 		createLabels();
-		createMatchesForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesEdit,	SAVEMODE);
-		//createMatchesForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesNew,		NEWMODE);
+		createMatchesEditForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesEdit);
+		createMatchesNewForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesNew);
 		createArenaForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit,		SAVEMODE);
 		//createArenaForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaNew,			NEWMODE);
 		
@@ -623,175 +629,339 @@ public class HearthUI {
 		poppulateResolutions();
 		poppulateDiagnoticsControls();
 		poppulateDiagnoticsStatus();
-		
-		poppulateOverviewTable();
 		poppulateCurrentStats();
 		updateStatus();
 		poppulateDiagnoticsStatus();
 		
+		fillOverviewTable();
 		fillMatchesTable();
 	}
 	
 	private void fillMatchesTable(){
 		try {
+			TableItem[] tis = table_1.getSelection();
+			int selectedID = -1;
+			
+			if(tis.length > 0){
+				selectedID = (int) tis[0].getData("id");
+			}
+			
+			table_1.removeAll();
+			
 			ResultSet rs = tracker.getMatches();
+			Calendar cal = Calendar.getInstance();
+
 			while(rs.next()){
 				TableItem tableItem = new TableItem(table_1, SWT.NONE);
+				String result = rs.getInt("WIN") == 1 ? "Win" : "Loss";
+				cal.setTime(new Date(rs.getDate("STARTTIME").getTime() + rs.getTime("STARTTIME").getTime()));
+				
 				tableItem.setData("id", rs.getInt("ID"));
 				tableItem.setImage(0, heroImgs[rs.getInt("MYHEROID")+1]);
 				tableItem.setImage(1, heroImgs[rs.getInt("OPPHEROID")+1]);
+				tableItem.setText(2, HearthReader.gameModeToString(rs.getInt("MODE")));
+				tableItem.setText(3, result);
+				tableItem.setText(4, (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
+				
+				if(selectedID == rs.getInt("ID")){
+					table_1.setSelection(tableItem);
+				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	private void createMatchesForm(Composite composite_4, TabItem tabitem, int mode){
+	private void createMatchesEditForm(Composite composite_4, TabItem tabitem){
 		tabitem.setControl(composite_4);
-		composite_4.setLayout(new FormLayout());
 		
-		Combo combo = new Combo(composite_4, SWT.NONE);
-		FormData fd_combo = new FormData();
-		fd_combo.left = new FormAttachment(0, 68);
-		combo.setLayoutData(fd_combo);
+		final Combo cbMatchesEditAs = new Combo(composite_4, SWT.READ_ONLY);
+		cbMatchesEditAs.setBounds(48, 66, 90, 23);
 		
 		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
-		FormData fd_lblNewLabel_3 = new FormData();
-		fd_lblNewLabel_3.left = new FormAttachment(combo, 16);
-		fd_lblNewLabel_3.top = new FormAttachment(combo, 3, SWT.TOP);
-		lblNewLabel_3.setLayoutData(fd_lblNewLabel_3);
+		lblNewLabel_3.setBounds(154, 69, 11, 15);
 		lblNewLabel_3.setText("vs");
 		
-		Combo combo_1 = new Combo(composite_4, SWT.NONE);
-		fd_combo.right = new FormAttachment(100, -211);
-		FormData fd_combo_1 = new FormData();
-		fd_combo_1.top = new FormAttachment(combo, 0, SWT.TOP);
-		fd_combo_1.left = new FormAttachment(combo, 47);
-		combo_1.setLayoutData(fd_combo_1);
+		final Combo cbMatchesEditVs = new Combo(composite_4, SWT.READ_ONLY);
+		cbMatchesEditVs.setBounds(184, 66, 90, 23);
+		
+		for(int i = -1; i < heroesList.getTotal(); i++){
+			cbMatchesEditAs.add(heroesList.getHeroLabel(i));
+			cbMatchesEditVs.add(heroesList.getHeroLabel(i));
+		}
 		
 		Label lblNewLabel_4 = new Label(composite_4, SWT.NONE);
-		FormData fd_lblNewLabel_4 = new FormData();
-		fd_lblNewLabel_4.left = new FormAttachment(0, 168);
-		fd_lblNewLabel_4.right = new FormAttachment(100, -173);
-		lblNewLabel_4.setLayoutData(fd_lblNewLabel_4);
+		lblNewLabel_4.setBounds(148, 101, 26, 15);
 		lblNewLabel_4.setText("Goes");
 		
-		Combo combo_2 = new Combo(composite_4, SWT.NONE);
-		fd_lblNewLabel_4.bottom = new FormAttachment(100, -229);
-		combo_2.setItems(new String[] {"First", "Second", "Unknown"});
-		FormData fd_combo_2 = new FormData();
-		fd_combo_2.top = new FormAttachment(lblNewLabel_4, 6);
-		fd_combo_2.left = new FormAttachment(0, 144);
-		combo_2.setLayoutData(fd_combo_2);
+		final Combo cbMatchesEditGoes = new Combo(composite_4, SWT.READ_ONLY);
+		cbMatchesEditGoes.setBounds(125, 123, 74, 23);
+		cbMatchesEditGoes.setItems(new String[] {"First", "Second", "Unknown"});
 		
-		Combo combo_3 = new Combo(composite_4, SWT.NONE);
-		fd_combo.top = new FormAttachment(combo_3, 16);
-		combo_3.setItems(new String[] {"Arena", "Ranked", "Unranked", "Challenge", "Practice"});
-		FormData fd_combo_3 = new FormData();
-		fd_combo_3.right = new FormAttachment(combo_2, 0, SWT.RIGHT);
-		combo_3.setLayoutData(fd_combo_3);
+		final Combo cbMatchesEditGameMode = new Combo(composite_4, SWT.READ_ONLY);
+		cbMatchesEditGameMode.setBounds(109, 25, 99, 23);
+		cbMatchesEditGameMode.setItems(new String[] {"Unknown mode", "Arena", "Ranked", "Unranked", "Challenge", "Practice"});
 		
-		Combo combo_4 = new Combo(composite_4, SWT.NONE);
-		combo_4.setItems(new String[] {"win", "loss"});
-		FormData fd_combo_4 = new FormData();
-		fd_combo_4.top = new FormAttachment(combo_2, 20);
-		fd_combo_4.left = new FormAttachment(0, 155);
-		combo_4.setLayoutData(fd_combo_4);
+		final Combo cbMatchesEditResult = new Combo(composite_4, SWT.READ_ONLY);
+		cbMatchesEditResult.setBounds(136, 165, 49, 23);
+		cbMatchesEditResult.setItems(new String[] {"Win", "Loss"});
 		
-		DateTime dateTime = new DateTime(composite_4, SWT.NONE);
-		FormData fd_dateTime = new FormData();
-		dateTime.setLayoutData(fd_dateTime);
+		final DateTime dtMatchesEditDate = new DateTime(composite_4, SWT.NONE);
+		dtMatchesEditDate.setBounds(69, 211, 80, 24);
 		
-		DateTime dateTime_1 = new DateTime(composite_4, SWT.TIME);
-		fd_dateTime.right = new FormAttachment(100, -190);
-		FormData fd_dateTime_1 = new FormData();
-		fd_dateTime_1.bottom = new FormAttachment(dateTime, 0, SWT.BOTTOM);
-		fd_dateTime_1.left = new FormAttachment(dateTime, 17);
-		dateTime_1.setLayoutData(fd_dateTime_1);
+		final DateTime dtMatchesEditTime = new DateTime(composite_4, SWT.TIME);
+		dtMatchesEditTime.setBounds(169, 211, 86, 24);
 		
-		Spinner spinner_2 = new Spinner(composite_4, SWT.BORDER);
-		fd_dateTime.bottom = new FormAttachment(100, -110);
-		FormData fd_spinner_2 = new FormData();
-		fd_spinner_2.left = new FormAttachment(lblNewLabel_4, 0, SWT.LEFT);
-		spinner_2.setLayoutData(fd_spinner_2);
+		final Spinner spMatchesEditMinute = new Spinner(composite_4, SWT.BORDER);
+		spMatchesEditMinute.setBounds(148, 254, 44, 22);
 		
 		Label lblNewLabel_9 = new Label(composite_4, SWT.NONE);
-		fd_spinner_2.top = new FormAttachment(lblNewLabel_9, -3, SWT.TOP);
-		FormData fd_lblNewLabel_9 = new FormData();
-		fd_lblNewLabel_9.top = new FormAttachment(0, 257);
-		fd_lblNewLabel_9.right = new FormAttachment(spinner_2, -15);
-		lblNewLabel_9.setLayoutData(fd_lblNewLabel_9);
+		lblNewLabel_9.setBounds(88, 257, 35, 15);
 		lblNewLabel_9.setText("Played");
 		
 		Label lblMinutes = new Label(composite_4, SWT.NONE);
-		FormData fd_lblMinutes = new FormData();
-		fd_lblMinutes.top = new FormAttachment(spinner_2, 3, SWT.TOP);
-		fd_lblMinutes.left = new FormAttachment(spinner_2, 14);
-		lblMinutes.setLayoutData(fd_lblMinutes);
+		lblMinutes.setBounds(212, 257, 43, 15);
 		lblMinutes.setText("minutes");
 		
-		Button btnNewButton_3 = new Button(composite_4, SWT.NONE);
-		btnNewButton_3.addSelectionListener(new SelectionAdapter() {
+		final Button btnMatchesEditSave = new Button(composite_4, SWT.NONE);
+		btnMatchesEditSave.setBounds(88, 310, 36, 25);
+		btnMatchesEditSave.setText("&Save");
+
+		final Button btnMatchesEditDelete = new Button(composite_4, SWT.NONE);
+		btnMatchesEditDelete.setBounds(212, 310, 45, 25);
+		btnMatchesEditDelete.setText("&Delete");
+		
+		final Label lblID = new Label(composite_4, SWT.NONE);
+		lblID.setBounds(10, 10, 55, 15);
+		lblID.setText("ID #00000");
+		lblID.setData("id", 0);
+		
+		table_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				TableItem[] titems = table_1.getSelection();
 				
-			}
-		});
-		FormData fd_btnNewButton_3 = new FormData();
-		btnNewButton_3.setLayoutData(fd_btnNewButton_3);
-		btnNewButton_3.setText("&Save");
-		btnNewButton_3.setData("mode", mode);
-		
-		Button btnNewButton_2 = new Button(composite_4, SWT.NONE);
-		fd_btnNewButton_3.top = new FormAttachment(btnNewButton_2, 0, SWT.TOP);
-		fd_btnNewButton_3.right = new FormAttachment(btnNewButton_2, -49);
-		btnNewButton_2.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				
-			}
-		});
-		FormData fd_btnNewButton_2 = new FormData();
-		fd_btnNewButton_2.bottom = new FormAttachment(100, -10);
-		fd_btnNewButton_2.left = new FormAttachment(lblNewLabel_3, 0, SWT.LEFT);
-		btnNewButton_2.setLayoutData(fd_btnNewButton_2);
-		btnNewButton_2.setText("S&ync");
-		btnNewButton_2.setData("mode", mode);
-		
-		Button btnNewButton_4 = new Button(composite_4, SWT.NONE);
-		FormData fd_btnNewButton_4 = new FormData();
-		fd_btnNewButton_4.top = new FormAttachment(btnNewButton_3, 0, SWT.TOP);
-		fd_btnNewButton_4.left = new FormAttachment(btnNewButton_2, 50);
-		btnNewButton_4.setLayoutData(fd_btnNewButton_4);
-		btnNewButton_4.setText("&Delete");
-		
-		if(mode == SAVEMODE){
-			final Label lblID = new Label(composite_4, SWT.NONE);
-			fd_combo_4.right = new FormAttachment(lblID, 0, SWT.RIGHT);
-			fd_combo_3.top = new FormAttachment(lblID, 6);
-			FormData fd_lblID = new FormData();
-			fd_lblID.top = new FormAttachment(0, 5);
-			fd_lblID.left = new FormAttachment(0, 154);
-			lblID.setLayoutData(fd_lblID);
-			lblID.setText("ID #00000");
-			
-			table_1.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					TableItem[] titems = table_1.getSelection();
+				if(titems.length > 0){
+					int id = (int) titems[0].getData("id");
+					lblID.setText("ID #" + id);
+					lblID.setData("id", id);
+					tabFolder_1.setSelection(0);
 					
-					if(titems.length > 0){
-						int id = (int) titems[0].getData("id");
-						lblID.setText("ID #" + id);
-						lblID.setData("id", id);
+					ResultSet rs;
+					try {
+						rs = tracker.getMatch(id);
+						
+						if(rs.next()){
+							int myheroid = rs.getInt("MYHEROID");
+							int oppheroid = rs.getInt("OPPHEROID");
+							int goes = rs.getInt("GOESFIRST");
+							int win	= rs.getInt("WIN");
+							Date startdate = rs.getDate("STARTTIME");
+							Date starttime = rs.getTime("STARTTIME");
+							Calendar calDate = Calendar.getInstance();
+							Calendar calTime = Calendar.getInstance();
+							int totaltime = rs.getInt("TOTALTIME") / 60;
+							int gameMode = rs.getInt("MODE");
+
+							calDate.setTime(startdate);
+							calTime.setTime(starttime);
+							
+							if(myheroid == -1){
+								cbMatchesEditAs.select(0);
+							}else{
+								cbMatchesEditAs.select(myheroid + 1);
+							}
+							
+							if(oppheroid == -1){
+								cbMatchesEditVs.select(0);
+							} else {
+								cbMatchesEditVs.select(oppheroid + 1);
+							}
+							
+							if(goes == 1){
+								cbMatchesEditGoes.select(0);
+							} else {
+								cbMatchesEditGoes.select(1);
+							}
+							
+							if(gameMode > 0){
+								cbMatchesEditGameMode.select(gameMode);
+							} else {
+								cbMatchesEditGameMode.select(0);
+							}
+							
+							if(win == 1){
+								cbMatchesEditResult.select(0);
+							}else{
+								cbMatchesEditResult.select(1);
+							}
+							
+							spMatchesEditMinute.setSelection(totaltime);
+						
+							dtMatchesEditDate.setYear(calDate.get(Calendar.YEAR));
+							dtMatchesEditDate.setMonth(calDate.get(Calendar.MONTH));
+							dtMatchesEditDate.setDay(calDate.get(Calendar.DAY_OF_MONTH));
+	
+							dtMatchesEditTime.setHours(calTime.get(Calendar.HOUR_OF_DAY));
+							dtMatchesEditTime.setMinutes(calTime.get(Calendar.MINUTE));
+							dtMatchesEditTime.setSeconds(calTime.get(Calendar.SECOND));
+
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
 					}
+
 				}
-			});
+			}
+		});
+		
+		
+		btnMatchesEditSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int id = (int) lblID.getData("id");
+				int gMode = cbMatchesEditGameMode.getSelectionIndex();
+				int myheroid = cbMatchesEditAs.getSelectionIndex() - 1;
+				int oppheroid = cbMatchesEditVs.getSelectionIndex() - 1;
+				int goes = cbMatchesEditGoes.getSelectionIndex() == 0 ? 1 : 0;
+				int result = cbMatchesEditResult.getSelectionIndex() == 0 ? 1 : 0;
+				int totaltime = spMatchesEditMinute.getSelection() * 60;
+				
+				if(id == 0){
+					return;
+				}
+				
+				Calendar cal = Calendar.getInstance();
+				cal.set(Calendar.DAY_OF_MONTH, 	dtMatchesEditDate.getDay());
+				cal.set(Calendar.MONTH, 		dtMatchesEditDate.getMonth());
+				cal.set(Calendar.YEAR, 			dtMatchesEditDate.getYear());
+				cal.set(Calendar.HOUR_OF_DAY, 	dtMatchesEditTime.getHours());
+				cal.set(Calendar.MINUTE, 		dtMatchesEditTime.getMinutes());
+				
+				Date starttime = cal.getTime(); 
+				
+				try {
+					btnMatchesEditSave.setEnabled(false);
+					btnMatchesEditSave.setText("Saving...");
+					tracker.saveModifiedMatchResult(id, gMode, myheroid, oppheroid, goes, result, starttime, totaltime);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				fillMatchesTable();
+				btnMatchesEditSave.setEnabled(true);
+				btnMatchesEditSave.setText("&Save");
+			}
+		});
+		
+		btnMatchesEditDelete.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int id = (int) lblID.getData("id");
+				try {
+					btnMatchesEditDelete.setEnabled(false);
+					btnMatchesEditDelete.setText("Deleting...");
+					tracker.deleteMatchResult(id);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				fillMatchesTable();
+				btnMatchesEditDelete.setEnabled(true);
+				btnMatchesEditDelete.setText("&Delete");
+			}
+		});
+	}
+	
+	private void createMatchesNewForm(Composite composite_4, TabItem tabitem){
+		tabitem.setControl(composite_4);
+		
+		final Combo cbMatchesEditAs = new Combo(composite_4, SWT.READ_ONLY);
+		cbMatchesEditAs.setBounds(48, 66, 90, 23);
+		
+		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
+		lblNewLabel_3.setBounds(154, 69, 11, 15);
+		lblNewLabel_3.setText("vs");
+		
+		final Combo cbMatchesEditVs = new Combo(composite_4, SWT.READ_ONLY);
+		cbMatchesEditVs.setBounds(184, 66, 90, 23);
+		
+		for(int i = -1; i < heroesList.getTotal(); i++){
+			cbMatchesEditAs.add(heroesList.getHeroLabel(i));
+			cbMatchesEditVs.add(heroesList.getHeroLabel(i));
 		}
 		
-
+		Label lblNewLabel_4 = new Label(composite_4, SWT.NONE);
+		lblNewLabel_4.setBounds(148, 101, 26, 15);
+		lblNewLabel_4.setText("Goes");
 		
+		final Combo cbMatchesEditGoes = new Combo(composite_4, SWT.READ_ONLY);
+		cbMatchesEditGoes.setBounds(125, 123, 74, 23);
+		cbMatchesEditGoes.setItems(new String[] {"First", "Second", "Unknown"});
+		
+		final Combo cbMatchesEditGameMode = new Combo(composite_4, SWT.READ_ONLY);
+		cbMatchesEditGameMode.setBounds(109, 25, 99, 23);
+		cbMatchesEditGameMode.setItems(new String[] {"Unknown mode", "Arena", "Ranked", "Unranked", "Challenge", "Practice"});
+		
+		final Combo cbMatchesEditResult = new Combo(composite_4, SWT.READ_ONLY);
+		cbMatchesEditResult.setBounds(136, 165, 49, 23);
+		cbMatchesEditResult.setItems(new String[] {"Win", "Loss"});
+		
+		final DateTime dtMatchesEditDate = new DateTime(composite_4, SWT.NONE);
+		dtMatchesEditDate.setBounds(69, 211, 80, 24);
+		
+		final DateTime dtMatchesEditTime = new DateTime(composite_4, SWT.TIME);
+		dtMatchesEditTime.setBounds(169, 211, 86, 24);
+		
+		final Spinner spMatchesEditMinute = new Spinner(composite_4, SWT.BORDER);
+		spMatchesEditMinute.setBounds(148, 254, 44, 22);
+		
+		Label lblNewLabel_9 = new Label(composite_4, SWT.NONE);
+		lblNewLabel_9.setBounds(88, 257, 35, 15);
+		lblNewLabel_9.setText("Played");
+		
+		Label lblMinutes = new Label(composite_4, SWT.NONE);
+		lblMinutes.setBounds(212, 257, 43, 15);
+		lblMinutes.setText("minutes");
+		
+		final Button btnMatchesEditSave = new Button(composite_4, SWT.NONE);
+		btnMatchesEditSave.setBounds(150, 310, 36, 25);
+		btnMatchesEditSave.setText("&Save");
+				
+		btnMatchesEditSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int gMode = cbMatchesEditGameMode.getSelectionIndex();
+				int myheroid = cbMatchesEditAs.getSelectionIndex() - 1;
+				int oppheroid = cbMatchesEditVs.getSelectionIndex() - 1;
+				int goes = cbMatchesEditGoes.getSelectionIndex() == 0 ? 1 : 0;
+				int result = cbMatchesEditResult.getSelectionIndex() == 0 ? 1 : 0;
+				int totaltime = spMatchesEditMinute.getSelection() * 60;
+
+				Calendar cal = Calendar.getInstance();
+				cal.set(Calendar.DAY_OF_MONTH, 	dtMatchesEditDate.getDay());
+				cal.set(Calendar.MONTH, 		dtMatchesEditDate.getMonth());
+				cal.set(Calendar.YEAR, 			dtMatchesEditDate.getYear());
+				cal.set(Calendar.HOUR_OF_DAY, 	dtMatchesEditTime.getHours());
+				cal.set(Calendar.MINUTE, 		dtMatchesEditTime.getMinutes());
+				
+				Date starttime = cal.getTime(); 
+				
+				System.out.println("mode: " + gMode);
+				
+				try {
+					btnMatchesEditSave.setEnabled(false);
+					btnMatchesEditSave.setText("Saving...");
+					tracker.saveMatchResult(gMode, myheroid, oppheroid, goes, result, starttime, totaltime);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				fillMatchesTable();
+				btnMatchesEditSave.setEnabled(true);
+				btnMatchesEditSave.setText("&Save");
+			}
+		});
 	}
 
 	private void createArenaForm(Composite composite_4, TabItem tabitem, int mode){
@@ -828,23 +998,9 @@ public class HearthUI {
 		btnNewButton.setLayoutData(fd_btnNewButton);
 		btnNewButton.setText("&Save");
 		btnNewButton.setData("mode", mode);
-		
-		Button btnNewButton_1 = new Button(composite_4, SWT.NONE);
 		fd_btnNewButton.right = new FormAttachment(100, -253);
-		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				
-			}
-		});
-		FormData fd_btnNewButton_1 = new FormData();
-		fd_btnNewButton_1.top = new FormAttachment(btnNewButton, 0, SWT.TOP);
-		btnNewButton_1.setLayoutData(fd_btnNewButton_1);
-		btnNewButton_1.setText("S&ync");
-		btnNewButton_1.setData("mode", mode);
 		
 		Button btnNewButton_5 = new Button(composite_4, SWT.NONE);
-		fd_btnNewButton_1.right = new FormAttachment(100, -157);
 		FormData fd_btnNewButton_5 = new FormData();
 		fd_btnNewButton_5.top = new FormAttachment(btnNewButton, 0, SWT.TOP);
 		fd_btnNewButton_5.right = new FormAttachment(100, -52);
@@ -1127,31 +1283,16 @@ public class HearthUI {
 		cmbStatsMode.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				poppulateOverviewTable();
+				fillOverviewTable();
 			}
 		});
-	}
-		
-	private void poppulateOverviewTable(){
-		int selected = table.getSelectionIndex();
-		table.removeAll();
-		
-		for(int heroId = 0; heroId < heroesList.getTotal(); heroId++){
-			fillTable(heroId);
-		}
-		
-		//fill the unknown heroes as well
-		fillTable(-1);
-		
-		if(selected > 0){
-			table.select(selected);
-		}
 	}
 	
 	private void createLabels(){	
 		for(int i = 0; i < lblStatus.length; i++){
 			lblStatus[i] = new Label(grpCurrentStats, SWT.NONE);
 			lblStatus[i].setText("...................................................................");
+			lblStatus[i].setSize(300, 20);
 		}
 	}
 	
@@ -1185,47 +1326,58 @@ public class HearthUI {
 		return HearthReader.UNKNOWNMODE;
 	}
 	
-	private void fillTable(int heroId){
-		TableItem tableItem_1 = new TableItem(table, SWT.NONE);
-		float sevenplus = 0, overall = 0;
-		int wins = 0;
-		int losses = 0;
-		int totalrun = 0;
-		Image heroImg;
-		int mode = this.getMode();
+	private void fillOverviewTable(){
+		int selected = table.getSelectionIndex();
+		table.removeAll();
 		
-		try {
-			wins = tracker.getTotalWinsByHero(mode, heroId);
-			losses = tracker.getTotalLossesByHero(mode, heroId);
-			sevenplus = tracker.getWinRateByHeroSpecial(mode, heroId);
-			overall = tracker.getWinRateByHero(mode, heroId);
-			totalrun = tracker.getTotalRunsByHero(mode, heroId);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		for(int i = 0; i < heroesList.getTotal() + 1; i++){
+			float sevenplus = 0, overall = 0;
+			int wins = 0;
+			int losses = 0;
+			int totalrun = 0;
+			Image heroImg;
+			int mode = this.getMode();
+			int heroId = i < heroesList.getTotal() ? i : -1;
+			
+			try {
+				wins = tracker.getTotalWinsByHero(mode, heroId);
+				losses = tracker.getTotalLossesByHero(mode, heroId);
+				sevenplus = tracker.getWinRateByHeroSpecial(mode, heroId);
+				overall = tracker.getWinRateByHero(mode, heroId);
+				totalrun = tracker.getTotalRunsByHero(mode, heroId);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			if(heroId == -1 && !(overall > -1)){
+				continue;
+			}
+			
+			TableItem tableItem_1 = new TableItem(table, SWT.NONE);
+			
+			tableItem_1.setImage(0, heroImgs[heroId+1]);
+			
+			if( !(overall > -1) ){
+				continue;
+			}
+			
+			tableItem_1.setText(1,   wins + "");
+			tableItem_1.setText(2,   losses + "");
+			
+			if(overall > -1){
+				tableItem_1.setText(3,  new DecimalFormat("0.00").format(overall*100));
+			}
+			
+			if(sevenplus > -1){
+				tableItem_1.setText(4,  new DecimalFormat("0.00").format(sevenplus*100));
+			}
+			
+			tableItem_1.setText(5,  totalrun + "");
+			
 		}
 		
-		if(heroId == -1 && !(overall > -1)){
-			return;
+		if(selected > 0){
+			table.select(selected);
 		}
-		
-		tableItem_1.setImage(0, heroImgs[heroId+1]);
-		
-		if( !(overall > -1) ){
-			return;
-		}
-		
-		tableItem_1.setText(1,   wins + "");
-		tableItem_1.setText(2,   losses + "");
-		
-		if(overall > -1){
-			tableItem_1.setText(3,  new DecimalFormat("0.00").format(overall*100));
-		}
-		
-		if(sevenplus > -1){
-			tableItem_1.setText(4,  new DecimalFormat("0.00").format(sevenplus*100));
-		}
-		
-		tableItem_1.setText(5,  totalrun + "");
-		
 	}
 }

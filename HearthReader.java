@@ -100,6 +100,27 @@ public class HearthReader {
 		init();
 	}
 	
+	public static String gameModeToString(int mode){
+		switch(mode){
+			case HearthReader.ARENAMODE:
+				return "Arena";
+	
+			case HearthReader.RANKEDMODE:
+				return "Ranked";
+		
+			case HearthReader.UNRANKEDMODE:
+				return "Unranked";
+			
+			case HearthReader.PRACTICEMODE:
+				return "Practice";
+				
+			case HearthReader.CHALLENGEMODE:
+				return "Challenge";
+		}
+		
+		return "Unknown mode";
+	}
+	
 	public void pause(){
 		paused = true;
 		System.out.println("paused");
@@ -467,18 +488,14 @@ public class HearthReader {
 		if(!foundLosses){
 			for(int i = 0; i < 3; i++){
 				if(this.findImage(readerSettings.lossesUncheckedScanboxes[i], uncheckedImageTarget, "Unchecked Losses " + (i+1))){
-					System.out.println("Found " + (i+1) + "unchecked losses");
+					System.out.println("Found " + (i+1) + " unchecked losses");
 					foundUncheckedLosses = true;
 					++uncheckedLossesCount;
-					break;
+					losses = 3 - (i + 1);
 				}
 			}
 		}
-		
-		if(!foundLosses && foundUncheckedLosses && uncheckedLossesCount == 3){
-			losses = 0;
-		}
-		
+				
 		if(foundWins && (wins == 9 || losses == 3) && (previousWins != wins || previousLosses != losses) ){
 
 			try {
@@ -575,17 +592,15 @@ public class HearthReader {
 			return;
 		}
 		
-		if(!this.isArenaMode()){
-			for(int i = 0; i < heroesThumbIT.length; i++){
-				if(this.findImage(readerSettings.myHeroScanboxes[i], heroesThumbIT[i], "My Hero (" + heroesList.getHeroLabel(i) + ") ")){
-					System.out.println("Found my hero: (" + i + ") " + heroesList.getHeroLabel(i));
-					myHero = i;
-					if(myHero != exMyHero){
-						exMyHero = myHero;
-					}
-					this.formatMatchStatus();
-					break;
+		for(int i = 0; i < heroesThumbIT.length; i++){
+			if(this.findImage(readerSettings.myHeroScanboxes[i], heroesThumbIT[i], "My Hero (" + heroesList.getHeroLabel(i) + ") ")){
+				System.out.println("Found my hero: (" + i + ") " + heroesList.getHeroLabel(i));
+				myHero = i;
+				if(myHero != exMyHero){
+					exMyHero = myHero;
 				}
+				this.formatMatchStatus();
+				break;
 			}
 		}
 		

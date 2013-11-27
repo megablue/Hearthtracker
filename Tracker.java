@@ -21,6 +21,7 @@ public class Tracker {
 	String liveGamestats = "";
 	HearthDatabase dbSetting;
 	private static HearthConfigurator config = new HearthConfigurator();
+	private Statement stat;
 	
 	public Tracker(){
 		
@@ -46,6 +47,7 @@ public class Tracker {
 		ds.setUser("tracker");
 		ds.setPassword("tracker");
 		conn = ds.getConnection();
+		stat = conn.createStatement();
 		this.createTables();
 	}
 	
@@ -68,14 +70,13 @@ public class Tracker {
 	}
 	
 	private void truncateDB() throws SQLException{
-		Statement stat = conn.createStatement();
 		stat.execute("TRUNCATE TABLE ARENARESULTS");
 		stat.execute("TRUNCATE TABLE MATCHES");
-		stat.close();
 	}
 	
 	public void closeDB(){
 		try {
+			stat.close();
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -83,8 +84,8 @@ public class Tracker {
 	}
 	
 	public void createTables() throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
+		boolean newdb = false;
 		
 		dbSetting = (HearthDatabase) config.load("." + File.separator + "data" + File.separator + "database.xml");
 		
@@ -93,67 +94,113 @@ public class Tracker {
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
 		}
 		
-		if(dbSetting.version == 0){
-			stat.execute("ALTER TABLE ARENARESULTS ADD MODIFIED INT");
-			stat.execute("ALTER TABLE ARENARESULTS ADD SUBMITTED INT");
-			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN MODIFIED SET DEFAULT 0");
-			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN SUBMITTED SET DEFAULT 0");
-			
-			stat.execute("ALTER TABLE ARENAMATCHES RENAME to MATCHES");
-			stat.execute("ALTER TABLE MATCHES ADD MODE INT");
-			stat.execute("ALTER TABLE MATCHES ADD MODIFIED INT");
-			stat.execute("ALTER TABLE MATCHES ADD SUBMITTED INT");
-			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODE SET DEFAULT " + HearthReader.ARENAMODE);
-			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODIFIED SET DEFAULT 0");
-			stat.execute("ALTER TABLE MATCHES ALTER COLUMN SUBMITTED SET DEFAULT 0");
-			stat.execute("CREATE INDEX MODE ON MATCHES(MODE)");
-			stat.execute("CREATE INDEX MYHERO_MODE ON MATCHES(MYHEROID, MODE)");
-			stat.execute("CREATE INDEX OPPHERO_MODE ON MATCHES(OPPHEROID, MODE)");
-			stat.execute("CREATE INDEX HEROES_MODE ON MATCHES(MYHEROID, OPPHEROID, MODE)");
-			
-			stat.execute("UPDATE MATCHES SET MODE=" + HearthReader.ARENAMODE);
-			stat.execute("UPDATE MATCHES SET MODIFIED=0");
-			stat.execute("UPDATE MATCHES SET SUBMITTED=0");
-			stat.execute("UPDATE ARENARESULTS SET MODIFIED=0");
-			stat.execute("UPDATE ARENARESULTS SET SUBMITTED=0");
-			
-			dbSetting.version = 1;
-			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
-		}
-    
 		rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'ARENARESULTS'");
 		 
 		if(rs.next()){
 			if(rs.getInt("COUNT(*)") == 0){
-				stat.execute("create table arenaResults(id int primary key auto_increment, heroId int, wins int, losses int, timeCaptured TIMESTAMP DEFAULT CURRENT_TIMESTAMP)");
-				stat.execute("CREATE INDEX heroId ON arenaResults(heroId)");
+				stat.execute("create table arenaResults( "
+								+"id int primary key auto_increment, "
+								+"heroId int, "
+								+"wins int, "
+								+"losses int, "
+								+"timeCaptured TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+								+"modified int DEFAULT 0, "
+								+"lastmodified TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+								+"deleted int DEFAULT 0, "
+								+"submitted int DEFAULT 0 "
+								+ ")"
+						);
+				stat.execute("CREATE INDEX heroId ON arenaResults(heroId, DELETED)");
+				newdb = true;
 			}
 		}
 		 
-		rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'MATCHES'");
+		rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'MATCHES' OR table_name = 'ARENAMATCHES'");
 		 
 		if(rs.next()){
 			if(rs.getInt("COUNT(*)") == 0){
-				stat.execute("create table MATCHES(id int primary key auto_increment, myHeroId int, oppHeroId int, goesFirst int, win int, startTime TIMESTAMP, totalTime int)");
-				stat.execute("CREATE INDEX myHeroId ON MATCHES(myHeroId)");
+				stat.execute("create table MATCHES("
+								+"id int primary key auto_increment, "
+								+"myHeroId int, "
+								+"oppHeroId int, "
+								+"goesFirst int, win int, "
+								+"startTime TIMESTAMP, "
+								+"totalTime int,"
+								+"mode int,"
+								+"modified int DEFAULT 0, "
+								+"lastmodified TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+								+"deleted int DEFAULT 0, "
+								+"submitted int DEFAULT 0 "
+								+")"
+							);
+				stat.execute("CREATE INDEX myHeroId ON MATCHES(myHeroId, deleted)");
+				stat.execute("CREATE INDEX DELETED ON MATCHES(DELETED)");
+				stat.execute("CREATE INDEX MODE ON MATCHES(MODE,DELETED)");
+				stat.execute("CREATE INDEX MYHERO_MODE ON MATCHES(MYHEROID, MODE, DELETED)");
+				stat.execute("CREATE INDEX OPPHERO_MODE ON MATCHES(OPPHEROID, MODE, DELETED)");
+				stat.execute("CREATE INDEX HEROES_MODE ON MATCHES(MYHEROID, OPPHEROID, MODE, DELETED)");
+				newdb = true;
 			}
 		}
-
-		stat.close();
+		
+		if(!newdb && dbSetting.version == 0){
+			stat.execute("ALTER TABLE ARENARESULTS ADD MODIFIED INT");
+			stat.execute("ALTER TABLE ARENARESULTS ADD DELETED INT");
+			stat.execute("ALTER TABLE ARENARESULTS ADD LASTMODIFIED TIMESTAMP");
+			stat.execute("ALTER TABLE ARENARESULTS ADD SUBMITTED INT");
+			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN DELETED SET DEFAULT 0");
+			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN MODIFIED SET DEFAULT 0");
+			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN SUBMITTED SET DEFAULT 0");
+			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN LASTMODIFIED SET DEFAULT CURRENT_TIMESTAMP");
+						
+			stat.execute("DROP INDEX IF EXISTS heroId");
+			stat.execute("CREATE INDEX heroId ON arenaResults(heroId, DELETED)");
+			
+			stat.execute("ALTER TABLE ARENAMATCHES RENAME to MATCHES");
+			stat.execute("ALTER TABLE MATCHES ADD MODE INT");
+			stat.execute("ALTER TABLE MATCHES ADD DELETED INT");
+			stat.execute("ALTER TABLE MATCHES ADD MODIFIED INT");
+			stat.execute("ALTER TABLE MATCHES ADD LASTMODIFIED TIMESTAMP");
+			stat.execute("ALTER TABLE MATCHES ADD SUBMITTED INT");
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODE SET DEFAULT " + HearthReader.ARENAMODE);
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN DELETED SET DEFAULT 0");
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODIFIED SET DEFAULT 0");
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN SUBMITTED SET DEFAULT 0");
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN LASTMODIFIED SET DEFAULT CURRENT_TIMESTAMP");
+			
+			stat.execute("DROP INDEX IF EXISTS myHeroId");
+			stat.execute("CREATE INDEX myHeroId ON MATCHES(myHeroId, deleted)");
+			stat.execute("CREATE INDEX DELETED ON MATCHES(DELETED)");
+			stat.execute("CREATE INDEX MODE ON MATCHES(MODE,DELETED)");
+			stat.execute("CREATE INDEX MYHERO_MODE ON MATCHES(MYHEROID, MODE, DELETED)");
+			stat.execute("CREATE INDEX OPPHERO_MODE ON MATCHES(OPPHEROID, MODE, DELETED)");
+			stat.execute("CREATE INDEX HEROES_MODE ON MATCHES(MYHEROID, OPPHEROID, MODE, DELETED)");
+			
+			stat.execute("UPDATE MATCHES SET MODE=" + HearthReader.ARENAMODE);
+			stat.execute("UPDATE MATCHES SET MODIFIED=0");
+			stat.execute("UPDATE MATCHES SET LASTMODIFIED=STARTTIME");
+			stat.execute("UPDATE MATCHES SET DELETED=0");
+			stat.execute("UPDATE MATCHES SET SUBMITTED=0");
+			stat.execute("UPDATE ARENARESULTS SET MODIFIED=0");
+			stat.execute("UPDATE ARENARESULTS SET SUBMITTED=0");
+			stat.execute("UPDATE ARENARESULTS SET DELETED=0");
+			stat.execute("UPDATE ARENARESULTS SET LASTMODIFIED=timeCaptured");
+			
+			dbSetting.version = 1;
+			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		}
 	}
 	
 	public void saveArenaResult(int heroId, int wins, int losses) throws SQLException{
 		String sql = "INSERT INTO arenaResults(heroId, wins, losses) VALUES(" + heroId + "," + wins + "," + losses + ")";
-		Statement stat = conn.createStatement();
 		stat.execute(sql);
-		stat.close();
 	}
 	
 	public void saveMatchResult(int mode, int myHeroId, int oppHeroId, int goesFirst, int win, Date startTime, int totalTime) throws SQLException{
 		java.sql.Timestamp sqlDate = new java.sql.Timestamp(startTime.getTime());
 		String table = "MATCHES";
 		
-		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, totalTime, mode) " 
+		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, mode, totalTime) " 
 					+ "VALUES(" + myHeroId + "," 
 					+ oppHeroId + "," 
 					+ goesFirst + "," 
@@ -162,13 +209,52 @@ public class Tracker {
 					+ mode + ","
 					+ totalTime + ")";
 
-		Statement stat = conn.createStatement();
 		stat.execute(sql);
-		stat.close();
+	}
+	
+	public void saveModifiedMatchResult(int id, int mode, int myHeroId, int oppHeroId, int goesFirst, int win, Date startTime, int totalTime) throws SQLException{
+		java.sql.Timestamp sqlDate = new java.sql.Timestamp(startTime.getTime());
+		java.sql.Timestamp sqlDateMod = new java.sql.Timestamp(new Date().getTime());
+		String table = "MATCHES";
+		ResultSet rs = this.getMatch(id);
+		int modified = 0;
+		
+		if(rs.next()){
+			if(rs.getInt("MYHEROID") != myHeroId){
+				modified = 1;
+			}
+			
+			if(rs.getInt("win") != win){
+				modified = 1;
+			}
+		}
+		
+		String sql = "UPDATE " + table
+					+ " SET myheroid=" +  myHeroId + ", "
+					+ " oppheroid=" + oppHeroId + ", "
+					+ " mode=" + mode + ", "
+					+ " goesFirst=" + goesFirst + ", "
+					+ " win=" + win + ", "
+					+ " startTime='" + sqlDate.toString() + "', "
+					+ " totalTime=" + totalTime + ", "
+					+ " lastmodified='" + sqlDateMod.toString() + "', "
+					+ " modified=" + modified
+					+ " WHERE id=" + id;
+		stat.execute(sql);
+	}
+	
+	public void deleteMatchResult(int id) throws SQLException{
+		java.sql.Timestamp sqlDateMod = new java.sql.Timestamp(new Date().getTime());
+		String table = "MATCHES";
+
+		String sql = "UPDATE " + table
+					+ " SET deleted=1, "
+					+ " lastmodified='" + sqlDateMod.toString() + "' "
+					+ " WHERE id=" + id;
+		stat.execute(sql);
 	}
 	
 	public int getTotalRunsByHero(int mode, int heroid) throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int total = 0;
 
@@ -186,13 +272,10 @@ public class Tracker {
 			}
 		}
 		
-		stat.close();
-		
 		return total;
 	}
 	
 	public float getWinRateByHero(int mode, int heroId) throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int wins = 0;
 		int losses = 0;
@@ -225,13 +308,11 @@ public class Tracker {
 			winrate = (float) wins/(wins+losses);
 		}
 		
-		stat.close();
-		
+
 		return winrate;
 	}
 	
 	public float getWinRateByHeroSpecial(int mode, int heroId) throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int sevenplus = 0;
 		int arenacount = 0;
@@ -255,13 +336,11 @@ public class Tracker {
 			winrate = (float) sevenplus/arenacount;
 		}
 		
-		stat.close();
-		
+
 		return found ? winrate : -1;
 	}
 	
 	public float getOverallWinRate(int mode) throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int wins = 0;
 		int losses = 0;
@@ -269,7 +348,7 @@ public class Tracker {
 		boolean found = false;
 		
 		if(mode == HearthReader.ARENAMODE){
-			rs = stat.executeQuery("select wins,losses from ARENARESULTS");
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE DELETED=0");
 			
 			while(rs.next()){
 				found = true;
@@ -277,7 +356,7 @@ public class Tracker {
 				losses += rs.getInt("LOSSES");
 			}
 		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE MODE=" + mode);
+			rs = stat.executeQuery("select WIN from MATCHES WHERE MODE=" + mode + " AND DELETED=0");
 			while(rs.next()){
 				found = true;
 				
@@ -292,14 +371,11 @@ public class Tracker {
 		if(found){
 			winrate = (float) wins/(wins+losses) * 100;
 		}
-		
-		stat.close();
-		
+
 		return winrate;
 	}
 	
 	public int getTotalWins(int mode) throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int total = 0;
 
@@ -314,14 +390,11 @@ public class Tracker {
 				total += rs.getInt("WIN");
 			}
 		}
-		
-		stat.close();
-		
+			
 		return total;
 	}
 	
 	public int getTotalWinsByHero(int mode, int heroId) throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int total = 0;
 
@@ -336,52 +409,45 @@ public class Tracker {
 				total += rs.getInt("WIN");
 			}
 		}
-		
-		stat.close();
-		
+
 		return total;
 	}
 	
 	public int getTotalLosses(int mode) throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int total = 0;
 
 		if(mode == HearthReader.ARENAMODE){
-			rs = stat.executeQuery("select wins,losses from ARENARESULTS");
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE DELETED=0");
 			while(rs.next()){
 				total += rs.getInt("LOSSES");
 			}
 		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode);
+			rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode + " AND DELETED=0");
 			while(rs.next()){
 				total += rs.getInt("WIN") == 0 ? 1 : 0;
 			}
 		}
-		stat.close();
-		
+
 		return total;
 	}
 	
 	public int getTotalLossesByHero(int mode, int heroId) throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
 		int total = 0;
 
 		if(mode == HearthReader.ARENAMODE){
-			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId);
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED=0" );
 			while(rs.next()){
 				total += rs.getInt("LOSSES");
 			}
 		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode);
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode + " AND DELETED=0");
 			while(rs.next()){
 				total += rs.getInt("WIN") == 0 ? 1 : 0;
 			}
 		}
-		
-		stat.close();
-		
+
 		return total;
 	}
 	
@@ -394,12 +460,11 @@ public class Tracker {
 	}
 	
 	public float getWinRateGoesBy(int mode, boolean goesFirstFlag, int heroId, int against) throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
 		float winrate = -1;
 		int goesFirst = goesFirstFlag ? 1 : 0;
 		String table = "MATCHES";
-		String sqlWhere = " WHERE goesFirst = " + goesFirst + " AND mode = " + mode;
+		String sqlWhere = " WHERE goesFirst = " + goesFirst + " AND mode = " + mode + " AND DELETED=0";
 		String sql = "select SUM(WIN), COUNT(*) from " + table + sqlWhere;
 		
 		if(heroId > -1){
@@ -416,16 +481,20 @@ public class Tracker {
 			winrate = rs.getFloat("SUM(WIN)") / rs.getFloat("COUNT(*)") * 100;
 		}
 		
-		stat.close();
-		
 		return winrate;
 	}
 	
 	public ResultSet getMatches() throws SQLException{
-		Statement stat = conn.createStatement();
 		ResultSet rs;
-		rs = stat.executeQuery("select * from MATCHES ORDER BY ID DESC LIMIT 50");
-		//stat.close();
+		rs = stat.executeQuery("select * from MATCHES WHERE DELETED=0 ORDER BY ID DESC LIMIT 50");
+
+		return rs;
+	}
+	
+	public ResultSet getMatch(int id) throws SQLException{
+		ResultSet rs;
+		rs = stat.executeQuery("select * from MATCHES WHERE id = " + id);
+
 		return rs;
 	}
 	
