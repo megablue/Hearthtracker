@@ -22,8 +22,7 @@ public class HearthConfigurator {
 			xmlString = HearthHelper.readFile(path);
 			obj = xstream.fromXML(xmlString);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			
 		}
 		return obj;
 	}

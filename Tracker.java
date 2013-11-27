@@ -58,12 +58,12 @@ public class Tracker {
 		this.saveArenaResult(0, 9, 9);
 		assert this.getOverallWinRate(HearthReader.ARENAMODE) == 75.0f;
 		
-		this.saveMatchResult(HearthReader.ARENAMODE, 0, 0, 1, 1, new Date(), 0);
-		this.saveMatchResult(HearthReader.ARENAMODE, 1, 0, 1, 0, new Date(), 0);
-		this.saveMatchResult(HearthReader.ARENAMODE, 2, 0, 0, 0, new Date(), 0);
-		this.saveMatchResult(HearthReader.ARENAMODE, 3, 0, 0, 1, new Date(), 0);
-		this.saveMatchResult(HearthReader.ARENAMODE, 4, 0, 0, 1, new Date(), 0);
-		this.saveMatchResult(HearthReader.ARENAMODE, 5, 0, 0, 1, new Date(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 0, 0, 1, 1, new Date().getTime(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 1, 0, 1, 0, new Date().getTime(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 2, 0, 0, 0, new Date().getTime(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 3, 0, 0, 1, new Date().getTime(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 4, 0, 0, 1, new Date().getTime(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 5, 0, 0, 1, new Date().getTime(), 0);
 		
 		assert this.getWinRateByGoesFirst(HearthReader.ARENAMODE) == 50.0f;
 		assert this.getWinRateByGoesSecond(HearthReader.ARENAMODE) == 75.0f;
@@ -103,9 +103,9 @@ public class Tracker {
 								+"heroId int, "
 								+"wins int, "
 								+"losses int, "
-								+"timeCaptured TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+								+"timeCaptured BIGINT DEFAULT 0, "
 								+"modified int DEFAULT 0, "
-								+"lastmodified TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+								+"lastmodified BIGINT DEFAULT 0, "
 								+"deleted int DEFAULT 0, "
 								+"submitted int DEFAULT 0 "
 								+ ")"
@@ -124,11 +124,11 @@ public class Tracker {
 								+"myHeroId int, "
 								+"oppHeroId int, "
 								+"goesFirst int, win int, "
-								+"startTime TIMESTAMP, "
+								+"startTime BIGINT DEFAULT 0, "
 								+"totalTime int,"
 								+"mode int,"
 								+"modified int DEFAULT 0, "
-								+"lastmodified TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+								+"lastmodified BIGINT DEFAULT 0, "
 								+"deleted int DEFAULT 0, "
 								+"submitted int DEFAULT 0 "
 								+")"
@@ -144,14 +144,48 @@ public class Tracker {
 		}
 		
 		if(!newdb && dbSetting.version == 0){
+			stat.execute("ALTER TABLE ARENARESULTS ADD timeCapturedX BIGINT");
+			ResultSet result = stat.executeQuery("SELECT id, timeCaptured FROM ARENARESULTS");
+			Statement stat2 = conn.createStatement();
+			
+			while(result.next()){
+				long time = result.getTimestamp("TIMECAPTURED").getTime();
+				int id = result.getInt("id");
+				
+				stat2.execute(
+						"UPDATE ARENARESULTS SET "
+						+"TIMECAPTUREDX='" + time + "' "
+						+"WHERE id=" + id
+					);
+			}
+			stat.execute("ALTER TABLE ARENARESULTS DROP COLUMN timeCaptured");
+			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN timeCapturedx RENAME to timeCaptured");
+			
+			stat.execute("ALTER TABLE ARENAMATCHES ADD startTimeX BIGINT");
+			result = stat.executeQuery("SELECT id, startTime FROM ARENAMATCHES");
+			
+			while(result.next()){
+				long time = result.getTimestamp("STARTTIME").getTime();
+				int id = result.getInt("id");
+				
+				stat2.execute(
+						"UPDATE ARENAMATCHES SET "
+						+"STARTTIMEX='" + time + "' "
+						+"WHERE id=" + id
+					);
+			}
+			stat.execute("ALTER TABLE ARENAMATCHES DROP COLUMN STARTTIME");
+			stat.execute("ALTER TABLE ARENAMATCHES ALTER COLUMN STARTTIMEX RENAME to STARTTIME");
+			
+			
 			stat.execute("ALTER TABLE ARENARESULTS ADD MODIFIED INT");
 			stat.execute("ALTER TABLE ARENARESULTS ADD DELETED INT");
-			stat.execute("ALTER TABLE ARENARESULTS ADD LASTMODIFIED TIMESTAMP");
+			stat.execute("ALTER TABLE ARENARESULTS ADD LASTMODIFIED BIGINT");
 			stat.execute("ALTER TABLE ARENARESULTS ADD SUBMITTED INT");
 			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN DELETED SET DEFAULT 0");
 			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN MODIFIED SET DEFAULT 0");
 			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN SUBMITTED SET DEFAULT 0");
-			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN LASTMODIFIED SET DEFAULT CURRENT_TIMESTAMP");
+			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN LASTMODIFIED SET DEFAULT 0");
 						
 			stat.execute("DROP INDEX IF EXISTS heroId");
 			stat.execute("CREATE INDEX heroId ON arenaResults(heroId, DELETED)");
@@ -160,13 +194,13 @@ public class Tracker {
 			stat.execute("ALTER TABLE MATCHES ADD MODE INT");
 			stat.execute("ALTER TABLE MATCHES ADD DELETED INT");
 			stat.execute("ALTER TABLE MATCHES ADD MODIFIED INT");
-			stat.execute("ALTER TABLE MATCHES ADD LASTMODIFIED TIMESTAMP");
+			stat.execute("ALTER TABLE MATCHES ADD LASTMODIFIED BIGINT");
 			stat.execute("ALTER TABLE MATCHES ADD SUBMITTED INT");
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODE SET DEFAULT " + HearthReader.ARENAMODE);
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN DELETED SET DEFAULT 0");
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODIFIED SET DEFAULT 0");
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN SUBMITTED SET DEFAULT 0");
-			stat.execute("ALTER TABLE MATCHES ALTER COLUMN LASTMODIFIED SET DEFAULT CURRENT_TIMESTAMP");
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN LASTMODIFIED SET DEFAULT 0");
 			
 			stat.execute("DROP INDEX IF EXISTS myHeroId");
 			stat.execute("CREATE INDEX myHeroId ON MATCHES(myHeroId, deleted)");
@@ -192,29 +226,29 @@ public class Tracker {
 	}
 	
 	public void saveArenaResult(int heroId, int wins, int losses) throws SQLException{
-		String sql = "INSERT INTO arenaResults(heroId, wins, losses) VALUES(" + heroId + "," + wins + "," + losses + ")";
+		long sqlDate = new Date().getTime();
+		String sql = "INSERT INTO arenaResults(heroId, wins, losses, timeCaptured, lastModified) VALUES(" + heroId + "," + wins + "," + losses + ", " + sqlDate + ", " + sqlDate + ")";
 		stat.execute(sql);
 	}
 	
-	public void saveMatchResult(int mode, int myHeroId, int oppHeroId, int goesFirst, int win, Date startTime, int totalTime) throws SQLException{
-		java.sql.Timestamp sqlDate = new java.sql.Timestamp(startTime.getTime());
+	public void saveMatchResult(int mode, int myHeroId, int oppHeroId, int goesFirst, int win, long startTime, int totalTime) throws SQLException{
 		String table = "MATCHES";
 		
-		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, mode, totalTime) " 
+		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, lastModified, mode, totalTime) " 
 					+ "VALUES(" + myHeroId + "," 
 					+ oppHeroId + "," 
 					+ goesFirst + "," 
 					+ win + ","
-					+ "'" + sqlDate.toString() + "'" + ","
+					+ startTime + ","
+					+ startTime + ","
 					+ mode + ","
 					+ totalTime + ")";
 
 		stat.execute(sql);
 	}
 	
-	public void saveModifiedMatchResult(int id, int mode, int myHeroId, int oppHeroId, int goesFirst, int win, Date startTime, int totalTime) throws SQLException{
-		java.sql.Timestamp sqlDate = new java.sql.Timestamp(startTime.getTime());
-		java.sql.Timestamp sqlDateMod = new java.sql.Timestamp(new Date().getTime());
+	public void saveModifiedMatchResult(int id, int mode, int myHeroId, int oppHeroId, int goesFirst, int win, Long startTime, int totalTime) throws SQLException{
+		long modTime = new Date().getTime();
 		String table = "MATCHES";
 		ResultSet rs = this.getMatch(id);
 		int modified = 0;
@@ -235,9 +269,9 @@ public class Tracker {
 					+ " mode=" + mode + ", "
 					+ " goesFirst=" + goesFirst + ", "
 					+ " win=" + win + ", "
-					+ " startTime='" + sqlDate.toString() + "', "
+					+ " startTime='" + startTime + "', "
 					+ " totalTime=" + totalTime + ", "
-					+ " lastmodified='" + sqlDateMod.toString() + "', "
+					+ " lastmodified=" + modTime + ", "
 					+ " modified=" + modified
 					+ " WHERE id=" + id;
 		stat.execute(sql);
@@ -360,7 +394,7 @@ public class Tracker {
 			while(rs.next()){
 				found = true;
 				
-				if(rs.getInt("WINS") == 1){
+				if(rs.getInt("WIN") == 1){
 					wins += 1;
 				} else {
 					losses += 1;

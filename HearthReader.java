@@ -463,9 +463,7 @@ public class HearthReader {
 	private synchronized void scanArenaScore() {
 		boolean foundWins = false;
 		boolean foundLosses = false;
-		boolean foundUncheckedLosses = false;
-		int uncheckedLossesCount = 0;
-		
+
 		for(int i = (winsImageTarget.length - 1); i >= 0; i--){
 			foundWins = this.findImage(readerSettings.winsScanboxes[i], winsImageTarget[i], "Wins (" + i + ")");
 			
@@ -489,8 +487,6 @@ public class HearthReader {
 			for(int i = 0; i < 3; i++){
 				if(this.findImage(readerSettings.lossesUncheckedScanboxes[i], uncheckedImageTarget, "Unchecked Losses " + (i+1))){
 					System.out.println("Found " + (i+1) + " unchecked losses");
-					foundUncheckedLosses = true;
-					++uncheckedLossesCount;
 					losses = 3 - (i + 1);
 				}
 			}
@@ -640,7 +636,7 @@ public class HearthReader {
 		
 		if(found){
 			int totalTime = (int) (new Date().getTime() - startTime.getTime())/1000;
-
+			
 			assert goFirst == 1 || goFirst == 0;
 			assert victory == 1 || victory == 0;
 			
@@ -648,7 +644,7 @@ public class HearthReader {
 			
 			try {
 				System.out.println("Saving match result...");
-				tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime, totalTime);
+				tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime);
 				System.out.println("Done saving match result...");
 				inGameMode = 0;
 				victory = -1;

@@ -110,6 +110,8 @@ public class HearthUI {
 	private static Image[] heroImgs;
 	private Composite composite_9;
 	
+	public static int[] version = {1, 1, 0};
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -558,7 +560,7 @@ public class HearthUI {
 		composite_3.setLayout(new GridLayout(1, false));
 		
 		Label lblVersion = new Label(composite_3, SWT.NONE);
-		lblVersion.setText("HearthTracker v1.0.7 Beta");
+		lblVersion.setText("HearthTracker v" + version[0] + "." + version[1] + "." + version[2]);
 		
 		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
 		lblCopyrightc.setText("Copyright \u00A9 2013 megablue");
@@ -654,7 +656,7 @@ public class HearthUI {
 			while(rs.next()){
 				TableItem tableItem = new TableItem(table_1, SWT.NONE);
 				String result = rs.getInt("WIN") == 1 ? "Win" : "Loss";
-				cal.setTime(new Date(rs.getDate("STARTTIME").getTime() + rs.getTime("STARTTIME").getTime()));
+				cal.setTime(new Date(rs.getLong("STARTTIME")));
 				
 				tableItem.setData("id", rs.getInt("ID"));
 				tableItem.setImage(0, heroImgs[rs.getInt("MYHEROID")+1]);
@@ -756,15 +758,12 @@ public class HearthUI {
 							int oppheroid = rs.getInt("OPPHEROID");
 							int goes = rs.getInt("GOESFIRST");
 							int win	= rs.getInt("WIN");
-							Date startdate = rs.getDate("STARTTIME");
-							Date starttime = rs.getTime("STARTTIME");
+							Date startdate = new Date(rs.getLong("STARTTIME"));
 							Calendar calDate = Calendar.getInstance();
-							Calendar calTime = Calendar.getInstance();
 							int totaltime = rs.getInt("TOTALTIME") / 60;
 							int gameMode = rs.getInt("MODE");
-
+							
 							calDate.setTime(startdate);
-							calTime.setTime(starttime);
 							
 							if(myheroid == -1){
 								cbMatchesEditAs.select(0);
@@ -802,9 +801,9 @@ public class HearthUI {
 							dtMatchesEditDate.setMonth(calDate.get(Calendar.MONTH));
 							dtMatchesEditDate.setDay(calDate.get(Calendar.DAY_OF_MONTH));
 	
-							dtMatchesEditTime.setHours(calTime.get(Calendar.HOUR_OF_DAY));
-							dtMatchesEditTime.setMinutes(calTime.get(Calendar.MINUTE));
-							dtMatchesEditTime.setSeconds(calTime.get(Calendar.SECOND));
+							dtMatchesEditTime.setHours(calDate.get(Calendar.HOUR_OF_DAY));
+							dtMatchesEditTime.setMinutes(calDate.get(Calendar.MINUTE));
+							dtMatchesEditTime.setSeconds(calDate.get(Calendar.SECOND));
 
 						}
 					} catch (SQLException e) {
@@ -838,7 +837,7 @@ public class HearthUI {
 				cal.set(Calendar.HOUR_OF_DAY, 	dtMatchesEditTime.getHours());
 				cal.set(Calendar.MINUTE, 		dtMatchesEditTime.getMinutes());
 				
-				Date starttime = cal.getTime(); 
+				Long starttime = cal.getTime().getTime(); 
 				
 				try {
 					btnMatchesEditSave.setEnabled(false);
@@ -945,9 +944,7 @@ public class HearthUI {
 				cal.set(Calendar.HOUR_OF_DAY, 	dtMatchesEditTime.getHours());
 				cal.set(Calendar.MINUTE, 		dtMatchesEditTime.getMinutes());
 				
-				Date starttime = cal.getTime(); 
-				
-				System.out.println("mode: " + gMode);
+				long starttime = cal.getTime().getTime();
 				
 				try {
 					btnMatchesEditSave.setEnabled(false);
@@ -1376,7 +1373,7 @@ public class HearthUI {
 			
 		}
 		
-		if(selected > 0){
+		if(selected > -1){
 			table.select(selected);
 		}
 	}
