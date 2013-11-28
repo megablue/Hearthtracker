@@ -1,7 +1,6 @@
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.eclipse.swt.SWT;
@@ -69,7 +68,12 @@ public class HearthUpdateUI {
 		Label lblReleased = new Label(shlHearthtrackerUpdateNotification, SWT.NONE);
 		lblReleased.setBounds(95, 52, 277, 15);
 		Date released = new Date(updater.getLastUpdated());
-		lblReleased.setText( released.toLocaleString() + " (" + HearthHelper.getPrettyText(released) + ")" );
+		
+		Calendar cal = Calendar.getInstance();
+		
+		cal.setTime(released);
+		
+		lblReleased.setText(new SimpleDateFormat("dd MMM yyyy HH:mm:ss").format(cal.getTime()) + " (" + HearthHelper.getPrettyText(released) + ")" );
 
 		shlHearthtrackerUpdateNotification.open();
 		shlHearthtrackerUpdateNotification.layout();

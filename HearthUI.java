@@ -78,7 +78,7 @@ public class HearthUI {
 	private Label lblLastScanSubArea;
 	private Button btnAutoDetectGameRes;
 	private Group grpCurrentStats;
-	private Label[] lblStatus = new Label[17]; 
+	private StyledText styledTextStatus; 
 	private Combo cmbStatsMode;
 	
 	private Group grpStats;
@@ -222,10 +222,18 @@ public class HearthUI {
 			}
 			
 			if(hearththread.isAlive()){
-				if(new Date().getTime() - lastUpdate.getTime() > 2000){
+				if(tracker.isDirty()){
 					window.fillOverviewTable();
-					window.poppulateCurrentStats();
+					window.fillArenaTable();
+					window.fillMatchesTable();
 					window.updateStatus();
+				}
+				
+				if(hearth.isDirty()){
+					window.updateStatus();
+				}
+				
+				if(new Date().getTime() - lastUpdate.getTime() > 2000){	
 					window.poppulateDiagnoticsStatus();
 					lastUpdate = new Date();
 				}
@@ -310,6 +318,9 @@ public class HearthUI {
 		grpCurrentStats.setText("Sideboard");
 		FillLayout fl_grpCurrentStats = new FillLayout(SWT.VERTICAL);
 		grpCurrentStats.setLayout(fl_grpCurrentStats);
+		
+		styledTextStatus = new StyledText(grpCurrentStats, SWT.READ_ONLY);
+		styledTextStatus.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 		
 		sashForm.setWeights(new int[] {365, 230});
 		GridData gd_lblNewLabel_15 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -634,7 +645,7 @@ public class HearthUI {
 
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
-		createLabels();
+		//createLabels();
 		createMatchesEditForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesEdit);
 		createMatchesNewForm(new Composite(tabFolder_1, SWT.NONE), 	tbtmMatchesNew);
 		createArenaEditForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit);
@@ -645,13 +656,12 @@ public class HearthUI {
 		poppulateResolutions();
 		poppulateDiagnoticsControls();
 		poppulateDiagnoticsStatus();
-		poppulateCurrentStats();
 		updateStatus();
 		poppulateDiagnoticsStatus();
-		
 		fillOverviewTable();
 		fillMatchesTable();
 		fillArenaTable();
+		setupModeSelection();
 	}
 	
 	private void fillMatchesTable(){
@@ -1454,30 +1464,40 @@ public class HearthUI {
 		});
 	}
 	
-	private void poppulateCurrentStats(){
-		String winrateStr = "";
-		float winrate = 0;
-		int mode = this.getMode();
-
-		try {
-			winrate = tracker.getOverallWinRate(mode);
-			
-			if(winrate >= 0){
-				winrateStr += " (" + new DecimalFormat("#.##").format(winrate) + "% )";
-			}
-			
-			winrateStr = tracker.getTotalWins(mode) + "-" + tracker.getTotalLosses(mode) + winrateStr;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	private void updateStatus(){
 		Date lastSeen = hearth.getLastseen();
-		String seen = lastSeen.getTime() == 0 ? "Not yet" : HearthHelper.getPrettyText(lastSeen);
+		String seen = lastSeen.getTime() == 0 ? "Nope" : HearthHelper.getPrettyText(lastSeen);
 		String goes = "Unknown";
-		int line = 0;
+		int arenaWins = -1;
+		int arenaLosses = -1;
+		float arenaWinrate = -1;
 		
+		int rankedWins = -1;
+		int rankedLosses = -1;
+		float rankedWinrate = -1;
+		
+		int unrankedWins = -1;
+		int unrankedLosses = -1;
+		float unrankedWinrate = -1;
+
+		try {
+			arenaWins = 	tracker.getTotalWins(HearthReader.ARENAMODE);
+			arenaLosses = 	tracker.getTotalLosses(HearthReader.ARENAMODE);
+			arenaWinrate =  (arenaWins + arenaLosses) > 0 ? (float) arenaWins /  (arenaWins + arenaLosses) * 100: -1;
+			rankedWins = 	tracker.getTotalWins(HearthReader.RANKEDMODE);
+			rankedLosses = 	tracker.getTotalLosses(HearthReader.RANKEDMODE);
+			rankedWinrate =  (rankedWins + rankedLosses) > 0 ? (float) rankedWins / (rankedWins + rankedLosses) * 100 : -1;
+			unrankedWins = 	tracker.getTotalWins(HearthReader.UNRANKEDMODE);
+			unrankedLosses = 	tracker.getTotalLosses(HearthReader.UNRANKEDMODE);
+			unrankedWinrate =  (unrankedWins + unrankedLosses) > 0 ? (float) unrankedWins / (unrankedWins + unrankedLosses) * 100 : -1;
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		
+		String strArena = arenaWinrate > -1 ?  arenaWins + "-" + arenaLosses + " (" + new DecimalFormat("0.00").format(arenaWinrate) + "%) " : "N|A";
+		String strRanked = rankedWinrate > -1 ?  rankedWins + "-" + rankedLosses + " (" + new DecimalFormat("0.00").format(rankedWinrate) + "%) " : "N|A";
+		String strUnranked = unrankedWinrate > -1 ? unrankedWins + "-" + unrankedLosses + " (" + new DecimalFormat("0.00").format(unrankedWinrate) + "%) " : "N|A";
+
 		if(hearth.isGoFirst()){
 			goes = "first";
 		}
@@ -1486,34 +1506,76 @@ public class HearthUI {
 			goes = "second";
 		}
 		
-		lblStatus[line++].setText("Detected: " + seen);
-		lblStatus[line++].setText("Game mode: " + hearth.getGameMode());
-		lblStatus[line++].setText("Arena Win%: ");
-		lblStatus[line++].setText("Ranked Win%: ");
-		lblStatus[line++].setText("Unranked Win%: ");
+		styledTextStatus.setText("");
+		
+		styledTextStatus.append("Last seen: " + seen + "\r\n");
+		
+		if(arenaWinrate > -1){
+			styledTextStatus.append("Arena: " + strArena  +"\r\n");
+		}
+		
+		if(rankedWinrate > -1){
+			styledTextStatus.append("Ranked: " + strRanked +"\r\n");
+		}
+		
+		if(unrankedWinrate > -1){
+			styledTextStatus.append("Unranked: " + strUnranked +"\r\n");
+		}
+
+		styledTextStatus.append("Current Game mode: " + hearth.getGameMode() +"\r\n");
 		
 		if(hearth.isArenaMode()){
-			lblStatus[line++].setText("");
-			lblStatus[line++].setText("Live Arena status");
-			lblStatus[line++].setText("Score: " + hearth.getArenaWins() + "-" + hearth.getArenaLosses());
-			lblStatus[line++].setText("Playing as " + hearth.getMyHero());
+			String score = hearth.getArenaWins() > -1 && hearth.getArenaLosses() > -1 ? hearth.getArenaWins() + "-" + hearth.getArenaLosses() : "Unknown";
+			
+			styledTextStatus.append("\r\n");
+			styledTextStatus.append("Live Arena status" + "\r\n");
+			styledTextStatus.append("Score: " + score + "\r\n");
+			styledTextStatus.append("Playing as " + hearth.getMyHero() + "\r\n");
 		}
 				
-		if(hearth.isInGame()){
-			lblStatus[line++].setText("");
-			lblStatus[line++].setText("Live match status");
-			lblStatus[line++].setText(hearth.getMyHero() + " vs " + hearth.getOppHero());
-			lblStatus[line++].setText("Go " + goes);
+		if( !hearth.getOppHero().toLowerCase().equals("unknown") || hearth.isGoFirst() || hearth.isGoSecond() ){
+			styledTextStatus.append("\r\n");
+			styledTextStatus.append("Live match status" + "\r\n");
+			styledTextStatus.append(hearth.getMyHero() + " vs " + hearth.getOppHero() + ", " + goes + "\r\n");
 		}
 		
-		lblStatus[line++].setText("");
-		lblStatus[line++].setText("Previous match status");
-		lblStatus[line++].setText(hearth.getMyHero() + " vs " + hearth.getOppHero());
-		lblStatus[line++].setText("Go " + goes);
-		lblStatus[line++].setText("Victory/Defeat");
+		try {
+			ResultSet rs = tracker.getLastMatches(5);
+
+			styledTextStatus.append("\r\nLatest match(es): \r\n");
+			
+			while(rs.next()){
 				
-		for(int i = line; i < lblStatus.length; i++){
-			lblStatus[i].setText("");
+				String as 	= heroesList.getHeroLabel(rs.getInt("MYHEROID"));
+				String vs 	= heroesList.getHeroLabel(rs.getInt("OPPHEROID"));
+				String first = rs.getInt("GOESFIRST") == 1 ? "(1st) " : "(2nd) ";
+				String result = rs.getInt("WIN") == 1 ? "(W) " : "(L) ";
+				
+				if(rs.getInt("GOESFIRST") == -1){
+					first =  "";
+				}
+				
+				if(rs.getInt("WIN") == -1){
+					result =  "";
+				}
+				
+				styledTextStatus.append(as + " vs " + vs + " " + first + result + "\r\n");
+			}
+			
+			rs = tracker.getLastArenaResults(5);
+
+			styledTextStatus.append("\r\nLatest Arena: \r\n");
+			
+			while(rs.next()){
+				
+				String as 	= heroesList.getHeroLabel(rs.getInt("HEROID"));
+				String result = rs.getInt("WINS") + "-" + rs.getInt("LOSSES");
+	
+				styledTextStatus.append(as + " " + result + "\r\n");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -1524,14 +1586,6 @@ public class HearthUI {
 				fillOverviewTable();
 			}
 		});
-	}
-	
-	private void createLabels(){	
-		for(int i = 0; i < lblStatus.length; i++){
-			lblStatus[i] = new Label(grpCurrentStats, SWT.NONE);
-			lblStatus[i].setText("...................................................................");
-			lblStatus[i].setSize(300, 10);
-		}
 	}
 	
 	private static Image resize(Image image, int width, int height) {

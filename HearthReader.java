@@ -80,6 +80,7 @@ public class HearthReader {
 	
 	long pingInterval = 60 * 1000;
 	Date lastSeen =  new Date(0);
+	boolean isDirty = true;
 	int[] lastScanArea = {0,0,0,0};
 	int[] lastScanSubArea = {0,0,0,0};
 	Date lastPing = new Date(new Date().getTime() - pingInterval);
@@ -357,77 +358,83 @@ public class HearthReader {
 			
 			if(exGameMode != gameMode){
 				exGameMode = gameMode; 
+				isDirty = true;
 				System.out.println("Mode: Menu Mode");
 			}
 
 			return;
 		}
 		
-		if(this.findImage(readerSettings.winsLabelScanbox, winsLabelImageTarget, "Wins Label") 
+		if(gameMode == MENUMODE && this.findImage(readerSettings.winsLabelScanbox, winsLabelImageTarget, "Wins Label") 
 				|| this.findImage(readerSettings.lossesLabelScanbox, lossesLabelImageTarget, "Losses Label")){
 			gameMode = ARENAMODE;
 			oppHero = -1;
 			inGameMode = 0;
 			
 			if(exGameMode != gameMode){
-				exGameMode = gameMode; 
+				exGameMode = gameMode;
+				isDirty = true;
 				System.out.println("Mode: Arena Mode");
 			}
 			
 			return;
 		}
 		
-		if(this.findImage(readerSettings.rankedScanbox, rankedImageTarget, "Ranked mode Label")){
+		if(gameMode == MENUMODE && this.findImage(readerSettings.rankedScanbox, rankedImageTarget, "Ranked mode Label")){
 			gameMode = RANKEDMODE;
 			oppHero = -1;
 			inGameMode = 0;
 			
 			if(exGameMode != gameMode){
-				exGameMode = gameMode; 
+				exGameMode = gameMode;
+				isDirty = true;
 				System.out.println("Mode: Ranked Mode");
 			}
 			
 			return;
 		}
 		
-		if(this.findImage(readerSettings.unrankedScanbox, unrankedImageTarget, "Unranked mode Label")){
+		if(gameMode == MENUMODE && this.findImage(readerSettings.unrankedScanbox, unrankedImageTarget, "Unranked mode Label")){
 			gameMode = UNRANKEDMODE;
 			oppHero = -1;
 			inGameMode = 0;
 			
 			if(exGameMode != gameMode){
 				exGameMode = gameMode; 
+				isDirty = true;
 				System.out.println("Mode: Unranked Mode");
 			}
 			
 			return;
 		}
 		
-//		if(this.findImage(readerSettings.challengeScanbox, challengeImageTarget, "Challenge mode Label")){
-//			gameMode = CHALLENGEMODE;
-//			oppHero = -1;
-//			inGameMode = 0;
-//			
-//			if(exGameMode != gameMode){
-//				exGameMode = gameMode; 
-//				System.out.println("Mode: Challenge Mode");
-//			}
-//
-//			return;
-//		}
-//		
-//		if(this.findImage(readerSettings.practiceScanbox, practiceImageTarget, "Practice mode Label")){
-//			gameMode = PRACTICEMODE;
-//			oppHero = -1;
-//			inGameMode = 0;
-//			
-//			if(exGameMode != gameMode){
-//				exGameMode = gameMode; 
-//				System.out.println("Mode: Practice Mode");
-//			}
-//			
-//			return;
-//		}
+		if(gameMode == MENUMODE && this.findImage(readerSettings.challengeScanbox, challengeImageTarget, "Challenge mode Label")){
+			gameMode = CHALLENGEMODE;
+			oppHero = -1;
+			inGameMode = 0;
+			
+			if(exGameMode != gameMode){
+				exGameMode = gameMode; 
+				isDirty = true;
+				System.out.println("Mode: Challenge Mode");
+			}
+
+			return;
+		}
+		
+		if(gameMode == MENUMODE && this.findImage(readerSettings.practiceScanbox, practiceImageTarget, "Practice mode Label")){
+			gameMode = PRACTICEMODE;
+			oppHero = -1;
+			inGameMode = 0;
+			
+			if(exGameMode != gameMode){
+				exGameMode = gameMode; 
+				isDirty = true;
+				System.out.println("Mode: Practice Mode");
+			}
+			
+			return;
+		}
 				
 		return;
 	}
@@ -499,6 +506,7 @@ public class HearthReader {
 				tracker.saveArenaResult(myHero, wins, losses, new Date().getTime(), false);
 				System.out.println("Done saving arena result...");
 				this.formatArenaStatus();
+				isDirty = true;
 				this.resetFlags();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -508,6 +516,7 @@ public class HearthReader {
 		if(foundWins && (previousWins != wins || previousLosses != losses)){
 			previousWins = wins;
 			previousLosses = losses;
+			isDirty = true;
 		}
 	}
 	
@@ -574,6 +583,7 @@ public class HearthReader {
 				
 				if(myHero != exMyHero){
 					exMyHero = myHero;
+					isDirty = true;
 				}
 				
 				break;
@@ -594,6 +604,7 @@ public class HearthReader {
 				myHero = i;
 				if(myHero != exMyHero){
 					exMyHero = myHero;
+					isDirty = true;
 				}
 				this.formatMatchStatus();
 				break;
@@ -606,6 +617,7 @@ public class HearthReader {
 				oppHero = i;
 				if(oppHero != exOppHero){
 					exOppHero = oppHero;
+					isDirty = true;
 				}
 				this.formatMatchStatus();
 				break;
@@ -643,6 +655,7 @@ public class HearthReader {
 			this.formatMatchStatus();
 			
 			try {
+				isDirty = true;
 				System.out.println("Saving match result...");
 				tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime, false);
 				System.out.println("Done saving match result...");
@@ -657,6 +670,16 @@ public class HearthReader {
 		}
 		
 		return;
+	}
+	
+	public boolean isDirty(){
+
+		if(isDirty){
+			isDirty = false;
+			return true;
+		}
+		
+		return false;
 	}
 	
 	private synchronized void formatMatchStatus(){
@@ -717,6 +740,7 @@ public class HearthReader {
 			inGameMode = 1;
 			startTime = new Date();
 			this.formatMatchStatus();
+			isDirty = true;
 			return;
 		}
 		
@@ -726,6 +750,7 @@ public class HearthReader {
 			inGameMode = 1;
 			startTime = new Date();
 			this.formatMatchStatus();
+			isDirty = true;
 			return;
 		}
 		

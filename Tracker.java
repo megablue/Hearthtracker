@@ -12,6 +12,7 @@ import org.h2.jdbcx.JdbcDataSource;
 
 public class Tracker {	
 	Connection conn;
+	boolean isDirty = true;
 	boolean isWorking = false;
 	boolean testMode = false;
 	Date lastWrite = new Date();
@@ -225,6 +226,16 @@ public class Tracker {
 		}
 	}
 	
+	public boolean isDirty(){
+
+		if(isDirty){
+			isDirty = false;
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public void saveArenaResult(int heroId, int wins, int losses, long time, boolean modified) throws SQLException{
 		int mod = modified ? 1 : 0;
 		String sql = "INSERT INTO arenaResults(heroId, wins, losses, modified, timeCaptured, lastModified)"
@@ -235,6 +246,7 @@ public class Tracker {
 				+ time + ", " 
 				+ time + ")";
 		stat.execute(sql);
+		isDirty = true;
 	}
 	
 	public void saveModifiedArenaResult(int id, int heroId, int wins, int losses, long time) throws SQLException{
@@ -266,6 +278,7 @@ public class Tracker {
 					+ " modified=" + modified
 					+ " WHERE id=" + id;
 		stat.execute(sql);
+		isDirty = true;
 	}
 	
 	public void saveMatchResult(int mode, int myHeroId, int oppHeroId, int goesFirst, int win, long startTime, int totalTime, boolean modified) throws SQLException{
@@ -284,6 +297,7 @@ public class Tracker {
 					+ totalTime + ")";
 
 		stat.execute(sql);
+		isDirty = true;
 	}
 	
 	public void deleteModifiedArenaResult(int id) throws SQLException{
@@ -295,6 +309,7 @@ public class Tracker {
 					+ " lastmodified=" + modTime
 					+ " WHERE id=" + id;
 		stat.execute(sql);
+		isDirty = true;
 	}
 	
 	public void saveModifiedMatchResult(int id, int mode, int myHeroId, int oppHeroId, int goesFirst, int win, Long startTime, int totalTime) throws SQLException{
@@ -325,6 +340,7 @@ public class Tracker {
 					+ " modified=" + modified
 					+ " WHERE id=" + id;
 		stat.execute(sql);
+		isDirty = true;
 	}
 	
 	public void deleteMatchResult(int id) throws SQLException{
@@ -336,6 +352,7 @@ public class Tracker {
 					+ " lastmodified='" + sqlDateMod.toString() + "' "
 					+ " WHERE id=" + id;
 		stat.execute(sql);
+		isDirty = true;
 	}
 	
 	public int getTotalRunsByHero(int mode, int heroid) throws SQLException{
@@ -658,6 +675,18 @@ public class Tracker {
 		ResultSet rs;
 		rs = stat.executeQuery("select * from MATCHES WHERE id = " + id);
 
+		return rs;
+	}
+	
+	public ResultSet getLastMatches(int n) throws SQLException{
+		ResultSet rs;
+		rs = stat.executeQuery("select * from MATCHES WHERE DELETED=0 ORDER BY ID DESC LIMIT " + n);
+		return rs;
+	}
+	
+	public ResultSet getLastArenaResults(int n) throws SQLException{
+		ResultSet rs;
+		rs = stat.executeQuery("select * from ARENARESULTS WHERE DELETED=0 ORDER BY ID DESC LIMIT " + n);
 		return rs;
 	}
 	
