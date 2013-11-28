@@ -496,7 +496,7 @@ public class HearthReader {
 
 			try {
 				System.out.println("Saving arena result...");
-				tracker.saveArenaResult(myHero, wins, losses);
+				tracker.saveArenaResult(myHero, wins, losses, new Date().getTime(), false);
 				System.out.println("Done saving arena result...");
 				this.formatArenaStatus();
 				this.resetFlags();
@@ -644,7 +644,7 @@ public class HearthReader {
 			
 			try {
 				System.out.println("Saving match result...");
-				tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime);
+				tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime, false);
 				System.out.println("Done saving match result...");
 				inGameMode = 0;
 				victory = -1;

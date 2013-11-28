@@ -66,9 +66,6 @@ import org.eclipse.swt.widgets.Link;
 
 @SuppressWarnings({ "unused", "deprecation" })
 public class HearthUI {
-
-	private static final int SAVEMODE = 0;
-	private static final int NEWMODE = 1;
 	protected Shell shlHearthtracker;
 	private CCombo cmbGameLang;
 	private Button btnEnableScanner;
@@ -101,16 +98,17 @@ public class HearthUI {
 	
 	Thread hearththread;
 	private Table table;
-	private Table table_1;
-	private Table table_2;
+	private Table matchesTable;
+	private Table arenaTable;
 	private TabFolder tabFolder_1;
+	private TabFolder tabFolder_2; 
 	private TabItem tbtmMatchesEdit;
 	private TabItem tbtmMatchesNew;
 	private TabItem tbtmArenaEdit;
 	private TabItem tbtmArenaNew;
 	private static Image[] heroImgs;
 	private Composite composite_9;
-	
+
 	public static int[] version = {1, 1, 0};
 	private Text text;
 	private Composite composite_11;
@@ -294,7 +292,7 @@ public class HearthUI {
 		
 		TableColumn tblclmnNewColumn_3 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_3.setWidth(55);
-		tblclmnNewColumn_3.setText("7+");
+		tblclmnNewColumn_3.setText("7+ %");
 		
 		TableColumn tblclmnNewColumn_4 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_4.setWidth(72);
@@ -309,8 +307,9 @@ public class HearthUI {
 		cmbStatsMode.select(0);
 		
 		grpCurrentStats = new Group(sashForm, SWT.NONE);
-		grpCurrentStats.setText("Current Status");
-		grpCurrentStats.setLayout(new FillLayout(SWT.VERTICAL));
+		grpCurrentStats.setText("Sideboard");
+		FillLayout fl_grpCurrentStats = new FillLayout(SWT.VERTICAL);
+		grpCurrentStats.setLayout(fl_grpCurrentStats);
 		
 		sashForm.setWeights(new int[] {365, 230});
 		GridData gd_lblNewLabel_15 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -326,28 +325,28 @@ public class HearthUI {
 		SashForm sashForm_1 = new SashForm(composite_2, SWT.NONE);
 		sashForm_1.setLayoutData(new RowData(598, 373));
 		
-		table_1 = new Table(sashForm_1, SWT.FULL_SELECTION);
-		table_1.setLinesVisible(true);
-		table_1.setHeaderVisible(true);
-		table_1.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
+		matchesTable = new Table(sashForm_1, SWT.FULL_SELECTION);
+		matchesTable.setLinesVisible(true);
+		matchesTable.setHeaderVisible(true);
+		matchesTable.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 		
-		TableColumn tblclmnAs = new TableColumn(table_1, SWT.NONE);
+		TableColumn tblclmnAs = new TableColumn(matchesTable, SWT.NONE);
 		tblclmnAs.setText("As");
 		tblclmnAs.setWidth(29);
 		
-		TableColumn tblclmnVs = new TableColumn(table_1, SWT.NONE);
+		TableColumn tblclmnVs = new TableColumn(matchesTable, SWT.NONE);
 		tblclmnVs.setWidth(29);
 		tblclmnVs.setText("Vs");
 		
-		TableColumn tblclmnMode = new TableColumn(table_1, SWT.NONE);
+		TableColumn tblclmnMode = new TableColumn(matchesTable, SWT.NONE);
 		tblclmnMode.setWidth(55);
 		tblclmnMode.setText("Mode");
 		
-		TableColumn tblclmnResult = new TableColumn(table_1, SWT.NONE);
+		TableColumn tblclmnResult = new TableColumn(matchesTable, SWT.NONE);
 		tblclmnResult.setWidth(45);
 		tblclmnResult.setText("Result");
 		
-		TableColumn tblclmnOn = new TableColumn(table_1, SWT.NONE);
+		TableColumn tblclmnOn = new TableColumn(matchesTable, SWT.NONE);
 		tblclmnOn.setWidth(88);
 		tblclmnOn.setText("On");
 		
@@ -374,34 +373,30 @@ public class HearthUI {
 		SashForm sashForm_2 = new SashForm(composite_8, SWT.NONE);
 		sashForm_2.setLayoutData(new RowData(598, 373));
 		
-		table_2 = new Table(sashForm_2, SWT.FULL_SELECTION);
-		table_2.setLinesVisible(true);
-		table_2.setHeaderVisible(true);
-		table_2.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
+		arenaTable = new Table(sashForm_2, SWT.FULL_SELECTION);
+		arenaTable.setLinesVisible(true);
+		arenaTable.setHeaderVisible(true);
+		arenaTable.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 		
-		TableColumn tblclmnAs_1 = new TableColumn(table_2, SWT.NONE);
+		TableColumn tblclmnAs_1 = new TableColumn(arenaTable, SWT.NONE);
 		tblclmnAs_1.setText("As");
-		tblclmnAs_1.setWidth(25);
+		tblclmnAs_1.setWidth(29);
 		
-		TableColumn tableColumn_3 = new TableColumn(table_2, SWT.NONE);
-		tableColumn_3.setWidth(60);
+		TableColumn tableColumn_3 = new TableColumn(arenaTable, SWT.NONE);
+		tableColumn_3.setWidth(45);
 		tableColumn_3.setText("Result");
 		
-		TableColumn tableColumn_4 = new TableColumn(table_2, SWT.NONE);
-		tableColumn_4.setWidth(60);
+		TableColumn tableColumn_4 = new TableColumn(arenaTable, SWT.NONE);
+		tableColumn_4.setWidth(88);
 		tableColumn_4.setText("On");
 		
-		TabFolder tabFolder_2 = new TabFolder(sashForm_2, SWT.NONE);
+		tabFolder_2 = new TabFolder(sashForm_2, SWT.NONE);
 		
 		tbtmArenaEdit = new TabItem(tabFolder_2, 0);
 		tbtmArenaEdit.setText("&Edit");
 		
 		TabItem tbtmArenaNew = new TabItem(tabFolder_2, 0);
 		tbtmArenaNew.setText("&New");
-		
-		Composite composite_10 = new Composite(tabFolder_2, SWT.NONE);
-		tbtmArenaNew.setControl(composite_10);
-		composite_10.setLayout(new FormLayout());
 		sashForm_2.setWeights(new int[] {220, 375});
 			
 		TabItem tbtmPerferences = new TabItem(tabFolder, SWT.NONE);
@@ -640,11 +635,10 @@ public class HearthUI {
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
 		createLabels();
-		Composite composite_4 = new Composite(tabFolder_1, SWT.NONE);
-		createMatchesEditForm(composite_4, tbtmMatchesEdit);
-		createMatchesNewForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesNew);
-		createArenaForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit,		SAVEMODE);
-		//createArenaForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaNew,			NEWMODE);
+		createMatchesEditForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesEdit);
+		createMatchesNewForm(new Composite(tabFolder_1, SWT.NONE), 	tbtmMatchesNew);
+		createArenaEditForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit);
+		createArenaNewForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaNew);
 		
 		poppulateScannerOptions();
 		poppulateGameLangs();
@@ -657,24 +651,25 @@ public class HearthUI {
 		
 		fillOverviewTable();
 		fillMatchesTable();
+		fillArenaTable();
 	}
 	
 	private void fillMatchesTable(){
 		try {
-			TableItem[] tis = table_1.getSelection();
+			TableItem[] tis = matchesTable.getSelection();
 			int selectedID = -1;
 			
 			if(tis.length > 0){
 				selectedID = (int) tis[0].getData("id");
 			}
 			
-			table_1.removeAll();
+			matchesTable.removeAll();
 			
 			ResultSet rs = tracker.getMatches();
 			Calendar cal = Calendar.getInstance();
 
 			while(rs.next()){
-				TableItem tableItem = new TableItem(table_1, SWT.NONE);
+				TableItem tableItem = new TableItem(matchesTable, SWT.NONE);
 				String result = rs.getInt("WIN") == 1 ? "Win" : "Loss";
 				cal.setTime(new Date(rs.getLong("STARTTIME")));
 				
@@ -686,7 +681,40 @@ public class HearthUI {
 				tableItem.setText(4, (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
 				
 				if(selectedID == rs.getInt("ID")){
-					table_1.setSelection(tableItem);
+					matchesTable.setSelection(tableItem);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void fillArenaTable(){
+		try {
+			TableItem[] tis = arenaTable.getSelection();
+			int selectedID = -1;
+			
+			if(tis.length > 0){
+				selectedID = (int) tis[0].getData("id");
+			}
+			
+			arenaTable.removeAll();
+			
+			ResultSet rs = tracker.getArenaResults();
+			Calendar cal = Calendar.getInstance();
+
+			while(rs.next()){
+				TableItem tableItem = new TableItem(arenaTable, SWT.NONE);
+				String result = rs.getInt("WINS") + "-" + rs.getInt("LOSSES");
+				cal.setTime(new Date(rs.getLong("TIMECAPTURED")));
+				
+				tableItem.setData("id", rs.getInt("ID"));
+				tableItem.setImage(0, heroImgs[rs.getInt("HEROID")+1]);
+				tableItem.setText(1, result);
+				tableItem.setText(2, (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
+				
+				if(selectedID == rs.getInt("ID")){
+					arenaTable.setSelection(tableItem);
 				}
 			}
 		} catch (SQLException e) {
@@ -696,7 +724,7 @@ public class HearthUI {
 	
 	private void createMatchesEditForm(Composite composite_4, TabItem tabitem){
 		tabitem.setControl(composite_4);
-		
+		composite_4.setLayout(null);
 		final Combo cbMatchesEditAs = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditAs.setBounds(48, 66, 90, 23);
 		
@@ -756,7 +784,7 @@ public class HearthUI {
 		btnMatchesEditDelete.setText("&Delete");
 		
 		final Label lblID = new Label(composite_4, SWT.NONE);
-		lblID.setBounds(10, 10, 55, 15);
+		lblID.setBounds(10, 10, 303, 15);
 		lblID.setText("ID #00000");
 		lblID.setData("id", 0);
 		
@@ -778,10 +806,10 @@ public class HearthUI {
 		btnConfirmChanges.setBounds(134, 293, 65, 16);
 		btnConfirmChanges.setText("&Confirm");
 		
-		table_1.addSelectionListener(new SelectionAdapter() {
+		matchesTable.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				TableItem[] titems = table_1.getSelection();
+				TableItem[] titems = matchesTable.getSelection();
 				
 				if(titems.length > 0){
 					int id = (int) titems[0].getData("id");
@@ -797,12 +825,12 @@ public class HearthUI {
 							int myheroid = rs.getInt("MYHEROID");
 							int oppheroid = rs.getInt("OPPHEROID");
 							int goes = rs.getInt("GOESFIRST");
-							int win	= rs.getInt("WIN");
-							Date startdate = new Date(rs.getLong("STARTTIME"));
-							Calendar calDate = Calendar.getInstance();
+							int win	= rs.getInt("WIN");				
 							int totaltime = rs.getInt("TOTALTIME") / 60;
 							int gameMode = rs.getInt("MODE");
 							
+							Date startdate = new Date(rs.getLong("STARTTIME"));
+							Calendar calDate = Calendar.getInstance();
 							calDate.setTime(startdate);
 							
 							if(myheroid == -1){
@@ -919,7 +947,7 @@ public class HearthUI {
 	
 	private void createMatchesNewForm(Composite composite_4, TabItem tabitem){
 		tabitem.setControl(composite_4);
-		
+		composite_4.setLayout(null);
 		final Combo cbMatchesEditAs = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditAs.setBounds(48, 66, 90, 23);
 		
@@ -994,7 +1022,7 @@ public class HearthUI {
 				try {
 					btnMatchesEditSave.setEnabled(false);
 					btnMatchesEditSave.setText("Saving...");
-					tracker.saveMatchResult(gMode, myheroid, oppheroid, goes, result, starttime, totaltime);
+					tracker.saveMatchResult(gMode, myheroid, oppheroid, goes, result, starttime, totaltime, true);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -1006,47 +1034,238 @@ public class HearthUI {
 		});
 	}
 
-	private void createArenaForm(Composite composite_4, TabItem tabitem, int mode){
-		tbtmArenaEdit.setControl(composite_4);
+	private void createArenaEditForm(Composite composite_4, TabItem tabitem){
+		tabitem.setControl(composite_4);
+		composite_4.setLayout(null);
+		final Label lblID = new Label(composite_4, SWT.NONE);
+		lblID.setBounds(10, 10, 348, 15);
+		lblID.setText("ID #00000");
+		lblID.setData("id", 0);
 		
-		Combo combo = new Combo(composite_4, SWT.NONE);
-		combo.setBounds(134, 24, 89, 23);
+		final Combo cbArenaEditHero = new Combo(composite_4, SWT.READ_ONLY);
+		cbArenaEditHero.setBounds(134, 38, 89, 23);
 		
-		DateTime dateTime = new DateTime(composite_4, SWT.NONE);
-		dateTime.setBounds(91, 118, 80, 24);
+		for(int i = -1; i < heroesList.getTotal(); i++){
+			cbArenaEditHero.add(heroesList.getHeroLabel(i));
+		}
 		
-		DateTime dateTime_1 = new DateTime(composite_4, SWT.TIME);
-		dateTime_1.setBounds(188, 118, 86, 24);
+		final DateTime dtArenaDate = new DateTime(composite_4, SWT.NONE);
+		dtArenaDate.setBounds(91, 132, 80, 24);
 		
-		Button btnNewButton = new Button(composite_4, SWT.NONE);
-		btnNewButton.setBounds(91, 310, 44, 25);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				
-			}
-		});
-		btnNewButton.setText("&Save");
-		btnNewButton.setData("mode", mode);
+		final DateTime dtArenaTime = new DateTime(composite_4, SWT.TIME);
+		dtArenaTime.setBounds(188, 132, 86, 24);
 		
-		Button btnNewButton_5 = new Button(composite_4, SWT.NONE);
-		btnNewButton_5.setBounds(229, 310, 45, 25);
-		btnNewButton_5.setText("&Delete");
+		final Button btnArenaSave = new Button(composite_4, SWT.NONE);
+		btnArenaSave.setEnabled(false);
+		btnArenaSave.setBounds(91, 310, 44, 25);
+		btnArenaSave.setText("&Save");
 		
-		Spinner spinner = new Spinner(composite_4, SWT.BORDER);
-		spinner.setBounds(113, 71, 44, 22);
+		final Button btnArenaDelete = new Button(composite_4, SWT.NONE);
+		btnArenaDelete.setEnabled(false);
+		btnArenaDelete.setBounds(229, 310, 45, 25);
+		btnArenaDelete.setText("&Delete");
 		
-		Spinner spinner_1 = new Spinner(composite_4, SWT.BORDER);
-		spinner_1.setBounds(203, 71, 44, 22);
+		final Spinner spEditArenaWins = new Spinner(composite_4, SWT.BORDER);
+		spEditArenaWins.setMaximum(9);
+		spEditArenaWins.setBounds(113, 85, 44, 22);
+		
+		final Spinner spEditArenaLosses = new Spinner(composite_4, SWT.BORDER);
+		spEditArenaLosses.setMaximum(3);
+		spEditArenaLosses.setBounds(203, 85, 44, 22);
 		
 		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
-		lblNewLabel_3.setBounds(177, 74, 20, 15);
+		lblNewLabel_3.setBounds(177, 88, 20, 15);
 		lblNewLabel_3.setText("-");
 		
 		
-		Button btnCheckButton = new Button(composite_4, SWT.CHECK);
-		btnCheckButton.setBounds(151, 162, 65, 16);
-		btnCheckButton.setText("&Confirm");
+		final Button btnArenaConfirm = new Button(composite_4, SWT.CHECK);
+		btnArenaConfirm.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+				if(btnArenaConfirm.getSelection()){
+					btnArenaSave.setEnabled(true);
+					btnArenaDelete.setEnabled(true);
+				} else {
+					btnArenaSave.setEnabled(false);
+					btnArenaDelete.setEnabled(false);
+				}
+			}
+		});
+		btnArenaConfirm.setBounds(151, 176, 65, 16);
+		btnArenaConfirm.setText("&Confirm");
+		
+		
+		arenaTable.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				TableItem[] titems = arenaTable.getSelection();
+				
+				if(titems.length > 0){
+					int id = (int) titems[0].getData("id");
+					lblID.setText("ID #" + id);
+					lblID.setData("id", id);
+					tabFolder_2.setSelection(0);
+					btnArenaConfirm.setSelection(false);
+					btnArenaSave.setEnabled(false);
+					btnArenaDelete.setEnabled(false);
+					ResultSet rs;
+					
+					try {
+						rs = tracker.getArenaResult(id);
+						
+						if(rs.next()){
+							
+							int heroid = rs.getInt("HEROID");
+							int wins = rs.getInt("WINS");
+							int losses = rs.getInt("LOSSES");
+							
+							Date startdate = new Date(rs.getLong("TIMECAPTURED"));
+							Calendar calDate = Calendar.getInstance();
+							calDate.setTime(startdate);
+
+							if(heroid == -1){
+								cbArenaEditHero.select(0);
+							}else{
+								cbArenaEditHero.select(heroid + 1);
+							}
+							
+							spEditArenaWins.setSelection(wins);
+							spEditArenaLosses.setSelection(losses);
+							
+							dtArenaDate.setYear(calDate.get(Calendar.YEAR));
+							dtArenaDate.setMonth(calDate.get(Calendar.MONDAY));
+							dtArenaDate.setDay(calDate.get(Calendar.DAY_OF_MONTH));
+							
+							dtArenaTime.setHours(calDate.get(Calendar.HOUR_OF_DAY));
+							dtArenaTime.setMinutes(calDate.get(Calendar.MINUTE));
+							dtArenaTime.setSeconds(calDate.get(Calendar.SECOND));
+						}
+						
+						
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		
+		btnArenaSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int id = (int) lblID.getData("id");
+				int heroid = cbArenaEditHero.getSelectionIndex() - 1;
+				int wins = spEditArenaWins.getSelection();
+				int losses = spEditArenaLosses.getSelection();
+				
+				if(id == 0){
+					return;
+				}
+				
+				Calendar cal = Calendar.getInstance();
+				cal.set(Calendar.DAY_OF_MONTH, 	dtArenaDate.getDay());
+				cal.set(Calendar.MONTH, 		dtArenaDate.getMonth());
+				cal.set(Calendar.YEAR, 			dtArenaDate.getYear());
+				cal.set(Calendar.HOUR_OF_DAY, 	dtArenaTime.getHours());
+				cal.set(Calendar.MINUTE, 		dtArenaTime.getMinutes());
+				
+				Long time = cal.getTime().getTime(); 
+				
+				try {
+					btnArenaSave.setEnabled(false);
+					btnArenaSave.setText("Saving...");
+					tracker.saveModifiedArenaResult(id, heroid, wins, losses, time);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				fillArenaTable();
+				btnArenaSave.setEnabled(true);
+				btnArenaSave.setText("&Save");
+			}
+		});
+		
+		btnArenaDelete.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int id = (int) lblID.getData("id");
+				try {
+					btnArenaDelete.setEnabled(false);
+					btnArenaDelete.setText("Deleting...");
+					tracker.deleteModifiedArenaResult(id);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				fillArenaTable();
+				btnArenaDelete.setText("&Delete");
+				btnArenaDelete.setEnabled(true);
+			}
+		});
+	}
+	
+	private void createArenaNewForm(Composite composite_4, TabItem tabitem){
+		tabitem.setControl(composite_4);
+		composite_4.setLayout(null);
+		final Combo cbArenaEditHero = new Combo(composite_4, SWT.READ_ONLY);
+		cbArenaEditHero.setBounds(134, 38, 89, 23);
+		
+		for(int i = -1; i < heroesList.getTotal(); i++){
+			cbArenaEditHero.add(heroesList.getHeroLabel(i));
+		}
+		
+		final DateTime dtArenaDate = new DateTime(composite_4, SWT.NONE);
+		dtArenaDate.setBounds(91, 132, 80, 24);
+		
+		final DateTime dtArenaTime = new DateTime(composite_4, SWT.TIME);
+		dtArenaTime.setBounds(188, 132, 86, 24);
+		
+		final Button btnArenaSave = new Button(composite_4, SWT.NONE);
+		btnArenaSave.setBounds(150, 310, 44, 25);
+		btnArenaSave.setText("&Save");
+
+		final Spinner spEditArenaWins = new Spinner(composite_4, SWT.BORDER);
+		spEditArenaWins.setMaximum(9);
+		spEditArenaWins.setBounds(113, 85, 44, 22);
+		
+		final Spinner spEditArenaLosses = new Spinner(composite_4, SWT.BORDER);
+		spEditArenaLosses.setMaximum(3);
+		spEditArenaLosses.setBounds(203, 85, 44, 22);
+		
+		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
+		lblNewLabel_3.setBounds(177, 88, 20, 15);
+		lblNewLabel_3.setText("-");
+	
+		btnArenaSave.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int heroid = cbArenaEditHero.getSelectionIndex() - 1;
+				int wins = spEditArenaWins.getSelection();
+				int losses = spEditArenaLosses.getSelection();
+				
+				Calendar cal = Calendar.getInstance();
+				cal.set(Calendar.DAY_OF_MONTH, 	dtArenaDate.getDay());
+				cal.set(Calendar.MONTH, 		dtArenaDate.getMonth());
+				cal.set(Calendar.YEAR, 			dtArenaDate.getYear());
+				cal.set(Calendar.HOUR_OF_DAY, 	dtArenaTime.getHours());
+				cal.set(Calendar.MINUTE, 		dtArenaTime.getMinutes());
+				
+				Long time = cal.getTime().getTime(); 
+				
+				try {
+					btnArenaSave.setEnabled(false);
+					btnArenaSave.setText("Saving...");
+					tracker.saveArenaResult(heroid, wins, losses, time, true);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+				fillArenaTable();
+				btnArenaSave.setEnabled(true);
+				btnArenaSave.setText("&Save");
+			}
+		});
 	}
 	
 	private void savePreferences(){
@@ -1311,7 +1530,7 @@ public class HearthUI {
 		for(int i = 0; i < lblStatus.length; i++){
 			lblStatus[i] = new Label(grpCurrentStats, SWT.NONE);
 			lblStatus[i].setText("...................................................................");
-			lblStatus[i].setSize(300, 20);
+			lblStatus[i].setSize(300, 10);
 		}
 	}
 	

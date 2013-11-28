@@ -53,17 +53,17 @@ public class Tracker {
 	
 	private void selfTest() throws SQLException{
 		this.truncateDB();
-		this.saveArenaResult(0, 9, 0);
-		this.saveArenaResult(0, 9, 0);
-		this.saveArenaResult(0, 9, 9);
+		this.saveArenaResult(0, 9, 0, new Date().getTime(), false);
+		this.saveArenaResult(0, 9, 0, new Date().getTime(), false);
+		this.saveArenaResult(0, 9, 9, new Date().getTime(), false);
 		assert this.getOverallWinRate(HearthReader.ARENAMODE) == 75.0f;
 		
-		this.saveMatchResult(HearthReader.ARENAMODE, 0, 0, 1, 1, new Date().getTime(), 0);
-		this.saveMatchResult(HearthReader.ARENAMODE, 1, 0, 1, 0, new Date().getTime(), 0);
-		this.saveMatchResult(HearthReader.ARENAMODE, 2, 0, 0, 0, new Date().getTime(), 0);
-		this.saveMatchResult(HearthReader.ARENAMODE, 3, 0, 0, 1, new Date().getTime(), 0);
-		this.saveMatchResult(HearthReader.ARENAMODE, 4, 0, 0, 1, new Date().getTime(), 0);
-		this.saveMatchResult(HearthReader.ARENAMODE, 5, 0, 0, 1, new Date().getTime(), 0);
+		this.saveMatchResult(HearthReader.ARENAMODE, 0, 0, 1, 1, new Date().getTime(), 0, false);
+		this.saveMatchResult(HearthReader.ARENAMODE, 1, 0, 1, 0, new Date().getTime(), 0, false);
+		this.saveMatchResult(HearthReader.ARENAMODE, 2, 0, 0, 0, new Date().getTime(), 0, false);
+		this.saveMatchResult(HearthReader.ARENAMODE, 3, 0, 0, 1, new Date().getTime(), 0, false);
+		this.saveMatchResult(HearthReader.ARENAMODE, 4, 0, 0, 1, new Date().getTime(), 0, false);
+		this.saveMatchResult(HearthReader.ARENAMODE, 5, 0, 0, 1, new Date().getTime(), 0, false);
 		
 		assert this.getWinRateByGoesFirst(HearthReader.ARENAMODE) == 50.0f;
 		assert this.getWinRateByGoesSecond(HearthReader.ARENAMODE) == 75.0f;
@@ -225,16 +225,54 @@ public class Tracker {
 		}
 	}
 	
-	public void saveArenaResult(int heroId, int wins, int losses) throws SQLException{
-		long sqlDate = new Date().getTime();
-		String sql = "INSERT INTO arenaResults(heroId, wins, losses, timeCaptured, lastModified) VALUES(" + heroId + "," + wins + "," + losses + ", " + sqlDate + ", " + sqlDate + ")";
+	public void saveArenaResult(int heroId, int wins, int losses, long time, boolean modified) throws SQLException{
+		int mod = modified ? 1 : 0;
+		String sql = "INSERT INTO arenaResults(heroId, wins, losses, modified, timeCaptured, lastModified)"
+				+"VALUES(" + heroId + "," 
+				+ wins + "," 
+				+ losses + ", " 
+				+ mod + ", " 
+				+ time + ", " 
+				+ time + ")";
 		stat.execute(sql);
 	}
 	
-	public void saveMatchResult(int mode, int myHeroId, int oppHeroId, int goesFirst, int win, long startTime, int totalTime) throws SQLException{
-		String table = "MATCHES";
+	public void saveModifiedArenaResult(int id, int heroId, int wins, int losses, long time) throws SQLException{
+		long modTime = new Date().getTime();
+		String table = "ARENARESULTS";
+		ResultSet rs = this.getMatch(id);
+		int modified = 0;
 		
-		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, lastModified, mode, totalTime) " 
+		if(rs.next()){
+			if(rs.getInt("HEROID") != -1 && rs.getInt("HEROID") != heroId){
+				modified = 1;
+			}
+			
+			if(rs.getInt("WINS") != wins){
+				modified = 1;
+			}
+			
+			if(rs.getInt("LOSSES") != losses){
+				modified = 1;
+			}
+		}
+		
+		String sql = "UPDATE " + table
+					+ " SET heroid=" +  heroId + ", "
+					+ " wins=" + wins + ", "
+					+ " losses=" + losses + ", "
+					+ " timeCaptured='" + time + "', "
+					+ " lastModified=" + modTime + ", "
+					+ " modified=" + modified
+					+ " WHERE id=" + id;
+		stat.execute(sql);
+	}
+	
+	public void saveMatchResult(int mode, int myHeroId, int oppHeroId, int goesFirst, int win, long startTime, int totalTime, boolean modified) throws SQLException{
+		String table = "MATCHES";
+		int mod = modified ? 1 : 0;
+		
+		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, lastModified, mode, modified, totalTime) " 
 					+ "VALUES(" + myHeroId + "," 
 					+ oppHeroId + "," 
 					+ goesFirst + "," 
@@ -242,8 +280,20 @@ public class Tracker {
 					+ startTime + ","
 					+ startTime + ","
 					+ mode + ","
+					+ mod + ","
 					+ totalTime + ")";
 
+		stat.execute(sql);
+	}
+	
+	public void deleteModifiedArenaResult(int id) throws SQLException{
+		long modTime = new Date().getTime();
+		String table = "ARENARESULTS";
+
+		String sql = "UPDATE " + table
+					+ " SET deleted=1, "
+					+ " lastmodified=" + modTime
+					+ " WHERE id=" + id;
 		stat.execute(sql);
 	}
 	
@@ -254,7 +304,7 @@ public class Tracker {
 		int modified = 0;
 		
 		if(rs.next()){
-			if(rs.getInt("MYHEROID") != myHeroId){
+			if(rs.getInt("MYHEROID") != -1 && rs.getInt("MYHEROID") != myHeroId){
 				modified = 1;
 			}
 			
@@ -518,9 +568,23 @@ public class Tracker {
 		return winrate;
 	}
 	
+	public ResultSet getArenaResults() throws SQLException{
+		ResultSet rs;
+		rs = stat.executeQuery("select * from ARENARESULTS WHERE DELETED=0 ORDER BY ID DESC LIMIT 20");
+
+		return rs;
+	}
+	
+	public ResultSet getArenaResult(int id) throws SQLException{
+		ResultSet rs;
+		rs = stat.executeQuery("select * from ARENARESULTS WHERE id=" + id);
+
+		return rs;
+	}
+	
 	public ResultSet getMatches() throws SQLException{
 		ResultSet rs;
-		rs = stat.executeQuery("select * from MATCHES WHERE DELETED=0 ORDER BY ID DESC LIMIT 50");
+		rs = stat.executeQuery("select * from MATCHES WHERE DELETED=0 ORDER BY ID DESC LIMIT 100");
 
 		return rs;
 	}
