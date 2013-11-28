@@ -31,3 +31,4 @@ images/backup/
 /HearthUI$7.class
 *.class
 logs/
+configs/update.xml

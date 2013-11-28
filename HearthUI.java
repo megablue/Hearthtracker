@@ -61,6 +61,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import com.googlecode.javacv.CameraDevice.Settings;
 
 import org.eclipse.swt.widgets.DateTime;
+import org.eclipse.swt.widgets.Link;
 
 
 @SuppressWarnings({ "unused", "deprecation" })
@@ -111,6 +112,8 @@ public class HearthUI {
 	private Composite composite_9;
 	
 	public static int[] version = {1, 1, 0};
+	private Text text;
+	private Composite composite_11;
 	
 	/**
 	 * Launch the application.
@@ -126,6 +129,13 @@ public class HearthUI {
 	}
 	
 	public static void init(){
+		HearthUpdaterLog updateLog = (HearthUpdaterLog) config.load("." + File.separator + "configs" + File.separator + "update.xml");
+		
+		if(updateLog == null){
+			updateLog = new HearthUpdaterLog();
+			config.save(updateLog, "." + File.separator + "configs" + File.separator + "update.xml");
+		}
+		
 		heroesList = (HearthHeroesList) config.load("." + File.separator + "configs" + File.separator + "heroes.xml");
 		gameLanguages = (HearthGameLangList) config.load("." + File.separator + "configs" + File.separator + "gameLangs.xml");
 		gameResolutions = (HearthResolutionsList) config.load("." + File.separator + "configs" + File.separator + "gameResolutions.xml");
@@ -483,6 +493,15 @@ public class HearthUI {
 		cmbGameRes.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		cmbGameRes.setEditable(false);
 		
+		Link link = new Link(grpGeneral, SWT.NONE);
+		link.setText("<a>Web App Key</a>");
+		new Label(grpGeneral, SWT.NONE);
+		new Label(grpGeneral, SWT.NONE);
+		
+		text = new Text(grpGeneral, SWT.BORDER | SWT.PASSWORD);
+		text.setEnabled(false);
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		
 		Group grpDiagnostics = new Group(composite_1, SWT.NONE);
 		grpDiagnostics.setText("Diagnostics");
 		grpDiagnostics.setLayout(new GridLayout(4, false));
@@ -621,7 +640,8 @@ public class HearthUI {
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
 		createLabels();
-		createMatchesEditForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesEdit);
+		Composite composite_4 = new Composite(tabFolder_1, SWT.NONE);
+		createMatchesEditForm(composite_4, tbtmMatchesEdit);
 		createMatchesNewForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesNew);
 		createArenaForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit,		SAVEMODE);
 		//createArenaForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaNew,			NEWMODE);
@@ -726,10 +746,12 @@ public class HearthUI {
 		lblMinutes.setText("minutes");
 		
 		final Button btnMatchesEditSave = new Button(composite_4, SWT.NONE);
+		btnMatchesEditSave.setEnabled(false);
 		btnMatchesEditSave.setBounds(88, 310, 36, 25);
 		btnMatchesEditSave.setText("&Save");
 
 		final Button btnMatchesEditDelete = new Button(composite_4, SWT.NONE);
+		btnMatchesEditDelete.setEnabled(false);
 		btnMatchesEditDelete.setBounds(212, 310, 45, 25);
 		btnMatchesEditDelete.setText("&Delete");
 		
@@ -804,7 +826,9 @@ public class HearthUI {
 							dtMatchesEditTime.setHours(calDate.get(Calendar.HOUR_OF_DAY));
 							dtMatchesEditTime.setMinutes(calDate.get(Calendar.MINUTE));
 							dtMatchesEditTime.setSeconds(calDate.get(Calendar.SECOND));
-
+							
+							btnMatchesEditDelete.setEnabled(false);
+							btnMatchesEditSave.setEnabled(false);
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
@@ -870,6 +894,24 @@ public class HearthUI {
 				btnMatchesEditDelete.setText("&Delete");
 			}
 		});
+		
+		final Button btnConfirmChanges = new Button(composite_4, SWT.CHECK);
+		btnConfirmChanges.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				boolean confirmed = btnConfirmChanges.getSelection();
+				
+				if(confirmed){
+					btnMatchesEditDelete.setEnabled(true);
+					btnMatchesEditSave.setEnabled(true);
+				} else {
+					btnMatchesEditDelete.setEnabled(false);
+					btnMatchesEditSave.setEnabled(false);
+				}
+			}
+		});
+		btnConfirmChanges.setBounds(134, 293, 65, 16);
+		btnConfirmChanges.setText("&Confirm");
 	}
 	
 	private void createMatchesNewForm(Composite composite_4, TabItem tabitem){
@@ -963,68 +1005,45 @@ public class HearthUI {
 
 	private void createArenaForm(Composite composite_4, TabItem tabitem, int mode){
 		tbtmArenaEdit.setControl(composite_4);
-		composite_4.setLayout(new FormLayout());
 		
 		Combo combo = new Combo(composite_4, SWT.NONE);
-		FormData fd_combo = new FormData();
-		fd_combo.top = new FormAttachment(0, 24);
-		fd_combo.left = new FormAttachment(0, 134);
-		fd_combo.right = new FormAttachment(100, -145);
-		combo.setLayoutData(fd_combo);
+		combo.setBounds(134, 24, 89, 23);
 		
 		DateTime dateTime = new DateTime(composite_4, SWT.NONE);
-		FormData fd_dateTime = new FormData();
-		dateTime.setLayoutData(fd_dateTime);
+		dateTime.setBounds(91, 118, 80, 24);
 		
 		DateTime dateTime_1 = new DateTime(composite_4, SWT.TIME);
-		fd_dateTime.right = new FormAttachment(100, -197);
-		FormData fd_dateTime_1 = new FormData();
-		fd_dateTime_1.top = new FormAttachment(dateTime, 0, SWT.TOP);
-		fd_dateTime_1.left = new FormAttachment(dateTime, 17);
-		dateTime_1.setLayoutData(fd_dateTime_1);
+		dateTime_1.setBounds(188, 118, 86, 24);
 		
 		Button btnNewButton = new Button(composite_4, SWT.NONE);
+		btnNewButton.setBounds(91, 310, 44, 25);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				
 			}
 		});
-		FormData fd_btnNewButton = new FormData();
-		fd_btnNewButton.bottom = new FormAttachment(100, -10);
-		btnNewButton.setLayoutData(fd_btnNewButton);
 		btnNewButton.setText("&Save");
 		btnNewButton.setData("mode", mode);
-		fd_btnNewButton.right = new FormAttachment(100, -253);
 		
 		Button btnNewButton_5 = new Button(composite_4, SWT.NONE);
-		FormData fd_btnNewButton_5 = new FormData();
-		fd_btnNewButton_5.top = new FormAttachment(btnNewButton, 0, SWT.TOP);
-		fd_btnNewButton_5.right = new FormAttachment(100, -52);
-		btnNewButton_5.setLayoutData(fd_btnNewButton_5);
+		btnNewButton_5.setBounds(229, 310, 45, 25);
 		btnNewButton_5.setText("&Delete");
 		
 		Spinner spinner = new Spinner(composite_4, SWT.BORDER);
-		fd_dateTime.top = new FormAttachment(spinner, 25);
-		FormData fd_spinner = new FormData();
-		fd_spinner.top = new FormAttachment(combo, 24);
-		fd_spinner.left = new FormAttachment(0, 113);
-		spinner.setLayoutData(fd_spinner);
+		spinner.setBounds(113, 71, 44, 22);
 		
 		Spinner spinner_1 = new Spinner(composite_4, SWT.BORDER);
-		FormData fd_spinner_1 = new FormData();
-		fd_spinner_1.bottom = new FormAttachment(spinner, 0, SWT.BOTTOM);
-		fd_spinner_1.left = new FormAttachment(spinner, 46);
-		spinner_1.setLayoutData(fd_spinner_1);
+		spinner_1.setBounds(203, 71, 44, 22);
 		
 		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
-		FormData fd_lblNewLabel_3 = new FormData();
-		fd_lblNewLabel_3.top = new FormAttachment(spinner, 3, SWT.TOP);
-		fd_lblNewLabel_3.left = new FormAttachment(spinner, 20);
-		fd_lblNewLabel_3.right = new FormAttachment(spinner_1, -6);
-		lblNewLabel_3.setLayoutData(fd_lblNewLabel_3);
+		lblNewLabel_3.setBounds(177, 74, 20, 15);
 		lblNewLabel_3.setText("-");
 		
+		
+		Button btnCheckButton = new Button(composite_4, SWT.CHECK);
+		btnCheckButton.setBounds(151, 162, 65, 16);
+		btnCheckButton.setText("&Confirm");
 	}
 	
 	private void savePreferences(){
