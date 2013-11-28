@@ -66,7 +66,7 @@ public class HearthUpdater {
 			foundUpdate = true;
 			message = updateLog.message;
 			version = updateLog.version;
-			updated = updateLog.updated;
+			updated = updateLog.updated * 1000;
 		}
 	}
 	
