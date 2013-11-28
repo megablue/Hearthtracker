@@ -343,13 +343,24 @@ public class Tracker {
 		int total = 0;
 
 		if(mode == HearthReader.ARENAMODE){
-			rs = stat.executeQuery("select count(*) as TOTAL from ARENARESULTS WHERE heroid = " + heroid);
+			rs = stat.executeQuery("select count(*) as TOTAL from ARENARESULTS WHERE heroid = " + heroid + " AND DELETED=0");
 			
 			if(rs.next()){
 				total += rs.getInt("TOTAL");
 			}
 		} else {
-			rs = stat.executeQuery("select count(*) as TOTAL from MATCHES WHERE myheroid = " + heroid + " AND MODE=" + mode);
+			
+			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
+				rs = stat.executeQuery("select count(*) as TOTAL from MATCHES WHERE myheroid = " + heroid 
+						+ " AND (MODE=" + HearthReader.CHALLENGEMODE + " OR MODE=" + HearthReader.PRACTICEMODE +") AND DELETED=0"
+					);
+			} else {
+				rs = stat.executeQuery("select count(*) as TOTAL from MATCHES WHERE myheroid = " + heroid 
+						+ " AND (MODE=" + mode + ") AND DELETED=0"
+					);
+			}
+			
+
 			
 			if(rs.next()){
 				total += rs.getInt("TOTAL");
@@ -367,7 +378,7 @@ public class Tracker {
 		boolean found = false;
 		
 		if(mode == HearthReader.ARENAMODE){
-			rs = stat.executeQuery("select wins,losses from ARENARESULTS where heroId = " + heroId);
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS where heroId = " + heroId + " AND DELETED=0");
 			
 			while(rs.next()){
 				found = true;
@@ -375,7 +386,16 @@ public class Tracker {
 				losses += rs.getInt("LOSSES");
 			}
 		} else {
-			rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + heroId + " AND MODE=" + mode);
+			
+			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
+				rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + heroId 
+						+ " AND( MODE=" + HearthReader.CHALLENGEMODE
+						+ " OR MODE=" + HearthReader.PRACTICEMODE
+						+ ") AND DELETED=0"
+				);
+			} else {
+				rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + heroId + " AND MODE=" + mode + " AND DELETED=0");
+			}
 			
 			while(rs.next()){
 				found = true;
@@ -391,7 +411,6 @@ public class Tracker {
 		if(found){
 			winrate = (float) wins/(wins+losses);
 		}
-		
 
 		return winrate;
 	}
@@ -404,7 +423,7 @@ public class Tracker {
 		boolean found = false;
 		
 		if(mode == HearthReader.ARENAMODE){
-			rs = stat.executeQuery("select wins from ARENARESULTS where heroId = " + heroId);
+			rs = stat.executeQuery("select wins from ARENARESULTS where heroId = " + heroId + " AND DELETED=0");
 			
 			while(rs.next()){
 				found = true;
@@ -440,7 +459,13 @@ public class Tracker {
 				losses += rs.getInt("LOSSES");
 			}
 		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE MODE=" + mode + " AND DELETED=0");
+			
+			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
+				rs = stat.executeQuery("select WIN from MATCHES WHERE (MODE=" + HearthReader.CHALLENGEMODE + " OR MODE=" + HearthReader.PRACTICEMODE + ") AND DELETED=0");
+			} else {
+				rs = stat.executeQuery("select WIN from MATCHES WHERE MODE=" + mode + " AND DELETED=0");
+			}
+
 			while(rs.next()){
 				found = true;
 				
@@ -464,12 +489,20 @@ public class Tracker {
 		int total = 0;
 
 		if(mode == HearthReader.ARENAMODE){
-			rs = stat.executeQuery("select wins,losses from ARENARESULTS");
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE " + " DELETED = 0");
 			while(rs.next()){
 				total += rs.getInt("WINS");
 			}
 		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode);
+			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
+				rs = stat.executeQuery("select WIN from MATCHES WHERE "
+						+ "(mode=" + HearthReader.CHALLENGEMODE
+						+ " OR mode=" + HearthReader.PRACTICEMODE
+						+ " )AND DELETED = 0");
+			} else {
+				rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode + " AND DELETED = 0");
+			}
+			
 			while(rs.next()){
 				total += rs.getInt("WIN");
 			}
@@ -483,12 +516,23 @@ public class Tracker {
 		int total = 0;
 
 		if(mode == HearthReader.ARENAMODE){
-			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId);
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED = 0");
 			while(rs.next()){
 				total += rs.getInt("WINS");
 			}
 		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode);
+			
+			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
+				rs = stat.executeQuery("select WIN from MATCHES "
+						+" WHERE myheroid=" + heroId 
+						+ " AND (mode=" + HearthReader.CHALLENGEMODE
+						+ " OR mode=" + HearthReader.PRACTICEMODE + ")"
+						+ " AND DELETED = 0"
+					);
+			}else{
+				rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode + " AND DELETED = 0");
+			}
+
 			while(rs.next()){
 				total += rs.getInt("WIN");
 			}
@@ -507,7 +551,15 @@ public class Tracker {
 				total += rs.getInt("LOSSES");
 			}
 		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode + " AND DELETED=0");
+			
+			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
+				rs = stat.executeQuery("select WIN from MATCHES "
+						+" WHERE mode=" + HearthReader.CHALLENGEMODE
+						+ " OR mode=" + HearthReader.PRACTICEMODE + ""
+					);
+			}else{
+				rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode);
+			}
 			while(rs.next()){
 				total += rs.getInt("WIN") == 0 ? 1 : 0;
 			}
@@ -526,7 +578,17 @@ public class Tracker {
 				total += rs.getInt("LOSSES");
 			}
 		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode + " AND DELETED=0");
+			
+			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
+				rs = stat.executeQuery("select WIN from MATCHES WHERE "
+						+ "myheroid=" + heroId + " AND (mode=" + mode 
+						+ " OR MODE=" + HearthReader.PRACTICEMODE
+						+ ") AND DELETED=0"
+				);
+			} else {
+				rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode + " AND DELETED=0");
+			}
+			
 			while(rs.next()){
 				total += rs.getInt("WIN") == 0 ? 1 : 0;
 			}
@@ -548,7 +610,10 @@ public class Tracker {
 		float winrate = -1;
 		int goesFirst = goesFirstFlag ? 1 : 0;
 		String table = "MATCHES";
-		String sqlWhere = " WHERE goesFirst = " + goesFirst + " AND mode = " + mode + " AND DELETED=0";
+		String sqlWhere = mode == HearthReader.PRACTICEMODE || mode == HearthReader.CHALLENGEMODE ?
+				" WHERE goesFirst = " + goesFirst + " AND (mode = " + HearthReader.CHALLENGEMODE + " OR MODE=" + HearthReader.PRACTICEMODE +") AND DELETED=0"
+				:" WHERE goesFirst = " + goesFirst + " AND mode = " + mode + " AND DELETED=0";
+					
 		String sql = "select SUM(WIN), COUNT(*) from " + table + sqlWhere;
 		
 		if(heroId > -1){
