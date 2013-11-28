@@ -760,6 +760,24 @@ public class HearthUI {
 		lblID.setText("ID #00000");
 		lblID.setData("id", 0);
 		
+		final Button btnConfirmChanges = new Button(composite_4, SWT.CHECK);
+		btnConfirmChanges.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				boolean confirmed = btnConfirmChanges.getSelection();
+				
+				if(confirmed){
+					btnMatchesEditDelete.setEnabled(true);
+					btnMatchesEditSave.setEnabled(true);
+				} else {
+					btnMatchesEditDelete.setEnabled(false);
+					btnMatchesEditSave.setEnabled(false);
+				}
+			}
+		});
+		btnConfirmChanges.setBounds(134, 293, 65, 16);
+		btnConfirmChanges.setText("&Confirm");
+		
 		table_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -827,6 +845,7 @@ public class HearthUI {
 							dtMatchesEditTime.setMinutes(calDate.get(Calendar.MINUTE));
 							dtMatchesEditTime.setSeconds(calDate.get(Calendar.SECOND));
 							
+							btnConfirmChanges.setSelection(false);
 							btnMatchesEditDelete.setEnabled(false);
 							btnMatchesEditSave.setEnabled(false);
 						}
@@ -895,23 +914,7 @@ public class HearthUI {
 			}
 		});
 		
-		final Button btnConfirmChanges = new Button(composite_4, SWT.CHECK);
-		btnConfirmChanges.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				boolean confirmed = btnConfirmChanges.getSelection();
-				
-				if(confirmed){
-					btnMatchesEditDelete.setEnabled(true);
-					btnMatchesEditSave.setEnabled(true);
-				} else {
-					btnMatchesEditDelete.setEnabled(false);
-					btnMatchesEditSave.setEnabled(false);
-				}
-			}
-		});
-		btnConfirmChanges.setBounds(134, 293, 65, 16);
-		btnConfirmChanges.setText("&Confirm");
+
 	}
 	
 	private void createMatchesNewForm(Composite composite_4, TabItem tabitem){
