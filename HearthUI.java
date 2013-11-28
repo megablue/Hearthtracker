@@ -476,7 +476,7 @@ public class HearthUI {
 		cmbGameLang.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		cmbGameLang.setEditable(false);
 		cmbGameLang.setItems(new String[] {});
-		cmbGameLang.setVisibleItemCount(1);
+		cmbGameLang.setVisibleItemCount(8);
 		
 		Label lblDetect = new Label(grpGeneral, SWT.NONE);
 		lblDetect.setText("Auto Detect Game Resolution");

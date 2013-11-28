@@ -365,7 +365,7 @@ public class HearthReader {
 			return;
 		}
 		
-		if(gameMode == MENUMODE && this.findImage(readerSettings.winsLabelScanbox, winsLabelImageTarget, "Wins Label") 
+		if(this.findImage(readerSettings.winsLabelScanbox, winsLabelImageTarget, "Wins Label") 
 				|| this.findImage(readerSettings.lossesLabelScanbox, lossesLabelImageTarget, "Losses Label")){
 			gameMode = ARENAMODE;
 			oppHero = -1;
@@ -380,7 +380,7 @@ public class HearthReader {
 			return;
 		}
 		
-		if(gameMode == MENUMODE && this.findImage(readerSettings.rankedScanbox, rankedImageTarget, "Ranked mode Label")){
+		if( (gameMode == MENUMODE || gameMode == UNRANKEDMODE) && this.findImage(readerSettings.rankedScanbox, rankedImageTarget, "Ranked mode Label")){
 			gameMode = RANKEDMODE;
 			oppHero = -1;
 			inGameMode = 0;
@@ -394,7 +394,7 @@ public class HearthReader {
 			return;
 		}
 		
-		if(gameMode == MENUMODE && this.findImage(readerSettings.unrankedScanbox, unrankedImageTarget, "Unranked mode Label")){
+		if( (gameMode == MENUMODE || gameMode == RANKEDMODE)  && this.findImage(readerSettings.unrankedScanbox, unrankedImageTarget, "Unranked mode Label")){
 			gameMode = UNRANKEDMODE;
 			oppHero = -1;
 			inGameMode = 0;
