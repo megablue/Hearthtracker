@@ -1,10 +1,7 @@
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.file.NoSuchFileException;
 
@@ -26,7 +23,10 @@ public class HearthConfigurator {
 			HearthHelper.createFolder(path.substring(0,path.lastIndexOf(File.separator)));
 			xmlString = HearthHelper.readFile(path);
 			obj = xstream.fromXML(xmlString);
-		} catch (Throwable e) {
+		} catch (NoSuchFileException e){
+			return obj; 
+		}
+		catch (Throwable e) {
 			e.printStackTrace();
 		}
 		return obj;

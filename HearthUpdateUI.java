@@ -1,3 +1,5 @@
+import org.eclipse.swt.graphics.Image;
+import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,6 +27,7 @@ public class HearthUpdateUI {
 		Shell shlHearthtrackerUpdateNotification = new Shell(display, SWT.TITLE | SWT.CLOSE | SWT.BORDER);
 		shlHearthtrackerUpdateNotification.setText("HearthTracker Update Notification!");
 		shlHearthtrackerUpdateNotification.setSize(388, 228);
+		shlHearthtrackerUpdateNotification.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-128.png" ));
 		
 		Link link = new Link(shlHearthtrackerUpdateNotification, SWT.NONE);
 		link.addSelectionListener(new SelectionAdapter() {

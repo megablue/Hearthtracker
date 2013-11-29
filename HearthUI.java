@@ -209,6 +209,7 @@ public class HearthUI {
 	public void open() {
 		display = Display.getDefault();
 		createContents();
+		shlHearthtracker.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-128.png" ));
 		shlHearthtracker.open();
 		shlHearthtracker.layout();
 		Date lastUpdate = new Date(); 
@@ -582,49 +583,26 @@ public class HearthUI {
 		grpAbout.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		Composite composite_3 = new Composite(grpAbout, SWT.NONE);
-		composite_3.setLayout(new GridLayout(1, false));
+		composite_3.setLayout(null);
 		
 		Label lblVersion = new Label(composite_3, SWT.NONE);
+		lblVersion.setBounds(46, 132, 127, 15);
 		lblVersion.setText("HearthTracker v" + version[0] + "." + version[1] + "." + version[2]);
 		
 		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
+		lblCopyrightc.setBounds(36, 153, 150, 15);
 		lblCopyrightc.setText("Copyright \u00A9 2013 megablue");
 		
-		Label lblWebsite = new Label(composite_3, SWT.NONE);
-		lblWebsite.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseUp(MouseEvent arg0) {
-				try {
-					java.awt.Desktop.getDesktop().browse(new URL("http://hearthtracking.com").toURI());
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		lblWebsite.setText("Website:  HearthTracking.com");
-		
 		Label lblNewLabel_7 = new Label(composite_3, SWT.NONE);
+		lblNewLabel_7.setBounds(5, 65, 0, 15);
 		lblNewLabel_7.setText("");
 		
-		Composite composite_7 = new Composite(composite_3, SWT.NONE);
-		GridData gd_composite_7 = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
-		gd_composite_7.widthHint = 583;
-		composite_7.setLayoutData(gd_composite_7);
-		
-		StyledText styledText = new StyledText(composite_7, SWT.READ_ONLY | SWT.WRAP);
-		styledText.setText("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!");
-		styledText.setBounds(0, 0, 583, 119);
-		
 		Label lblNewLabel_8 = new Label(composite_3, SWT.NONE);
+		lblNewLabel_8.setBounds(5, 209, 0, 15);
 		lblNewLabel_8.setText("");
 		
-		Label lblSupportTheProject = new Label(composite_3, SWT.NONE);
-		lblSupportTheProject.setText("Support the project!");
-		
 		Label lblPaypal = new Label(composite_3, SWT.NONE);
-		lblPaypal.setSize(146, 58);
+		lblPaypal.setBounds(236, 258, 153, 96);
 		lblPaypal.setText("");
 		lblPaypal.setToolTipText("Your support means a lot to me. Thank you for even hovering over the donate button!");
 		lblPaypal.addMouseListener(new MouseAdapter() {
@@ -632,20 +610,93 @@ public class HearthUI {
 			public void mouseUp(MouseEvent arg0) {
 				try {
 					java.awt.Desktop.getDesktop().browse(new URL("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=2NK7Y4PU86UK2").toURI());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				}catch (Throwable e) {
+					//e.printStackTrace();
 				}
 			}
 		});
-		lblPaypal.setImage(new Image( display, "." + File.separator + "images" + File.separator + "btn_donate_150wx70h.gif" ));
+		lblPaypal.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "paypal.png" ));
+		
+		StyledText styledText = new StyledText(composite_3, SWT.READ_ONLY | SWT.WRAP);
+		styledText.setBounds(208, 31, 382, 183);
+		styledText.setText("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!");
+		
+		Link link_1 = new Link(composite_3, SWT.NONE);
+		link_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URL("http://bit.ly/HearthTracking").toURI());
+				} catch (Throwable e) {
+					//.printStackTrace();
+				}
+			}
+		});
+		link_1.setBounds(36, 176, 150, 15);
+		link_1.setText("<a>www.HearthTracking.com</a>");
+		
+		Label lblFacebook = new Label(composite_3, SWT.NONE);
+		lblFacebook.setBounds(10, 258, 96, 96);
+		lblFacebook.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "facebook.png" ));
+		
+		lblFacebook.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URL("http://bit.ly/hearthtrackingfacebook").toURI());
+				} catch (Throwable e) {
+					//e.printStackTrace();
+				}
+			}
+		});
+		
+		Label lblTLQ = new Label(composite_3, SWT.NONE);
+		lblTLQ.setBounds(124, 258, 96, 96);
+		lblTLQ.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "teamliquid.png" ));
+		
+		lblTLQ.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URL("http://bit.ly/teamliquid").toURI());
+				} catch (Throwable e) {
+					//e.printStackTrace();
+				}
+			}
+		});
+		
+		Label lblTwitter = new Label(composite_3, SWT.NONE);
+		lblTwitter.setBounds(407, 258, 96, 96);
+		lblTwitter.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "twitter.png" ));
+		
+		lblTwitter.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URL("http://bit.ly/hearthtrackingtwitter").toURI());
+				} catch (Throwable e) {
+					//e.printStackTrace();
+				}
+			}
+		});
+		
+		Label lblFindUsOn = new Label(composite_3, SWT.NONE);
+		lblFindUsOn.setBounds(10, 237, 96, 15);
+		lblFindUsOn.setText("Show us the love!");
+		
+		Label lblNewLabel_10 = new Label(composite_3, SWT.NONE);
+		lblNewLabel_10.setBounds(208, 10, 96, 15);
+		lblNewLabel_10.setText("How it all began...");
+		
+		Label label_1 = new Label(composite_3, SWT.SEPARATOR | SWT.HORIZONTAL);
+		label_1.setBounds(10, 222, 580, 2);
+		
+		Label label = new Label(composite_3, SWT.NONE);
+		label.setImage(SWTResourceManager.getImage(".\\images\\etc\\logo.png"));
+		label.setBounds(55, 30, 96, 96);
 
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
-		//createLabels();
 		createMatchesEditForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesEdit);
 		createMatchesNewForm(new Composite(tabFolder_1, SWT.NONE), 	tbtmMatchesNew);
 		createArenaEditForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit);
@@ -951,8 +1002,6 @@ public class HearthUI {
 				btnMatchesEditDelete.setText("&Delete");
 			}
 		});
-		
-
 	}
 	
 	private void createMatchesNewForm(Composite composite_4, TabItem tabitem){

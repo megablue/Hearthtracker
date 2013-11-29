@@ -344,12 +344,12 @@ public class Tracker {
 	}
 	
 	public void deleteMatchResult(int id) throws SQLException{
-		java.sql.Timestamp sqlDateMod = new java.sql.Timestamp(new Date().getTime());
+		long modTime = new Date().getTime();
 		String table = "MATCHES";
 
 		String sql = "UPDATE " + table
 					+ " SET deleted=1, "
-					+ " lastmodified='" + sqlDateMod.toString() + "' "
+					+ " lastmodified='" + modTime + "' "
 					+ " WHERE id=" + id;
 		stat.execute(sql);
 		isDirty = true;
