@@ -566,8 +566,6 @@ public class HearthReader {
 		victory = -1;
 		myHero = -1;
 		oppHero = -1;
-		wins = -1;
-		losses = -1;
 		goFirst = -1;
 	}
 	
