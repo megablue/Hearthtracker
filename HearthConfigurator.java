@@ -1,7 +1,12 @@
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.nio.file.NoSuchFileException;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
@@ -21,8 +26,8 @@ public class HearthConfigurator {
 			HearthHelper.createFolder(path.substring(0,path.lastIndexOf(File.separator)));
 			xmlString = HearthHelper.readFile(path);
 			obj = xstream.fromXML(xmlString);
-		} catch (IOException e) {
-			
+		} catch (Throwable e) {
+			e.printStackTrace();
 		}
 		return obj;
 	}
@@ -31,15 +36,17 @@ public class HearthConfigurator {
 		if (obj == null) return false;
 		String xmlString = xstream.toXML(obj);
 
+		HearthHelper.createFolder(path.substring(0, path.lastIndexOf(File.separator)));
+		
 		try {
-			HearthHelper.createFolder(path.substring(0, path.lastIndexOf(File.separator)));
-			PrintWriter out = new PrintWriter(path);
-			out.println(xmlString);
+			Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path), "UTF-8"));
+			out.write(xmlString);
 			out.close();
 			return true;
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+		} catch (NoSuchFileException e){
+			return false;
+		}catch (Throwable e) {
+			e.printStackTrace();
 		}
 		
 		return false;
