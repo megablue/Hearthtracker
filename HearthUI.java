@@ -109,7 +109,7 @@ public class HearthUI {
 	private static Image[] heroImgs;
 	private Composite composite_9;
 
-	public static int[] version = {1, 1, 0};
+	public static int[] version = {1, 1, 1};
 	private Text text;
 	private Composite composite_11;
 	
