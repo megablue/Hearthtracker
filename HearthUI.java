@@ -708,7 +708,6 @@ public class HearthUI {
 		poppulateDiagnoticsControls();
 		poppulateDiagnoticsStatus();
 		updateStatus();
-		poppulateDiagnoticsStatus();
 		fillOverviewTable();
 		fillMatchesTable();
 		fillArenaTable();
@@ -1335,11 +1334,12 @@ public class HearthUI {
 		Date lastSeen = hearth.getLastseen();
 		int[] area = hearth.getLastScanArea();
 		int[] subArea = hearth.getLastScanSubArea();
+		String last = lastSeen.getTime() == 0 ? "Never" : HearthHelper.getPrettyText(lastSeen); 
 
 		if(lastSeen == null){
 			lblLastSeen.setText("N|A");
 		} else {
-			lblLastSeen.setText( HearthHelper.getPrettyText(lastSeen) );
+			lblLastSeen.setText(last);
 		}
 		
 		lblLastscreencoordinate.setText(area[0] + ", " + area[1] + ", w: " + area[2] + ", h: " + area[3]);
