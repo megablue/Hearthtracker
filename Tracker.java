@@ -95,6 +95,19 @@ public class Tracker {
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
 		}
 		
+		if(dbSetting.version > 0){
+			return;
+		}
+		
+		rs = stat.executeQuery("select count(*) from information_schema.tables WHERE table_name = 'MATCHES'");
+		
+		if(rs.next() && rs.getInt("COUNT(*)") == 1){
+			//dirty fix for database.xml which I forgot to save the change of version 
+			//if the app created a database for the first time on v1.1.0 and v1.1.1 
+			dbSetting.version = 1;
+			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		}
+
 		rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'ARENARESULTS'");
 		 
 		if(rs.next()){
@@ -116,34 +129,39 @@ public class Tracker {
 			}
 		}
 		 
-		rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'MATCHES' OR table_name = 'ARENAMATCHES'");
+		rs = stat.executeQuery("select count(*) from information_schema.tables WHERE table_name = 'ARENAMATCHES'");
 		 
-		if(rs.next()){
-			if(rs.getInt("COUNT(*)") == 0){
-				stat.execute("create table MATCHES("
-								+"id int primary key auto_increment, "
-								+"myHeroId int, "
-								+"oppHeroId int, "
-								+"goesFirst int, win int, "
-								+"startTime BIGINT DEFAULT 0, "
-								+"totalTime int,"
-								+"mode int,"
-								+"modified int DEFAULT 0, "
-								+"lastmodified BIGINT DEFAULT 0, "
-								+"deleted int DEFAULT 0, "
-								+"submitted int DEFAULT 0 "
-								+")"
-							);
-				stat.execute("CREATE INDEX myHeroId ON MATCHES(myHeroId, deleted)");
-				stat.execute("CREATE INDEX DELETED ON MATCHES(DELETED)");
-				stat.execute("CREATE INDEX MODE ON MATCHES(MODE,DELETED)");
-				stat.execute("CREATE INDEX MYHERO_MODE ON MATCHES(MYHEROID, MODE, DELETED)");
-				stat.execute("CREATE INDEX OPPHERO_MODE ON MATCHES(OPPHEROID, MODE, DELETED)");
-				stat.execute("CREATE INDEX HEROES_MODE ON MATCHES(MYHEROID, OPPHEROID, MODE, DELETED)");
-				newdb = true;
-			}
+		if(rs.next() && rs.getInt("COUNT(*)") == 0){
+			stat.execute("create table MATCHES("
+							+"id int primary key auto_increment, "
+							+"myHeroId int, "
+							+"oppHeroId int, "
+							+"goesFirst int, win int, "
+							+"startTime BIGINT DEFAULT 0, "
+							+"totalTime int,"
+							+"mode int,"
+							+"modified int DEFAULT 0, "
+							+"lastmodified BIGINT DEFAULT 0, "
+							+"deleted int DEFAULT 0, "
+							+"submitted int DEFAULT 0 "
+							+")"
+						);
+			stat.execute("CREATE INDEX myHeroId ON MATCHES(myHeroId, deleted)");
+			stat.execute("CREATE INDEX DELETED ON MATCHES(DELETED)");
+			stat.execute("CREATE INDEX MODE ON MATCHES(MODE,DELETED)");
+			stat.execute("CREATE INDEX MYHERO_MODE ON MATCHES(MYHEROID, MODE, DELETED)");
+			stat.execute("CREATE INDEX OPPHERO_MODE ON MATCHES(OPPHEROID, MODE, DELETED)");
+			stat.execute("CREATE INDEX HEROES_MODE ON MATCHES(MYHEROID, OPPHEROID, MODE, DELETED)");
+			newdb = true;
 		}
 		
+		if(newdb){
+			dbSetting.version = 1;
+			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+			return;
+		}
+		
+		//database schema upgrade from v1.0.X to v1.1.0
 		if(!newdb && dbSetting.version == 0){
 			stat.execute("ALTER TABLE ARENARESULTS ADD timeCapturedX BIGINT");
 			ResultSet result = stat.executeQuery("SELECT id, timeCaptured FROM ARENARESULTS");
@@ -221,6 +239,7 @@ public class Tracker {
 			stat.execute("UPDATE ARENARESULTS SET DELETED=0");
 			stat.execute("UPDATE ARENARESULTS SET LASTMODIFIED=timeCaptured");
 			
+			//save upgraded version
 			dbSetting.version = 1;
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
 		}
