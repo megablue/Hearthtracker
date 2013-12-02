@@ -63,7 +63,6 @@ import com.googlecode.javacv.CameraDevice.Settings;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Link;
 
-
 @SuppressWarnings({ "unused", "deprecation" })
 public class HearthUI {
 	protected Shell shlHearthtracker;
@@ -483,7 +482,7 @@ public class HearthUI {
 		btnEnableScanner.setText("Enable");
 		
 		Button button = new Button(grpAdvanced, SWT.RADIO);
-		button.setBounds(262, 127, 56, 16);
+		button.setBounds(262, 127, 42, 16);
 		btnScanSpeed[0] = button;
 		button.setText("Fast");
 		
