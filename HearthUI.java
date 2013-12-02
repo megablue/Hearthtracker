@@ -317,10 +317,10 @@ public class HearthUI {
 		
 		grpCurrentStats = new Group(sashForm, SWT.NONE);
 		grpCurrentStats.setText("Sideboard");
-		FillLayout fl_grpCurrentStats = new FillLayout(SWT.VERTICAL);
-		grpCurrentStats.setLayout(fl_grpCurrentStats);
+		grpCurrentStats.setLayout(null);
 		
 		styledTextStatus = new StyledText(grpCurrentStats, SWT.READ_ONLY);
+		styledTextStatus.setBounds(10, 23, 211, 340);
 		styledTextStatus.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
 		
 		sashForm.setWeights(new int[] {365, 230});
@@ -422,78 +422,83 @@ public class HearthUI {
 		grpGeneral.setText("General");
 		grpGeneral.setLayout(null);
 		GridData gd_grpGeneral = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_grpGeneral.heightHint = 353;
+		gd_grpGeneral.heightHint = 159;
 		gd_grpGeneral.widthHint = 585;
 		grpGeneral.setLayoutData(gd_grpGeneral);
 		
-		Label lblNewLabel_2 = new Label(grpGeneral, SWT.NONE);
-		lblNewLabel_2.setBounds(169, 20, 42, 15);
-		lblNewLabel_2.setText("Scanner");
-		
-		btnEnableScanner = new Button(grpGeneral, SWT.CHECK);
-		btnEnableScanner.setBounds(225, 19, 56, 16);
-		btnEnableScanner.setSelection(true);
-		btnEnableScanner.setText("Enable");
-		
-		Button button = new Button(grpGeneral, SWT.RADIO);
-		button.setBounds(225, 46, 56, 16);
-		btnScanSpeed[0] = button;
-		button.setText("Fast");
-		
-		Button button_1 = new Button(grpGeneral, SWT.RADIO);
-		button_1.setBounds(272, 46, 85, 16);
-		btnScanSpeed[1] = button_1;
-		button_1.setText("Intermediate");
-		
-		Button button_2 = new Button(grpGeneral, SWT.RADIO);
-		button_2.setBounds(363, 46, 56, 16);
-		btnScanSpeed[2] = button_2;
-		button_2.setText("Slow");
-		
-		Label lblNewLabel = new Label(grpGeneral, SWT.NONE);
-		lblNewLabel.setBounds(151, 47, 60, 15);
-		lblNewLabel.setText("Scan Speed");
-		btnScanSpeed[0].setText("Fast");
-		btnScanSpeed[1].setText("Intermediate");
-		btnScanSpeed[2].setText("Slow");
-		
 		Label lblNewLabel_1 = new Label(grpGeneral, SWT.NONE);
-		lblNewLabel_1.setBounds(125, 73, 92, 15);
+		lblNewLabel_1.setBounds(153, 68, 92, 15);
 		lblNewLabel_1.setText("Game Language");
 		
 		cmbGameLang = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
-		cmbGameLang.setBounds(223, 70, 358, 21);
+		cmbGameLang.setBounds(251, 65, 150, 21);
 		cmbGameLang.setEditable(false);
 		cmbGameLang.setItems(new String[] {});
 		cmbGameLang.setVisibleItemCount(8);
 		
-		Label lblDetect = new Label(grpGeneral, SWT.NONE);
-		lblDetect.setBounds(56, 97, 156, 15);
-		lblDetect.setText("Auto Detect Game Resolution");
-		
-		btnAutoDetectGameRes = new Button(grpGeneral, SWT.CHECK);
-		btnAutoDetectGameRes.setBounds(225, 98, 56, 16);
-		btnAutoDetectGameRes.setToolTipText("It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.");
-		btnAutoDetectGameRes.setText("Enable");
-		
-		Label lblGameResolution = new Label(grpGeneral, SWT.NONE);
-		lblGameResolution.setBounds(8, 123, 211, 15);
-		lblGameResolution.setText("Game Resolution (if auto detect failed)");
-		
-		cmbGameRes = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
-		cmbGameRes.setBounds(225, 120, 358, 21);
-		cmbGameRes.setEditable(false);
-		
 		Link link = new Link(grpGeneral, SWT.NONE);
-		link.setBounds(141, 152, 71, 15);
+		link.setBounds(168, 96, 71, 15);
 		link.setText("<a>Web App Key</a>");
 		
 		text = new Text(grpGeneral, SWT.BORDER | SWT.PASSWORD);
-		text.setBounds(225, 149, 358, 21);
+		text.setBounds(251, 92, 150, 21);
 		text.setEnabled(false);
 		
+		Group grpAdvanced = new Group(composite_1, SWT.NONE);
+		grpAdvanced.setText("Advanced");
+		grpAdvanced.setLayout(null);
+		GridData gd_grpAdvanced = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+		gd_grpAdvanced.heightHint = 174;
+		gd_grpAdvanced.widthHint = 585;
+		grpAdvanced.setLayoutData(gd_grpAdvanced);
+		
+		Label lblDetect = new Label(grpAdvanced, SWT.NONE);
+		lblDetect.setBounds(95, 46, 156, 15);
+		lblDetect.setText("Auto Detect Game Resolution");
+		
+		btnAutoDetectGameRes = new Button(grpAdvanced, SWT.CHECK);
+		btnAutoDetectGameRes.setBounds(263, 45, 183, 16);
+		btnAutoDetectGameRes.setToolTipText("It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.");
+		btnAutoDetectGameRes.setText("Enable");
+		
+		Label lblGameResolution = new Label(grpAdvanced, SWT.NONE);
+		lblGameResolution.setBounds(48, 73, 211, 15);
+		lblGameResolution.setText("Game Resolution (if auto detect failed)");
+		
+		cmbGameRes = new CCombo(grpAdvanced, SWT.BORDER | SWT.READ_ONLY);
+		cmbGameRes.setBounds(263, 67, 150, 21);
+		cmbGameRes.setEditable(false);
+		
+		Label lblNewLabel = new Label(grpAdvanced, SWT.NONE);
+		lblNewLabel.setBounds(188, 128, 60, 15);
+		lblNewLabel.setText("Scan Speed");
+		
+		Label lblNewLabel_2 = new Label(grpAdvanced, SWT.NONE);
+		lblNewLabel_2.setBounds(206, 101, 42, 15);
+		lblNewLabel_2.setText("Scanner");
+		
+		btnEnableScanner = new Button(grpAdvanced, SWT.CHECK);
+		btnEnableScanner.setBounds(262, 100, 56, 16);
+		btnEnableScanner.setSelection(true);
+		btnEnableScanner.setText("Enable");
+		
+		Button button = new Button(grpAdvanced, SWT.RADIO);
+		button.setBounds(262, 127, 56, 16);
+		btnScanSpeed[0] = button;
+		button.setText("Fast");
+		
+		Button button_1 = new Button(grpAdvanced, SWT.RADIO);
+		button_1.setBounds(309, 127, 85, 16);
+		btnScanSpeed[1] = button_1;
+		button_1.setText("Intermediate");
+		
+		Button button_2 = new Button(grpAdvanced, SWT.RADIO);
+		button_2.setBounds(400, 127, 56, 16);
+		btnScanSpeed[2] = button_2;
+		button_2.setText("Slow");
+		
 		TabItem tbtmDiagnostics = new TabItem(tabFolder, SWT.NONE);
-		tbtmDiagnostics.setText("&Diagnostics");
+		tbtmDiagnostics.setText("D&iagnostics");
 		
 		Composite composite_4 = new Composite(tabFolder, SWT.NONE);
 		tbtmDiagnostics.setControl(composite_4);
@@ -508,44 +513,44 @@ public class HearthUI {
 		grpDiagnostics.setLayout(null);
 		
 		Label lblLastSeenLabel = new Label(grpDiagnostics, SWT.NONE);
-		lblLastSeenLabel.setBounds(122, 20, 48, 15);
+		lblLastSeenLabel.setBounds(206, 21, 48, 15);
 		lblLastSeenLabel.setText("Last seen");
 		
 		lblLastSeen = new Label(grpDiagnostics, SWT.NONE);
-		lblLastSeen.setBounds(176, 20, 300, 15);
+		lblLastSeen.setBounds(260, 21, 300, 15);
 		lblLastSeen.setText("..........");
 		
 		Label lblLastScanCoordinate = new Label(grpDiagnostics, SWT.NONE);
-		lblLastScanCoordinate.setBounds(97, 40, 73, 15);
+		lblLastScanCoordinate.setBounds(181, 41, 73, 15);
 		lblLastScanCoordinate.setText("Last scan area");
 		
 		lblLastscreencoordinate = new Label(grpDiagnostics, SWT.NONE);
-		lblLastscreencoordinate.setBounds(176, 40, 300, 15);
+		lblLastscreencoordinate.setBounds(260, 41, 300, 15);
 		lblLastscreencoordinate.setText("..........");
 		
 		Label lblNewLabel_5 = new Label(grpDiagnostics, SWT.NONE);
-		lblNewLabel_5.setBounds(73, 60, 97, 15);
+		lblNewLabel_5.setBounds(157, 61, 97, 15);
 		lblNewLabel_5.setText("Last scan sub-area");
 		
 		lblLastScanSubArea = new Label(grpDiagnostics, SWT.NONE);
-		lblLastScanSubArea.setBounds(176, 60, 300, 15);
+		lblLastScanSubArea.setBounds(260, 61, 300, 15);
 		lblLastScanSubArea.setText("..........");
 		
 		Label lblAutoPingLabel = new Label(grpDiagnostics, SWT.NONE);
-		lblAutoPingLabel.setBounds(53, 114, 117, 15);
+		lblAutoPingLabel.setBounds(132, 113, 117, 15);
 		lblAutoPingLabel.setText("Visualize scanned area");
 		
 		btnAutoPing = new Button(grpDiagnostics, SWT.CHECK);
-		btnAutoPing.setBounds(176, 113, 56, 16);
+		btnAutoPing.setBounds(255, 112, 56, 16);
 		btnAutoPing.setToolTipText("Visualize scanned areas after Hearthstone being out of sight for more than 1 min.");
 		btnAutoPing.setText("Enable");
 		
 		Label lblNewLabel_6 = new Label(grpDiagnostics, SWT.NONE);
-		lblNewLabel_6.setBounds(92, 139, 78, 15);
+		lblNewLabel_6.setBounds(171, 138, 78, 15);
 		lblNewLabel_6.setText("Diagnotic Tool");
 		
 		btnVisualizeNow = new Button(grpDiagnostics, SWT.NONE);
-		btnVisualizeNow.setBounds(176, 134, 83, 25);
+		btnVisualizeNow.setBounds(255, 133, 83, 25);
 		btnVisualizeNow.setText("Visualize now");
 		
 		Label label_2 = new Label(grpDiagnostics, SWT.SEPARATOR | SWT.HORIZONTAL);
