@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="HearthTracker.app/|build/|configs/|data/|images/|lib/|logs/|output/" kind="src" path=""/>
+	<classpathentry excluding="HearthTracker.app/|README.md|build/|configs/|data/|images/|lib/|logs/|org/eclipse/wb/swt/.gitignore|output/|readme.txt" kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/h2-1.3.174.jar"/>
 	<classpathentry kind="lib" path="lib/sikuli-api-1.0.2-standalone.jar"/>
