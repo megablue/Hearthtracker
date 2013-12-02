@@ -114,7 +114,7 @@
     <outer-class reference="../.."/>
   </defeatScanbox>
   <winsScanboxes>
-    <HearthReaderSetting_-Scanbox>
+    <Scanbox>
       <xOffset>300</xOffset>
       <yOffset>190</yOffset>
       <width>200</width>
@@ -123,8 +123,8 @@
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>300</xOffset>
       <yOffset>190</yOffset>
       <width>200</width>
@@ -133,8 +133,8 @@
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>300</xOffset>
       <yOffset>190</yOffset>
       <width>200</width>
@@ -143,8 +143,8 @@
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>300</xOffset>
       <yOffset>190</yOffset>
       <width>200</width>
@@ -153,8 +153,8 @@
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>300</xOffset>
       <yOffset>190</yOffset>
       <width>200</width>
@@ -163,8 +163,8 @@
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>300</xOffset>
       <yOffset>190</yOffset>
       <width>200</width>
@@ -173,8 +173,8 @@
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>300</xOffset>
       <yOffset>190</yOffset>
       <width>200</width>
@@ -183,8 +183,8 @@
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>300</xOffset>
       <yOffset>190</yOffset>
       <width>200</width>
@@ -193,8 +193,8 @@
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>300</xOffset>
       <yOffset>190</yOffset>
       <width>200</width>
@@ -203,8 +203,8 @@
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>300</xOffset>
       <yOffset>190</yOffset>
       <width>200</width>
@@ -213,10 +213,10 @@
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
+    </Scanbox>
   </winsScanboxes>
   <lossesScanboxes>
-    <HearthReaderSetting_-Scanbox>
+    <Scanbox>
       <xOffset>400</xOffset>
       <yOffset>507</yOffset>
       <width>110</width>
@@ -225,8 +225,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>492</xOffset>
       <yOffset>507</yOffset>
       <width>110</width>
@@ -235,8 +235,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>584</xOffset>
       <yOffset>507</yOffset>
       <width>110</width>
@@ -245,10 +245,10 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
+    </Scanbox>
   </lossesScanboxes>
   <lossesUncheckedScanboxes>
-    <HearthReaderSetting_-Scanbox>
+    <Scanbox>
       <xOffset>400</xOffset>
       <yOffset>507</yOffset>
       <width>110</width>
@@ -257,8 +257,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>492</xOffset>
       <yOffset>507</yOffset>
       <width>110</width>
@@ -267,8 +267,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>584</xOffset>
       <yOffset>507</yOffset>
       <width>110</width>
@@ -277,10 +277,10 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
+    </Scanbox>
   </lossesUncheckedScanboxes>
   <arenaHeroScanboxes>
-    <HearthReaderSetting_-Scanbox>
+    <Scanbox>
       <xOffset>80</xOffset>
       <yOffset>720</yOffset>
       <width>240</width>
@@ -289,8 +289,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>80</xOffset>
       <yOffset>720</yOffset>
       <width>240</width>
@@ -299,8 +299,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>80</xOffset>
       <yOffset>720</yOffset>
       <width>240</width>
@@ -309,8 +309,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>80</xOffset>
       <yOffset>720</yOffset>
       <width>240</width>
@@ -319,8 +319,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>80</xOffset>
       <yOffset>720</yOffset>
       <width>240</width>
@@ -329,8 +329,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>80</xOffset>
       <yOffset>720</yOffset>
       <width>240</width>
@@ -339,8 +339,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>80</xOffset>
       <yOffset>720</yOffset>
       <width>240</width>
@@ -349,8 +349,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>80</xOffset>
       <yOffset>720</yOffset>
       <width>240</width>
@@ -359,8 +359,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>80</xOffset>
       <yOffset>720</yOffset>
       <width>240</width>
@@ -369,10 +369,10 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
+    </Scanbox>
   </arenaHeroScanboxes>
   <opponentHeroScanboxes>
-    <HearthReaderSetting_-Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>70</yOffset>
       <width>220</width>
@@ -381,8 +381,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>70</yOffset>
       <width>220</width>
@@ -391,8 +391,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>70</yOffset>
       <width>220</width>
@@ -401,8 +401,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>70</yOffset>
       <width>220</width>
@@ -411,8 +411,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>70</yOffset>
       <width>220</width>
@@ -421,8 +421,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>70</yOffset>
       <width>220</width>
@@ -431,8 +431,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>70</yOffset>
       <width>220</width>
@@ -441,8 +441,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>70</yOffset>
       <width>220</width>
@@ -451,8 +451,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>70</yOffset>
       <width>220</width>
@@ -461,10 +461,10 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
+    </Scanbox>
   </opponentHeroScanboxes>
   <myHeroScanboxes>
-    <HearthReaderSetting_-Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>710</yOffset>
       <width>220</width>
@@ -473,8 +473,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>710</yOffset>
       <width>220</width>
@@ -483,8 +483,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>710</yOffset>
       <width>220</width>
@@ -493,8 +493,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>710</yOffset>
       <width>220</width>
@@ -503,8 +503,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>710</yOffset>
       <width>220</width>
@@ -513,8 +513,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>710</yOffset>
       <width>220</width>
@@ -523,8 +523,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>710</yOffset>
       <width>220</width>
@@ -533,8 +533,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>710</yOffset>
       <width>220</width>
@@ -543,8 +543,8 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
-    <HearthReaderSetting_-Scanbox>
+    </Scanbox>
+    <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>710</yOffset>
       <width>220</width>
@@ -553,6 +553,6 @@
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <outer-class reference="../../.."/>
-    </HearthReaderSetting_-Scanbox>
+    </Scanbox>
   </myHeroScanboxes>
 </HearthReaderSetting>

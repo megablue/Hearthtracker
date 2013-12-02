@@ -1,3 +1,5 @@
+package my.hearthtracking.app;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -17,6 +19,8 @@ public class HearthUpdater {
 	HearthUpdaterLog updateLog;
 	
 	public HearthUpdater(){
+		xstream.alias("HearthUpdaterLog", HearthUpdaterLog.class);
+		
 		updateLog = (HearthUpdaterLog) config.load("." + File.separator + "configs" + File.separator + "update.xml");
 		if(updateLog == null){
 			updateLog = new HearthUpdaterLog();

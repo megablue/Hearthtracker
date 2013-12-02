@@ -1,3 +1,5 @@
+package my.hearthtracking.app;
+
 import org.eclipse.swt.graphics.Image;
 import java.io.File;
 import java.net.URL;

@@ -1,5 +1,5 @@
 #!/bin/sh
 exec java \
-	-jar
+	-jar \
 	-XstartOnFirstThread \
 	HearthTracker.jar

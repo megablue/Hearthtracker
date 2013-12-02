@@ -1,3 +1,5 @@
+package my.hearthtracking.app;
+
 import java.awt.Color;
 import java.io.File;
 import java.sql.SQLException;

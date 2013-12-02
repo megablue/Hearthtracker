@@ -1,3 +1,5 @@
+package my.hearthtracking.app;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;

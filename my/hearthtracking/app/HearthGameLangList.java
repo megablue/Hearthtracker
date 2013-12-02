@@ -1,3 +1,5 @@
+package my.hearthtracking.app;
+
 public class HearthGameLangList {
 	
 	public HearthGameLang[] langs = {

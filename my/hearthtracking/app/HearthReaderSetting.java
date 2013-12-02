@@ -1,3 +1,4 @@
+package my.hearthtracking.app;
 
 public class HearthReaderSetting {
 	public String lang = "enUS";

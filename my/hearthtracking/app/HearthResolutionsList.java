@@ -1,3 +1,5 @@
+package my.hearthtracking.app;
+
 public class HearthResolutionsList {
 
 	public class Resolution{

@@ -1,3 +1,5 @@
+package my.hearthtracking.app;
+
 public class HearthSetting {
 	int scanInterval = 500;
 	int gameWidth = 1920;

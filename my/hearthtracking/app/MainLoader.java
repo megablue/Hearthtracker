@@ -1,3 +1,5 @@
+package my.hearthtracking.app;
+
 import java.io.File;
 
 public class MainLoader {

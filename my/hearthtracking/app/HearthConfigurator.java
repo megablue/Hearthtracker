@@ -1,10 +1,11 @@
+package my.hearthtracking.app;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.file.NoSuchFileException;
-
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
@@ -13,6 +14,16 @@ public class HearthConfigurator {
 
 	public HearthConfigurator() {
 		xstream = new XStream(new DomDriver());
+		xstream.alias("HearthUpdaterLog", 				HearthUpdaterLog.class);
+		xstream.alias("HearthDatabase", 				HearthDatabase.class);
+		xstream.alias("HearthGameLang", 				HearthGameLang.class);
+		xstream.alias("HearthGameLangList", 			HearthGameLangList.class);
+		xstream.alias("HearthHeroesList", 				HearthHeroesList.class);
+		xstream.alias("Hero", 							HearthHeroesList.Hero.class);
+		xstream.alias("HearthReaderSetting", 			HearthReaderSetting.class);
+		xstream.alias("Scanbox",						HearthReaderSetting.Scanbox.class);
+		xstream.alias("HearthResolutionsList", 			HearthResolutionsList.class);
+		xstream.alias("Resolution", 					HearthResolutionsList.Resolution.class);
 	}
 	
 	public <t> Object load(String path){
