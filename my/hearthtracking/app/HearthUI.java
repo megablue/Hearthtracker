@@ -111,6 +111,7 @@ public class HearthUI {
 	private Composite composite_9;
 
 	public static int[] version = {1, 1, 1};
+	public static int experimental = 1;
 	private Text text;
 	private Composite composite_11;
 	
@@ -256,6 +257,13 @@ public class HearthUI {
 		});
 		shlHearthtracker.setSize(620, 438);
 		shlHearthtracker.setText("HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!");
+		
+		if(experimental > 0){
+			shlHearthtracker.setText("HearthTracker (Experimental build " 
+									+ experimental 
+									+ ") - Automated Stats Tracking for Hearthstone enthusiasts!");
+		}
+		
 		shlHearthtracker.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		TabFolder tabFolder = new TabFolder(shlHearthtracker, SWT.NONE);
@@ -569,7 +577,7 @@ public class HearthUI {
 		composite_3.setLayout(null);
 		
 		Label lblVersion = new Label(composite_3, SWT.NONE);
-		lblVersion.setBounds(46, 132, 127, 15);
+		lblVersion.setBounds(46, 132, 113, 15);
 		lblVersion.setText("HearthTracker v" + version[0] + "." + version[1] + "." + version[2]);
 		
 		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
@@ -675,8 +683,8 @@ public class HearthUI {
 		label_1.setBounds(10, 222, 580, 2);
 		
 		Label label = new Label(composite_3, SWT.NONE);
-		label.setImage(SWTResourceManager.getImage(".\\images\\etc\\logo.png"));
-		label.setBounds(55, 30, 96, 96);
+		label.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo.png" ));
+		label.setBounds(46, 31, 96, 96);
 
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
