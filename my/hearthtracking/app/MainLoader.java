@@ -19,6 +19,13 @@ public class MainLoader {
 			}		
 		}
 		
+		HearthSync sync = new HearthSync();
+		
+		if(sync.checkAccessKey()){
+			System.out.println("API key verified");
+			sync.syncAll();
+		}
+				
 		HearthUI.main(args);
 	}
 

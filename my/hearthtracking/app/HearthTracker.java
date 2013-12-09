@@ -12,7 +12,7 @@ import java.util.Date;
 
 import org.h2.jdbcx.JdbcDataSource;
 
-public class Tracker {	
+public class HearthTracker {	
 	Connection conn;
 	boolean isDirty = true;
 	boolean isWorking = false;
@@ -26,7 +26,7 @@ public class Tracker {
 	private static HearthConfigurator config = new HearthConfigurator();
 	private Statement stat;
 	
-	public Tracker(){
+	public HearthTracker(){
 		
 		try {
 			this.initDB();
@@ -89,6 +89,7 @@ public class Tracker {
 	public void createTables() throws SQLException{
 		ResultSet rs;
 		boolean newdb = false;
+		int currentDBversion = 2;
 		
 		dbSetting = (HearthDatabase) config.load("." + File.separator + "data" + File.separator + "database.xml");
 		
@@ -97,13 +98,13 @@ public class Tracker {
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
 		}
 		
-		if(dbSetting.version > 0){
+		if(dbSetting.version >= currentDBversion){
 			return;
 		}
 		
 		rs = stat.executeQuery("select count(*) from information_schema.tables WHERE table_name = 'MATCHES'");
 		
-		if(rs.next() && rs.getInt("COUNT(*)") == 1){
+		if(dbSetting.version == 0 && rs.next() && rs.getInt("COUNT(*)") == 1){
 			//dirty fix for database.xml which I forgot to save the change of version 
 			//if the app created a database for the first time on v1.1.0 and v1.1.1 
 			dbSetting.version = 1;
@@ -112,26 +113,24 @@ public class Tracker {
 
 		rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'ARENARESULTS'");
 		 
-		if(rs.next()){
-			if(rs.getInt("COUNT(*)") == 0){
-				stat.execute("create table arenaResults( "
-								+"id int primary key auto_increment, "
-								+"heroId int, "
-								+"wins int, "
-								+"losses int, "
-								+"timeCaptured BIGINT DEFAULT 0, "
-								+"modified int DEFAULT 0, "
-								+"lastmodified BIGINT DEFAULT 0, "
-								+"deleted int DEFAULT 0, "
-								+"submitted int DEFAULT 0 "
-								+ ")"
-						);
-				stat.execute("CREATE INDEX heroId ON arenaResults(heroId, DELETED)");
-				newdb = true;
-			}
+		if(rs.next() && rs.getInt("COUNT(*)") == 0){
+			stat.execute("create table arenaResults( "
+							+"id int primary key auto_increment, "
+							+"heroId int, "
+							+"wins int, "
+							+"losses int, "
+							+"timeCaptured BIGINT DEFAULT 0, "
+							+"modified int DEFAULT 0, "
+							+"lastmodified BIGINT DEFAULT 0, "
+							+"deleted int DEFAULT 0, "
+							+"submitted BIGINT DEFAULT 0 "
+							+ ")"
+					);
+			stat.execute("CREATE INDEX heroId ON arenaResults(heroId, DELETED)");
+			newdb = true;
 		}
-		 
-		rs = stat.executeQuery("select count(*) from information_schema.tables WHERE table_name = 'ARENAMATCHES'");
+		
+		rs = stat.executeQuery("select count(*) from information_schema.tables WHERE table_name = 'ARENAMATCHES' OR table_name = 'MATCHES'");
 		 
 		if(rs.next() && rs.getInt("COUNT(*)") == 0){
 			stat.execute("create table MATCHES("
@@ -145,7 +144,7 @@ public class Tracker {
 							+"modified int DEFAULT 0, "
 							+"lastmodified BIGINT DEFAULT 0, "
 							+"deleted int DEFAULT 0, "
-							+"submitted int DEFAULT 0 "
+							+"submitted BIGINT DEFAULT 0 "
 							+")"
 						);
 			stat.execute("CREATE INDEX myHeroId ON MATCHES(myHeroId, deleted)");
@@ -158,7 +157,7 @@ public class Tracker {
 		}
 		
 		if(newdb){
-			dbSetting.version = 1;
+			dbSetting.version = currentDBversion;
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
 			return;
 		}
@@ -243,6 +242,14 @@ public class Tracker {
 			
 			//save upgraded version
 			dbSetting.version = 1;
+			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		}
+		
+		if(!newdb && dbSetting.version == 1){
+			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN SUBMITTED BIGINT");
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN SUBMITTED BIGINT");
+			//save upgraded version
+			dbSetting.version = 2;
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
 		}
 	}
@@ -676,6 +683,22 @@ public class Tracker {
 		rs = stat.executeQuery("select * from ARENARESULTS WHERE DELETED=0 ORDER BY ID DESC LIMIT 20");
 
 		return rs;
+	}
+	
+	public ResultSet getUnsyncArenaResults() throws SQLException{
+		ResultSet rs;
+		String query = "select * from ARENARESULTS WHERE submitted <= lastmodified ORDER BY ID ASC";
+		rs = stat.executeQuery(query);
+		return rs;
+	}
+	
+	public void updateArenaResultSyncTime(int id, long time) throws SQLException{
+		Statement stat2 = conn.createStatement();
+		String sql = "UPDATE " + "ARENARESULTS"
+				+ " SET submitted=" + time
+				+ " WHERE id=" + id;
+		stat2.execute(sql);
+		stat2.close();
 	}
 	
 	public ResultSet getArenaResult(int id) throws SQLException{

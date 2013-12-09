@@ -89,7 +89,7 @@ public class HearthUI {
 	static boolean debugMode = HearthHelper.isDevelopmentEnvironment();
 	
 	private static HearthReader hearth;
-	private static Tracker tracker;
+	private static HearthTracker tracker;
 	private static HearthConfigurator config = new HearthConfigurator();
 	private static HearthGameLangList gameLanguages;
 	private static HearthResolutionsList gameResolutions;
@@ -166,7 +166,7 @@ public class HearthUI {
 		}
 		
 		window = new HearthUI();
-		tracker = new Tracker();
+		tracker = new HearthTracker();
 		hearth = new HearthReader(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, debugMode);
 		
 		if(!setting.scannerEnabled){
@@ -182,7 +182,7 @@ public class HearthUI {
 
 	}
 	
-    private static class MessageLoop
+    private static class ReaderThread
     implements Runnable {
 	    public void run() {
 	    	while(true){
@@ -203,6 +203,19 @@ public class HearthUI {
 	    	}
 	    }
     }
+    
+    private static class SyncThread
+    implements Runnable {
+	    public void run() {
+	    	while(true){
+//	        	try {
+//	        		
+//	    		} catch (InterruptedException e) {
+//	    			break;
+//	    		}
+	    	}
+	    }
+    }
 
 
 	/**
@@ -216,7 +229,7 @@ public class HearthUI {
 		shlHearthtracker.layout();
 		Date lastUpdate = new Date(); 
 		
-		hearththread = new Thread(new MessageLoop());
+		hearththread = new Thread(new ReaderThread());
 		hearththread.start();
 		
 		while (!shlHearthtracker.isDisposed()) {

@@ -24,6 +24,7 @@ public class HearthConfigurator {
 		xstream.alias("Scanbox",						HearthReaderSetting.Scanbox.class);
 		xstream.alias("HearthResolutionsList", 			HearthResolutionsList.class);
 		xstream.alias("Resolution", 					HearthResolutionsList.Resolution.class);
+		xstream.alias("Sync", 							HearthSyncLog.class);
 	}
 	
 	public <t> Object load(String path){

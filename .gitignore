@@ -32,3 +32,4 @@ images/backup/
 *.class
 logs/
 configs/update.xml
+configs/sync.xml

@@ -44,7 +44,7 @@ public class HearthReader {
 	
 	boolean paused = false;
 
-	Tracker tracker = null;
+	HearthTracker tracker = null;
 
 	Target rankedImageTarget;
 	Target unrankedImageTarget;
@@ -87,14 +87,14 @@ public class HearthReader {
 	int[] lastScanSubArea = {0,0,0,0};
 	Date lastPing = new Date(new Date().getTime() - pingInterval);
 	
-	public HearthReader(Tracker t){
-		debugMode = false;
+	public HearthReader(HearthTracker t){
+		debugMode = HearthHelper.isDevelopmentEnvironment();
 		tracker = t;
 		init();
 	}
 	
-	public HearthReader (Tracker t, String lang, int resX, int resY, boolean autoping, boolean mode){
-		debugMode = mode;
+	public HearthReader (HearthTracker t, String lang, int resX, int resY, boolean autoping, boolean mode){
+		debugMode = HearthHelper.isDevelopmentEnvironment();
 		tracker = t;
 		oldGameResX = gameResX = resX;
 		oldGameResY = gameResY = resY;
