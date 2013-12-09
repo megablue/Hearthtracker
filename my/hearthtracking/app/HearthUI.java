@@ -971,6 +971,7 @@ public class HearthUI {
 				cal.set(Calendar.YEAR, 			dtMatchesEditDate.getYear());
 				cal.set(Calendar.HOUR_OF_DAY, 	dtMatchesEditTime.getHours());
 				cal.set(Calendar.MINUTE, 		dtMatchesEditTime.getMinutes());
+				cal.set(Calendar.SECOND, 		dtMatchesEditTime.getSeconds());
 				
 				Long starttime = cal.getTime().getTime(); 
 				
@@ -1231,6 +1232,7 @@ public class HearthUI {
 				cal.set(Calendar.YEAR, 			dtArenaDate.getYear());
 				cal.set(Calendar.HOUR_OF_DAY, 	dtArenaTime.getHours());
 				cal.set(Calendar.MINUTE, 		dtArenaTime.getMinutes());
+				cal.set(Calendar.SECOND, 		dtArenaTime.getSeconds());
 				
 				Long time = cal.getTime().getTime(); 
 				
@@ -1312,6 +1314,7 @@ public class HearthUI {
 				cal.set(Calendar.YEAR, 			dtArenaDate.getYear());
 				cal.set(Calendar.HOUR_OF_DAY, 	dtArenaTime.getHours());
 				cal.set(Calendar.MINUTE, 		dtArenaTime.getMinutes());
+				cal.set(Calendar.SECOND, 		dtArenaTime.getSeconds());
 				
 				Long time = cal.getTime().getTime(); 
 				

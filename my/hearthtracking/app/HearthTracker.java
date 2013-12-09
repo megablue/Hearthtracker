@@ -246,8 +246,13 @@ public class HearthTracker {
 		}
 		
 		if(!newdb && dbSetting.version == 1){
+			//Fixed the incorrect type declarations
 			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN SUBMITTED BIGINT");
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN SUBMITTED BIGINT");
+			
+			//tune down precision in order to match datetime widget better
+			stat.execute("UPDATE ARENARESULTS SET timeCaptured=(timeCaptured/1000)*1000");
+			stat.execute("UPDATE MATCHES SET starttime=(starttime/1000)*1000");
 			//save upgraded version
 			dbSetting.version = 2;
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
@@ -266,6 +271,8 @@ public class HearthTracker {
 	
 	public void saveArenaResult(int heroId, int wins, int losses, long time, boolean modified) throws SQLException{
 		int mod = modified ? 1 : 0;
+		time = (long)(time/1000)*1000;
+		
 		String sql = "INSERT INTO arenaResults(heroId, wins, losses, modified, timeCaptured, lastModified)"
 				+"VALUES(" + heroId + "," 
 				+ wins + "," 
@@ -280,8 +287,9 @@ public class HearthTracker {
 	public void saveModifiedArenaResult(int id, int heroId, int wins, int losses, long time) throws SQLException{
 		long modTime = new Date().getTime();
 		String table = "ARENARESULTS";
-		ResultSet rs = this.getMatch(id);
+		ResultSet rs = this.getArenaResult(id);
 		int modified = 0;
+		time = (long)(time/1000)*1000;
 		
 		if(rs.next()){
 			if(rs.getInt("HEROID") != -1 && rs.getInt("HEROID") != heroId){
@@ -312,6 +320,7 @@ public class HearthTracker {
 	public void saveMatchResult(int mode, int myHeroId, int oppHeroId, int goesFirst, int win, long startTime, int totalTime, boolean modified) throws SQLException{
 		String table = "MATCHES";
 		int mod = modified ? 1 : 0;
+		startTime = (long) (startTime / 1000) * 1000; //fix precision issues
 		
 		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, lastModified, mode, modified, totalTime) " 
 					+ "VALUES(" + myHeroId + "," 
@@ -340,11 +349,13 @@ public class HearthTracker {
 		isDirty = true;
 	}
 	
-	public void saveModifiedMatchResult(int id, int mode, int myHeroId, int oppHeroId, int goesFirst, int win, Long startTime, int totalTime) throws SQLException{
+	public void saveModifiedMatchResult(int id, int mode, int myHeroId, int oppHeroId, int goesFirst, int win, long startTime, int totalTime) throws SQLException{
 		long modTime = new Date().getTime();
 		String table = "MATCHES";
 		ResultSet rs = this.getMatch(id);
 		int modified = 0;
+		
+		startTime = (long) (startTime/1000) * 1000;
 		
 		if(rs.next()){
 			if(rs.getInt("MYHEROID") != -1 && rs.getInt("MYHEROID") != myHeroId){
@@ -692,9 +703,25 @@ public class HearthTracker {
 		return rs;
 	}
 	
+	public ResultSet getUnsyncMatchResults() throws SQLException{
+		ResultSet rs;
+		String query = "select * from MATCHES WHERE submitted <= lastmodified ORDER BY ID ASC";
+		rs = stat.executeQuery(query);
+		return rs;
+	}
+	
 	public void updateArenaResultSyncTime(int id, long time) throws SQLException{
 		Statement stat2 = conn.createStatement();
 		String sql = "UPDATE " + "ARENARESULTS"
+				+ " SET submitted=" + time
+				+ " WHERE id=" + id;
+		stat2.execute(sql);
+		stat2.close();
+	}
+	
+	public void updateMatchResultSyncTime(int id, long time) throws SQLException{
+		Statement stat2 = conn.createStatement();
+		String sql = "UPDATE " + "MATCHES"
 				+ " SET submitted=" + time
 				+ " WHERE id=" + id;
 		stat2.execute(sql);

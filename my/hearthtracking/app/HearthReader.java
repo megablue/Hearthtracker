@@ -124,6 +124,18 @@ public class HearthReader {
 		return "Unknown mode";
 	}
 	
+	public static String goesFirstToString(int goesFirst){
+		switch(goesFirst){
+			case 1:
+				return "First";
+	
+			case 0:
+				return "Second";
+		}
+		
+		return "unknown";
+	}
+	
 	public void pause(){
 		paused = true;
 		System.out.println("paused");
@@ -545,7 +557,7 @@ public class HearthReader {
 		
 		return "Unknown";
 	}
-
+	
 	public String getMyHero(){
 		if(exMyHero >= 0 ){
 			return heroesList.getHeroLabel(exMyHero);

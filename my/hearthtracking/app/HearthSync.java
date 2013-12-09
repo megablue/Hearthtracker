@@ -26,8 +26,11 @@ public class HearthSync {
 	
 	private HearthHeroesList heroesList;
 	
+	private int nounce = 0;
+	
 	public HearthSync() {
 		tracker = new HearthTracker();
+		nounce = generateNounce();
 		
 		heroesList = (HearthHeroesList) config.load("." + File.separator + "configs" + File.separator + "heroes.xml");
 		syncLog = (HearthSyncLog) config.load("." + File.separator + "configs" + File.separator + "sync.xml");
@@ -43,6 +46,15 @@ public class HearthSync {
 		}
 		
 		setKey(syncLog.secretKey);
+	}
+	
+	private int generateNounce(){
+	   int range = (32767) + 1;     
+	   return (int)(Math.random() * range) + 1;
+	}
+	
+	private int getNounce(){
+		return nounce++;
 	}
 	
 	private void saveSyncLog(){
@@ -61,7 +73,8 @@ public class HearthSync {
 		String url = baseURL + "key_check/";
 
 		MultipartContent formData = form(
-			data("key", getKey())
+			data("key", getKey()),
+			data("nounce", getNounce() + "")
 		);
 		
 		try {
@@ -93,6 +106,7 @@ public class HearthSync {
 		
 		MultipartContent formData = form(
 			data("key", 			getKey()		+ ""),
+			data("nounce", 			getNounce() 	+ ""),
 			data("cid", 			cid				+ ""),
 			data("myhero", 			myhero			+ ""),
 			data("wins", 			wins 			+ ""),
@@ -108,6 +122,43 @@ public class HearthSync {
 			System.out.println("URL: " + url);
 			JSONResource jsonResult = resty.json(url, formData);
 			tracker.updateArenaResultSyncTime(cid, new Date().getTime());
+			syncLog.lastSync = new Date().getTime();
+			printEJSON(jsonResult);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	public boolean syncMatch(int cid, String myhero, String opphero, 
+			String goes, int win, long starttime, int totaltime, String mode,
+			int deleted, int modified, long lastmodified){
+		
+		String url = baseURL + "match_sync/";
+		
+		MultipartContent formData = form(
+				data("key", 			getKey()		+ ""),
+				data("nounce", 			getNounce() 	+ ""),
+				data("cid", 			cid				+ ""),
+				data("myhero", 			myhero			+ ""),
+				data("opphero", 		opphero			+ ""),
+				data("goes", 			goes			+ ""),
+				data("win", 			win 			+ ""),
+				data("starttime", 		starttime 		+ ""),
+				data("totaltime",		totaltime		+ ""),
+				data("mode", 			mode 			+ ""),
+				data("deleted", 		deleted 		+ ""),
+				data("modified", 		modified 		+ ""),
+				data("lastmodified", 	lastmodified 	+ "")
+		);
+		
+		try {
+			System.out.println("Attempting to sync match result (" + cid + ")");
+			System.out.println("URL: " + url);
+			JSONResource jsonResult = resty.json(url, formData);
+			tracker.updateMatchResultSyncTime(cid, new Date().getTime());
 			syncLog.lastSync = new Date().getTime();
 			printEJSON(jsonResult);
 		} catch (Throwable e) {
@@ -148,6 +199,46 @@ public class HearthSync {
 				} else {
 					System.out.println("Failed to sync arena result ( " + rs.getInt("id") + " )");
 					errorCount++;
+				}
+				
+				if(errorCount > 10){
+					break;
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			ResultSet rs = tracker.getUnsyncMatchResults();
+
+			while(rs.next()){
+				recordCount++;
+					
+				success = syncMatch(
+					rs.getInt("id"),
+					heroesList.getHeroLabel(rs.getInt("myheroid")),
+					heroesList.getHeroLabel(rs.getInt("oppheroid")),
+					HearthReader.goesFirstToString(rs.getInt("goesfirst")),
+					rs.getInt("win"),
+					rs.getLong("starttime"),
+					rs.getInt("totaltime"),
+					HearthReader.gameModeToString(rs.getInt("mode")),
+					rs.getInt("deleted"),
+					rs.getInt("modified"),
+					rs.getLong("lastmodified")
+				);
+				
+				if(success){
+					syncLog.lastSync = new Date().getTime();
+					saveSyncLog();
+				} else {
+					System.out.println("Failed to sync arena result ( " + rs.getInt("id") + " )");
+					errorCount++;
+				}
+				
+				if(errorCount > 10){
+					break;
 				}
 			}
 		} catch (SQLException e) {
