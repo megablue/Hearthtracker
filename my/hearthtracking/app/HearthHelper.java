@@ -231,5 +231,5 @@ public class HearthHelper {
 	    } else {
 	      return Math.ceil(dayDiff / 7) + " weeks ago";
 	    }
-	  }
+	 }
 }

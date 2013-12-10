@@ -703,11 +703,25 @@ public class HearthTracker {
 		return rs;
 	}
 	
+	public int getUnsyncArenaResultsCount() throws SQLException{
+		ResultSet rs;
+		String query = "select COUNT(*) from ARENARESULTS WHERE submitted <= lastmodified ORDER BY ID ASC";
+		rs = stat.executeQuery(query);
+		return rs.next() ? rs.getInt("COUNT(*)") : 0;
+	}
+	
 	public ResultSet getUnsyncMatchResults() throws SQLException{
 		ResultSet rs;
 		String query = "select * from MATCHES WHERE submitted <= lastmodified ORDER BY ID ASC";
 		rs = stat.executeQuery(query);
 		return rs;
+	}
+	
+	public int getUnsyncMatchResultsCount() throws SQLException{
+		ResultSet rs;
+		String query = "select COUNT(*) from MATCHES WHERE submitted <= lastmodified ORDER BY ID ASC";
+		rs = stat.executeQuery(query);
+		return rs.next() ? rs.getInt("COUNT(*)") : 0;
 	}
 	
 	public void updateArenaResultSyncTime(int id, long time) throws SQLException{
@@ -719,11 +733,42 @@ public class HearthTracker {
 		stat2.close();
 	}
 	
+	public void updateArenaResultSyncTime(int[] ids, long time) throws SQLException{
+		String ins = "";
+		Statement stat2 = conn.createStatement();
+		
+		for(int i = 0; i < ids.length; i++){
+			ins += (i!=ids.length-1) ? ids[i] + ", " : ids[i];
+		}
+		
+		String sql = "UPDATE " + "ARENARESULTS"
+				+ " SET submitted=" + time
+				+ " WHERE id IN(" + ins + ")";
+		
+		stat2.execute(sql);
+		stat2.close();
+	}
+	
 	public void updateMatchResultSyncTime(int id, long time) throws SQLException{
 		Statement stat2 = conn.createStatement();
 		String sql = "UPDATE " + "MATCHES"
 				+ " SET submitted=" + time
 				+ " WHERE id=" + id;
+		stat2.execute(sql);
+		stat2.close();
+	}
+	
+	public void updateMatchResultSyncTime(int[] ids, long time) throws SQLException{
+		String ins = "";
+		Statement stat2 = conn.createStatement();
+		
+		for(int i = 0; i < ids.length; i++){
+			ins += (i!=ids.length-1) ? ids[i] + ", " : ids[i];
+		}
+		
+		String sql = "UPDATE " + "MATCHES"
+				+ " SET submitted=" + time
+				+ " WHERE id IN(" + ins + ")";
 		stat2.execute(sql);
 		stat2.close();
 	}

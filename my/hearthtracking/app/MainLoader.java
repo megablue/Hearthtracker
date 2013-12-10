@@ -21,9 +21,9 @@ public class MainLoader {
 		
 		HearthSync sync = new HearthSync();
 		
-		if(sync.checkAccessKey()){
-			sync.syncAll();
-		}
+		//sync.checkAccessKey()
+		sync.syncArenaBatch();
+		sync.syncMatchBatch();
 				
 		HearthUI.main(args);
 	}
