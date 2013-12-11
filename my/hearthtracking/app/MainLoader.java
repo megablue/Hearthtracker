@@ -19,11 +19,10 @@ public class MainLoader {
 			}		
 		}
 		
-		HearthSync sync = new HearthSync();
-		
-		//sync.checkAccessKey()
-		sync.syncArenaBatch();
-		sync.syncMatchBatch();
+//		HearthSync sync = new HearthSync();
+//		sync.checkAccessKey();
+//		sync.syncArenaBatch();
+//		sync.syncMatchBatch();
 				
 		HearthUI.main(args);
 	}

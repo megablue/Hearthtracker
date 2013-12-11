@@ -284,13 +284,12 @@ public class HearthTracker {
 		isDirty = true;
 	}
 	
-	public void saveModifiedArenaResult(int id, int heroId, int wins, int losses, long time) throws SQLException{
+	public void saveModifiedArenaResult(int id, int heroId, int wins, int losses) throws SQLException{
 		long modTime = new Date().getTime();
 		String table = "ARENARESULTS";
 		ResultSet rs = this.getArenaResult(id);
 		int modified = 0;
-		time = (long)(time/1000)*1000;
-		
+	
 		if(rs.next()){
 			if(rs.getInt("HEROID") != -1 && rs.getInt("HEROID") != heroId){
 				modified = 1;
@@ -309,7 +308,6 @@ public class HearthTracker {
 					+ " SET heroid=" +  heroId + ", "
 					+ " wins=" + wins + ", "
 					+ " losses=" + losses + ", "
-					+ " timeCaptured='" + time + "', "
 					+ " lastModified=" + modTime + ", "
 					+ " modified=" + modified
 					+ " WHERE id=" + id;
@@ -349,13 +347,11 @@ public class HearthTracker {
 		isDirty = true;
 	}
 	
-	public void saveModifiedMatchResult(int id, int mode, int myHeroId, int oppHeroId, int goesFirst, int win, long startTime, int totalTime) throws SQLException{
+	public void saveModifiedMatchResult(int id, int mode, int myHeroId, int oppHeroId, int goesFirst, int win, int totalTime) throws SQLException{
 		long modTime = new Date().getTime();
 		String table = "MATCHES";
 		ResultSet rs = this.getMatch(id);
 		int modified = 0;
-		
-		startTime = (long) (startTime/1000) * 1000;
 		
 		if(rs.next()){
 			if(rs.getInt("MYHEROID") != -1 && rs.getInt("MYHEROID") != myHeroId){
@@ -373,7 +369,6 @@ public class HearthTracker {
 					+ " mode=" + mode + ", "
 					+ " goesFirst=" + goesFirst + ", "
 					+ " win=" + win + ", "
-					+ " startTime='" + startTime + "', "
 					+ " totalTime=" + totalTime + ", "
 					+ " lastmodified=" + modTime + ", "
 					+ " modified=" + modified

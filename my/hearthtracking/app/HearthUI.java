@@ -373,7 +373,7 @@ public class HearthUI {
 		tblclmnVs.setText("Vs");
 		
 		TableColumn tblclmnMode = new TableColumn(matchesTable, SWT.NONE);
-		tblclmnMode.setWidth(55);
+		tblclmnMode.setWidth(68);
 		tblclmnMode.setText("Mode");
 		
 		TableColumn tblclmnResult = new TableColumn(matchesTable, SWT.NONE);
@@ -385,7 +385,6 @@ public class HearthUI {
 		tblclmnOn.setText("On");
 		
 		tabFolder_1 = new TabFolder(sashForm_1, SWT.NONE);
-		sashForm_1.setWeights(new int[] {264, 331});
 		
 		tbtmMatchesEdit = new TabItem(tabFolder_1, SWT.NONE);
 		tbtmMatchesEdit.setText("&Edit");
@@ -431,7 +430,6 @@ public class HearthUI {
 		
 		TabItem tbtmArenaNew = new TabItem(tabFolder_2, 0);
 		tbtmArenaNew.setText("&New");
-		sashForm_2.setWeights(new int[] {220, 375});
 			
 		TabItem tbtmPerferences = new TabItem(tabFolder, SWT.NONE);
 		tbtmPerferences.setText("&Preferences");
@@ -701,10 +699,14 @@ public class HearthUI {
 
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
+		sashForm_1.setWeights(new int[] {277, 318});
+		sashForm_2.setWeights(new int[] {277, 318});
+		
 		createMatchesEditForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesEdit);
 		createMatchesNewForm(new Composite(tabFolder_1, SWT.NONE), 	tbtmMatchesNew);
 		createArenaEditForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit);
 		createArenaNewForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaNew);
+		
 		
 		poppulateScannerOptions();
 		poppulateGameLangs();
@@ -821,9 +823,11 @@ public class HearthUI {
 		cbMatchesEditResult.setItems(new String[] {"Win", "Loss"});
 		
 		final DateTime dtMatchesEditDate = new DateTime(composite_4, SWT.NONE);
+		dtMatchesEditDate.setEnabled(false);
 		dtMatchesEditDate.setBounds(69, 211, 80, 24);
 		
 		final DateTime dtMatchesEditTime = new DateTime(composite_4, SWT.TIME);
+		dtMatchesEditTime.setEnabled(false);
 		dtMatchesEditTime.setBounds(169, 211, 86, 24);
 		
 		final Spinner spMatchesEditMinute = new Spinner(composite_4, SWT.BORDER);
@@ -978,7 +982,7 @@ public class HearthUI {
 				try {
 					btnMatchesEditSave.setEnabled(false);
 					btnMatchesEditSave.setText("Saving...");
-					tracker.saveModifiedMatchResult(id, gMode, myheroid, oppheroid, goes, result, starttime, totaltime);
+					tracker.saveModifiedMatchResult(id, gMode, myheroid, oppheroid, goes, result, totaltime);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -1106,38 +1110,40 @@ public class HearthUI {
 		lblID.setData("id", 0);
 		
 		final Combo cbArenaEditHero = new Combo(composite_4, SWT.READ_ONLY);
-		cbArenaEditHero.setBounds(134, 38, 89, 23);
+		cbArenaEditHero.setBounds(102, 31, 89, 23);
 		
 		for(int i = -1; i < heroesList.getTotal(); i++){
 			cbArenaEditHero.add(heroesList.getHeroLabel(i));
 		}
 		
 		final DateTime dtArenaDate = new DateTime(composite_4, SWT.NONE);
-		dtArenaDate.setBounds(91, 132, 80, 24);
+		dtArenaDate.setEnabled(false);
+		dtArenaDate.setBounds(59, 125, 80, 24);
 		
 		final DateTime dtArenaTime = new DateTime(composite_4, SWT.TIME);
-		dtArenaTime.setBounds(188, 132, 86, 24);
+		dtArenaTime.setEnabled(false);
+		dtArenaTime.setBounds(156, 125, 86, 24);
 		
 		final Button btnArenaSave = new Button(composite_4, SWT.NONE);
 		btnArenaSave.setEnabled(false);
-		btnArenaSave.setBounds(91, 310, 44, 25);
+		btnArenaSave.setBounds(59, 303, 44, 25);
 		btnArenaSave.setText("&Save");
 		
 		final Button btnArenaDelete = new Button(composite_4, SWT.NONE);
 		btnArenaDelete.setEnabled(false);
-		btnArenaDelete.setBounds(229, 310, 45, 25);
+		btnArenaDelete.setBounds(197, 303, 45, 25);
 		btnArenaDelete.setText("&Delete");
 		
 		final Spinner spEditArenaWins = new Spinner(composite_4, SWT.BORDER);
 		spEditArenaWins.setMaximum(9);
-		spEditArenaWins.setBounds(113, 85, 44, 22);
+		spEditArenaWins.setBounds(81, 78, 44, 22);
 		
 		final Spinner spEditArenaLosses = new Spinner(composite_4, SWT.BORDER);
 		spEditArenaLosses.setMaximum(3);
-		spEditArenaLosses.setBounds(203, 85, 44, 22);
+		spEditArenaLosses.setBounds(171, 78, 44, 22);
 		
 		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
-		lblNewLabel_3.setBounds(177, 88, 20, 15);
+		lblNewLabel_3.setBounds(145, 81, 20, 15);
 		lblNewLabel_3.setText("-");
 		
 		
@@ -1155,7 +1161,7 @@ public class HearthUI {
 				}
 			}
 		});
-		btnArenaConfirm.setBounds(151, 176, 65, 16);
+		btnArenaConfirm.setBounds(119, 169, 65, 16);
 		btnArenaConfirm.setText("&Confirm");
 		
 		
@@ -1239,7 +1245,7 @@ public class HearthUI {
 				try {
 					btnArenaSave.setEnabled(false);
 					btnArenaSave.setText("Saving...");
-					tracker.saveModifiedArenaResult(id, heroid, wins, losses, time);
+					tracker.saveModifiedArenaResult(id, heroid, wins, losses);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -1273,32 +1279,32 @@ public class HearthUI {
 		tabitem.setControl(composite_4);
 		composite_4.setLayout(null);
 		final Combo cbArenaEditHero = new Combo(composite_4, SWT.READ_ONLY);
-		cbArenaEditHero.setBounds(134, 38, 89, 23);
+		cbArenaEditHero.setBounds(113, 43, 89, 23);
 		
 		for(int i = -1; i < heroesList.getTotal(); i++){
 			cbArenaEditHero.add(heroesList.getHeroLabel(i));
 		}
 		
 		final DateTime dtArenaDate = new DateTime(composite_4, SWT.NONE);
-		dtArenaDate.setBounds(91, 132, 80, 24);
+		dtArenaDate.setBounds(70, 137, 80, 24);
 		
 		final DateTime dtArenaTime = new DateTime(composite_4, SWT.TIME);
-		dtArenaTime.setBounds(188, 132, 86, 24);
+		dtArenaTime.setBounds(167, 137, 86, 24);
 		
 		final Button btnArenaSave = new Button(composite_4, SWT.NONE);
-		btnArenaSave.setBounds(150, 310, 44, 25);
+		btnArenaSave.setBounds(139, 310, 44, 25);
 		btnArenaSave.setText("&Save");
 
 		final Spinner spEditArenaWins = new Spinner(composite_4, SWT.BORDER);
 		spEditArenaWins.setMaximum(9);
-		spEditArenaWins.setBounds(113, 85, 44, 22);
+		spEditArenaWins.setBounds(92, 90, 44, 22);
 		
 		final Spinner spEditArenaLosses = new Spinner(composite_4, SWT.BORDER);
 		spEditArenaLosses.setMaximum(3);
-		spEditArenaLosses.setBounds(203, 85, 44, 22);
+		spEditArenaLosses.setBounds(182, 90, 44, 22);
 		
 		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
-		lblNewLabel_3.setBounds(177, 88, 20, 15);
+		lblNewLabel_3.setBounds(156, 93, 20, 15);
 		lblNewLabel_3.setText("-");
 	
 		btnArenaSave.addSelectionListener(new SelectionAdapter() {

@@ -34,20 +34,20 @@
     <outer-class reference="../.."/>
   </lossesLabelScanbox>
   <rankedScanbox>
-    <xOffset>1200</xOffset>
-    <yOffset>100</yOffset>
-    <width>120</width>
-    <height>120</height>
+    <xOffset>1118</xOffset>
+    <yOffset>112</yOffset>
+    <width>80</width>
+    <height>80</height>
     <imgfile>ranked-mode.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
     <outer-class reference="../.."/>
   </rankedScanbox>
   <unrankedScanbox>
-    <xOffset>1200</xOffset>
-    <yOffset>100</yOffset>
-    <width>120</width>
-    <height>120</height>
+    <xOffset>1118</xOffset>
+    <yOffset>112</yOffset>
+    <width>80</width>
+    <height>80</height>
     <imgfile>unranked-mode.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
@@ -210,6 +210,36 @@
       <width>200</width>
       <height>200</height>
       <imgfile>9.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.9</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>300</xOffset>
+      <yOffset>190</yOffset>
+      <width>200</width>
+      <height>200</height>
+      <imgfile>10.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.9</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>300</xOffset>
+      <yOffset>190</yOffset>
+      <width>200</width>
+      <height>200</height>
+      <imgfile>11.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.9</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>300</xOffset>
+      <yOffset>190</yOffset>
+      <width>200</width>
+      <height>200</height>
+      <imgfile>12.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
       <outer-class reference="../../.."/>

@@ -285,7 +285,7 @@ public class HearthReader {
 		
 	private void initGameLang(){		
 		//language dependent
-		winsImageTarget = new ImageTarget[10];
+		winsImageTarget = new ImageTarget[readerSettings.winsScanboxes.length];
 		
 		for(int i = 0; i < readerSettings.winsScanboxes.length; i++){
 			winsImageTarget[i] =  this.prepareImageTarget(readerSettings.winsScanboxes[i]);
@@ -513,7 +513,7 @@ public class HearthReader {
 			}
 		}
 				
-		if(foundWins && (wins == 9 || losses == 3) && (previousWins != wins || previousLosses != losses) ){
+		if(foundWins && (wins == (winsImageTarget.length - 1) || losses == 3) && (previousWins != wins || previousLosses != losses) ){
 
 			try {
 				System.out.println("Saving arena result...");

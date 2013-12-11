@@ -3,7 +3,6 @@ package my.hearthtracking.app;
 import static us.monoid.web.Resty.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -328,9 +327,9 @@ public class HearthSync {
 	}
 		
 	public void syncArenaBatch(){
-		boolean success = false;
+		//boolean success = false;
 		int recordCount = 0;
-		Date start = new Date();
+		//Date start = new Date();
 		ArenaResult[] ar = new ArenaResult[BATCH_SIZE];
 		int[] resultIds = new int[BATCH_SIZE];
 		int index = -1;
@@ -397,9 +396,9 @@ public class HearthSync {
 	}
 	
 	public void syncMatchBatch(){
-		boolean success = false;
+		//boolean success = false;
 		int recordCount = 0;
-		Date start = new Date();
+		//Date start = new Date();
 		MatchResult[] ar = new MatchResult[BATCH_SIZE];
 		int[] resultIds = new int[BATCH_SIZE];
 		int index = -1;
@@ -483,7 +482,7 @@ public class HearthSync {
 				data("json", jsondata)
 			);
 			
-			JSONResource jsonResult = resty.json(url, formData);
+			resty.json(url, formData);
 		} catch (Throwable e) {
 			System.out.println(e.getMessage());
 		}

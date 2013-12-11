@@ -13,10 +13,10 @@ public class HearthReaderSetting {
 	public Scanbox lossesLabelScanbox	= new Scanbox("losses-label.png", 	250, 510, 160, 150);
 	
 	//Ranked mode scan boxes
-	public Scanbox rankedScanbox		= new Scanbox("ranked-mode.png", 	1200, 100, 120, 120);
+	public Scanbox rankedScanbox		= new Scanbox("ranked-mode.png", 	1118, 112, 80, 80);
 
 	//Play mode scan boxes
-	public Scanbox unrankedScanbox		= new Scanbox("unranked-mode.png", 	1200, 100, 120, 120);
+	public Scanbox unrankedScanbox		= new Scanbox("unranked-mode.png", 	1118, 112, 80, 80);
 
 	//practice mode scan boxes
 	public Scanbox practiceScanbox		= new Scanbox("practice-mode.png", 	1200, 100, 120, 120);
@@ -40,6 +40,9 @@ public class HearthReaderSetting {
 			new Scanbox("7.png", 		300, 190, 200, 200, 1f, 0.9f),
 			new Scanbox("8.png", 		300, 190, 200, 200, 1f, 0.9f),
 			new Scanbox("9.png", 		300, 190, 200, 200, 1f, 0.9f),
+			new Scanbox("10.png", 		300, 190, 200, 200, 1f, 0.9f),
+			new Scanbox("11.png", 		300, 190, 200, 200, 1f, 0.9f),
+			new Scanbox("12.png", 		300, 190, 200, 200, 1f, 0.9f),
 	};
 	
 	public Scanbox[] lossesScanboxes  = { 
