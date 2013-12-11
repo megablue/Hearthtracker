@@ -110,8 +110,8 @@ public class HearthUI {
 	private static Image[] heroImgs;
 	private Composite composite_9;
 
-	public static int[] version = {1, 1, 1};
-	public static int experimental = 1;
+	public static int[] version = {1, 1, 2};
+	public static int experimental = 0;
 	private Text text;
 	private Composite composite_11;
 	
