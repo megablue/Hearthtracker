@@ -114,6 +114,8 @@ public class HearthUI {
 	public static int experimental = 0;
 	private Text text;
 	private Composite composite_11;
+	private Spinner spXOffset;
+	private Spinner spYOffset;
 	
 	/**
 	 * Launch the application.
@@ -442,80 +444,102 @@ public class HearthUI {
 		grpGeneral.setText("General");
 		grpGeneral.setLayout(null);
 		GridData gd_grpGeneral = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_grpGeneral.heightHint = 159;
+		gd_grpGeneral.heightHint = 134;
 		gd_grpGeneral.widthHint = 585;
 		grpGeneral.setLayoutData(gd_grpGeneral);
 		
 		Label lblNewLabel_1 = new Label(grpGeneral, SWT.NONE);
-		lblNewLabel_1.setBounds(153, 68, 92, 15);
+		lblNewLabel_1.setBounds(134, 25, 92, 15);
 		lblNewLabel_1.setText("Game Language");
 		
 		cmbGameLang = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
-		cmbGameLang.setBounds(251, 65, 150, 21);
+		cmbGameLang.setBounds(232, 22, 150, 21);
 		cmbGameLang.setEditable(false);
 		cmbGameLang.setItems(new String[] {});
 		cmbGameLang.setVisibleItemCount(8);
 		
 		Link link = new Link(grpGeneral, SWT.NONE);
-		link.setBounds(168, 96, 71, 15);
+		link.setBounds(149, 53, 71, 15);
 		link.setText("<a>Web App Key</a>");
 		
 		text = new Text(grpGeneral, SWT.BORDER | SWT.PASSWORD);
-		text.setBounds(251, 92, 150, 21);
+		text.setBounds(232, 49, 150, 21);
 		text.setEnabled(false);
 		
 		Group grpAdvanced = new Group(composite_1, SWT.NONE);
 		grpAdvanced.setText("Advanced");
 		grpAdvanced.setLayout(null);
 		GridData gd_grpAdvanced = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_grpAdvanced.heightHint = 174;
+		gd_grpAdvanced.heightHint = 194;
 		gd_grpAdvanced.widthHint = 585;
 		grpAdvanced.setLayoutData(gd_grpAdvanced);
 		
 		Label lblDetect = new Label(grpAdvanced, SWT.NONE);
-		lblDetect.setBounds(95, 46, 156, 15);
+		lblDetect.setBounds(71, 21, 156, 15);
 		lblDetect.setText("Auto Detect Game Resolution");
 		
 		btnAutoDetectGameRes = new Button(grpAdvanced, SWT.CHECK);
-		btnAutoDetectGameRes.setBounds(263, 45, 183, 16);
+		btnAutoDetectGameRes.setBounds(239, 20, 183, 16);
 		btnAutoDetectGameRes.setToolTipText("It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.");
 		btnAutoDetectGameRes.setText("Enable");
 		
 		Label lblGameResolution = new Label(grpAdvanced, SWT.NONE);
-		lblGameResolution.setBounds(48, 73, 211, 15);
+		lblGameResolution.setBounds(24, 48, 211, 15);
 		lblGameResolution.setText("Game Resolution (if auto detect failed)");
 		
 		cmbGameRes = new CCombo(grpAdvanced, SWT.BORDER | SWT.READ_ONLY);
-		cmbGameRes.setBounds(263, 67, 150, 21);
+		cmbGameRes.setBounds(239, 42, 150, 21);
 		cmbGameRes.setEditable(false);
 		
 		Label lblNewLabel = new Label(grpAdvanced, SWT.NONE);
-		lblNewLabel.setBounds(188, 128, 60, 15);
+		lblNewLabel.setBounds(167, 175, 60, 15);
 		lblNewLabel.setText("Scan Speed");
 		
 		Label lblNewLabel_2 = new Label(grpAdvanced, SWT.NONE);
-		lblNewLabel_2.setBounds(206, 101, 42, 15);
+		lblNewLabel_2.setBounds(185, 148, 42, 15);
 		lblNewLabel_2.setText("Scanner");
 		
 		btnEnableScanner = new Button(grpAdvanced, SWT.CHECK);
-		btnEnableScanner.setBounds(262, 100, 56, 16);
+		btnEnableScanner.setBounds(241, 147, 56, 16);
 		btnEnableScanner.setSelection(true);
 		btnEnableScanner.setText("Enable");
 		
 		Button button = new Button(grpAdvanced, SWT.RADIO);
-		button.setBounds(262, 127, 42, 16);
+		button.setBounds(241, 174, 42, 16);
 		btnScanSpeed[0] = button;
 		button.setText("Fast");
 		
 		Button button_1 = new Button(grpAdvanced, SWT.RADIO);
-		button_1.setBounds(309, 127, 85, 16);
+		button_1.setBounds(288, 174, 85, 16);
 		btnScanSpeed[1] = button_1;
 		button_1.setText("Intermediate");
 		
 		Button button_2 = new Button(grpAdvanced, SWT.RADIO);
-		button_2.setBounds(400, 127, 56, 16);
+		button_2.setBounds(379, 174, 56, 16);
 		btnScanSpeed[2] = button_2;
 		button_2.setText("Slow");
+		
+		Label lblNewLabel_11 = new Label(grpAdvanced, SWT.NONE);
+		lblNewLabel_11.setBounds(10, 78, 225, 15);
+		lblNewLabel_11.setText("Override Offsets (Multi monitors dirty fix)");
+		
+		spXOffset = new Spinner(grpAdvanced, SWT.BORDER);
+		spXOffset.setMaximum(10240);
+		spXOffset.setMinimum(-10240);
+		spXOffset.setBounds(288, 75, 75, 22);
+		
+		spYOffset = new Spinner(grpAdvanced, SWT.BORDER);
+		spYOffset.setMaximum(10240);
+		spYOffset.setMinimum(-10240);
+		spYOffset.setBounds(442, 75, 75, 22);
+		
+		Label lblNewLabel_12 = new Label(grpAdvanced, SWT.NONE);
+		lblNewLabel_12.setBounds(241, 78, 42, 15);
+		lblNewLabel_12.setText("X offset");
+		
+		Label lblYOffset = new Label(grpAdvanced, SWT.NONE);
+		lblYOffset.setText("Y offset");
+		lblYOffset.setBounds(398, 78, 42, 15);
 		
 		TabItem tbtmDiagnostics = new TabItem(tabFolder, SWT.NONE);
 		tbtmDiagnostics.setText("D&iagnostics");
@@ -707,7 +731,7 @@ public class HearthUI {
 		createArenaEditForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit);
 		createArenaNewForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaNew);
 		
-		
+		poppulatesOffsetOptions();
 		poppulateScannerOptions();
 		poppulateGameLangs();
 		poppulateResolutions();
@@ -1428,6 +1452,29 @@ public class HearthUI {
 			}
 		});
 		
+	}
+	
+	private void poppulatesOffsetOptions(){
+		hearth.setXOffetOverride(setting.xOffset);
+		hearth.setYOffetOverride(setting.yOffset);
+		
+		spXOffset.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setting.xOffset = spXOffset.getSelection();
+				hearth.setXOffetOverride(setting.xOffset);
+				savePreferences();
+			}
+		});
+		
+		spYOffset.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setting.yOffset = spYOffset.getSelection();
+				hearth.setYOffetOverride(setting.yOffset);
+				savePreferences();
+			}
+		});
 	}
 	
 	private void poppulateScannerOptions(){

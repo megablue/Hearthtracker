@@ -20,7 +20,9 @@ public class HearthReader {
 	boolean debugMode = true;
 	boolean inited = false;
 	boolean gameLangInited = false;
-
+	int xOffetOverrideVal = 0;
+	int yOffsetOverrideVal = 0;
+	
 	int previousWins = -1;
 	int wins = -1;
 	
@@ -160,6 +162,22 @@ public class HearthReader {
 	public void setAutoGameRes(boolean flag){
 		autoDetectGameRes = flag;
 		this.initGameScanner();
+	}
+	
+	public void setXOffetOverride(int val){
+		xOffetOverrideVal = val;
+	}
+	
+	public int getXOffsetOverride(){
+		return xOffetOverrideVal;
+	}
+	
+	public void setYOffetOverride(int val){
+		yOffsetOverrideVal = val;
+	}
+	
+	public int getYOffetOverride(){
+		return yOffsetOverrideVal;
 	}
 	
 	private void init(){
@@ -330,16 +348,16 @@ public class HearthReader {
 		int[] winRect = HearthHelper.getHearthstonePosition();
 		int[] gameRes = this.getGameResolution();
 		
-		lastScanArea[0]	= winRect[0];
-		lastScanArea[1]	= winRect[1];
+		lastScanArea[0]	= winRect[0] + this.getXOffsetOverride();
+		lastScanArea[1]	= winRect[1] + this.getYOffetOverride();
 		lastScanArea[2]	= gameRes[0];
 		lastScanArea[3]	= gameRes[1];
 		
-		lastScanSubArea[0] = x = (int) (scaling * sb.xOffset) + this.getBoardX();
-		lastScanSubArea[1] = y = (int) (scaling * sb.yOffset) + this.getBoardY();
+		lastScanSubArea[0] = x = ((int) (scaling * sb.xOffset) + this.getBoardX()) + this.getXOffsetOverride();
+		lastScanSubArea[1] = y = ((int) (scaling * sb.yOffset) + this.getBoardY()) + this.getYOffetOverride();
 		lastScanSubArea[2] = w = (int) (sb.width * scaling);
 		lastScanSubArea[3] = h = (int) (sb.height * scaling);
-		
+					
 		ScreenRegion region = new DesktopScreenRegion(x, y, w, h);
 		ScreenRegion foundRegion;
 
@@ -783,13 +801,13 @@ public class HearthReader {
 		int[] winPos = HearthHelper.getHearthstonePosition();
 		int xOffset = winPos[0];
 		int[] gameRes = this.getGameResolution();
-		int relativeX = xOffset + (gameRes[0] - this.getBoardWidth()) / 2;
-		return relativeX;
+		int absoluteX = xOffset + (gameRes[0] - this.getBoardWidth()) / 2;		
+		return absoluteX;
 	}
 	
 	public int getBoardY(){
 		int[] winPos = HearthHelper.getHearthstonePosition();
-		int yOffset = winPos[1];
+		int yOffset = winPos[1];		
 		return yOffset;
 	}
 	
@@ -824,13 +842,15 @@ public class HearthReader {
 	public void pingHearthstone(){
 		Canvas canvas = new DesktopCanvas();
 		int lineWidth = 10;
-		ScreenRegion region = new DesktopScreenRegion(lastScanArea[0],
+		ScreenRegion region = new DesktopScreenRegion(
+				lastScanArea[0],
 				lastScanArea[1], 
 				lastScanArea[2] - lineWidth / 2, 
 				lastScanArea[3] - lineWidth / 2
 		);
 		
-		ScreenRegion subregion = new DesktopScreenRegion(lastScanSubArea[0],
+		ScreenRegion subregion = new DesktopScreenRegion(
+				lastScanSubArea[0],
 				lastScanSubArea[1], 
 				lastScanSubArea[2] - lineWidth / 2, 
 				lastScanSubArea[3] - lineWidth / 2

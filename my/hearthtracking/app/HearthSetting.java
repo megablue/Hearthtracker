@@ -9,6 +9,8 @@ public class HearthSetting {
 	boolean autoPing = true;
 	boolean autoRes = true;
 	int settingVer = 0;
+	int xOffset = 0;
+	int yOffset = 0;
 	
 	public boolean upgrade(){
 		boolean upgraded = false;
