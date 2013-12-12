@@ -9,8 +9,7 @@ public class HearthReaderSetting {
 	public Scanbox menuScanbox 			= new Scanbox("quest.png", 			190, 850, 200, 200);
 	
 	//Arena related scan boxes
-	public Scanbox winsLabelScanbox		= new Scanbox("wins-label.png", 	480, 440, 140, 140);
-	public Scanbox lossesLabelScanbox	= new Scanbox("losses-label.png", 	250, 510, 160, 150);
+	public Scanbox arenaLeafScanbox		= new Scanbox("arena-leaf.png", 	435, 340, 100, 100);
 	
 	//Ranked mode scan boxes
 	public Scanbox rankedScanbox		= new Scanbox("ranked-mode.png", 	1118, 112, 80, 80);
@@ -26,8 +25,8 @@ public class HearthReaderSetting {
 	
 	public Scanbox goFirstScanbox 		= new Scanbox("go-first.png", 		910, 550, 400, 150);
 	public Scanbox goSecondScanbox 		= new Scanbox("go-second.png", 		910, 550, 400, 150);
-	public Scanbox victoryScanbox 		= new Scanbox("victory.png", 		510, 550, 400, 150);
-	public Scanbox defeatScanbox 		= new Scanbox("defeat.png", 		510, 550, 400, 150);
+	public Scanbox victoryScanbox 		= new Scanbox("victory.png", 		440, 500, 100, 100);
+	public Scanbox defeatScanbox 		= new Scanbox("defeat.png", 		510, 474, 100, 100);
 	
 	public Scanbox[] winsScanboxes	= {
 			new Scanbox("0.png",		300, 190, 200, 200, 1f, 0.9f),

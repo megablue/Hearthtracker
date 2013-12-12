@@ -13,26 +13,16 @@
     <matchQuality>-1.0</matchQuality>
     <outer-class reference="../.."/>
   </menuScanbox>
-  <winsLabelScanbox>
-    <xOffset>480</xOffset>
-    <yOffset>440</yOffset>
-    <width>140</width>
-    <height>140</height>
-    <imgfile>wins-label.png</imgfile>
+  <arenaLeafScanbox>
+    <xOffset>435</xOffset>
+    <yOffset>340</yOffset>
+    <width>100</width>
+    <height>100</height>
+    <imgfile>arena-leaf.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
     <outer-class reference="../.."/>
-  </winsLabelScanbox>
-  <lossesLabelScanbox>
-    <xOffset>250</xOffset>
-    <yOffset>510</yOffset>
-    <width>160</width>
-    <height>150</height>
-    <imgfile>losses-label.png</imgfile>
-    <scale>1.0</scale>
-    <matchQuality>-1.0</matchQuality>
-    <outer-class reference="../.."/>
-  </lossesLabelScanbox>
+  </arenaLeafScanbox>
   <rankedScanbox>
     <xOffset>1118</xOffset>
     <yOffset>112</yOffset>
@@ -94,10 +84,10 @@
     <outer-class reference="../.."/>
   </goSecondScanbox>
   <victoryScanbox>
-    <xOffset>510</xOffset>
-    <yOffset>550</yOffset>
-    <width>400</width>
-    <height>150</height>
+    <xOffset>440</xOffset>
+    <yOffset>500</yOffset>
+    <width>100</width>
+    <height>100</height>
     <imgfile>victory.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
@@ -105,9 +95,9 @@
   </victoryScanbox>
   <defeatScanbox>
     <xOffset>510</xOffset>
-    <yOffset>550</yOffset>
-    <width>400</width>
-    <height>150</height>
+    <yOffset>474</yOffset>
+    <width>100</width>
+    <height>100</height>
     <imgfile>defeat.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>

@@ -17,7 +17,7 @@ public class HearthReader {
 	public static final int UNRANKEDMODE = 3;
 	public static final int CHALLENGEMODE = 4;
 	public static final int PRACTICEMODE = 5;
-	boolean debugMode = true;
+	boolean debugMode = false;
 	boolean inited = false;
 	boolean gameLangInited = false;
 	int xOffetOverrideVal = 0;
@@ -55,8 +55,7 @@ public class HearthReader {
 	Target questImageTarget;
 	Target checkedImageTarget;
 	Target uncheckedImageTarget;
-	Target lossesLabelImageTarget;
-	Target winsLabelImageTarget;
+	Target arenaLeafImageTarget;
 	Target goFirstImageTarget;
 	Target goSecondImageTarget;
 	Target victoryImageTarget;
@@ -90,13 +89,13 @@ public class HearthReader {
 	Date lastPing = new Date(new Date().getTime() - pingInterval);
 	
 	public HearthReader(HearthTracker t){
-		debugMode = HearthHelper.isDevelopmentEnvironment();
+		//debugMode = HearthHelper.isDevelopmentEnvironment();
 		tracker = t;
 		init();
 	}
 	
-	public HearthReader (HearthTracker t, String lang, int resX, int resY, boolean autoping, boolean mode){
-		debugMode = HearthHelper.isDevelopmentEnvironment();
+	public HearthReader (HearthTracker t, String lang, int resX, int resY, boolean autoping){
+		//debugMode = HearthHelper.isDevelopmentEnvironment();
 		tracker = t;
 		oldGameResX = gameResX = resX;
 		oldGameResY = gameResY = resY;
@@ -297,6 +296,7 @@ public class HearthReader {
 		unrankedImageTarget = this.prepareImageTarget(readerSettings.unrankedScanbox);
 		challengeImageTarget = this.prepareImageTarget(readerSettings.challengeScanbox);
 		practiceImageTarget = this.prepareImageTarget(readerSettings.practiceScanbox);
+		arenaLeafImageTarget 	= this.prepareImageTarget(readerSettings.arenaLeafScanbox);
 		
 		this.initGameLang();
 	}
@@ -309,8 +309,6 @@ public class HearthReader {
 			winsImageTarget[i] =  this.prepareImageTarget(readerSettings.winsScanboxes[i]);
 		}
 		
-		lossesLabelImageTarget	= this.prepareImageTarget(readerSettings.lossesLabelScanbox);
-		winsLabelImageTarget 	= this.prepareImageTarget(readerSettings.winsLabelScanbox);
 		goFirstImageTarget 		= this.prepareImageTarget(readerSettings.goFirstScanbox);
 		goSecondImageTarget 	= this.prepareImageTarget(readerSettings.goSecondScanbox);
 		victoryImageTarget 		= this.prepareImageTarget(readerSettings.victoryScanbox);
@@ -397,8 +395,7 @@ public class HearthReader {
 			return;
 		}
 		
-		if(this.findImage(readerSettings.winsLabelScanbox, winsLabelImageTarget, "Wins Label") 
-				|| this.findImage(readerSettings.lossesLabelScanbox, lossesLabelImageTarget, "Losses Label")){
+		if(this.findImage(readerSettings.arenaLeafScanbox, arenaLeafImageTarget, "Arena Leaf") ){
 			gameMode = ARENAMODE;
 			oppHero = -1;
 			inGameMode = 0;

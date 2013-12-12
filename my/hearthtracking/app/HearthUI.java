@@ -171,7 +171,7 @@ public class HearthUI {
 		
 		window = new HearthUI();
 		tracker = new HearthTracker();
-		hearth = new HearthReader(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, debugMode);
+		hearth = new HearthReader(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing);
 		
 		if(!setting.scannerEnabled){
 			hearth.pause();
