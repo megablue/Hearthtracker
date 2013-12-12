@@ -45,7 +45,7 @@ public class HearthUpdateUI {
 		link.setBounds(166, 180, 59, 15);
 		link.setText("<a>Get update</a>");
 		
-		StyledText styledText = new StyledText(shlHearthtrackerUpdateNotification, SWT.BORDER);
+		StyledText styledText = new StyledText(shlHearthtrackerUpdateNotification, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
 		styledText.setBounds(10, 77, 362, 97);
 		
 		styledText.setText(updater.getUpdateMessage());
