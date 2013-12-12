@@ -577,16 +577,16 @@ public class HearthReader {
 	}
 	
 	public String getMyHero(){
-		if(exMyHero >= 0 ){
-			return heroesList.getHeroLabel(exMyHero);
+		if(myHero >= 0 ){
+			return heroesList.getHeroLabel(myHero);
 		}
 		
 		return "Unknown";
 	}
 	
 	public String getOppHero(){
-		if(exOppHero >= 0 ){
-			return heroesList.getHeroLabel(exOppHero);
+		if(oppHero >= 0 ){
+			return heroesList.getHeroLabel(oppHero);
 		}
 		
 		return "Unknown";

@@ -117,6 +117,8 @@ public class HearthUI {
 	private Spinner spXOffset;
 	private Spinner spYOffset;
 	
+	volatile static boolean shutdown = false;
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -187,7 +189,7 @@ public class HearthUI {
     private static class ReaderThread
     implements Runnable {
 	    public void run() {
-	    	while(true){
+	    	while(!shutdown){
 	        	try {
 	        		long sleepTime;
 	        		Date lastScan = new Date();
@@ -195,11 +197,20 @@ public class HearthUI {
 	        		
 	        		sleepTime = setting.scanInterval - (new Date().getTime() - lastScan.getTime());
         			
-        			if(sleepTime > 0){
-        				Thread.sleep(sleepTime);
+        			if(sleepTime < 0){
+        				sleepTime = 0;
         			}
+        			
+        			Thread.sleep(sleepTime);
+        			
+        			if(Thread.currentThread().isInterrupted()){
+            			tracker.closeDB();
+    	    			System.exit(0);
+        			}
+        			
 	    		} catch (InterruptedException e) {
 	    			tracker.closeDB();
+	    			System.exit(0);
 	    			break;
 	    		}
 	    	}
@@ -268,6 +279,7 @@ public class HearthUI {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
 				hearththread.interrupt();
+				shutdown = true;
 			}
 		});
 		shlHearthtracker.setSize(620, 438);
@@ -1159,7 +1171,7 @@ public class HearthUI {
 		btnArenaDelete.setText("&Delete");
 		
 		final Spinner spEditArenaWins = new Spinner(composite_4, SWT.BORDER);
-		spEditArenaWins.setMaximum(9);
+		spEditArenaWins.setMaximum(12);
 		spEditArenaWins.setBounds(81, 78, 44, 22);
 		
 		final Spinner spEditArenaLosses = new Spinner(composite_4, SWT.BORDER);
@@ -1320,7 +1332,7 @@ public class HearthUI {
 		btnArenaSave.setText("&Save");
 
 		final Spinner spEditArenaWins = new Spinner(composite_4, SWT.BORDER);
-		spEditArenaWins.setMaximum(9);
+		spEditArenaWins.setMaximum(12);
 		spEditArenaWins.setBounds(92, 90, 44, 22);
 		
 		final Spinner spEditArenaLosses = new Spinner(composite_4, SWT.BORDER);
