@@ -110,7 +110,7 @@ public class HearthUI {
 	private static Image[] heroImgs;
 	private Composite composite_9;
 
-	public static int[] version = {1, 1, 2};
+	public static int[] version = {1, 1, 3};
 	public static int experimental = 0;
 	private Text text;
 	private Composite composite_11;
@@ -194,11 +194,12 @@ public class HearthUI {
 	        		long sleepTime;
 	        		Date lastScan = new Date();
 	        		hearth.process();
+	        		long timeDiff = new Date().getTime() - lastScan.getTime();
 	        		
-	        		sleepTime = setting.scanInterval - (new Date().getTime() - lastScan.getTime());
-        			
+	        		sleepTime =  setting.scanInterval - timeDiff;
+
         			if(sleepTime < 0){
-        				sleepTime = 0;
+        				sleepTime = 100;
         			}
         			
         			Thread.sleep(sleepTime);
@@ -468,7 +469,7 @@ public class HearthUI {
 		cmbGameLang.setBounds(232, 22, 150, 21);
 		cmbGameLang.setEditable(false);
 		cmbGameLang.setItems(new String[] {});
-		cmbGameLang.setVisibleItemCount(8);
+		cmbGameLang.setVisibleItemCount(13);
 		
 		Link link = new Link(grpGeneral, SWT.NONE);
 		link.setBounds(149, 53, 71, 15);
@@ -1654,7 +1655,7 @@ public class HearthUI {
 			styledTextStatus.append("Playing as " + hearth.getMyHero() + "\r\n");
 		}
 				
-		if( !hearth.getOppHero().toLowerCase().equals("unknown") || hearth.isGoFirst() || hearth.isGoSecond() ){
+		if( !hearth.getMyHero().toLowerCase().equals("unknown") || hearth.isGoFirst() || hearth.isGoSecond() ){
 			styledTextStatus.append("\r\n");
 			styledTextStatus.append("Live match status" + "\r\n");
 			styledTextStatus.append(hearth.getMyHero() + " vs " + hearth.getOppHero() + ", " + goes + "\r\n");

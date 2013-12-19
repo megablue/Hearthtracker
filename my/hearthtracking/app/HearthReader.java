@@ -36,6 +36,7 @@ public class HearthReader {
 	int exOppHero = -1;
 	
 	int victory = -1;
+	int exVictory = -1;
 	int goFirst = -1;
 	Date startTime = new Date();
 	Date lastUpdate = new Date();
@@ -147,23 +148,23 @@ public class HearthReader {
 		System.out.println("resumed");
 	}
 	
-	public void setGameLang(String lang){
+	public synchronized void setGameLang(String lang){
 		gameLang = lang;
 		this.initGameScanner();
 	}
 	
-	public void setGameRes(int w, int h){
+	public synchronized void setGameRes(int w, int h){
 		gameResX = w;
 		gameResY = h;
 		this.initGameScanner();
 	}
 	
-	public void setAutoGameRes(boolean flag){
+	public synchronized void setAutoGameRes(boolean flag){
 		autoDetectGameRes = flag;
 		this.initGameScanner();
 	}
 	
-	public void setXOffetOverride(int val){
+	public synchronized void setXOffetOverride(int val){
 		xOffetOverrideVal = val;
 	}
 	
@@ -171,7 +172,7 @@ public class HearthReader {
 		return xOffetOverrideVal;
 	}
 	
-	public void setYOffetOverride(int val){
+	public synchronized void setYOffetOverride(int val){
 		yOffsetOverrideVal = val;
 	}
 	
@@ -179,7 +180,7 @@ public class HearthReader {
 		return yOffsetOverrideVal;
 	}
 	
-	private void init(){
+	private synchronized void init(){
 		if(inited){
 			return;
 		}
@@ -256,7 +257,7 @@ public class HearthReader {
 		return it;
 	}
 	
-	private void initGameScanner(){
+	private synchronized void initGameScanner(){
 		int[] gameRes = this.getGameResolution();
 		
 		gameLang = sanitizeGameLang(gameLang);
@@ -382,7 +383,6 @@ public class HearthReader {
 
 	private synchronized void scanMode() {
 		if(this.findImage(readerSettings.menuScanbox, questImageTarget, "Quest icon")){
-			System.out.println("Found quest icon");
 			gameMode = MENUMODE;
 			inGameMode = 0;
 			
@@ -409,7 +409,7 @@ public class HearthReader {
 			return;
 		}
 		
-		if( (gameMode == MENUMODE || gameMode == UNRANKEDMODE) && this.findImage(readerSettings.rankedScanbox, rankedImageTarget, "Ranked mode Label")){
+		if(this.findImage(readerSettings.rankedScanbox, rankedImageTarget, "Ranked mode Label")){
 			gameMode = RANKEDMODE;
 			oppHero = -1;
 			inGameMode = 0;
@@ -423,7 +423,7 @@ public class HearthReader {
 			return;
 		}
 		
-		if( (gameMode == MENUMODE || gameMode == RANKEDMODE)  && this.findImage(readerSettings.unrankedScanbox, unrankedImageTarget, "Unranked mode Label")){
+		if(this.findImage(readerSettings.unrankedScanbox, unrankedImageTarget, "Unranked mode Label")){
 			gameMode = UNRANKEDMODE;
 			oppHero = -1;
 			inGameMode = 0;
@@ -437,7 +437,7 @@ public class HearthReader {
 			return;
 		}
 		
-		if(gameMode == MENUMODE && this.findImage(readerSettings.challengeScanbox, challengeImageTarget, "Challenge mode Label")){
+		if(this.findImage(readerSettings.challengeScanbox, challengeImageTarget, "Challenge mode Label")){
 			gameMode = CHALLENGEMODE;
 			oppHero = -1;
 			inGameMode = 0;
@@ -451,7 +451,7 @@ public class HearthReader {
 			return;
 		}
 		
-		if(gameMode == MENUMODE && this.findImage(readerSettings.practiceScanbox, practiceImageTarget, "Practice mode Label")){
+		if(this.findImage(readerSettings.practiceScanbox, practiceImageTarget, "Practice mode Label")){
 			gameMode = PRACTICEMODE;
 			oppHero = -1;
 			inGameMode = 0;
@@ -621,12 +621,12 @@ public class HearthReader {
 	}
 	
 	private synchronized void scanGameHeroes() {
-		if(!this.isInGame() || this.foundGameHero()){
+		if(this.foundGameHero()){
 			return;
 		}
 		
 		for(int i = 0; i < heroesThumbIT.length; i++){
-			if(this.findImage(readerSettings.myHeroScanboxes[i], heroesThumbIT[i], "My Hero (" + heroesList.getHeroLabel(i) + ") ")){
+			if(myHero == -1 && this.findImage(readerSettings.myHeroScanboxes[i], heroesThumbIT[i], "My Hero (" + heroesList.getHeroLabel(i) + ") ")){
 				System.out.println("Found my hero: (" + i + ") " + heroesList.getHeroLabel(i));
 				myHero = i;
 				if(myHero != exMyHero){
@@ -644,6 +644,7 @@ public class HearthReader {
 				oppHero = i;
 				if(oppHero != exOppHero){
 					exOppHero = oppHero;
+					exVictory = -1;
 					isDirty = true;
 				}
 				this.formatMatchStatus();
@@ -657,18 +658,12 @@ public class HearthReader {
 	private synchronized void scanVictory(){
 		boolean found = false;
 		
-		if(!this.isInGame()){
-			return;
-		}
-		
 		if(this.findImage(readerSettings.victoryScanbox, victoryImageTarget, "Victory")){
-			System.out.println("Found Victory");
 			victory = 1;
 			found = true;
 		}
 		
 		if(!found && this.findImage(readerSettings.defeatScanbox, defeatImageTarget, "Defeat")){
-			System.out.println("Found Defeat");
 			victory = 0;
 			found = true;
 		}
@@ -683,13 +678,27 @@ public class HearthReader {
 			
 			try {
 				isDirty = true;
-				System.out.println("Saving match result...");
-				tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime, false);
-				System.out.println("Done saving match result...");
-				inGameMode = 0;
-				victory = -1;
-				oppHero = -1;
-				goFirst = -1;
+				
+				if(exVictory != victory){
+					
+					if(victory == 1){
+						System.out.println("Found Victory");
+					} else if(victory == 1) {
+						System.out.println("Found Defeat");
+					}
+					
+					System.out.println("Saving match result...");
+					tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime, false);
+					System.out.println("Done saving match result...");
+					
+					exVictory = victory;
+					inGameMode = 0;
+					victory = -1;
+					myHero = -1;
+					oppHero = -1;
+					goFirst = -1;
+				}
+				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -757,14 +766,12 @@ public class HearthReader {
 	}
 	
 	private synchronized void scanCoinScreen() {
-		if(this.isInGame()){
-			return;
-		}
 		
 		if(this.findImage(readerSettings.goFirstScanbox, goFirstImageTarget, "Go First")){
 			System.out.println("Found go first");
 			goFirst = 1;
 			inGameMode = 1;
+			exVictory = -1;
 			startTime = new Date();
 			this.formatMatchStatus();
 			isDirty = true;
@@ -775,6 +782,7 @@ public class HearthReader {
 			System.out.println("Found go second");
 			goFirst = 0;
 			inGameMode = 1;
+			exVictory = -1;
 			startTime = new Date();
 			this.formatMatchStatus();
 			isDirty = true;
@@ -820,7 +828,7 @@ public class HearthReader {
 		return lastScanArea;
 	}
 	
-	public void setAutoPing(boolean enabled){
+	public synchronized void setAutoPing(boolean enabled){
 		pingHearthstone = enabled;
 		seenHearthstone = false;
 		lastPing = new Date(new Date().getTime() - pingInterval);
@@ -915,24 +923,31 @@ public class HearthReader {
 			return;
 		}
 
-		if(!this.isInGame()){
-			this.scanMode();
+		this.scanMode();
+		
+		if(this.isArenaMode()){
+			this.scanArenaScore();
+			this.scanArenaHero();
 		}
 		
-		if(this.isArenaMode() || this.isRankedMode() || this.isUnrankedMode() || this.isChallengeMode() || this.isPracticeMode()){
-			if(!this.isInGame()){
-				
-				if(this.isArenaMode()){
-					this.scanArenaScore();
-					this.scanArenaHero();
-				}
-
-				this.scanCoinScreen();
-			} else {
-				this.scanGameHeroes();
-				this.scanVictory();
-			}
-		}
+		this.scanCoinScreen();
+		this.scanGameHeroes();
+		this.scanVictory();
+		
+//		if(this.isArenaMode() || this.isRankedMode() || this.isUnrankedMode() || this.isChallengeMode() || this.isPracticeMode()){
+//			if(!this.isInGame()){
+//				
+//				if(this.isArenaMode()){
+//					this.scanArenaScore();
+//					this.scanArenaHero();
+//				}
+//
+//				this.scanCoinScreen();
+//			} else {
+//				this.scanGameHeroes();
+//				this.scanVictory();
+//			}
+//		}
 		
 		this.autoPing();
 	}
