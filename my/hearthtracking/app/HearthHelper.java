@@ -20,6 +20,9 @@ import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
+import my.hearthtracking.app.HearthWin32Helper.GetWindowRectException;
+import my.hearthtracking.app.HearthWin32Helper.WindowNotFoundException;
+
 public class HearthHelper {
 
 	public static boolean isDevelopmentEnvironment() {
@@ -177,11 +180,28 @@ public class HearthHelper {
 			pos[2] = rect[2];
 			pos[3] = rect[3];
 		} catch (Throwable e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			//System.out.println(e.getMessage());
 		}
 		
 		return pos;
+	}
+	
+	public static boolean isHSDetected(){
+		if(!getOSName().equals("win")){
+			return true;
+		}
+		
+		try {
+			try {
+				HearthWin32Helper.getRect("Hearthstone", "UnityWndClass");
+			} catch (GetWindowRectException e) {
+				System.out.println(e.getMessage());
+			}
+		} catch (WindowNotFoundException e) {
+			return false;
+		}
+
+		return true;
 	}
 	
 	public static Logger getLogger(Level loglevel){

@@ -89,18 +89,21 @@ public class HearthReader {
 	int[] lastScanSubArea = {0,0,0,0};
 	Date lastPing = new Date(new Date().getTime() - pingInterval);
 	
+	private boolean alwaysScan = false;
+	
 	public HearthReader(HearthTracker t){
 		//debugMode = HearthHelper.isDevelopmentEnvironment();
 		tracker = t;
 		init();
 	}
 	
-	public HearthReader (HearthTracker t, String lang, int resX, int resY, boolean autoping){
+	public HearthReader (HearthTracker t, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
 		//debugMode = HearthHelper.isDevelopmentEnvironment();
 		tracker = t;
 		oldGameResX = gameResX = resX;
 		oldGameResY = gameResY = resY;
 		gameLang = lang.toLowerCase();
+		setAlwaysScan(alwaysScanFlag);
 		setAutoPing(autoping);
 		init();
 	}
@@ -766,6 +769,9 @@ public class HearthReader {
 	}
 	
 	private synchronized void scanCoinScreen() {
+		if(goFirst != -1){
+			return;
+		}
 		
 		if(this.findImage(readerSettings.goFirstScanbox, goFirstImageTarget, "Go First")){
 			System.out.println("Found go first");
@@ -826,6 +832,10 @@ public class HearthReader {
 	
 	public int[] getLastScanArea(){
 		return lastScanArea;
+	}
+	
+	public synchronized void setAlwaysScan(boolean enabled){
+		alwaysScan = enabled;
 	}
 	
 	public synchronized void setAutoPing(boolean enabled){
@@ -919,7 +929,9 @@ public class HearthReader {
 	}
 	
 	public void process(){
-		if(paused){
+		boolean hsDetected = alwaysScan || (!alwaysScan && HearthHelper.isHSDetected());
+		
+		if(paused || !hsDetected){
 			return;
 		}
 

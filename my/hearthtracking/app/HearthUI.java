@@ -118,6 +118,7 @@ public class HearthUI {
 	private Spinner spYOffset;
 	
 	volatile static boolean shutdown = false;
+	private Button btnAlwaysScan;
 	
 	/**
 	 * Launch the application.
@@ -171,7 +172,7 @@ public class HearthUI {
 		
 		window = new HearthUI();
 		tracker = new HearthTracker();
-		hearth = new HearthReader(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing);
+		hearth = new HearthReader(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
 		
 		if(!setting.scannerEnabled){
 			hearth.pause();
@@ -192,17 +193,20 @@ public class HearthUI {
 	    	while(!shutdown){
 	        	try {
 	        		long sleepTime;
-	        		Date lastScan = new Date();
+//	        		Date lastScan = new Date();
 	        		hearth.process();
-	        		long timeDiff = new Date().getTime() - lastScan.getTime();
-	        		
-	        		sleepTime =  setting.scanInterval - timeDiff;
+//	        		long timeDiff = new Date().getTime() - lastScan.getTime();
+//	        		
+//	        		sleepTime =  setting.scanInterval - timeDiff;
+//	        		
+//	        		System.out.println("Diff: " + timeDiff);
+//	        		System.out.println("Sleep: " + sleepTime);
+//
+//        			if(sleepTime < 0){
+//        				sleepTime = 100;
+//        			}
 
-        			if(sleepTime < 0){
-        				sleepTime = 100;
-        			}
-        			
-        			Thread.sleep(sleepTime);
+        			Thread.sleep(setting.scanInterval);
         			
         			if(Thread.currentThread().isInterrupted()){
             			tracker.closeDB();
@@ -476,7 +480,7 @@ public class HearthUI {
 		link.setText("<a>Web App Key</a>");
 		
 		text = new Text(grpGeneral, SWT.BORDER | SWT.PASSWORD);
-		text.setBounds(232, 49, 150, 21);
+		text.setBounds(232, 49, 241, 21);
 		text.setEnabled(false);
 		
 		Group grpAdvanced = new Group(composite_1, SWT.NONE);
@@ -505,32 +509,37 @@ public class HearthUI {
 		cmbGameRes.setEditable(false);
 		
 		Label lblNewLabel = new Label(grpAdvanced, SWT.NONE);
-		lblNewLabel.setBounds(167, 175, 60, 15);
+		lblNewLabel.setBounds(167, 156, 60, 15);
 		lblNewLabel.setText("Scan Speed");
 		
 		Label lblNewLabel_2 = new Label(grpAdvanced, SWT.NONE);
-		lblNewLabel_2.setBounds(185, 148, 42, 15);
+		lblNewLabel_2.setBounds(185, 129, 42, 15);
 		lblNewLabel_2.setText("Scanner");
 		
 		btnEnableScanner = new Button(grpAdvanced, SWT.CHECK);
-		btnEnableScanner.setBounds(241, 147, 56, 16);
+		btnEnableScanner.setBounds(241, 128, 56, 16);
 		btnEnableScanner.setSelection(true);
 		btnEnableScanner.setText("Enable");
 		
 		Button button = new Button(grpAdvanced, SWT.RADIO);
-		button.setBounds(241, 174, 42, 16);
+		button.setBounds(241, 155, 42, 16);
 		btnScanSpeed[0] = button;
 		button.setText("Fast");
 		
 		Button button_1 = new Button(grpAdvanced, SWT.RADIO);
-		button_1.setBounds(288, 174, 85, 16);
+		button_1.setBounds(288, 155, 85, 16);
 		btnScanSpeed[1] = button_1;
 		button_1.setText("Intermediate");
 		
 		Button button_2 = new Button(grpAdvanced, SWT.RADIO);
-		button_2.setBounds(379, 174, 56, 16);
+		button_2.setBounds(379, 155, 46, 16);
 		btnScanSpeed[2] = button_2;
 		button_2.setText("Slow");
+		
+//		Button button_3 = new Button(grpAdvanced, SWT.RADIO);
+//		button_3.setBounds(379, 155, 46, 16);
+//		btnScanSpeed[3] = button_3;
+//		button_3.setText("Slowest");
 		
 		Label lblNewLabel_11 = new Label(grpAdvanced, SWT.NONE);
 		lblNewLabel_11.setBounds(10, 78, 225, 15);
@@ -553,6 +562,14 @@ public class HearthUI {
 		Label lblYOffset = new Label(grpAdvanced, SWT.NONE);
 		lblYOffset.setText("Y offset");
 		lblYOffset.setBounds(398, 78, 42, 15);
+		
+		Label lblNewLabel_13 = new Label(grpAdvanced, SWT.NONE);
+		lblNewLabel_13.setBounds(23, 187, 204, 15);
+		lblNewLabel_13.setText("Force Scanning even if HS is not found");
+		
+		btnAlwaysScan = new Button(grpAdvanced, SWT.CHECK);
+		btnAlwaysScan.setBounds(239, 186, 93, 16);
+		btnAlwaysScan.setText("Enable");
 		
 		TabItem tbtmDiagnostics = new TabItem(tabFolder, SWT.NONE);
 		tbtmDiagnostics.setText("D&iagnostics");
@@ -1491,6 +1508,17 @@ public class HearthUI {
 	}
 	
 	private void poppulateScannerOptions(){
+		btnAlwaysScan.setSelection(setting.alwaysScan);
+		btnAlwaysScan.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				setting.alwaysScan = btnAlwaysScan.getSelection();
+				savePreferences();
+				hearth.setAlwaysScan(setting.alwaysScan);
+			}
+		});
+		
+		
 		btnEnableScanner.setSelection(setting.scannerEnabled);
 		btnEnableScanner.addSelectionListener(new SelectionAdapter() {
 			@Override
