@@ -76,7 +76,7 @@ public class HearthUI {
 	protected Shell shlHearthtracker;
 	private CCombo cmbGameLang;
 	private Button btnEnableScanner;
-	private Button[] btnScanSpeed = new Button[3];
+	private Button[] btnScanSpeed = new Button[4];
 	private CCombo cmbGameRes;
 	private Button btnAutoPing;
 	private Button btnVisualizeNow;
@@ -127,6 +127,7 @@ public class HearthUI {
 	private Button btnAlwaysScan;
 	
 	private static List<HearthReaderNotification> notifications = new ArrayList<HearthReaderNotification>();
+	private CCombo cbServer;
 	
 	/**
 	 * Launch the application.
@@ -518,12 +519,22 @@ public class HearthUI {
 		cmbGameLang.setVisibleItemCount(13);
 		
 		Link link = new Link(grpGeneral, SWT.NONE);
-		link.setBounds(149, 53, 71, 15);
-		link.setText("<a>Web App Key</a>");
+		link.setBounds(63, 80, 163, 15);
+		link.setText("<a>HearthTracker Web Sync Key</a>");
 		
 		text = new Text(grpGeneral, SWT.BORDER | SWT.PASSWORD);
-		text.setBounds(232, 49, 241, 21);
+		text.setBounds(232, 78, 241, 21);
 		text.setEnabled(false);
+		
+		Label lblNewLabel_14 = new Label(grpGeneral, SWT.NONE);
+		lblNewLabel_14.setBounds(144, 53, 81, 15);
+		lblNewLabel_14.setText("Batte.net server");
+		
+		cbServer = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
+		cbServer.setVisibleItemCount(4);
+		cbServer.setItems(new String[] {"NA", "EU", "Asia", "China"});
+		cbServer.setEditable(false);
+		cbServer.setBounds(231, 49, 150, 21);
 		
 		Group grpAdvanced = new Group(composite_1, SWT.NONE);
 		grpAdvanced.setText("Advanced");
@@ -548,7 +559,6 @@ public class HearthUI {
 		
 		cmbGameRes = new CCombo(grpAdvanced, SWT.BORDER | SWT.READ_ONLY);
 		cmbGameRes.setBounds(239, 42, 150, 21);
-		cmbGameRes.setEditable(false);
 		
 		Label lblNewLabel = new Label(grpAdvanced, SWT.NONE);
 		lblNewLabel.setBounds(167, 156, 60, 15);
@@ -563,18 +573,23 @@ public class HearthUI {
 		btnEnableScanner.setSelection(true);
 		btnEnableScanner.setText("Enable");
 		
+		Button button_0 = new Button(grpAdvanced, SWT.RADIO);
+		button_0.setBounds(239, 155, 75, 16);
+		btnScanSpeed[3] = button_0;
+		button_0.setText("Really Fast");
+		
 		Button button = new Button(grpAdvanced, SWT.RADIO);
-		button.setBounds(241, 155, 42, 16);
+		button.setBounds(321, 156, 42, 16);
 		btnScanSpeed[0] = button;
 		button.setText("Fast");
 		
 		Button button_1 = new Button(grpAdvanced, SWT.RADIO);
-		button_1.setBounds(288, 155, 85, 16);
+		button_1.setBounds(368, 156, 85, 16);
 		btnScanSpeed[1] = button_1;
 		button_1.setText("Intermediate");
 		
 		Button button_2 = new Button(grpAdvanced, SWT.RADIO);
-		button_2.setBounds(379, 155, 46, 16);
+		button_2.setBounds(459, 156, 46, 16);
 		btnScanSpeed[2] = button_2;
 		button_2.setText("Slow");
 		
@@ -806,6 +821,7 @@ public class HearthUI {
 		poppulatesOffsetOptions();
 		poppulateScannerOptions();
 		poppulateGameLangs();
+		poppulateGameServer();
 		poppulateResolutions();
 		poppulateDiagnoticsControls();
 		poppulateDiagnoticsStatus();
@@ -1577,6 +1593,10 @@ public class HearthUI {
 		});
 		
 		switch(setting.scanInterval){
+			case 0:
+			btnScanSpeed[3].setSelection(true);
+			break;
+		
 			case 250:
 				btnScanSpeed[0].setSelection(true);
 				break;
@@ -1601,6 +1621,8 @@ public class HearthUI {
 						setting.scanInterval = 500;
 					}else if(btnScanSpeed[2].getSelection()){
 						setting.scanInterval = 750;
+					}else if(btnScanSpeed[3].getSelection()){
+						setting.scanInterval = 0;
 					}
 					
 					savePreferences();
@@ -1652,6 +1674,40 @@ public class HearthUI {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				this.selected(e);
+			}
+		});
+	}
+	
+	private void poppulateGameServer(){
+		HearthBnetServersList servers = new HearthBnetServersList();
+		int selected = -1;
+		cbServer.removeAll();
+		
+		for(int i = 0; i < servers.getTotal(); i++){
+			cbServer.add(servers.getServerLabel(i));
+			cbServer.setData(servers.getServerLabel(i), servers.getServerName(i));
+			
+			if(servers.getServerName(i).equals(setting.gameServer)){
+				selected = i;
+			}
+		}
+		
+		cbServer.select(selected);
+			
+		cbServer.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int i = cbServer.getSelectionIndex();
+				
+				if( i >= 0 ){					
+					String server = (String) cbServer.getData(cbServer.getItem(i));
+
+					if(setting.gameServer == null || !setting.gameServer.equals(server)){
+						setting.gameServer = server;
+						tracker.setServer(server);
+						config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
+					}
+				}
 			}
 		});
 	}

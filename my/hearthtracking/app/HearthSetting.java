@@ -5,6 +5,7 @@ public class HearthSetting {
 	int gameWidth = 1920;
 	int gameHeight = 1080;
 	String gameLang = "enUS";
+	String gameServer = "";
 	boolean scannerEnabled = true;
 	boolean autoPing = true;
 	boolean autoRes = true;

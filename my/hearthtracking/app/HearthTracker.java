@@ -22,6 +22,7 @@ public class HearthTracker {
 	String liveHero = "";
 	String liveWinrate = "";
 	String liveGamestats = "";
+	String gameServer = "";
 	HearthDatabase dbSetting;
 	private static HearthConfigurator config = new HearthConfigurator();
 	private Statement stat;
@@ -89,7 +90,7 @@ public class HearthTracker {
 	public void createTables() throws SQLException{
 		ResultSet rs;
 		boolean newdb = false;
-		int currentDBversion = 2;
+		int currentDBversion = 3;
 		
 		dbSetting = (HearthDatabase) config.load("." + File.separator + "data" + File.separator + "database.xml");
 		
@@ -123,6 +124,7 @@ public class HearthTracker {
 							+"modified int DEFAULT 0, "
 							+"lastmodified BIGINT DEFAULT 0, "
 							+"deleted int DEFAULT 0, "
+							+"server varchar DEFAULT '', "
 							+"submitted BIGINT DEFAULT 0 "
 							+ ")"
 					);
@@ -144,6 +146,7 @@ public class HearthTracker {
 							+"modified int DEFAULT 0, "
 							+"lastmodified BIGINT DEFAULT 0, "
 							+"deleted int DEFAULT 0, "
+							+"server varchar DEFAULT '', "
 							+"submitted BIGINT DEFAULT 0 "
 							+")"
 						);
@@ -157,6 +160,7 @@ public class HearthTracker {
 		}
 		
 		if(newdb){
+			dbSetting.serverSelected = 0;
 			dbSetting.version = currentDBversion;
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
 			return;
@@ -256,6 +260,43 @@ public class HearthTracker {
 			//save upgraded version
 			dbSetting.version = 2;
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		}
+		
+		if(!newdb && dbSetting.version == 2){
+			stat.execute("ALTER TABLE ARENARESULTS ADD SERVER VARCHAR DEFAULT ''");
+			stat.execute("ALTER TABLE MATCHES ADD SERVER VARCHAR DEFAULT ''");
+			
+			//save upgraded version
+			dbSetting.version = 3;
+			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		}
+	}
+	
+	public boolean isServerSelected(){
+		return dbSetting.serverSelected == 1 ? true : false;
+	}
+	
+	private void setServerSelected(){
+		dbSetting.serverSelected = 1;
+		config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+	}
+	
+	public void setServer(String server){
+		gameServer = server;
+	}
+	
+	public void setServerForOldRecords(String server){
+		if(dbSetting.serverSelected == 1){
+			return;
+		}
+		
+		try {
+			stat.execute("UPDATE MATCHES SET server='" + server + "' WHERE server=''");
+			stat.execute("UPDATE ARENARESULTS SET server='" + server + "' WHERE server=''");
+			setServerSelected();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

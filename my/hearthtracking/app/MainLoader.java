@@ -8,7 +8,7 @@ public class MainLoader {
 	public static void main(String[] args) {
 		File swtJar = new File(HearthHelper.getArchFilename("lib/swt"));
 		HearthHelper.addJarToClasspath(swtJar);
-		
+
 		HearthUpdater updater = new HearthUpdater();
 
 		if(updater.lastCheckExpired()){
@@ -19,6 +19,18 @@ public class MainLoader {
 			}		
 		}
 		
+		HearthConfigurator config = new HearthConfigurator();
+		HearthDatabase dbSetting = (HearthDatabase) config.load("." + File.separator + "data" + File.separator + "database.xml");
+		
+		if(dbSetting == null){
+			dbSetting = new HearthDatabase();
+			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		}
+		
+		if(dbSetting.serverSelected == 0){
+			new HearthTrackerUpgradeUI().open();
+		}
+				
 //		HearthSync sync = new HearthSync();
 //		sync.checkAccessKey();
 //		sync.syncArenaBatch();
