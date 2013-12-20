@@ -7,9 +7,15 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 import java.util.logging.Logger;
+
+import notifier.NotifierDialog;
+import notifier.NotificationType;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -120,6 +126,8 @@ public class HearthUI {
 	volatile static boolean shutdown = false;
 	private Button btnAlwaysScan;
 	
+	private static List<HearthReaderNotification> notifications = new ArrayList<HearthReaderNotification>();
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -190,6 +198,8 @@ public class HearthUI {
     private static class ReaderThread
     implements Runnable {
 	    public void run() {
+	    	HearthReaderNotification note = null;
+	    	
 	    	while(!shutdown){
 	        	try {
 	        		long sleepTime;
@@ -207,6 +217,13 @@ public class HearthUI {
 //        			}
 
         			Thread.sleep(setting.scanInterval);
+        			
+        			note = hearth.getNotification();
+        			
+        			if(note != null){
+        				notifications.add(note);				
+        				display.wake();
+        			}
         			
         			if(Thread.currentThread().isInterrupted()){
             			tracker.closeDB();
@@ -236,6 +253,30 @@ public class HearthUI {
     }
 
 
+    private void processNotification(){
+    	Runnable runnable = new Runnable() {
+		    public void run() {
+		    	if(notifications.size() > 0){
+			    	HearthReaderNotification note = notifications.get(0);
+			    	notifications.remove(note);
+			    	
+			    	if(note != null){
+		 				NotifierDialog.notify(
+        						note.title, 
+        						note.message, 
+        						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
+        						shlHearthtracker.getMonitor()
+        				);
+			    	}
+		    	}
+		    	
+		    	Display.getDefault().timerExec(100, this);
+		    }
+		};
+    	
+		Display.getDefault().timerExec(100, runnable);
+    }
+    
 	/**
 	 * Open the window.
 	 */
@@ -249,12 +290,9 @@ public class HearthUI {
 		
 		hearththread = new Thread(new ReaderThread());
 		hearththread.start();
-		
+		processNotification();
+
 		while (!shlHearthtracker.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-			
 			if(hearththread.isAlive()){
 				if(tracker.isDirty()){
 					window.fillOverviewTable();
@@ -271,6 +309,10 @@ public class HearthUI {
 					window.poppulateDiagnoticsStatus();
 					lastUpdate = new Date();
 				}
+			}
+						
+			if (!display.readAndDispatch()) {
+				display.sleep();
 			}
 		}
 	}

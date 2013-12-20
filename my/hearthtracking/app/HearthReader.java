@@ -3,7 +3,9 @@ package my.hearthtracking.app;
 import java.awt.Color;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.sikuli.api.*;
 import org.sikuli.api.visual.Canvas;
@@ -38,6 +40,7 @@ public class HearthReader {
 	int victory = -1;
 	int exVictory = -1;
 	int goFirst = -1;
+	int exGoFirst = -1;
 	Date startTime = new Date();
 	Date lastUpdate = new Date();
 
@@ -90,6 +93,8 @@ public class HearthReader {
 	Date lastPing = new Date(new Date().getTime() - pingInterval);
 	
 	private boolean alwaysScan = false;
+	
+	private List<HearthReaderNotification> notifications = new ArrayList<HearthReaderNotification>();
 	
 	public HearthReader(HearthTracker t){
 		//debugMode = HearthHelper.isDevelopmentEnvironment();
@@ -181,6 +186,18 @@ public class HearthReader {
 	
 	public int getYOffetOverride(){
 		return yOffsetOverrideVal;
+	}
+	
+	public synchronized HearthReaderNotification getNotification(){
+		
+		if(notifications.size() == 0){
+			return null;
+		}
+		
+		HearthReaderNotification first = notifications.get(0);
+		notifications.remove(0);
+		
+		return first;
 	}
 	
 	private synchronized void init(){
@@ -390,9 +407,11 @@ public class HearthReader {
 			inGameMode = 0;
 			
 			if(exGameMode != gameMode){
-				exGameMode = gameMode; 
+				exGameMode = gameMode;
+				myHero = -1;
 				isDirty = true;
 				System.out.println("Mode: Menu Mode");
+				notifications.add(new HearthReaderNotification("Mode", "Menu detected"));
 			}
 
 			return;
@@ -407,6 +426,7 @@ public class HearthReader {
 				exGameMode = gameMode;
 				isDirty = true;
 				System.out.println("Mode: Arena Mode");
+				notifications.add(new HearthReaderNotification("Mode", "Arena detected"));
 			}
 			
 			return;
@@ -421,6 +441,7 @@ public class HearthReader {
 				exGameMode = gameMode;
 				isDirty = true;
 				System.out.println("Mode: Ranked Mode");
+				notifications.add(new HearthReaderNotification("Mode", "Ranked mode detected"));
 			}
 			
 			return;
@@ -435,6 +456,7 @@ public class HearthReader {
 				exGameMode = gameMode; 
 				isDirty = true;
 				System.out.println("Mode: Unranked Mode");
+				notifications.add(new HearthReaderNotification("Mode", "Unranked mode detected"));
 			}
 			
 			return;
@@ -449,6 +471,7 @@ public class HearthReader {
 				exGameMode = gameMode; 
 				isDirty = true;
 				System.out.println("Mode: Challenge Mode");
+				notifications.add(new HearthReaderNotification("Mode", "Challenge mode detected"));
 			}
 
 			return;
@@ -463,6 +486,7 @@ public class HearthReader {
 				exGameMode = gameMode; 
 				isDirty = true;
 				System.out.println("Mode: Practice Mode");
+				notifications.add(new HearthReaderNotification("Mode", "Practice mode detected"));
 			}
 			
 			return;
@@ -548,6 +572,7 @@ public class HearthReader {
 		if(foundWins && (previousWins != wins || previousLosses != losses)){
 			previousWins = wins;
 			previousLosses = losses;
+			notifications.add(new HearthReaderNotification("Arena score", "Wins " + wins + ", losses " + losses));
 			isDirty = true;
 		}
 	}
@@ -635,7 +660,9 @@ public class HearthReader {
 				if(myHero != exMyHero){
 					exMyHero = myHero;
 					isDirty = true;
+					notifications.add(new HearthReaderNotification("Hero Detected", "Your hero is " + heroesList.getHeroLabel(i)));
 				}
+				
 				this.formatMatchStatus();
 				break;
 			}
@@ -649,6 +676,8 @@ public class HearthReader {
 					exOppHero = oppHero;
 					exVictory = -1;
 					isDirty = true;
+					
+					notifications.add(new HearthReaderNotification("Hero Detected", "Opponent hero is " + heroesList.getHeroLabel(i)));
 				}
 				this.formatMatchStatus();
 				break;
@@ -686,8 +715,10 @@ public class HearthReader {
 					
 					if(victory == 1){
 						System.out.println("Found Victory");
+						notifications.add(new HearthReaderNotification("Game Result", "Victory"));
 					} else if(victory == 1) {
 						System.out.println("Found Defeat");
+						notifications.add(new HearthReaderNotification("Game Result", "Defeat"));
 					}
 					
 					System.out.println("Saving match result...");
@@ -774,24 +805,36 @@ public class HearthReader {
 		}
 		
 		if(this.findImage(readerSettings.goFirstScanbox, goFirstImageTarget, "Go First")){
-			System.out.println("Found go first");
-			goFirst = 1;
-			inGameMode = 1;
-			exVictory = -1;
-			startTime = new Date();
-			this.formatMatchStatus();
-			isDirty = true;
+			
+			if(exGoFirst != goFirst){
+				System.out.println("Found go first");
+				goFirst = 1;
+				exGoFirst = goFirst;
+				inGameMode = 1;
+				exVictory = -1;
+				startTime = new Date();
+				this.formatMatchStatus();
+				isDirty = true;
+				notifications.add(new HearthReaderNotification("Game start detected", "You go first!"));
+			}
+
 			return;
 		}
 		
 		if(this.findImage(readerSettings.goSecondScanbox, goSecondImageTarget, "Go Second")){
-			System.out.println("Found go second");
-			goFirst = 0;
-			inGameMode = 1;
-			exVictory = -1;
-			startTime = new Date();
-			this.formatMatchStatus();
-			isDirty = true;
+			
+			if(exGoFirst != goFirst){
+				System.out.println("Found go second");
+				goFirst = 0;
+				exGoFirst = goFirst;
+				inGameMode = 1;
+				exVictory = -1;
+				startTime = new Date();
+				this.formatMatchStatus();
+				isDirty = true;
+				notifications.add(new HearthReaderNotification("Game start detected", "You go second!"));
+			}
+			
 			return;
 		}
 		
