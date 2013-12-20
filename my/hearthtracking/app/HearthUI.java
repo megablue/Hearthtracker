@@ -684,11 +684,11 @@ public class HearthUI {
 		composite_3.setLayout(null);
 		
 		Label lblVersion = new Label(composite_3, SWT.NONE);
-		lblVersion.setBounds(46, 132, 113, 15);
+		lblVersion.setBounds(42, 132, 108, 15);
 		lblVersion.setText("HearthTracker v" + version[0] + "." + version[1] + "." + version[2]);
 		
 		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
-		lblCopyrightc.setBounds(36, 153, 150, 15);
+		lblCopyrightc.setBounds(24, 153, 150, 15);
 		lblCopyrightc.setText("Copyright \u00A9 2013 megablue");
 		
 		Label lblNewLabel_7 = new Label(composite_3, SWT.NONE);
@@ -730,7 +730,7 @@ public class HearthUI {
 				}
 			}
 		});
-		link_1.setBounds(36, 176, 150, 15);
+		link_1.setBounds(32, 176, 150, 15);
 		link_1.setText("<a>www.HearthTracking.com</a>");
 		
 		Label lblFacebook = new Label(composite_3, SWT.NONE);
