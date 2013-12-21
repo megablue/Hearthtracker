@@ -34,10 +34,10 @@
     <outer-class reference="../.."/>
   </rankedScanbox>
   <unrankedScanbox>
-    <xOffset>1118</xOffset>
-    <yOffset>112</yOffset>
-    <width>80</width>
-    <height>80</height>
+    <xOffset>1070</xOffset>
+    <yOffset>138</yOffset>
+    <width>100</width>
+    <height>100</height>
     <imgfile>unranked-mode.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
@@ -94,8 +94,8 @@
     <outer-class reference="../.."/>
   </victoryScanbox>
   <defeatScanbox>
-    <xOffset>510</xOffset>
-    <yOffset>474</yOffset>
+    <xOffset>452</xOffset>
+    <yOffset>547</yOffset>
     <width>100</width>
     <height>100</height>
     <imgfile>defeat.png</imgfile>

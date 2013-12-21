@@ -15,7 +15,7 @@ public class HearthReaderSetting {
 	public Scanbox rankedScanbox		= new Scanbox("ranked-mode.png", 	1118, 112, 80, 80);
 
 	//Play mode scan boxes
-	public Scanbox unrankedScanbox		= new Scanbox("unranked-mode.png", 	1118, 112, 80, 80);
+	public Scanbox unrankedScanbox		= new Scanbox("unranked-mode.png", 	1070, 138, 100, 100);
 
 	//practice mode scan boxes
 	public Scanbox practiceScanbox		= new Scanbox("practice-mode.png", 	1200, 100, 120, 120);
@@ -26,7 +26,7 @@ public class HearthReaderSetting {
 	public Scanbox goFirstScanbox 		= new Scanbox("go-first.png", 		910, 550, 400, 150);
 	public Scanbox goSecondScanbox 		= new Scanbox("go-second.png", 		910, 550, 400, 150);
 	public Scanbox victoryScanbox 		= new Scanbox("victory.png", 		440, 500, 100, 100);
-	public Scanbox defeatScanbox 		= new Scanbox("defeat.png", 		510, 474, 100, 100);
+	public Scanbox defeatScanbox 		= new Scanbox("defeat.png", 		452, 547, 100, 100);
 	
 	public Scanbox[] winsScanboxes	= {
 			new Scanbox("0.png",		300, 190, 200, 200, 1f, 0.9f),

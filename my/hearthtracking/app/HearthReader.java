@@ -715,10 +715,10 @@ public class HearthReader {
 					
 					if(victory == 1){
 						System.out.println("Found Victory");
-						notifications.add(new HearthReaderNotification("Game Result", "Victory"));
-					} else if(victory == 1) {
+						notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Victory!"));
+					} else if(victory == 0) {
 						System.out.println("Found Defeat");
-						notifications.add(new HearthReaderNotification("Game Result", "Defeat"));
+						notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Defeat!"));
 					}
 					
 					System.out.println("Saving match result...");
@@ -805,34 +805,32 @@ public class HearthReader {
 		}
 		
 		if(this.findImage(readerSettings.goFirstScanbox, goFirstImageTarget, "Go First")){
+			goFirst = 1;
 			
 			if(exGoFirst != goFirst){
 				System.out.println("Found go first");
-				goFirst = 1;
 				exGoFirst = goFirst;
 				inGameMode = 1;
-				exVictory = -1;
 				startTime = new Date();
 				this.formatMatchStatus();
 				isDirty = true;
-				notifications.add(new HearthReaderNotification("Game start detected", "You go first!"));
+				notifications.add(new HearthReaderNotification("Coin detected", "You go first!"));
 			}
 
 			return;
 		}
 		
 		if(this.findImage(readerSettings.goSecondScanbox, goSecondImageTarget, "Go Second")){
+			goFirst = 0;
 			
 			if(exGoFirst != goFirst){
 				System.out.println("Found go second");
-				goFirst = 0;
 				exGoFirst = goFirst;
 				inGameMode = 1;
-				exVictory = -1;
 				startTime = new Date();
 				this.formatMatchStatus();
 				isDirty = true;
-				notifications.add(new HearthReaderNotification("Game start detected", "You go second!"));
+				notifications.add(new HearthReaderNotification("Coin detected", "You go second!"));
 			}
 			
 			return;
