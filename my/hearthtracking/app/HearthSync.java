@@ -3,6 +3,7 @@ package my.hearthtracking.app;
 import static us.monoid.web.Resty.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -25,9 +26,9 @@ public class HearthSync {
 			: "http://hearthtracking.com/api/" + API_VERSION + "/";
 	private HearthSyncLog syncLog;
 	
-	private Resty resty = new Resty();
+	private Resty resty = new Resty(Option.timeout(5000));
 	
-	private HearthHeroesList heroesList;
+	private HearthHeroesList heroesList = null;
 	
 	private int nonce = 0;
 	
@@ -63,21 +64,29 @@ public class HearthSync {
 	public HearthSync() {
 		tracker = new HearthTracker();
 		nonce = generateNonce();
-		
-		heroesList = (HearthHeroesList) config.load("." + File.separator + "configs" + File.separator + "heroes.xml");
+
 		syncLog = (HearthSyncLog) config.load("." + File.separator + "configs" + File.separator + "sync.xml");
 		
 		if(syncLog == null){
 			syncLog = new HearthSyncLog();
 			saveSyncLog();
 		}
+
+		
+		setKey(syncLog.secretKey);
+	}
+	
+	private void loadHeroes(){
+		if(heroesList != null){
+			return;
+		}
+		
+		heroesList = (HearthHeroesList) config.load("." + File.separator + "configs" + File.separator + "heroes.xml");
 		
 		if(heroesList == null){
 			heroesList = new HearthHeroesList();
 			config.save(heroesList, "." + File.separator + "configs" + File.separator + "heroes.xml");
 		}
-		
-		setKey(syncLog.secretKey);
 	}
 	
 	private int generateNonce(){
@@ -114,8 +123,36 @@ public class HearthSync {
 	public boolean isValidKeyFormat(){
 		return syncLog.secretKey.length() == 48 ? true : false;
 	}
+	
+	public boolean isTimeout(){
+		if(syncLog.timeoutError > 0 && new Date().getTime() < syncLog.timeoutRetry){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public long getTimeout(){
+		return syncLog.timeoutRetry;
+	}
+	
+	public void setTimeout(){
+		++syncLog.timeoutError;
+		syncLog.timeoutRetry = new Date().getTime() + (60 * 60 * 1000) * syncLog.timeoutError;
+		saveSyncLog();
+	}
+	
+	public void resetTimeout(){
+		syncLog.timeoutError = 0;
+		syncLog.timeoutRetry = 0;
+		saveSyncLog();
+	}
 		
 	public boolean checkAccessKey(){
+		if(isTimeout()){
+			return false;
+		}
+		
 		String url = baseURL + "key_check/";
 		boolean result = false;
 
@@ -138,6 +175,10 @@ public class HearthSync {
 				}
 			}
 			
+			resetTimeout();
+		} catch (IOException e) {
+			System.out.println("io exception, " + e.getMessage());
+			setTimeout();
 		} catch (Throwable e) {
 			System.out.println(e.getMessage());
 		}
@@ -155,6 +196,10 @@ public class HearthSync {
 	}
 	
 	public boolean syncWithJsonString(String url, String jsonString){
+		if(isTimeout()){
+			return false;
+		}
+		
 		JSONResource jsonResult;
 		
 		MultipartContent formData = form(
@@ -172,7 +217,11 @@ public class HearthSync {
 			
 			syncLog.lastSync = new Date().getTime();
 			saveSyncLog();
+			resetTimeout();
 			return "true".equals(jsonResult.get("success").toString());
+		} catch (IOException e) {
+			System.out.println("io exception, " + e.getMessage());
+			setTimeout();
 		} catch (Throwable e) {
 			System.out.println(e.getMessage());
 		}
@@ -213,6 +262,8 @@ public class HearthSync {
 		int index = -1;
 		String url = baseURL + "arena_batch_sync/";
 		int errorCount = 0;
+		
+		loadHeroes();
 
 		System.out.println("***Arena Batch Sync Started***");
 		try {
@@ -227,7 +278,7 @@ public class HearthSync {
 				
 				resultIds[index] 		= rs.getInt("id");
 				ar[index].cid 			= rs.getInt("id");
-				ar[index].myhero 		= heroesList.getHeroLabel(rs.getInt("heroid"));
+				ar[index].myhero 		= heroesList.getHeroName(rs.getInt("heroid"));
 				ar[index].wins 			= rs.getInt("wins");
 				ar[index].losses 		= rs.getInt("losses");
 				ar[index].timecaptured	= rs.getLong("timecaptured");
@@ -297,6 +348,8 @@ public class HearthSync {
 		String url = baseURL + "match_batch_sync/";
 		int errorCount = 0;
 
+		loadHeroes();
+		
 		System.out.println("***Match Batch Sync Started***");
 		try {
 			ResultSet rs = tracker.getUnsyncMatchResults();
@@ -310,8 +363,8 @@ public class HearthSync {
 				
 				resultIds[index] 		= rs.getInt("id");
 				ar[index].cid 			= rs.getInt("id");
-				ar[index].myhero 		= heroesList.getHeroLabel(rs.getInt("myheroid"));
-				ar[index].opphero		= heroesList.getHeroLabel(rs.getInt("oppheroid"));
+				ar[index].myhero 		= heroesList.getHeroName(rs.getInt("myheroid"));
+				ar[index].opphero		= heroesList.getHeroName(rs.getInt("oppheroid"));
 				ar[index].goes			= HearthReader.goesFirstToString(rs.getInt("goesfirst"));
 				ar[index].win			= rs.getInt("win");
 				ar[index].starttime		= rs.getLong("starttime");

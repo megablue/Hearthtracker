@@ -207,6 +207,8 @@ public class HearthUI {
 	        	try {
 	        		long sleepTime;
 
+	        		hearth.process();
+	        		
         			Thread.sleep(setting.scanInterval);
         			
         			note = hearth.getNotification();
@@ -275,7 +277,17 @@ public class HearthUI {
 	        						shlHearthtracker.getMonitor()
 	        				);
 			    		}
-	
+		    		}
+		    		
+		    		if(sync.isTimeout()){
+		 				NotifierDialog.notify(
+        						"Web Sync", 
+        						"Sync timeout. Will retry later.", 
+        						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
+        						shlHearthtracker.getMonitor()
+        				);
+		 				
+		 				nextSync = (int) (sync.getTimeout() - new Date().getTime());
 		    		}
 		    	}
 		    	
@@ -364,8 +376,11 @@ public class HearthUI {
 				hearththread.interrupt();
 				shutdown = true;
 				HearthSync sync = new HearthSync();
-				sync.syncArenaBatch();
-				sync.syncMatchBatch();
+				
+				if(sync.isValidKeyFormat() && sync.checkAccessKey()){
+					sync.syncArenaBatch();
+					sync.syncMatchBatch();
+				}
 			}
 		});
 		shlHearthtracker.setSize(620, 438);

@@ -971,11 +971,11 @@ public class HearthReader {
 	
 	public void process(){
 		boolean hsDetected = alwaysScan || (!alwaysScan && HearthHelper.isHSDetected());
-		
+
 		if(paused || !hsDetected){
 			return;
 		}
-
+		
 		this.scanMode();
 		
 		if(this.isArenaMode()){
