@@ -14,16 +14,15 @@ import org.h2.jdbcx.JdbcDataSource;
 
 public class HearthTracker {	
 	Connection conn;
-	boolean isDirty = true;
-	boolean isWorking = false;
-	boolean testMode = false;
-	Date lastWrite = new Date();
-	String liveScore = "";
-	String liveHero = "";
-	String liveWinrate = "";
-	String liveGamestats = "";
-	String gameServer = "";
-	HearthDatabase dbSetting;
+	private boolean isDirty = true;
+	private boolean isWorking = false;
+	private boolean testMode = false;
+	private Date lastWrite = new Date();
+	private String liveScore = "";
+	private String liveHero = "";
+	private String liveGamestats = "";
+	private String gameServer = "";
+	private HearthDatabase dbSetting;
 	private static HearthConfigurator config = new HearthConfigurator();
 	private Statement stat;
 	
@@ -47,7 +46,7 @@ public class HearthTracker {
 	
 	private void initDB() throws SQLException{
 		JdbcDataSource ds = new JdbcDataSource();
-		ds.setURL("jdbc:h2:.//data/database");
+		ds.setURL("jdbc:h2:.//data/database;DB_CLOSE_ON_EXIT=FALSE");
 		ds.setUser("tracker");
 		ds.setPassword("tracker");
 		conn = ds.getConnection();
@@ -253,7 +252,7 @@ public class HearthTracker {
 			//Fixed the incorrect type declarations
 			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN SUBMITTED BIGINT");
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN SUBMITTED BIGINT");
-			
+
 			//tune down precision in order to match datetime widget better
 			stat.execute("UPDATE ARENARESULTS SET timeCaptured=(timeCaptured/1000)*1000");
 			stat.execute("UPDATE MATCHES SET starttime=(starttime/1000)*1000");
@@ -265,7 +264,11 @@ public class HearthTracker {
 		if(!newdb && dbSetting.version == 2){
 			stat.execute("ALTER TABLE ARENARESULTS ADD SERVER VARCHAR DEFAULT ''");
 			stat.execute("ALTER TABLE MATCHES ADD SERVER VARCHAR DEFAULT ''");
-			
+			stat.execute("ALTER TABLE ARENARESULTS ALTER COLUMN SUBMITTED SET DEFAULT 0");
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN SUBMITTED SET DEFAULT 0");
+			stat.execute("UPDATE ARENARESULTS SET submitted=0");
+			stat.execute("UPDATE MATCHES SET submitted=0");
+
 			//save upgraded version
 			dbSetting.version = 3;
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
@@ -303,23 +306,28 @@ public class HearthTracker {
 	public boolean isDirty(){
 
 		if(isDirty){
-			isDirty = false;
 			return true;
 		}
 		
 		return false;
 	}
 	
+	public void clearDirty(){
+		isDirty = false;
+	}
+	
 	public void saveArenaResult(int heroId, int wins, int losses, long time, boolean modified) throws SQLException{
 		int mod = modified ? 1 : 0;
 		time = (long)(time/1000)*1000;
 		
-		String sql = "INSERT INTO arenaResults(heroId, wins, losses, modified, timeCaptured, lastModified)"
+		String sql = "INSERT INTO arenaResults(heroId, wins, losses, modified, timeCaptured, server, submitted, lastModified)"
 				+"VALUES(" + heroId + "," 
 				+ wins + "," 
 				+ losses + ", " 
 				+ mod + ", " 
 				+ time + ", " 
+				+ "'" + gameServer + "', " 
+				+ "0, " 
 				+ time + ")";
 		stat.execute(sql);
 		isDirty = true;
@@ -361,7 +369,7 @@ public class HearthTracker {
 		int mod = modified ? 1 : 0;
 		startTime = (long) (startTime / 1000) * 1000; //fix precision issues
 		
-		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, lastModified, mode, modified, totalTime) " 
+		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, lastModified, mode, modified, server, submitted, totalTime) " 
 					+ "VALUES(" + myHeroId + "," 
 					+ oppHeroId + "," 
 					+ goesFirst + "," 
@@ -370,6 +378,8 @@ public class HearthTracker {
 					+ startTime + ","
 					+ mode + ","
 					+ mod + ","
+					+ "'" + gameServer + "', " 
+					+ "0, " 
 					+ totalTime + ")";
 
 		stat.execute(sql);
@@ -734,28 +744,28 @@ public class HearthTracker {
 	
 	public ResultSet getUnsyncArenaResults() throws SQLException{
 		ResultSet rs;
-		String query = "select * from ARENARESULTS WHERE submitted <= lastmodified ORDER BY ID ASC";
+		String query = "select * from ARENARESULTS WHERE lastmodified >= submitted OR submitted is null ORDER BY ID ASC";
 		rs = stat.executeQuery(query);
 		return rs;
 	}
 	
 	public int getUnsyncArenaResultsCount() throws SQLException{
 		ResultSet rs;
-		String query = "select COUNT(*) from ARENARESULTS WHERE submitted <= lastmodified ORDER BY ID ASC";
+		String query = "select COUNT(*) from ARENARESULTS WHERE lastmodified >= submitted OR submitted is null ORDER BY ID ASC";
 		rs = stat.executeQuery(query);
 		return rs.next() ? rs.getInt("COUNT(*)") : 0;
 	}
 	
 	public ResultSet getUnsyncMatchResults() throws SQLException{
 		ResultSet rs;
-		String query = "select * from MATCHES WHERE submitted <= lastmodified ORDER BY ID ASC";
+		String query = "select * from MATCHES WHERE lastmodified >= submitted OR submitted is null ORDER BY ID ASC";
 		rs = stat.executeQuery(query);
 		return rs;
 	}
 	
 	public int getUnsyncMatchResultsCount() throws SQLException{
 		ResultSet rs;
-		String query = "select COUNT(*) from MATCHES WHERE submitted <= lastmodified ORDER BY ID ASC";
+		String query = "select COUNT(*) from MATCHES WHERE lastmodified >= submitted  OR submitted is null ORDER BY ID ASC";
 		rs = stat.executeQuery(query);
 		return rs.next() ? rs.getInt("COUNT(*)") : 0;
 	}

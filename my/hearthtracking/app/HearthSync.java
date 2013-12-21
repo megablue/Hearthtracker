@@ -29,7 +29,7 @@ public class HearthSync {
 	
 	private HearthHeroesList heroesList;
 	
-	private int nounce = 0;
+	private int nonce = 0;
 	
 	private Gson gson = new Gson();
 	
@@ -42,6 +42,7 @@ public class HearthSync {
 		public int modified;
 		public int deleted;
 		public long lastmodified;
+		public String server;
 	}
 	
 	public class MatchResult {
@@ -56,11 +57,12 @@ public class HearthSync {
 		public int deleted;
 		public int modified;
 		public long lastmodified;
+		public String server;
 	}
 	
 	public HearthSync() {
 		tracker = new HearthTracker();
-		nounce = generateNounce();
+		nonce = generateNonce();
 		
 		heroesList = (HearthHeroesList) config.load("." + File.separator + "configs" + File.separator + "heroes.xml");
 		syncLog = (HearthSyncLog) config.load("." + File.separator + "configs" + File.separator + "sync.xml");
@@ -78,13 +80,13 @@ public class HearthSync {
 		setKey(syncLog.secretKey);
 	}
 	
-	private int generateNounce(){
+	private int generateNonce(){
 	   int range = (1000000000) + 1;     
 	   return (int)(Math.random() * range) + 1;
 	}
 	
-	private int getNounce(){
-		return nounce++;
+	private int getNonce(){
+		return nonce++;
 	}
 	
 	private void saveSyncLog(){
@@ -95,29 +97,52 @@ public class HearthSync {
 		secretKey = key;
 	}
 	
-	private String getKey(){
+	public String getKey(){
 		return secretKey;
+	}
+	
+	public void saveKey(){
+		syncLog.secretKey = secretKey;
+		config.save(syncLog, "." + File.separator + "configs" + File.separator + "sync.xml");
+	}
+	
+	public void invalidateKey(){
+		syncLog.secretKey = "";
+		config.save(syncLog, "." + File.separator + "configs" + File.separator + "sync.xml");
+	}
+	
+	public boolean isValidKeyFormat(){
+		return syncLog.secretKey.length() == 48 ? true : false;
 	}
 		
 	public boolean checkAccessKey(){
 		String url = baseURL + "key_check/";
+		boolean result = false;
 
 		MultipartContent formData = form(
 			data("key", getKey()),
-			data("nounce", getNounce() + "")
+			data("nonce", getNonce() + "")
 		);
 		
 		try {
-			System.out.println(url);
 			JSONResource jsonResult = resty.json(url, formData);
-			System.out.print(jsonResult.toString());
 			printEJSON(jsonResult);
+
+			if("true".equals(jsonResult.get("success").toString())){
+				saveKey();
+				result = true;
+			} else {
+				
+				if(!"Invalid nonce.".equals(jsonResult.get("message"))){
+					invalidateKey();
+				}
+			}
+			
 		} catch (Throwable e) {
 			System.out.println(e.getMessage());
-			return false;
 		}
 		
-		return true;
+		return result;
 	}
 	
 	private void printEJSON(JSONResource jsonResult){
@@ -129,186 +154,12 @@ public class HearthSync {
 		}
 	}
 	
-	public boolean syncArena(int cid, String myhero, int wins, 
-			int losses, long timecaptured, int modified,
-			int deleted, long lastmodified){
-		
-		String url = baseURL + "arena_sync/";
-		boolean success = false;
-		
-		MultipartContent formData = form(
-			data("key", 			getKey()		+ ""),
-			data("nounce", 			getNounce() 	+ ""),
-			data("cid", 			cid				+ ""),
-			data("myhero", 			myhero			+ ""),
-			data("wins", 			wins 			+ ""),
-			data("losses", 			losses 			+ ""),
-			data("timecaptured",	timecaptured	+ ""),
-			data("modified", 		modified 		+ ""),
-			data("deleted", 		deleted 		+ ""),
-			data("lastmodified", 	lastmodified 	+ "")
-		);
-			
-		try {
-			System.out.println("Attempting to sync arena result (" + cid + ")");
-			System.out.println("URL: " + url);
-			JSONResource jsonResult = resty.json(url, formData);
-			
-			success = (boolean) jsonResult.get("success");
-			
-			if(success){
-				tracker.updateArenaResultSyncTime(cid, new Date().getTime());
-			}
-			
-			syncLog.lastSync = new Date().getTime();
-			printEJSON(jsonResult);
-		} catch (Throwable e) {
-			System.out.println(e.getMessage());
-		}
-		
-		return success;
-	}
-	
-	public boolean syncMatch(int cid, String myhero, String opphero, 
-			String goes, int win, long starttime, int totaltime, String mode,
-			int deleted, int modified, long lastmodified){
-		
-		String url = baseURL + "match_sync/";
-		
-		JSONResource jsonResult;
-		boolean success = false;
-		
-		MultipartContent formData = form(
-				data("key", 			getKey()		+ ""),
-				data("nounce", 			getNounce() 	+ ""),
-				data("cid", 			cid				+ ""),
-				data("myhero", 			myhero			+ ""),
-				data("opphero", 		opphero			+ ""),
-				data("goes", 			goes			+ ""),
-				data("win", 			win 			+ ""),
-				data("starttime", 		starttime 		+ ""),
-				data("totaltime",		totaltime		+ ""),
-				data("mode", 			mode 			+ ""),
-				data("deleted", 		deleted 		+ ""),
-				data("modified", 		modified 		+ ""),
-				data("lastmodified", 	lastmodified 	+ "")
-		);
-		
-		try {
-			System.out.println("Attempting to sync match result (" + cid + ")");
-			System.out.println("URL: " + url);
-			jsonResult = resty.json(url, formData);
-			success = (boolean) jsonResult.get("success");
-			
-			if(success){
-				tracker.updateMatchResultSyncTime(cid, new Date().getTime());
-			}
-			
-			syncLog.lastSync = new Date().getTime();
-			printEJSON(jsonResult);
-		} catch (Throwable e) {
-			System.out.println(e.getMessage());
-		}
-		
-		return success;
-	}
-	
-	//sync all records with single query mode
-	public void syncAll(){
-		boolean success = false;
-		int errorCount = 0;
-		int recordCount = 0;
-		Date start = new Date();
-
-		try {
-			System.out.println("***Sync All Started***");
-			ResultSet rs = tracker.getUnsyncArenaResults();
-			
-			while(rs.next()){
-				recordCount++;
-				
-				success = syncArena(
-					rs.getInt("id"),
-					heroesList.getHeroLabel(rs.getInt("heroid")),
-					rs.getInt("wins"),
-					rs.getInt("losses"),
-					rs.getLong("timecaptured"),
-					rs.getInt("modified"),
-					rs.getInt("deleted"),
-					rs.getLong("lastmodified")
-				);
-				
-				if(success){
-					syncLog.lastSync = new Date().getTime();
-					saveSyncLog();
-				} else {
-					System.out.println("Failed to sync arena result ( " + rs.getInt("id") + " )");
-					errorCount++;
-				}
-				
-				if(errorCount > 10){
-					break;
-				}
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		
-		try {
-			ResultSet rs = tracker.getUnsyncMatchResults();
-
-			while(rs.next()){
-				recordCount++;
-					
-				success = syncMatch(
-					rs.getInt("id"),
-					heroesList.getHeroLabel(rs.getInt("myheroid")),
-					heroesList.getHeroLabel(rs.getInt("oppheroid")),
-					HearthReader.goesFirstToString(rs.getInt("goesfirst")),
-					rs.getInt("win"),
-					rs.getLong("starttime"),
-					rs.getInt("totaltime"),
-					HearthReader.gameModeToString(rs.getInt("mode")),
-					rs.getInt("deleted"),
-					rs.getInt("modified"),
-					rs.getLong("lastmodified")
-				);
-				
-				if(success){
-					syncLog.lastSync = new Date().getTime();
-					saveSyncLog();
-				} else {
-					System.out.println("Failed to sync arena result ( " + rs.getInt("id") + " )");
-					errorCount++;
-				}
-				
-				if(errorCount > 10){
-					break;
-				}
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		
-		float totalSeconds = (float)(new Date().getTime() - start.getTime())/1000;
-		float average = (float) totalSeconds / recordCount;
-		
-		System.out.println("Total time used: " + (float)(totalSeconds/60) + " mins");
-		System.out.println("Total records processeed: " + recordCount);
-		if(recordCount > 0){
-			System.out.println("Average time per record: " + average + " seconds");
-		}
-		
-		System.out.println("***Sync All Ended***");
-		saveSyncLog();
-	}
-	
 	public boolean syncWithJsonString(String url, String jsonString){
 		JSONResource jsonResult;
 		
 		MultipartContent formData = form(
 				data("key", 			getKey()		+ ""),
-				data("nounce", 			getNounce() 	+ ""),
+				data("nonce", 			getNonce() 		+ ""),
 				data("json", 			jsonString		+ "")
 		);
 		
@@ -318,15 +169,42 @@ public class HearthSync {
 		try {
 			jsonResult = resty.json(url, formData);
 			printEJSON(jsonResult);
-			return (boolean) jsonResult.get("success");
+			
+			syncLog.lastSync = new Date().getTime();
+			saveSyncLog();
+			return "true".equals(jsonResult.get("success").toString());
 		} catch (Throwable e) {
 			System.out.println(e.getMessage());
 		}
 		
 		return false;
 	}
+	
+	public long getLastSync(){
+		return syncLog.lastSync;
+	}
+	
+	public int getUnsyncArenaCount(){
+		try {
+			return tracker.getUnsyncArenaResultsCount();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
-	public void syncArenaBatch(){
+		return 0;
+	}
+	
+	public int getUnsyncMatchCount(){
+		try {
+			return tracker.getUnsyncMatchResultsCount();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+	}
+		
+	public boolean syncArenaBatch(){
 		//boolean success = false;
 		int recordCount = 0;
 		//Date start = new Date();
@@ -334,6 +212,7 @@ public class HearthSync {
 		int[] resultIds = new int[BATCH_SIZE];
 		int index = -1;
 		String url = baseURL + "arena_batch_sync/";
+		int errorCount = 0;
 
 		System.out.println("***Arena Batch Sync Started***");
 		try {
@@ -355,15 +234,19 @@ public class HearthSync {
 				ar[index].modified		= rs.getInt("modified");
 				ar[index].deleted		= rs.getInt("deleted");
 				ar[index].lastmodified	= rs.getLong("lastmodified");
+				ar[index].server		= rs.getString("server");
 				
 				if(recordCount != 0 && index == (BATCH_SIZE - 1)){
 					try {
 						String json = gson.toJson(ar);
 						if(syncWithJsonString(url, json)){
 							tracker.updateArenaResultSyncTime(resultIds, new Date().getTime());
+						}else{
+							errorCount++;
 						}
 					} catch (Throwable e) {
 						System.out.println(e.getMessage());
+						errorCount++;
 					}
 				}
 
@@ -382,9 +265,12 @@ public class HearthSync {
 					json = gson.toJson(arResized);
 					if(syncWithJsonString(url, json)){
 						tracker.updateArenaResultSyncTime(resultIdsResized, new Date().getTime());
+					}else{
+						errorCount++;
 					}
 				} catch (Throwable e) {
 					System.out.println(e.getMessage());
+					errorCount++;
 				}
 			}
 	
@@ -393,9 +279,15 @@ public class HearthSync {
 		}
 		System.out.println("Affected records: " + recordCount);
 		System.out.println("***Arena Batch Sync Ended***");
+		
+		if(errorCount > 0){
+			return false;
+		}
+		
+		return true;
 	}
 	
-	public void syncMatchBatch(){
+	public boolean syncMatchBatch(){
 		//boolean success = false;
 		int recordCount = 0;
 		//Date start = new Date();
@@ -403,6 +295,7 @@ public class HearthSync {
 		int[] resultIds = new int[BATCH_SIZE];
 		int index = -1;
 		String url = baseURL + "match_batch_sync/";
+		int errorCount = 0;
 
 		System.out.println("***Match Batch Sync Started***");
 		try {
@@ -423,19 +316,23 @@ public class HearthSync {
 				ar[index].win			= rs.getInt("win");
 				ar[index].starttime		= rs.getLong("starttime");
 				ar[index].totaltime		= rs.getInt("totaltime");
-				ar[index].mode			= HearthReader.gameModeToString(rs.getInt("mode"));
+				ar[index].mode			= HearthReader.gameModeToString(rs.getInt("mode")).toLowerCase();
 				ar[index].deleted		= rs.getInt("deleted");
 				ar[index].modified		= rs.getInt("modified");
 				ar[index].lastmodified	= rs.getLong("lastmodified");
+				ar[index].server		= rs.getString("server");
 				
 				if(recordCount != 0 && index == (BATCH_SIZE - 1)){
 					try {
 						String json = gson.toJson(ar);
 						if(syncWithJsonString(url, json)){
 							tracker.updateMatchResultSyncTime(resultIds, new Date().getTime());
+						}else{
+							errorCount++;
 						}
 					} catch (Throwable e) {
 						System.out.println(e.getMessage());
+						errorCount++;
 					}
 				}
 
@@ -454,9 +351,12 @@ public class HearthSync {
 					json = gson.toJson(arResized);
 					if(syncWithJsonString(url, json)){
 						tracker.updateMatchResultSyncTime(resultIdsResized, new Date().getTime());
+					}else{
+						errorCount++;
 					}
 				} catch (Throwable e) {
 					System.out.println(e.getMessage());
+					errorCount++;
 				}
 			}
 	
@@ -465,37 +365,32 @@ public class HearthSync {
 		}
 		System.out.println("Affected records: " + recordCount);
 		System.out.println("***Match Batch Sync Ended***");
-	}
-	
-	public void test(){
-		String url = baseURL + "test/";
-		int[] array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,};		
-		System.out.println(url);
 		
-		try {
-			String jsondata = gson.toJson(array);
-			System.out.println(jsondata);
-			
-			MultipartContent formData = form(
-				data("key", getKey()),
-				data("nounce", getNounce() + ""),
-				data("json", jsondata)
-			);
-			
-			resty.json(url, formData);
-		} catch (Throwable e) {
-			System.out.println(e.getMessage());
+		if(errorCount > 0){
+			return false;
 		}
+		
+		return true;
 	}
 	
-//	private void sleep(){
-//		long sleepTime;
-//		Date lastScan = new Date();
-//
-//		sleepTime = setting.scanInterval - (new Date().getTime() - lastScan.getTime());
+//	public void test(){
+//		String url = baseURL + "test/";
+//		int[] array = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,};		
+//		System.out.println(url);
 //		
-//		if(sleepTime > 0){
-//			Thread.sleep(sleepTime);
+//		try {
+//			String jsondata = gson.toJson(array);
+//			System.out.println(jsondata);
+//			
+//			MultipartContent formData = form(
+//				data("key", getKey()),
+//				data("nonce", getnonce() + ""),
+//				data("json", jsondata)
+//			);
+//			
+//			resty.json(url, formData);
+//		} catch (Throwable e) {
+//			System.out.println(e.getMessage());
 //		}
 //	}
 }

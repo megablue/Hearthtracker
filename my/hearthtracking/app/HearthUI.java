@@ -118,17 +118,19 @@ public class HearthUI {
 
 	public static int[] version = {1, 1, 3};
 	public static int experimental = 0;
-	private Text text;
+	private Text txtWebSyncKey;
 	private Composite composite_11;
 	private Spinner spXOffset;
 	private Spinner spYOffset;
+	
+	public static int syncInterval =  1 * 60 * 1000;
 	
 	volatile static boolean shutdown = false;
 	private Button btnAlwaysScan;
 	
 	private static List<HearthReaderNotification> notifications = new ArrayList<HearthReaderNotification>();
 	private CCombo cbServer;
-	
+
 	/**
 	 * Launch the application.
 	 * @param args
@@ -204,18 +206,6 @@ public class HearthUI {
 	    	while(!shutdown){
 	        	try {
 	        		long sleepTime;
-//	        		Date lastScan = new Date();
-	        		hearth.process();
-//	        		long timeDiff = new Date().getTime() - lastScan.getTime();
-//	        		
-//	        		sleepTime =  setting.scanInterval - timeDiff;
-//	        		
-//	        		System.out.println("Diff: " + timeDiff);
-//	        		System.out.println("Sleep: " + sleepTime);
-//
-//        			if(sleepTime < 0){
-//        				sleepTime = 100;
-//        			}
 
         			Thread.sleep(setting.scanInterval);
         			
@@ -240,20 +230,63 @@ public class HearthUI {
 	    }
     }
     
-    private static class SyncThread
-    implements Runnable {
-	    public void run() {
-	    	while(true){
-//	        	try {
-//	        		
-//	    		} catch (InterruptedException e) {
-//	    			break;
-//	    		}
-	    	}
-	    }
+    private void recordSyncTimer(){
+    	
+    	Runnable runnable = new Runnable() {
+		    public void run() {
+		    	HearthSync sync = new HearthSync();
+		    	boolean success = true;
+		    	boolean hasEffected = false;
+		    	
+		    	long lastSync = sync.getLastSync();
+		    	long timeDiff = new Date().getTime() - lastSync;
+		    	int nextSync = (int) (timeDiff > syncInterval ? syncInterval : timeDiff - syncInterval);
+		    	
+		    	if(timeDiff >= syncInterval && sync.isValidKeyFormat()){	
+		    		
+		    		if(sync.checkAccessKey()){
+		    			int arenaRecordsCount = sync.getUnsyncArenaCount();
+		    			int matchRecordsCount = sync.getUnsyncMatchCount();
+
+		    			if(arenaRecordsCount > 0){
+		    				success = sync.syncArenaBatch();
+		    				hasEffected = true;
+		    				lastSync = new Date().getTime();
+		    			}
+		    			
+		    			if(matchRecordsCount > 0){
+		    				success = sync.syncMatchBatch() && success;
+		    				hasEffected = true;
+		    				lastSync = new Date().getTime();
+		    			}
+			    		
+			    		if(hasEffected && success){
+			 				NotifierDialog.notify(
+	        						"Web Sync", 
+	        						"Without errors. " + (matchRecordsCount + arenaRecordsCount) + " records. ", 
+	        						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
+	        						shlHearthtracker.getMonitor()
+	        				);
+			    		} else if(hasEffected) {
+			 				NotifierDialog.notify(
+	        						"Web Sync", 
+	        						"With errors. " + (matchRecordsCount + arenaRecordsCount) + " records. ", 
+	        						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
+	        						shlHearthtracker.getMonitor()
+	        				);
+			    		}
+	
+		    		}
+		    	}
+		    	
+		    	Display.getDefault().timerExec(nextSync, this);
+		    }
+		};
+    	
+		//Starts after 100 miliseconds
+		Display.getDefault().timerExec(100, runnable);
     }
-
-
+    
     private void processNotification(){
     	Runnable runnable = new Runnable() {
 		    public void run() {
@@ -292,6 +325,7 @@ public class HearthUI {
 		hearththread = new Thread(new ReaderThread());
 		hearththread.start();
 		processNotification();
+		recordSyncTimer();
 
 		while (!shlHearthtracker.isDisposed()) {
 			if(hearththread.isAlive()){
@@ -300,6 +334,7 @@ public class HearthUI {
 					window.fillArenaTable();
 					window.fillMatchesTable();
 					window.updateStatus();
+					tracker.clearDirty();
 				}
 				
 				if(hearth.isDirty()){
@@ -328,6 +363,9 @@ public class HearthUI {
 			public void shellClosed(ShellEvent arg0) {
 				hearththread.interrupt();
 				shutdown = true;
+				HearthSync sync = new HearthSync();
+				sync.syncArenaBatch();
+				sync.syncMatchBatch();
 			}
 		});
 		shlHearthtracker.setSize(620, 438);
@@ -522,9 +560,8 @@ public class HearthUI {
 		link.setBounds(63, 80, 163, 15);
 		link.setText("<a>HearthTracker Web Sync Key</a>");
 		
-		text = new Text(grpGeneral, SWT.BORDER | SWT.PASSWORD);
-		text.setBounds(232, 78, 241, 21);
-		text.setEnabled(false);
+		txtWebSyncKey = new Text(grpGeneral, SWT.BORDER);
+		txtWebSyncKey.setBounds(232, 78, 241, 21);
 		
 		Label lblNewLabel_14 = new Label(grpGeneral, SWT.NONE);
 		lblNewLabel_14.setBounds(144, 53, 81, 15);
@@ -629,7 +666,7 @@ public class HearthUI {
 		btnAlwaysScan.setText("Enable");
 		
 		TabItem tbtmDiagnostics = new TabItem(tabFolder, SWT.NONE);
-		tbtmDiagnostics.setText("D&iagnostics");
+		tbtmDiagnostics.setText("&Tools");
 		
 		Composite composite_4 = new Composite(tabFolder, SWT.NONE);
 		tbtmDiagnostics.setControl(composite_4);
@@ -820,7 +857,7 @@ public class HearthUI {
 		
 		poppulatesOffsetOptions();
 		poppulateScannerOptions();
-		poppulateGameLangs();
+		poppulateGeneralPerferences();
 		poppulateGameServer();
 		poppulateResolutions();
 		poppulateDiagnoticsControls();
@@ -1632,7 +1669,7 @@ public class HearthUI {
 		
 	}
 	
-	private void poppulateGameLangs(){
+	private void poppulateGeneralPerferences(){
 		cmbGameLang.removeAll();
 		int selected = 0;
 		
@@ -1674,6 +1711,54 @@ public class HearthUI {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				this.selected(e);
+			}
+		});
+		
+		txtWebSyncKey.setText(new HearthSync().getKey());
+		
+		txtWebSyncKey.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				String key = txtWebSyncKey.getText().trim();
+				boolean keyValid = false;
+				boolean sameKey = false;
+				HearthSync hsync = new HearthSync();
+					
+				if(hsync.getKey().equals(key)){
+					sameKey = true;
+				}
+				
+				if(key.length() == 48){
+					hsync.setKey(key);
+					
+					if(hsync.checkAccessKey()){
+						keyValid = true;
+					}
+				}
+				
+				if(!sameKey && keyValid){
+	 				NotifierDialog.notify(
+    						"Web Access Key", 
+    						"Validated. Key saved. Sync started.", 
+    						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
+    						shlHearthtracker.getMonitor()
+    				);
+	 				
+	 				hsync.setKey(key);
+	 				hsync.saveKey();
+
+				}else if(!sameKey && !keyValid){
+					NotifierDialog.notify(
+    						"Web Access Key", 
+    						"Invalid. Key is not saved!", 
+    						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
+    						shlHearthtracker.getMonitor()
+    				);
+				}
+			}
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtWebSyncKey.selectAll();
 			}
 		});
 	}

@@ -4,16 +4,13 @@ import java.io.File;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Composite;
 
 public class HearthTrackerUpgradeUI {
 	HearthTracker tracker = new HearthTracker();
@@ -63,6 +60,8 @@ public class HearthTrackerUpgradeUI {
 						setting = new HearthSetting();
 						config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
 					}
+					
+					setting.gameServer = server;
 					
 					config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
 					ui.close();
