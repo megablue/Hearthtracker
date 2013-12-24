@@ -214,8 +214,7 @@ public class HearthUI {
         			note = hearth.getNotification();
         			
         			if(note != null){
-        				notifications.add(note);				
-        				display.wake();
+        				notifications.add(note);
         			}
         			
         			if(Thread.currentThread().isInterrupted()){
@@ -1598,19 +1597,22 @@ public class HearthUI {
 		hearth.setXOffetOverride(setting.xOffset);
 		hearth.setYOffetOverride(setting.yOffset);
 		
-		spXOffset.addSelectionListener(new SelectionAdapter() {
+		spXOffset.setSelection(setting.xOffset);
+		spYOffset.setSelection(setting.yOffset);
+		
+		spXOffset.addFocusListener(new FocusAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				setting.xOffset = spXOffset.getSelection();
+			public void focusLost(FocusEvent arg0) {
+				setting.xOffset = Integer.parseInt(spXOffset.getText());
 				hearth.setXOffetOverride(setting.xOffset);
 				savePreferences();
 			}
 		});
 		
-		spYOffset.addSelectionListener(new SelectionAdapter() {
+		spYOffset.addFocusListener(new FocusAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				setting.yOffset = spYOffset.getSelection();
+			public void focusLost(FocusEvent arg0) {
+				setting.yOffset = Integer.parseInt(spYOffset.getText());
 				hearth.setYOffetOverride(setting.yOffset);
 				savePreferences();
 			}
@@ -1813,118 +1815,9 @@ public class HearthUI {
 	}
 	
 	private void updateStatus(){
-		Date lastSeen = hearth.getLastseen();
-		String seen = lastSeen.getTime() == 0 ? "Nope" : HearthHelper.getPrettyText(lastSeen);
-		String goes = "Unknown";
-		int arenaWins = -1;
-		int arenaLosses = -1;
-		float arenaWinrate = -1;
-		
-		int rankedWins = -1;
-		int rankedLosses = -1;
-		float rankedWinrate = -1;
-		
-		int unrankedWins = -1;
-		int unrankedLosses = -1;
-		float unrankedWinrate = -1;
-
-		try {
-			arenaWins = 	tracker.getTotalWins(HearthReader.ARENAMODE);
-			arenaLosses = 	tracker.getTotalLosses(HearthReader.ARENAMODE);
-			arenaWinrate =  (arenaWins + arenaLosses) > 0 ? (float) arenaWins /  (arenaWins + arenaLosses) * 100: -1;
-			rankedWins = 	tracker.getTotalWins(HearthReader.RANKEDMODE);
-			rankedLosses = 	tracker.getTotalLosses(HearthReader.RANKEDMODE);
-			rankedWinrate =  (rankedWins + rankedLosses) > 0 ? (float) rankedWins / (rankedWins + rankedLosses) * 100 : -1;
-			unrankedWins = 	tracker.getTotalWins(HearthReader.UNRANKEDMODE);
-			unrankedLosses = 	tracker.getTotalLosses(HearthReader.UNRANKEDMODE);
-			unrankedWinrate =  (unrankedWins + unrankedLosses) > 0 ? (float) unrankedWins / (unrankedWins + unrankedLosses) * 100 : -1;
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		
-		String strArena = arenaWinrate > -1 ?  arenaWins + "-" + arenaLosses + " (" + new DecimalFormat("0.00").format(arenaWinrate) + "%) " : "N|A";
-		String strRanked = rankedWinrate > -1 ?  rankedWins + "-" + rankedLosses + " (" + new DecimalFormat("0.00").format(rankedWinrate) + "%) " : "N|A";
-		String strUnranked = unrankedWinrate > -1 ? unrankedWins + "-" + unrankedLosses + " (" + new DecimalFormat("0.00").format(unrankedWinrate) + "%) " : "N|A";
-
-		if(hearth.isGoFirst()){
-			goes = "first";
-		}
-		
-		if(hearth.isGoSecond()){
-			goes = "second";
-		}
-		
-		styledTextStatus.setText("");
-		
-		styledTextStatus.append("Last seen: " + seen + "\r\n");
-		
-		if(arenaWinrate > -1){
-			styledTextStatus.append("Arena: " + strArena  +"\r\n");
-		}
-		
-		if(rankedWinrate > -1){
-			styledTextStatus.append("Ranked: " + strRanked +"\r\n");
-		}
-		
-		if(unrankedWinrate > -1){
-			styledTextStatus.append("Unranked: " + strUnranked +"\r\n");
-		}
-
-		styledTextStatus.append("Current Game mode: " + hearth.getGameMode() +"\r\n");
-		
-		if(hearth.isArenaMode()){
-			String score = hearth.getArenaWins() > -1 && hearth.getArenaLosses() > -1 ? hearth.getArenaWins() + "-" + hearth.getArenaLosses() : "Unknown";
-			
-			styledTextStatus.append("\r\n");
-			styledTextStatus.append("Live Arena status" + "\r\n");
-			styledTextStatus.append("Score: " + score + "\r\n");
-			styledTextStatus.append("Playing as " + hearth.getMyHero() + "\r\n");
-		}
-				
-		if( !hearth.getMyHero().toLowerCase().equals("unknown") || hearth.isGoFirst() || hearth.isGoSecond() ){
-			styledTextStatus.append("\r\n");
-			styledTextStatus.append("Live match status" + "\r\n");
-			styledTextStatus.append(hearth.getMyHero() + " vs " + hearth.getOppHero() + ", " + goes + "\r\n");
-		}
-		
-		try {
-			ResultSet rs = tracker.getLastMatches(5);
-
-			styledTextStatus.append("\r\nLatest match(es): \r\n");
-			
-			while(rs.next()){
-				
-				String as 	= heroesList.getHeroLabel(rs.getInt("MYHEROID"));
-				String vs 	= heroesList.getHeroLabel(rs.getInt("OPPHEROID"));
-				String first = rs.getInt("GOESFIRST") == 1 ? "(1st) " : "(2nd) ";
-				String result = rs.getInt("WIN") == 1 ? "(W) " : "(L) ";
-				
-				if(rs.getInt("GOESFIRST") == -1){
-					first =  "";
-				}
-				
-				if(rs.getInt("WIN") == -1){
-					result =  "";
-				}
-				
-				styledTextStatus.append(as + " vs " + vs + " " + first + result + "\r\n");
-			}
-			
-			rs = tracker.getLastArenaResults(5);
-
-			styledTextStatus.append("\r\nLatest Arena: \r\n");
-			
-			while(rs.next()){
-				
-				String as 	= heroesList.getHeroLabel(rs.getInt("HEROID"));
-				String result = rs.getInt("WINS") + "-" + rs.getInt("LOSSES");
-	
-				styledTextStatus.append(as + " " + result + "\r\n");
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		String overview = hearth.getOverview();
+		styledTextStatus.setText(overview);
+		tracker.writeLines(overview);
 	}
 	
 	private void setupModeSelection(){

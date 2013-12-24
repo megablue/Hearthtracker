@@ -2,7 +2,9 @@ package my.hearthtracking.app;
 
 import java.awt.Color;
 import java.io.File;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -526,6 +528,7 @@ public class HearthReader {
 	private synchronized void scanArenaScore() {
 		boolean foundWins = false;
 		boolean foundLosses = false;
+		boolean saved = false;
 
 		for(int i = (winsImageTarget.length - 1); i >= 0; i--){
 			foundWins = this.findImage(readerSettings.winsScanboxes[i], winsImageTarget[i], "Wins (" + i + ")");
@@ -558,10 +561,11 @@ public class HearthReader {
 		if(foundWins && (wins == (winsImageTarget.length - 1) || losses == 3) && (previousWins != wins || previousLosses != losses) ){
 
 			try {
+				int hero = myHero != -1 ? myHero : exMyHero;
+
 				System.out.println("Saving arena result...");
-				tracker.saveArenaResult(myHero, wins, losses, new Date().getTime(), false);
+				tracker.saveArenaResult(hero, wins, losses, new Date().getTime(), false);
 				System.out.println("Done saving arena result...");
-				this.formatArenaStatus();
 				isDirty = true;
 				this.resetFlags();
 			} catch (SQLException e) {
@@ -572,7 +576,15 @@ public class HearthReader {
 		if(foundWins && (previousWins != wins || previousLosses != losses)){
 			previousWins = wins;
 			previousLosses = losses;
-			notifications.add(new HearthReaderNotification("Arena score", "Wins " + wins + ", losses " + losses));
+			String hero = myHero != -1 ? heroesList.getHeroLabel(myHero) : heroesList.getHeroLabel(exMyHero);
+			
+			if(!saved){
+				notifications.add(new HearthReaderNotification("Arena score", "Wins " + wins + ", losses " + losses + " as " + hero));
+			} else {
+				notifications.add(new HearthReaderNotification("Arena concluded", "Wins " + wins + ", losses " + losses + " as " + hero));
+			}
+			
+			saved = false;
 			isDirty = true;
 		}
 	}
@@ -662,8 +674,6 @@ public class HearthReader {
 					isDirty = true;
 					notifications.add(new HearthReaderNotification("Hero Detected", "Your hero is " + heroesList.getHeroLabel(i)));
 				}
-				
-				this.formatMatchStatus();
 				break;
 			}
 		}
@@ -679,7 +689,6 @@ public class HearthReader {
 					
 					notifications.add(new HearthReaderNotification("Hero Detected", "Opponent hero is " + heroesList.getHeroLabel(i)));
 				}
-				this.formatMatchStatus();
 				break;
 			}
 		}
@@ -701,45 +710,45 @@ public class HearthReader {
 		}
 		
 		if(found){
-			int totalTime = (int) (new Date().getTime() - startTime.getTime())/1000;
-			
 			assert goFirst == 1 || goFirst == 0;
 			assert victory == 1 || victory == 0;
-			
-			this.formatMatchStatus();
-			
-			try {
-				isDirty = true;
 				
-				if(exVictory != victory){
-					
-					if(victory == 1){
-						System.out.println("Found Victory");
-						notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Victory!"));
-					} else if(victory == 0) {
-						System.out.println("Found Defeat");
-						notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Defeat!"));
-					}
-					
-					System.out.println("Saving match result...");
-					tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime, false);
-					System.out.println("Done saving match result...");
-					
-					exVictory = victory;
-					inGameMode = 0;
-					victory = -1;
-					myHero = -1;
-					oppHero = -1;
-					goFirst = -1;
-				}
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
+			isDirty = true;
+			
+			if(exVictory != victory){
+				saveGameResult();
 			}
 			
 		}
 		
 		return;
+	}
+	
+	private void saveGameResult(){
+		int totalTime = (int) (new Date().getTime() - startTime.getTime())/1000;
+		
+		if(victory == 1){
+			System.out.println("Found Victory");
+			notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Victory!"));
+		} else if(victory == 0) {
+			System.out.println("Found Defeat");
+			notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Defeat!"));
+		}
+		
+		System.out.println("Saving match result...");
+		try {
+			tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime, false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Done saving match result...");
+		
+		exVictory = victory;
+		inGameMode = 0;
+		victory = -1;
+		myHero = -1;
+		oppHero = -1;
+		goFirst = -1;
 	}
 	
 	public boolean isDirty(){
@@ -752,49 +761,6 @@ public class HearthReader {
 		return false;
 	}
 	
-	private synchronized void formatMatchStatus(){
-		String whosFirst = goFirst == 1 ? "Goes first" : "Goes second";
-		String result = victory == 1 ? ", 1 - 0 " : ", 0 - 1 ";
-		String output = "Unknown";
-		
-		if(myHero == -1){
-			return;
-		}
-		
-		if(goFirst != -1){
-			output = whosFirst;
-		}
-		
-		if(goFirst != -1 && oppHero != -1){
-			output = whosFirst + ", vs " + heroesList.getHeroLabel(oppHero);
-		}
-		
-		if(goFirst != -1 && oppHero != -1 && victory != -1){
-			output = whosFirst + ", vs " + heroesList.getHeroLabel(oppHero) + result;
-		}
-		
-		tracker.ouputMatchStatus(HearthReader.ARENAMODE, output);
-	}
-	
-	private synchronized void formatArenaStatus(){
-		String score = "Unknown";
-		String hero = "Unknown";
-
-		if(wins != -1){
-			if(losses == -1){
-				losses = 0;
-			}
-			
-			score = wins + " - " + losses;
-		}
-		
-		if(myHero != -1){
-			hero = heroesList.getHeroLabel(myHero);
-		}
-		
-		tracker.outputArenaStatus(ARENAMODE, score, hero);
-	}
-	
 	public boolean isVictory(){
 		return victory == 1 ? true : false;
 	}
@@ -804,39 +770,155 @@ public class HearthReader {
 			return;
 		}
 		
+		boolean found = false;
+		
 		if(this.findImage(readerSettings.goFirstScanbox, goFirstImageTarget, "Go First")){
 			goFirst = 1;
-			
-			if(exGoFirst != goFirst){
-				System.out.println("Found go first");
-				exGoFirst = goFirst;
-				inGameMode = 1;
-				startTime = new Date();
-				this.formatMatchStatus();
-				isDirty = true;
-				notifications.add(new HearthReaderNotification("Coin detected", "You go first!"));
-			}
-
-			return;
+			found = true;
 		}
 		
-		if(this.findImage(readerSettings.goSecondScanbox, goSecondImageTarget, "Go Second")){
+		if(!found && this.findImage(readerSettings.goSecondScanbox, goSecondImageTarget, "Go Second")){
 			goFirst = 0;
+			found = true;
+		}
+		
+		//check are we scanning the "same" scene twice
+		if(found && exGoFirst != goFirst){
 			
-			if(exGoFirst != goFirst){
-				System.out.println("Found go second");
-				exGoFirst = goFirst;
-				inGameMode = 1;
-				startTime = new Date();
-				this.formatMatchStatus();
-				isDirty = true;
+			if(goFirst == 1){
+				System.out.println("Found coin, go first");
+				notifications.add(new HearthReaderNotification("Coin detected", "You go first!"));
+			} else if( goFirst == 0){
+				System.out.println("Found coin, go second");
 				notifications.add(new HearthReaderNotification("Coin detected", "You go second!"));
 			}
 			
-			return;
+			//if we failed to detect the last game result scene
+			if(inGameMode == 1){
+				//save the game result of last game regardless of the game result
+				saveGameResult();
+			}
+			
+			exGoFirst = goFirst;
+			inGameMode = 1;
+			startTime = new Date();
+			isDirty = true;
 		}
 		
 		return;
+	}
+	
+	public String getOverview(){
+		Date lastSeen = this.getLastseen();
+		String seen = lastSeen.getTime() == 0 ? "Nope" : HearthHelper.getPrettyText(lastSeen);
+		String goes = "Unknown";
+		int arenaWins = -1;
+		int arenaLosses = -1;
+		float arenaWinrate = -1;
+		
+		int rankedWins = -1;
+		int rankedLosses = -1;
+		float rankedWinrate = -1;
+		
+		int unrankedWins = -1;
+		int unrankedLosses = -1;
+		float unrankedWinrate = -1;
+		String output = "";
+
+		try {
+			arenaWins = 	tracker.getTotalWins(HearthReader.ARENAMODE);
+			arenaLosses = 	tracker.getTotalLosses(HearthReader.ARENAMODE);
+			arenaWinrate =  (arenaWins + arenaLosses) > 0 ? (float) arenaWins /  (arenaWins + arenaLosses) * 100: -1;
+			rankedWins = 	tracker.getTotalWins(HearthReader.RANKEDMODE);
+			rankedLosses = 	tracker.getTotalLosses(HearthReader.RANKEDMODE);
+			rankedWinrate =  (rankedWins + rankedLosses) > 0 ? (float) rankedWins / (rankedWins + rankedLosses) * 100 : -1;
+			unrankedWins = 	tracker.getTotalWins(HearthReader.UNRANKEDMODE);
+			unrankedLosses = 	tracker.getTotalLosses(HearthReader.UNRANKEDMODE);
+			unrankedWinrate =  (unrankedWins + unrankedLosses) > 0 ? (float) unrankedWins / (unrankedWins + unrankedLosses) * 100 : -1;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		String strArena = arenaWinrate > -1 ?  arenaWins + "-" + arenaLosses + " (" + new DecimalFormat("0.00").format(arenaWinrate) + "%) " : "N|A";
+		String strRanked = rankedWinrate > -1 ?  rankedWins + "-" + rankedLosses + " (" + new DecimalFormat("0.00").format(rankedWinrate) + "%) " : "N|A";
+		String strUnranked = unrankedWinrate > -1 ? unrankedWins + "-" + unrankedLosses + " (" + new DecimalFormat("0.00").format(unrankedWinrate) + "%) " : "N|A";
+
+		if(this.isGoFirst()){
+			goes = "first";
+		}
+		
+		if(this.isGoSecond()){
+			goes = "second";
+		}
+		
+		output += "Last seen: " + seen + "\r\n";
+		
+		if(arenaWinrate > -1){
+			output +="Arena: " + strArena  +"\r\n";
+		}
+		
+		if(rankedWinrate > -1){
+			output +="Ranked: " + strRanked +"\r\n";
+		}
+		
+		if(unrankedWinrate > -1){
+			output +="Unranked: " + strUnranked +"\r\n";
+		}
+
+		output +="Current Game mode: " + this.getGameMode() +"\r\n";
+		
+		if(this.isArenaMode()){
+			String score = this.getArenaWins() > -1 && this.getArenaLosses() > -1 ? this.getArenaWins() + "-" + this.getArenaLosses() : "Unknown";
+			
+			output +="\r\n";
+			output +="Live Arena status" + "\r\n";
+			output +="Score: " + score + "\r\n";
+			output +="Playing as " + this.getMyHero() + "\r\n";
+		}
+				
+		if( !this.getMyHero().toLowerCase().equals("unknown") || this.isGoFirst() || this.isGoSecond() ){
+			output +="\r\n";
+			output +="Live match status" + "\r\n";
+			output += this.getMyHero() + " vs " + this.getOppHero() + ", " + goes + "\r\n";
+		}
+		
+		try {
+			ResultSet rs = tracker.getLastMatches(5);
+			output += "\r\nLatest match(es): \r\n";
+			while(rs.next()){
+				
+				String as 	= heroesList.getHeroLabel(rs.getInt("MYHEROID"));
+				String vs 	= heroesList.getHeroLabel(rs.getInt("OPPHEROID"));
+				String first = rs.getInt("GOESFIRST") == 1 ? "(1st) " : "(2nd) ";
+				String result = rs.getInt("WIN") == 1 ? "(W) " : "(L) ";
+				
+				if(rs.getInt("GOESFIRST") == -1){
+					first =  "";
+				}
+				
+				if(rs.getInt("WIN") == -1){
+					result =  "";
+				}
+				
+				output += as + " vs " + vs + " " + first + result + "\r\n";
+			}
+			
+			rs = tracker.getLastArenaResults(5);
+
+			output +="\r\nLatest Arena: \r\n";
+			
+			while(rs.next()){
+				
+				String as 	= heroesList.getHeroLabel(rs.getInt("HEROID"));
+				String result = rs.getInt("WINS") + "-" + rs.getInt("LOSSES");
+				output +=as + " " + result + "\r\n";
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return output;
 	}
 	
 	public int getBoardWidth(){
@@ -973,6 +1055,11 @@ public class HearthReader {
 		boolean hsDetected = alwaysScan || (!alwaysScan && HearthHelper.isHSDetected());
 
 		if(paused || !hsDetected){
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				//
+			}
 			return;
 		}
 		

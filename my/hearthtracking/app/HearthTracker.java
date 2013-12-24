@@ -17,10 +17,6 @@ public class HearthTracker {
 	private boolean isDirty = true;
 	private boolean isWorking = false;
 	private boolean testMode = false;
-	private Date lastWrite = new Date();
-	private String liveScore = "";
-	private String liveHero = "";
-	private String liveGamestats = "";
 	private String gameServer = "";
 	private HearthDatabase dbSetting;
 	private static HearthConfigurator config = new HearthConfigurator();
@@ -852,51 +848,8 @@ public class HearthTracker {
 		return rs;
 	}
 	
-	public void outputArenaStatus(int mode, String score, String hero){
-		liveScore = score;
-		liveHero = hero;
-		this.saveStreamStats(mode);
-	}
-	
-	public void ouputMatchStatus(int mode, String match){
-		liveGamestats = match;
-		this.saveStreamStats(mode);
-	}
-	
-	private void saveStreamStats(int mode){
-		float winrate = 0;
-		String overall = "Overall win rate: ";
-		String arenaScore = "Arena score: " + liveScore;
-		String arenaClass = "Arena class: " + liveHero;
-		String latestGame = "Arena game: " + liveGamestats;
-		String[] lines = new String[4];
-		
-		try {
-			winrate = this.getOverallWinRate(mode);
-			
-			if(winrate > -1){
-				overall += winrate + " %";
-			} else {
-				overall += " N|A";
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		lines[0] = overall;
-		lines[1] = arenaScore;
-		lines[2] = arenaClass;
-		lines[3] = latestGame;
-		
-		this.writeLines(lines);
-	}
-	
-	private void writeLines(String[] lines){
-		
-		//limit the write frequency to 1 second
-		if(new Date().getTime() < lastWrite.getTime() + 1000){
-			return;
-		}
+	public void writeLines(String txt){
+		String[] lines = txt.split("\r\n");
 		
 		HearthHelper.createFolder("./output");
 		
@@ -906,8 +859,6 @@ public class HearthTracker {
 				lineWriter.println(lines[i]);
 				lineWriter.close();
 			}
-			
-			lastWrite = new Date();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
