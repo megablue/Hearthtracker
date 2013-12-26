@@ -18,7 +18,7 @@ public class HearthReaderSetting {
 	public Scanbox unrankedScanbox		= new Scanbox("unranked-mode.png", 	1070, 138, 100, 100);
 
 	//practice mode scan boxes
-	public Scanbox practiceScanbox		= new Scanbox("practice-mode.png", 	1200, 100, 120, 120);
+	public Scanbox practiceScanbox		= new Scanbox("practice-mode.png", 	985, 50, 80, 80);
 	
 	//challenge mode scan boxes
 	public Scanbox challengeScanbox		= new Scanbox("challenge-mode.png", 1200, 100, 120, 120);

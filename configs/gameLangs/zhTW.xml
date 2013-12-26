@@ -44,10 +44,10 @@
     <outer-class reference="../.."/>
   </unrankedScanbox>
   <practiceScanbox>
-    <xOffset>1200</xOffset>
-    <yOffset>100</yOffset>
-    <width>120</width>
-    <height>120</height>
+    <xOffset>985</xOffset>
+    <yOffset>50</yOffset>
+    <width>80</width>
+    <height>80</height>
     <imgfile>practice-mode.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
