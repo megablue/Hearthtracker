@@ -726,7 +726,7 @@ public class HearthReader {
 			notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Defeat!"));
 		} else {
 			System.out.println("Found Unknown game result");
-			notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Result?"));
+			notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Result unknown!"));
 		}
 		
 		System.out.println("Saving match result...");

@@ -232,70 +232,71 @@ public class HearthUI {
     }
     
     private void recordSyncTimer(){
-    	
     	Runnable runnable = new Runnable() {
 		    public void run() {
-		    	HearthSync sync = new HearthSync();
-		    	boolean success = true;
-		    	boolean hasEffected = false;
-		    	
-		    	long lastSync = sync.getLastSync();
-		    	long timeDiff = new Date().getTime() - lastSync;
-		    	int nextSync = (int) (timeDiff > syncInterval ? syncInterval : timeDiff - syncInterval);
-		    	
-		    	if(timeDiff >= syncInterval && sync.isValidKeyFormat()){	
-		    		
-		    		if(sync.checkAccessKey()){
-		    			int arenaRecordsCount = sync.getUnsyncArenaCount();
-		    			int matchRecordsCount = sync.getUnsyncMatchCount();
-
-		    			if(arenaRecordsCount > 0){
-		    				success = sync.syncArenaBatch();
-		    				hasEffected = true;
-		    				lastSync = new Date().getTime();
-		    			}
-		    			
-		    			if(matchRecordsCount > 0){
-		    				success = sync.syncMatchBatch() && success;
-		    				hasEffected = true;
-		    				lastSync = new Date().getTime();
-		    			}
+		    	while(!shutdown){
+		    		HearthSync sync = new HearthSync();
+			    	boolean success = true;
+			    	boolean hasEffected = false;
+			    	
+			    	long lastSync = sync.getLastSync();
+			    	long timeDiff = new Date().getTime() - lastSync;
+			    	int nextSync = (int) (timeDiff > syncInterval ? syncInterval : timeDiff - syncInterval);
+			    	
+			    	if(timeDiff >= syncInterval && sync.isValidKeyFormat()){	
 			    		
-			    		if(hasEffected && success){
-			 				NotifierDialog.notify(
-	        						"Web Sync", 
-	        						"Without errors. " + (matchRecordsCount + arenaRecordsCount) + " records. ", 
-	        						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
-	        						shlHearthtracker.getMonitor()
-	        				);
-			    		} else if(hasEffected) {
-			 				NotifierDialog.notify(
-	        						"Web Sync", 
-	        						"With errors. " + (matchRecordsCount + arenaRecordsCount) + " records. ", 
-	        						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
-	        						shlHearthtracker.getMonitor()
-	        				);
+			    		if(sync.checkAccessKey()){
+			    			int arenaRecordsCount = sync.getUnsyncArenaCount();
+			    			int matchRecordsCount = sync.getUnsyncMatchCount();
+
+			    			if(arenaRecordsCount > 0){
+			    				success = sync.syncArenaBatch();
+			    				hasEffected = true;
+			    				lastSync = new Date().getTime();
+			    			}
+			    			
+			    			if(matchRecordsCount > 0){
+			    				success = sync.syncMatchBatch() && success;
+			    				hasEffected = true;
+			    				lastSync = new Date().getTime();
+			    			}
+				    		
+				    		if(hasEffected && success){
+				    			HearthReaderNotification note = new HearthReaderNotification(
+				    					"Web Sync", 
+				    					"Without errors. " + (matchRecordsCount + arenaRecordsCount) + " records. "
+				    			);
+				    			notifications.add(note);
+				    		} else if(hasEffected) {
+				    			HearthReaderNotification note = new HearthReaderNotification(
+				    					"Web Sync", 
+				    					"With errors. " + (matchRecordsCount + arenaRecordsCount) + " records. "
+				    			);
+				    			notifications.add(note);
+				    		}
 			    		}
-		    		}
-		    		
-		    		if(sync.isTimeout()){
-		 				NotifierDialog.notify(
-        						"Web Sync", 
-        						"Sync timeout. Will retry later.", 
-        						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
-        						shlHearthtracker.getMonitor()
-        				);
-		 				
-		 				nextSync = (int) (sync.getTimeout() - new Date().getTime());
-		    		}
+			    		
+			    		if(sync.isTimeout()){
+			    			HearthReaderNotification note = new HearthReaderNotification(
+			    					"Web Sync", 
+			    					"Sync timeout. Will retry later."
+			    			);
+			    			notifications.add(note);	 				
+			 				nextSync = (int) (sync.getTimeout() - new Date().getTime());
+			    		}
+			    	}
+			    	
+			    	try {
+						Thread.sleep(nextSync);
+					} catch (InterruptedException e) {
+						
+					}
 		    	}
-		    	
-		    	Display.getDefault().timerExec(nextSync, this);
 		    }
 		};
-    	
-		//Starts after 100 miliseconds
-		Display.getDefault().timerExec(100, runnable);
+		
+		Thread myThread = new Thread(runnable);
+		myThread.start();
     }
     
     private void processNotification(){
