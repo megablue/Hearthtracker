@@ -441,6 +441,8 @@ public class HearthReader {
 				saveGameResult();
 			}
 			
+			exVictory = -1;
+			myHero = -1;
 			oppHero = -1;
 			inGameMode = 0;
 	
@@ -660,6 +662,7 @@ public class HearthReader {
 			if(myHero == -1 && this.findImage(readerSettings.myHeroScanboxes[i], heroesThumbIT[i], "My Hero (" + heroesList.getHeroLabel(i) + ") ")){
 				System.out.println("Found my hero: (" + i + ") " + heroesList.getHeroLabel(i));
 				myHero = i;
+				inGameMode = 1;
 				if(myHero != exMyHero){
 					exMyHero = myHero;
 					isDirty = true;
@@ -673,9 +676,9 @@ public class HearthReader {
 			if(this.findImage(readerSettings.opponentHeroScanboxes[i], heroesThumbIT[i], "Opp Hero (" + heroesList.getHeroLabel(i) + ") ")){
 				System.out.println("Found opp hero: (" + i + ") " + heroesList.getHeroLabel(i));
 				oppHero = i;
+				inGameMode = 1;
 				if(oppHero != exOppHero){
 					exOppHero = oppHero;
-					exVictory = -1;
 					isDirty = true;
 					
 					notifications.add(new HearthReaderNotification("Hero Detected", "Opponent hero is " + heroesList.getHeroLabel(i)));
@@ -742,7 +745,9 @@ public class HearthReader {
 		victory = -1;
 		myHero = -1;
 		oppHero = -1;
+		exOppHero = -1;
 		goFirst = -1;
+		exGoFirst = -1;
 	}
 	
 	public boolean isDirty(){
@@ -797,8 +802,6 @@ public class HearthReader {
 	}
 	
 	public String getOverview(){
-		Date lastSeen = this.getLastseen();
-		String seen = lastSeen.getTime() == 0 ? "Nope" : HearthHelper.getPrettyText(lastSeen);
 		String goes = "Unknown";
 		int arenaWins = -1;
 		int arenaLosses = -1;
@@ -839,7 +842,7 @@ public class HearthReader {
 			goes = "second";
 		}
 		
-		output += "Last seen: " + seen + "\r\n";
+		//output += "Last seen: " + seen + "\r\n";
 		
 		if(arenaWinrate > -1){
 			output +="Arena: " + strArena  +"\r\n";
@@ -853,7 +856,7 @@ public class HearthReader {
 			output +="Unranked: " + strUnranked +"\r\n";
 		}
 
-		output +="Current Game mode: " + this.getGameMode() +"\r\n";
+		output +="Game mode: " + this.getGameMode() +"\r\n";
 		
 		if(this.isArenaMode()){
 			String score = this.getArenaWins() > -1 && this.getArenaLosses() > -1 ? this.getArenaWins() + "-" + this.getArenaLosses() : "Unknown";
@@ -864,7 +867,7 @@ public class HearthReader {
 			output +="Playing as " + this.getMyHero() + "\r\n";
 		}
 				
-		if( !this.getMyHero().toLowerCase().equals("unknown") || this.isGoFirst() || this.isGoSecond() ){
+		if(this.isInGame()){
 			output +="\r\n";
 			output +="Live match status" + "\r\n";
 			output += this.getMyHero() + " vs " + this.getOppHero() + ", " + goes + "\r\n";
