@@ -900,8 +900,14 @@ public class HearthUI {
 
 			while(rs.next()){
 				TableItem tableItem = new TableItem(matchesTable, SWT.NONE);
-				String result = rs.getInt("WIN") == 1 ? "Win" : "Loss";
+				String result = "Unknown";
 				cal.setTime(new Date(rs.getLong("STARTTIME")));
+				
+				if(rs.getInt("WIN") == 1){
+					result = "Win";
+				} else if(rs.getInt("WIN") == 0){
+					result = "Lose";
+				}
 				
 				tableItem.setData("id", rs.getInt("ID"));
 				tableItem.setImage(0, heroImgs[rs.getInt("MYHEROID")+1]);
@@ -984,7 +990,7 @@ public class HearthUI {
 		
 		final Combo cbMatchesEditResult = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditResult.setBounds(136, 165, 49, 23);
-		cbMatchesEditResult.setItems(new String[] {"Win", "Loss"});
+		cbMatchesEditResult.setItems(new String[] {"Win", "Loss", "Unknown"});
 		
 		final DateTime dtMatchesEditDate = new DateTime(composite_4, SWT.NONE);
 		dtMatchesEditDate.setEnabled(false);
@@ -1079,8 +1085,10 @@ public class HearthUI {
 							
 							if(goes == 1){
 								cbMatchesEditGoes.select(0);
-							} else {
+							} else if(goes == 0){
 								cbMatchesEditGoes.select(1);
+							} else {
+								cbMatchesEditGoes.select(2);
 							}
 							
 							if(gameMode > 0){
@@ -1091,8 +1099,10 @@ public class HearthUI {
 							
 							if(win == 1){
 								cbMatchesEditResult.select(0);
-							}else{
+							}else if (win == 0){
 								cbMatchesEditResult.select(1);
+							}else {
+								cbMatchesEditResult.select(2);
 							}
 							
 							spMatchesEditMinute.setSelection(totaltime);
@@ -1125,12 +1135,26 @@ public class HearthUI {
 				int gMode = cbMatchesEditGameMode.getSelectionIndex();
 				int myheroid = cbMatchesEditAs.getSelectionIndex() - 1;
 				int oppheroid = cbMatchesEditVs.getSelectionIndex() - 1;
-				int goes = cbMatchesEditGoes.getSelectionIndex() == 0 ? 1 : 0;
-				int result = cbMatchesEditResult.getSelectionIndex() == 0 ? 1 : 0;
+				int goes = -1;
+				int result = -1;
 				int totaltime = spMatchesEditMinute.getSelection() * 60;
 				
 				if(id == 0){
 					return;
+				}
+				
+				if(cbMatchesEditResult.getSelectionIndex() == 0){
+					result = 1;
+				} if(cbMatchesEditResult.getSelectionIndex() == 1){
+					result = 0;
+				} else {
+					result = -1;
+				}
+				
+				if(cbMatchesEditGoes.getSelectionIndex() == 0){
+					goes = 1;
+				} else if (cbMatchesEditGoes.getSelectionIndex() == 1){
+					goes = 0;
 				}
 				
 				Calendar cal = Calendar.getInstance();
@@ -1208,7 +1232,7 @@ public class HearthUI {
 		
 		final Combo cbMatchesEditResult = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditResult.setBounds(136, 165, 49, 23);
-		cbMatchesEditResult.setItems(new String[] {"Win", "Loss"});
+		cbMatchesEditResult.setItems(new String[] {"Win", "Loss", "Unknown"});
 		
 		final DateTime dtMatchesEditDate = new DateTime(composite_4, SWT.NONE);
 		dtMatchesEditDate.setBounds(69, 211, 80, 24);
@@ -1238,8 +1262,14 @@ public class HearthUI {
 				int myheroid = cbMatchesEditAs.getSelectionIndex() - 1;
 				int oppheroid = cbMatchesEditVs.getSelectionIndex() - 1;
 				int goes = cbMatchesEditGoes.getSelectionIndex() == 0 ? 1 : 0;
-				int result = cbMatchesEditResult.getSelectionIndex() == 0 ? 1 : 0;
+				int result = -1;
 				int totaltime = spMatchesEditMinute.getSelection() * 60;
+				
+				if(cbMatchesEditResult.getSelectionIndex() == 0){
+					result = 1;
+				} else if(cbMatchesEditResult.getSelectionIndex() == 1){
+					result = 0;
+				}
 
 				Calendar cal = Calendar.getInstance();
 				cal.set(Calendar.DAY_OF_MONTH, 	dtMatchesEditDate.getDay());
