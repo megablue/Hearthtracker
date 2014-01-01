@@ -44,6 +44,7 @@ public class HearthReader {
 	private int goFirst = -1;
 	private int exGoFirst = -1;
 	private Date startTime = new Date();
+	private Date lastSave = new Date();
 
 	private int gameMode = UNKNOWNMODE;
 	private int exGameMode = UNKNOWNMODE;
@@ -654,10 +655,10 @@ public class HearthReader {
 	}
 	
 	private synchronized void scanGameHeroes() {
-		if(this.foundGameHero()){
+		if(this.foundGameHero() || new Date().getTime() - lastSave.getTime() < 10000){
 			return;
 		}
-		
+				
 		for(int i = 0; i < heroesThumbIT.length; i++){
 			if(myHero == -1 && this.findImage(readerSettings.myHeroScanboxes[i], heroesThumbIT[i], "My Hero (" + heroesList.getHeroLabel(i) + ") ")){
 				System.out.println("Found my hero: (" + i + ") " + heroesList.getHeroLabel(i));
@@ -739,7 +740,8 @@ public class HearthReader {
 			e.printStackTrace();
 		}
 		System.out.println("Done saving match result...");
-				
+		
+		lastSave = new Date();		
 		exVictory = victory;
 		inGameMode = 0;
 		victory = -1;
