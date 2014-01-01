@@ -70,6 +70,8 @@ import com.googlecode.javacv.CameraDevice.Settings;
 
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 @SuppressWarnings({ "unused", "deprecation" })
 public class HearthUI {
@@ -330,6 +332,24 @@ public class HearthUI {
 		display = Display.getDefault();
 		createContents();
 		shlHearthtracker.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-128.png" ));
+		
+		Menu menu = new Menu(shlHearthtracker, SWT.BAR);
+		shlHearthtracker.setMenuBar(menu);
+		
+		MenuItem mntmNewSubmenu = new MenuItem(menu, SWT.CASCADE);
+		mntmNewSubmenu.setText("&File");
+		
+		Menu menu_1 = new Menu(mntmNewSubmenu);
+		mntmNewSubmenu.setMenu(menu_1);
+		
+		MenuItem mntmNewItem = new MenuItem(menu_1, SWT.NONE);
+		mntmNewItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				shutdown();
+			}
+		});
+		mntmNewItem.setText("E&xit");
 		shlHearthtracker.open();
 		shlHearthtracker.layout();
 		Date lastUpdate = new Date(); 
@@ -364,6 +384,17 @@ public class HearthUI {
 			}
 		}
 	}
+	
+	private void shutdown(){
+		hearththread.interrupt();
+		shutdown = true;
+		HearthSync sync = new HearthSync();
+		
+		if(sync.isValidKeyFormat() && sync.checkAccessKey()){
+			sync.syncArenaBatch();
+			sync.syncMatchBatch();
+		}
+	}
 
 	/**
 	 * Create contents of the window.
@@ -373,17 +404,11 @@ public class HearthUI {
 		shlHearthtracker.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent arg0) {
-				hearththread.interrupt();
-				shutdown = true;
-				HearthSync sync = new HearthSync();
-				
-				if(sync.isValidKeyFormat() && sync.checkAccessKey()){
-					sync.syncArenaBatch();
-					sync.syncMatchBatch();
-				}
+				shlHearthtracker.setMinimized(true);
+				arg0.doit = false;
 			}
 		});
-		shlHearthtracker.setSize(620, 438);
+		shlHearthtracker.setSize(620, 456);
 		shlHearthtracker.setText("HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!");
 		
 		if(experimental > 0){
