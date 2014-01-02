@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Label;
@@ -72,6 +73,9 @@ import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.TrayItem;
+import org.eclipse.swt.events.MenuDetectListener;
+import org.eclipse.swt.events.MenuDetectEvent;
 
 @SuppressWarnings({ "unused", "deprecation" })
 public class HearthUI {
@@ -332,7 +336,7 @@ public class HearthUI {
 		display = Display.getDefault();
 		createContents();
 		shlHearthtracker.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-128.png" ));
-		
+
 		Menu menu = new Menu(shlHearthtracker, SWT.BAR);
 		shlHearthtracker.setMenuBar(menu);
 		
@@ -470,7 +474,7 @@ public class HearthUI {
 		tblclmnNewColumn_4.setText("Total Runs");
 		
 		cmbStatsMode = new Combo(grpStats, SWT.READ_ONLY);
-		cmbStatsMode.setItems(new String[] {"Arena mode (played as)", "Ranked mode (played as)", "Unranked mode (played as)", "Challenge/Pratice mode (played as)"});
+		cmbStatsMode.setItems(new String[] {"Arena mode (played as)", "Ranked mode (played as)", "Unranked mode (played as)", "Challenge mode (played as)", "Practice mode (played as)"});
 		FormData fd_cmbStatsMode = new FormData();
 		fd_cmbStatsMode.top = new FormAttachment(0, 10);
 		fd_cmbStatsMode.left = new FormAttachment(0, 10);
@@ -1910,6 +1914,8 @@ public class HearthUI {
 				return HearthReader.UNRANKEDMODE;
 			case 3:
 				return HearthReader.CHALLENGEMODE;
+			case 4:
+				return HearthReader.PRACTICEMODE;
 		}
 		
 		return HearthReader.UNKNOWNMODE;
@@ -1918,6 +1924,7 @@ public class HearthUI {
 	private void fillOverviewTable(){
 		int selected = table.getSelectionIndex();
 		table.removeAll();
+		int mode = this.getMode();
 		
 		for(int i = 0; i < heroesList.getTotal() + 1; i++){
 			float sevenplus = 0, overall = 0;
@@ -1925,7 +1932,6 @@ public class HearthUI {
 			int losses = 0;
 			int totalrun = 0;
 			Image heroImg;
-			int mode = this.getMode();
 			int heroId = i < heroesList.getTotal() ? i : -1;
 			
 			try {

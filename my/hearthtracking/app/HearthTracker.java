@@ -448,17 +448,8 @@ public class HearthTracker {
 			}
 		} else {
 			
-			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
-				rs = stat.executeQuery("select count(*) as TOTAL from MATCHES WHERE myheroid = " + heroid 
-						+ " AND (MODE=" + HearthReader.CHALLENGEMODE + " OR MODE=" + HearthReader.PRACTICEMODE +") AND DELETED=0"
-					);
-			} else {
-				rs = stat.executeQuery("select count(*) as TOTAL from MATCHES WHERE myheroid = " + heroid 
-						+ " AND (MODE=" + mode + ") AND DELETED=0"
-					);
-			}
-			
-
+			rs = stat.executeQuery("select count(*) as TOTAL from MATCHES WHERE myheroid = " + heroid 
+					+ " AND (MODE=" + mode + ") AND DELETED=0");
 			
 			if(rs.next()){
 				total += rs.getInt("TOTAL");
@@ -485,23 +476,16 @@ public class HearthTracker {
 			}
 		} else {
 			
-			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
-				rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + heroId 
-						+ " AND( MODE=" + HearthReader.CHALLENGEMODE
-						+ " OR MODE=" + HearthReader.PRACTICEMODE
-						+ ") AND DELETED=0"
-				);
-			} else {
-				rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + heroId + " AND MODE=" + mode + " AND DELETED=0");
-			}
+			rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + heroId + " AND MODE=" + mode + " AND DELETED=0");
 			
 			while(rs.next()){
 				found = true;
-				
-				if(rs.getInt("WIN") == 1){
-					wins += 1;
-				} else {
-					losses += 1;
+				if(rs.getInt("WIN") > -1){
+					if(rs.getInt("WIN") == 1){
+						wins += 1;
+					} else {
+						losses += 1;
+					}
 				}
 			}
 		}
@@ -567,11 +551,14 @@ public class HearthTracker {
 			while(rs.next()){
 				found = true;
 				
-				if(rs.getInt("WIN") == 1){
-					wins += 1;
-				} else {
-					losses += 1;
-				}	
+				if(rs.getInt("WIN") > -1){
+					if(rs.getInt("WIN") == 1){
+						wins += 1;
+					} else {
+						losses += 1;
+					}	
+				}
+				
 			}
 		}
 		
@@ -602,7 +589,11 @@ public class HearthTracker {
 			}
 			
 			while(rs.next()){
-				total += rs.getInt("WIN");
+				
+				if(rs.getInt("WIN") > -1){
+					total += rs.getInt("WIN");
+				}
+
 			}
 		}
 			
@@ -620,19 +611,10 @@ public class HearthTracker {
 			}
 		} else {
 			
-			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
-				rs = stat.executeQuery("select WIN from MATCHES "
-						+" WHERE myheroid=" + heroId 
-						+ " AND (mode=" + HearthReader.CHALLENGEMODE
-						+ " OR mode=" + HearthReader.PRACTICEMODE + ")"
-						+ " AND DELETED = 0"
-					);
-			}else{
-				rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode + " AND DELETED = 0");
-			}
-
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode + " AND DELETED = 0");
+			
 			while(rs.next()){
-				total += rs.getInt("WIN");
+				total += rs.getInt("WIN") > -1 ? rs.getInt("WIN") : 0;
 			}
 		}
 
@@ -659,7 +641,7 @@ public class HearthTracker {
 				rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode);
 			}
 			while(rs.next()){
-				total += rs.getInt("WIN") == 0 ? 1 : 0;
+				total += rs.getInt("WIN") > -1 && rs.getInt("WIN") == 0 ? 1 : 0;
 			}
 		}
 
@@ -676,19 +658,14 @@ public class HearthTracker {
 				total += rs.getInt("LOSSES");
 			}
 		} else {
-			
-			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
-				rs = stat.executeQuery("select WIN from MATCHES WHERE "
-						+ "myheroid=" + heroId + " AND (mode=" + mode 
-						+ " OR MODE=" + HearthReader.PRACTICEMODE
-						+ ") AND DELETED=0"
-				);
-			} else {
-				rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode + " AND DELETED=0");
-			}
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode + " AND DELETED=0");
 			
 			while(rs.next()){
-				total += rs.getInt("WIN") == 0 ? 1 : 0;
+				
+				if(rs.getInt("WIN") > -1){
+					total += rs.getInt("WIN") == 0 ? 1 : 0;
+				}
+				
 			}
 		}
 
