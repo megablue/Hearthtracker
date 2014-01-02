@@ -55,6 +55,7 @@ public class HearthSync {
 		public long starttime;
 		public int totaltime;
 		public String mode;
+		public String deck;
 		public int deleted;
 		public int modified;
 		public long lastmodified;
@@ -374,6 +375,7 @@ public class HearthSync {
 				ar[index].modified		= rs.getInt("modified");
 				ar[index].lastmodified	= rs.getLong("lastmodified");
 				ar[index].server		= rs.getString("server");
+				ar[index].deck			= rs.getString("deck");
 				
 				if(recordCount != 0 && index == (BATCH_SIZE - 1)){
 					try {
