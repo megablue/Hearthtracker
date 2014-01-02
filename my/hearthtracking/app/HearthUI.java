@@ -132,6 +132,7 @@ public class HearthUI {
 	public static int syncInterval =  1 * 60 * 1000;
 	
 	volatile static boolean shutdown = false;
+	volatile static boolean threadRunning = true;
 	private Button btnAlwaysScan;
 	
 	private static List<HearthReaderNotification> notifications = new ArrayList<HearthReaderNotification>();
@@ -222,19 +223,27 @@ public class HearthUI {
         			if(note != null){
         				notifications.add(note);
         			}
-        			
-        			if(Thread.currentThread().isInterrupted()){
-            			tracker.closeDB();
-    	    			System.exit(0);
-        			}
-        			
 	    		} catch (InterruptedException e) {
-	    			tracker.closeDB();
-	    			System.exit(0);
 	    			break;
 	    		}
 	    	}
+	    	
+	    	threadRunning = false;
+
 	    }
+    }
+    
+    private static void exit(){
+    	while(threadRunning){
+    		try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				
+			}
+    	}
+    	
+		tracker.closeDB();
+		System.exit(0);
     }
     
     private void recordSyncTimer(){
@@ -398,6 +407,8 @@ public class HearthUI {
 			sync.syncArenaBatch();
 			sync.syncMatchBatch();
 		}
+		
+		exit();
 	}
 
 	/**
