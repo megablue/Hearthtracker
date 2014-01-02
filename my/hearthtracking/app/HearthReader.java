@@ -544,11 +544,9 @@ public class HearthReader {
 		}
 		
 		if(!foundLosses){
-			for(int i = 0; i < 3; i++){
-				if(this.findImage(readerSettings.lossesUncheckedScanboxes[i], uncheckedImageTarget, "Unchecked Losses " + (i+1))){
-					System.out.println("Found " + (i+1) + " unchecked losses");
-					losses = 3 - (i + 1);
-				}
+			if(this.findImage(readerSettings.lossesUncheckedScanboxes[0], uncheckedImageTarget, "First Unchecked Losses")){
+				System.out.println("Found first unchecked losses");
+				losses = 0;
 			}
 		}
 				
@@ -832,9 +830,9 @@ public class HearthReader {
 			e.printStackTrace();
 		}
 		
-		String strArena = arenaWinrate > -1 ?  arenaWins + "-" + arenaLosses + " (" + new DecimalFormat("0.00").format(arenaWinrate) + "%) " : "N|A";
-		String strRanked = rankedWinrate > -1 ?  rankedWins + "-" + rankedLosses + " (" + new DecimalFormat("0.00").format(rankedWinrate) + "%) " : "N|A";
-		String strUnranked = unrankedWinrate > -1 ? unrankedWins + "-" + unrankedLosses + " (" + new DecimalFormat("0.00").format(unrankedWinrate) + "%) " : "N|A";
+		String strArena = arenaWinrate > -1 ?  arenaWins + " - " + arenaLosses + " (" + new DecimalFormat("0.00").format(arenaWinrate) + "%) " : "N|A";
+		String strRanked = rankedWinrate > -1 ?  rankedWins + " - " + rankedLosses + " (" + new DecimalFormat("0.00").format(rankedWinrate) + "%) " : "N|A";
+		String strUnranked = unrankedWinrate > -1 ? unrankedWins + " - " + unrankedLosses + " (" + new DecimalFormat("0.00").format(unrankedWinrate) + "%) " : "N|A";
 
 		if(this.isGoFirst()){
 			goes = "first";
@@ -861,7 +859,7 @@ public class HearthReader {
 		output +="Game mode: " + this.getGameMode() +"\r\n";
 		
 		if(this.isArenaMode()){
-			String score = this.getArenaWins() > -1 && this.getArenaLosses() > -1 ? this.getArenaWins() + "-" + this.getArenaLosses() : "Unknown";
+			String score = this.getArenaWins() > -1 && this.getArenaLosses() > -1 ? this.getArenaWins() + " - " + this.getArenaLosses() : "Unknown";
 			
 			output +="\r\n";
 			output +="Live Arena status" + "\r\n";
