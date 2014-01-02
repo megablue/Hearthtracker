@@ -436,6 +436,74 @@ public class HearthTracker {
 		isDirty = true;
 	}
 	
+	public void setLastMatchWon() throws SQLException{
+		ResultSet rs = getMatches();
+		int win = 1;
+		
+		if(rs.next()){
+			saveModifiedMatchResult(
+					rs.getInt("id"),
+					rs.getInt("mode"),
+					rs.getInt("myHeroId"),
+					rs.getInt("oppHeroId"),
+					rs.getInt("goesFirst"),
+					win,
+					rs.getInt("totalTime")
+			);
+		}
+	}
+	
+	public void setLastMatchLost() throws SQLException{
+		ResultSet rs = getMatches();
+		int win = 0;
+		
+		if(rs.next()){
+			saveModifiedMatchResult(
+					rs.getInt("id"),
+					rs.getInt("mode"),
+					rs.getInt("myHeroId"),
+					rs.getInt("oppHeroId"),
+					rs.getInt("goesFirst"),
+					win,
+					rs.getInt("totalTime")
+			);
+		}
+	}
+	
+	public void setLastMatchWentFirst() throws SQLException{
+		ResultSet rs = getMatches();
+		int wentFirst = 1;
+		
+		if(rs.next()){
+			saveModifiedMatchResult(
+					rs.getInt("id"),
+					rs.getInt("mode"),
+					rs.getInt("myHeroId"),
+					rs.getInt("oppHeroId"),
+					wentFirst,
+					rs.getInt("win"),
+					rs.getInt("totalTime")
+			);
+		}
+	}
+	
+	public void setLastMatchWentSecond() throws SQLException{
+		ResultSet rs = getMatches();
+		int wentFirst = 0;
+		
+		if(rs.next()){
+			saveModifiedMatchResult(
+					rs.getInt("id"),
+					rs.getInt("mode"),
+					rs.getInt("myHeroId"),
+					rs.getInt("oppHeroId"),
+					wentFirst,
+					rs.getInt("win"),
+					rs.getInt("totalTime")
+			);
+		}
+	}
+	
 	public int getTotalRunsByHero(int mode, int heroid) throws SQLException{
 		ResultSet rs;
 		int total = 0;

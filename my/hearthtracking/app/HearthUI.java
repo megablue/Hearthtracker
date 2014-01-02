@@ -363,6 +363,67 @@ public class HearthUI {
 			}
 		});
 		mntmNewItem.setText("E&xit");
+		
+		MenuItem mntmNewSubmenu_1 = new MenuItem(menu, SWT.CASCADE);
+		mntmNewSubmenu_1.setText("&Edit");
+		
+		Menu menu_2 = new Menu(mntmNewSubmenu_1);
+		mntmNewSubmenu_1.setMenu(menu_2);
+		
+		MenuItem mntmNewItem_1 = new MenuItem(menu_2, SWT.NONE);
+		mntmNewItem_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					tracker.setLastMatchWon();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		mntmNewItem_1.setText("Last Match -> Won");
+		
+		MenuItem mntmLastMatch = new MenuItem(menu_2, SWT.NONE);
+		mntmLastMatch.setText("Last Match -> Lost");
+		
+		mntmLastMatch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					tracker.setLastMatchLost();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		MenuItem mntmLastMatch_1 = new MenuItem(menu_2, SWT.NONE);
+		mntmLastMatch_1.setText("Last Match -> went first");
+		
+		mntmLastMatch_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					tracker.setLastMatchWentFirst();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		MenuItem mntmNewItem_2 = new MenuItem(menu_2, SWT.NONE);
+		mntmNewItem_2.setText("Last Match -> went second");
+		
+		mntmNewItem_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					tracker.setLastMatchWentSecond();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		shlHearthtracker.open();
 		shlHearthtracker.layout();
 		Date lastUpdate = new Date(); 
