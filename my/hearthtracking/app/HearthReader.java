@@ -651,15 +651,43 @@ public class HearthReader {
 	private synchronized void scanSeletedDeck() {
 		for(int i = 0; i < readerSettings.deckScanboxses.length; i++){
 			if(this.findImage(readerSettings.deckScanboxses[i], deckSelectedImageTarget, "Deck (" + i + ") ")){
-				System.out.println("Found selected deck #: " + i);
+				
+				HearthDecks decks = (HearthDecks) config.load("." + File.separator + "configs" + File.separator + "decks.xml");
+				String deckName = "";
+				
+				if(decks == null){
+					decks = new HearthDecks();
+					//we don't need to save the decks.xml here because the main UI will handle it if it is missing.
+				}
+				
+				
 				selectedDeck = i;
 				
 				if(selectedDeck != exSelectedDeck){
+					if(selectedDeck > -1 && selectedDeck < decks.list.length){
+						deckName = decks.list[selectedDeck];
+					}
 					
-					if(exSelectedDeck == -1){
-						notifications.add(new HearthReaderNotification("Deck", "Selected #" + (i + 1)));
-					} else {
-						notifications.add(new HearthReaderNotification("Deck", "Switched to #" + (i + 1)));
+					System.out.println("Found selected deck #: " + i);
+					
+					notifications.add(new HearthReaderNotification("Deck #" + (i + 1), deckName));
+
+					if(deckName.length() > 0){
+						try {
+							int deckWins = tracker.getWinsByDeck(gameMode, deckName);
+							int deckLosses = tracker.getWinsByDeck(gameMode, deckName);
+							float winRate = tracker.getWinRateByDeck(gameMode, deckName);
+							String winRateS = winRate > -1 ? new DecimalFormat("0.00").format(winRate) + "%" : "N|A";
+							
+							if(winRate > -1 ){
+								notifications.add(new HearthReaderNotification("Deck win rate", 
+										winRateS + " (" + deckWins + " - "  + deckLosses +  ")"
+								));
+							}
+				
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
 					}
 					
 					exSelectedDeck = selectedDeck;

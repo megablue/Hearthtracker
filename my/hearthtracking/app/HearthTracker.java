@@ -664,14 +664,7 @@ public class HearthTracker {
 				total += rs.getInt("WINS");
 			}
 		} else {
-			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
-				rs = stat.executeQuery("select WIN from MATCHES WHERE "
-						+ "(mode=" + HearthReader.CHALLENGEMODE
-						+ " OR mode=" + HearthReader.PRACTICEMODE
-						+ " )AND DELETED = 0");
-			} else {
-				rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode + " AND DELETED = 0");
-			}
+			rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode + " AND DELETED = 0");
 			
 			while(rs.next()){
 				
@@ -680,6 +673,19 @@ public class HearthTracker {
 				}
 
 			}
+		}
+			
+		return total;
+	}
+	
+	public int getTotalMatches() throws SQLException{
+		ResultSet rs;
+		int total = 0;
+
+		rs = stat.executeQuery("select COUNT(*) from MATCHES WHERE DELETED = 0");
+		
+		if(rs.next()){
+			total += rs.getInt("COUNT(*)");
 		}
 			
 		return total;
@@ -786,11 +792,14 @@ public class HearthTracker {
 	}
 	
 	public float getWinRateByDeck(int mode, String deckName) throws SQLException{
+		if(deckName.equals("")){
+			return -1;
+		}
+		
 		ResultSet rs;
 		float winrate = -1;
 		String table = "MATCHES";
 		String sqlWhere = " WHERE deck= ? AND mode = " + mode + " AND DELETED=0 AND win != -1";
-					
 		String sql = "select SUM(WIN), COUNT(*) from " + table + sqlWhere;
 		
 		PreparedStatement prepareSql = conn.prepareStatement(sql);
@@ -804,6 +813,52 @@ public class HearthTracker {
 		}
 		
 		return winrate;
+	}
+	
+	public int getWinsByDeck(int mode, String deckName) throws SQLException{
+		if(deckName.equals("")){
+			return 0;
+		}
+		
+		ResultSet rs;
+		int wins = 0;
+		String table = "MATCHES";
+		String sqlWhere = " WHERE deck=? AND mode = " + mode + " AND DELETED=0 AND win = 1";
+					
+		String sql = "select COUNT(*) from " + table + sqlWhere;
+		
+		PreparedStatement prepareSql = conn.prepareStatement(sql);
+		prepareSql.setString(1, deckName);
+		rs = prepareSql.executeQuery();
+		
+		if(rs.next()){
+			wins = rs.getInt("COUNT(*)");
+		}
+		
+		return wins;
+	}
+	
+	public int getLossesByDeck(int mode, String deckName) throws SQLException{
+		if(deckName.equals("")){
+			return 0;
+		}
+		
+		ResultSet rs;
+		int losses = 0;
+		String table = "MATCHES";
+		String sqlWhere = " WHERE deck=? AND mode = " + mode + " AND DELETED=0 AND win = 0";
+					
+		String sql = "select COUNT(*) from " + table + sqlWhere;
+		
+		PreparedStatement prepareSql = conn.prepareStatement(sql);
+		prepareSql.setString(1, deckName);
+		rs = prepareSql.executeQuery();
+		
+		if(rs.next()){
+			losses = rs.getInt("COUNT(*)");
+		}
+		
+		return losses;
 	}
 	
 	public ResultSet getArenaResults() throws SQLException{

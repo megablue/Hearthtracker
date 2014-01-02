@@ -13,6 +13,7 @@ public class HearthSetting {
 	int xOffset = 0;
 	int yOffset = 0;
 	boolean alwaysScan = false;
+	int tracker = 0;
 	
 	public boolean upgrade(){
 		boolean upgraded1 = false;

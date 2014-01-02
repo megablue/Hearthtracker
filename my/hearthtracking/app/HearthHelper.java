@@ -228,6 +228,18 @@ public class HearthHelper {
         return logger;
 	}
 	
+	public static void openLink(String link){
+		try {
+			java.awt.Desktop.getDesktop().browse(new URL(link).toURI());
+		}catch (Throwable e) {
+			//e.printStackTrace();
+		}
+	}
+	
+	public static void openDonateLink(){
+		openLink("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YNFGYE9V386UQ");
+	}
+	
 	public static String getPrettyText(Date date) {
 	    long diff = (new Date().getTime() - date.getTime()) / 1000;
 	    double dayDiff = Math.floor(diff / 86400);

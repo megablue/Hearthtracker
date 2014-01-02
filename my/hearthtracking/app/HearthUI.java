@@ -359,6 +359,22 @@ public class HearthUI {
     	
 		Display.getDefault().timerExec(100, runnable);
     }
+ 
+    private void openDonationDialog(){
+		try {
+			int totalMatches = tracker.getTotalMatches();
+			
+			//beg for donation every 1000 games tracked
+			if(totalMatches/1000 > setting.tracker){
+				new HearthDonate(shlHearthtracker, totalMatches).open();
+				setting.tracker = totalMatches/1000;
+				savePreferences();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+    }
     
 	/**
 	 * Open the window.
@@ -367,6 +383,79 @@ public class HearthUI {
 		display = Display.getDefault();
 		createContents();
 		shlHearthtracker.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-128.png" ));
+		shlHearthtracker.open();
+		shlHearthtracker.layout();
+		Date lastUpdate = new Date(); 
+		
+		hearththread = new Thread(new ReaderThread());
+		hearththread.start();
+		processNotification();
+		recordSyncTimer();
+		openDonationDialog();
+
+		while (!shlHearthtracker.isDisposed()) {
+			if(hearththread.isAlive()){
+				if(tracker.isDirty()){
+					window.fillOverviewTable();
+					window.fillArenaTable();
+					window.fillMatchesTable();
+					window.updateStatus();
+					window.fillDeckWinRate();
+					tracker.clearDirty();
+				}
+				
+				if(hearth.isDirty()){
+					window.updateStatus();
+				}
+				
+				if(new Date().getTime() - lastUpdate.getTime() > 2000){	
+					window.poppulateDiagnoticsStatus();
+					lastUpdate = new Date();
+				}
+			}
+						
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+	}
+	
+	private void shutdown(){
+		hearththread.interrupt();
+		shutdown = true;
+		HearthSync sync = new HearthSync();
+		
+		if(sync.isValidKeyFormat() && sync.checkAccessKey()){
+			sync.syncArenaBatch();
+			sync.syncMatchBatch();
+		}
+		
+		exit();
+	}
+
+	/**
+	 * Create contents of the window.
+	 */
+	protected void createContents() {
+		shlHearthtracker = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE) & (~SWT.MAX));
+		shlHearthtracker.addShellListener(new ShellAdapter() {
+			@Override
+			public void shellClosed(ShellEvent arg0) {
+				shlHearthtracker.setMinimized(true);
+				arg0.doit = false;
+			}
+		});
+		shlHearthtracker.setSize(620, 456);
+		shlHearthtracker.setText("HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!");
+		
+		if(experimental > 0){
+			shlHearthtracker.setText("HearthTracker (Experimental build " 
+									+ experimental 
+									+ ") - Automated Stats Tracking for Hearthstone enthusiasts!");
+		}
+		
+		shlHearthtracker.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
 
 		Menu menu = new Menu(shlHearthtracker, SWT.BAR);
 		shlHearthtracker.setMenuBar(menu);
@@ -446,77 +535,6 @@ public class HearthUI {
 				}
 			}
 		});
-		shlHearthtracker.open();
-		shlHearthtracker.layout();
-		Date lastUpdate = new Date(); 
-		
-		hearththread = new Thread(new ReaderThread());
-		hearththread.start();
-		processNotification();
-		recordSyncTimer();
-
-		while (!shlHearthtracker.isDisposed()) {
-			if(hearththread.isAlive()){
-				if(tracker.isDirty()){
-					window.fillOverviewTable();
-					window.fillArenaTable();
-					window.fillMatchesTable();
-					window.updateStatus();
-					window.fillDeckWinRate();
-					tracker.clearDirty();
-				}
-				
-				if(hearth.isDirty()){
-					window.updateStatus();
-				}
-				
-				if(new Date().getTime() - lastUpdate.getTime() > 2000){	
-					window.poppulateDiagnoticsStatus();
-					lastUpdate = new Date();
-				}
-			}
-						
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-	}
-	
-	private void shutdown(){
-		hearththread.interrupt();
-		shutdown = true;
-		HearthSync sync = new HearthSync();
-		
-		if(sync.isValidKeyFormat() && sync.checkAccessKey()){
-			sync.syncArenaBatch();
-			sync.syncMatchBatch();
-		}
-		
-		exit();
-	}
-
-	/**
-	 * Create contents of the window.
-	 */
-	protected void createContents() {
-		shlHearthtracker = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE) & (~SWT.MAX));
-		shlHearthtracker.addShellListener(new ShellAdapter() {
-			@Override
-			public void shellClosed(ShellEvent arg0) {
-				shlHearthtracker.setMinimized(true);
-				arg0.doit = false;
-			}
-		});
-		shlHearthtracker.setSize(620, 456);
-		shlHearthtracker.setText("HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!");
-		
-		if(experimental > 0){
-			shlHearthtracker.setText("HearthTracker (Experimental build " 
-									+ experimental 
-									+ ") - Automated Stats Tracking for Hearthstone enthusiasts!");
-		}
-		
-		shlHearthtracker.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		TabFolder tabFolder = new TabFolder(shlHearthtracker, SWT.NONE);
 		
@@ -1091,11 +1109,7 @@ public class HearthUI {
 		lblPaypal.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
-				try {
-					java.awt.Desktop.getDesktop().browse(new URL("https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YNFGYE9V386UQ").toURI());
-				}catch (Throwable e) {
-					//e.printStackTrace();
-				}
+				HearthHelper.openDonateLink();
 			}
 		});
 		lblPaypal.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "paypal.png" ));
