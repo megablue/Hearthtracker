@@ -126,7 +126,7 @@ public class HearthUI {
 	private static Image[] heroImgs;
 	private Composite composite_9;
 
-	public static int[] version = {1, 1, 3};
+	public static int[] version = {1, 1, 4};
 	public static int experimental = 0;
 	private Text txtWebSyncKey;
 	private Composite composite_11;
