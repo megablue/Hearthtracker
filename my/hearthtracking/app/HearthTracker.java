@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -57,12 +58,12 @@ public class HearthTracker {
 		this.saveArenaResult(0, 9, 9, new Date().getTime(), false);
 		assert this.getOverallWinRate(HearthReader.ARENAMODE) == 75.0f;
 		
-		this.saveMatchResult(HearthReader.ARENAMODE, 0, 0, 1, 1, new Date().getTime(), 0, false);
-		this.saveMatchResult(HearthReader.ARENAMODE, 1, 0, 1, 0, new Date().getTime(), 0, false);
-		this.saveMatchResult(HearthReader.ARENAMODE, 2, 0, 0, 0, new Date().getTime(), 0, false);
-		this.saveMatchResult(HearthReader.ARENAMODE, 3, 0, 0, 1, new Date().getTime(), 0, false);
-		this.saveMatchResult(HearthReader.ARENAMODE, 4, 0, 0, 1, new Date().getTime(), 0, false);
-		this.saveMatchResult(HearthReader.ARENAMODE, 5, 0, 0, 1, new Date().getTime(), 0, false);
+		this.saveMatchResult(HearthReader.ARENAMODE, 0, 0, 1, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthReader.ARENAMODE, 1, 0, 1, 0, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthReader.ARENAMODE, 2, 0, 0, 0, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthReader.ARENAMODE, 3, 0, 0, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthReader.ARENAMODE, 4, 0, 0, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthReader.ARENAMODE, 5, 0, 0, 1, new Date().getTime(), 0, false, "");
 		
 		assert this.getWinRateByGoesFirst(HearthReader.ARENAMODE) == 50.0f;
 		assert this.getWinRateByGoesSecond(HearthReader.ARENAMODE) == 75.0f;
@@ -85,7 +86,7 @@ public class HearthTracker {
 	public void createTables() throws SQLException{
 		ResultSet rs;
 		boolean newdb = false;
-		int currentDBversion = 3;
+		int currentDBversion = 4;
 		
 		dbSetting = (HearthDatabase) config.load("." + File.separator + "data" + File.separator + "database.xml");
 		
@@ -142,6 +143,7 @@ public class HearthTracker {
 							+"lastmodified BIGINT DEFAULT 0, "
 							+"deleted int DEFAULT 0, "
 							+"server varchar DEFAULT '', "
+							+"deck varchar DEFAULT '', "
 							+"submitted BIGINT DEFAULT 0 "
 							+")"
 						);
@@ -151,6 +153,7 @@ public class HearthTracker {
 			stat.execute("CREATE INDEX MYHERO_MODE ON MATCHES(MYHEROID, MODE, DELETED)");
 			stat.execute("CREATE INDEX OPPHERO_MODE ON MATCHES(OPPHEROID, MODE, DELETED)");
 			stat.execute("CREATE INDEX HEROES_MODE ON MATCHES(MYHEROID, OPPHEROID, MODE, DELETED)");
+			stat.execute("CREATE INDEX DECK ON MATCHES(DECK, MODE)");
 			newdb = true;
 		}
 		
@@ -269,6 +272,16 @@ public class HearthTracker {
 			dbSetting.version = 3;
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
 		}
+		
+		if(!newdb && dbSetting.version == 3){
+			stat.execute("ALTER TABLE MATCHES ADD DECK VARCHAR DEFAULT ''");
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN DECK SET DEFAULT ''");
+			stat.execute("UPDATE MATCHES SET DECK=''");
+			stat.execute("CREATE INDEX DECK ON MATCHES(DECK, MODE)");
+			//save upgraded version
+			dbSetting.version = 4;
+			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		}
 	}
 	
 	public boolean isServerSelected(){
@@ -360,12 +373,12 @@ public class HearthTracker {
 		isDirty = true;
 	}
 	
-	public void saveMatchResult(int mode, int myHeroId, int oppHeroId, int goesFirst, int win, long startTime, int totalTime, boolean modified) throws SQLException{
+	public void saveMatchResult(int mode, int myHeroId, int oppHeroId, int goesFirst, int win, long startTime, int totalTime, boolean modified, String deckName) throws SQLException{
 		String table = "MATCHES";
 		int mod = modified ? 1 : 0;
 		startTime = (long) (startTime / 1000) * 1000; //fix precision issues
 		
-		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, lastModified, mode, modified, server, submitted, totalTime) " 
+		String sql = "INSERT INTO " + table +"(myHeroId, oppHeroId, goesFirst, win, startTime, lastModified, mode, modified, server, submitted, deck, totalTime) " 
 					+ "VALUES(" + myHeroId + "," 
 					+ oppHeroId + "," 
 					+ goesFirst + "," 
@@ -375,10 +388,14 @@ public class HearthTracker {
 					+ mode + ","
 					+ mod + ","
 					+ "'" + gameServer + "', " 
-					+ "0, " 
+					+ "0, "
+					+ "?, "
 					+ totalTime + ")";
+		
+		PreparedStatement prepareSql = conn.prepareStatement(sql);
+		prepareSql.setString(1, deckName);
+		prepareSql.execute();
 
-		stat.execute(sql);
 		isDirty = true;
 	}
 	
@@ -700,14 +717,8 @@ public class HearthTracker {
 			}
 		} else {
 			
-			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
-				rs = stat.executeQuery("select WIN from MATCHES "
-						+" WHERE mode=" + HearthReader.CHALLENGEMODE
-						+ " OR mode=" + HearthReader.PRACTICEMODE + ""
-					);
-			}else{
-				rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode);
-			}
+			rs = stat.executeQuery("select WIN from MATCHES WHERE mode=" + mode);
+			
 			while(rs.next()){
 				total += rs.getInt("WIN") > -1 && rs.getInt("WIN") == 0 ? 1 : 0;
 			}
@@ -753,9 +764,7 @@ public class HearthTracker {
 		float winrate = -1;
 		int goesFirst = goesFirstFlag ? 1 : 0;
 		String table = "MATCHES";
-		String sqlWhere = mode == HearthReader.PRACTICEMODE || mode == HearthReader.CHALLENGEMODE ?
-				" WHERE goesFirst = " + goesFirst + " AND (mode = " + HearthReader.CHALLENGEMODE + " OR MODE=" + HearthReader.PRACTICEMODE +") AND DELETED=0"
-				:" WHERE goesFirst = " + goesFirst + " AND mode = " + mode + " AND DELETED=0";
+		String sqlWhere = " WHERE goesFirst = " + goesFirst + " AND mode = " + mode + " AND DELETED=0";
 					
 		String sql = "select SUM(WIN), COUNT(*) from " + table + sqlWhere;
 		
@@ -771,6 +780,27 @@ public class HearthTracker {
 		
 		if(rs.next()){
 			winrate = rs.getFloat("SUM(WIN)") / rs.getFloat("COUNT(*)") * 100;
+		}
+		
+		return winrate;
+	}
+	
+	public float getWinRateByDeck(int mode, String deckName) throws SQLException{
+		ResultSet rs;
+		float winrate = -1;
+		String table = "MATCHES";
+		String sqlWhere = " WHERE deck= ? AND mode = " + mode + " AND DELETED=0 AND win != -1";
+					
+		String sql = "select SUM(WIN), COUNT(*) from " + table + sqlWhere;
+		
+		PreparedStatement prepareSql = conn.prepareStatement(sql);
+		prepareSql.setString(1, deckName);
+		rs = prepareSql.executeQuery();
+		
+		if(rs.next()){
+			if(rs.getFloat("COUNT(*)") > 0){
+				winrate = rs.getFloat("SUM(WIN)") / rs.getFloat("COUNT(*)") * 100;
+			}
 		}
 		
 		return winrate;

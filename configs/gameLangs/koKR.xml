@@ -63,6 +63,98 @@
     <matchQuality>-1.0</matchQuality>
     <outer-class reference="../.."/>
   </challengeScanbox>
+  <deckScanboxses>
+    <Scanbox>
+      <xOffset>185</xOffset>
+      <yOffset>245</yOffset>
+      <width>100</width>
+      <height>30</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.8</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>425</xOffset>
+      <yOffset>245</yOffset>
+      <width>100</width>
+      <height>30</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.8</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>665</xOffset>
+      <yOffset>245</yOffset>
+      <width>100</width>
+      <height>30</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.8</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>185</xOffset>
+      <yOffset>473</yOffset>
+      <width>100</width>
+      <height>30</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.8</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>425</xOffset>
+      <yOffset>473</yOffset>
+      <width>100</width>
+      <height>30</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.8</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>665</xOffset>
+      <yOffset>473</yOffset>
+      <width>100</width>
+      <height>30</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.8</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>185</xOffset>
+      <yOffset>690</yOffset>
+      <width>100</width>
+      <height>30</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.8</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>425</xOffset>
+      <yOffset>690</yOffset>
+      <width>100</width>
+      <height>30</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.8</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>665</xOffset>
+      <yOffset>690</yOffset>
+      <width>100</width>
+      <height>30</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.8</matchQuality>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+  </deckScanboxses>
   <goFirstScanbox>
     <xOffset>910</xOffset>
     <yOffset>550</yOffset>

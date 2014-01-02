@@ -23,6 +23,19 @@ public class HearthReaderSetting {
 	//challenge mode scan boxes
 	public Scanbox challengeScanbox		= new Scanbox("challenge-mode.png", 1200, 100, 120, 120);
 	
+	public Scanbox[] deckScanboxses = {
+			new Scanbox("deck-selected.png",		185, 245, 100, 30, 1f, 0.8f),
+			new Scanbox("deck-selected.png",		425, 245, 100, 30, 1f, 0.8f),
+			new Scanbox("deck-selected.png",		665, 245, 100, 30, 1f, 0.8f),
+			new Scanbox("deck-selected.png",		185, 473, 100, 30, 1f, 0.8f),
+			new Scanbox("deck-selected.png",		425, 473, 100, 30, 1f, 0.8f),
+			new Scanbox("deck-selected.png",		665, 473, 100, 30, 1f, 0.8f),
+			new Scanbox("deck-selected.png",		185, 690, 100, 30, 1f, 0.8f),
+			new Scanbox("deck-selected.png",		425, 690, 100, 30, 1f, 0.8f),
+			new Scanbox("deck-selected.png",		665, 690, 100, 30, 1f, 0.8f),
+	};
+	
+	
 	public Scanbox goFirstScanbox 		= new Scanbox("go-first.png", 		910, 550, 400, 150);
 	public Scanbox goSecondScanbox 		= new Scanbox("go-second.png", 		910, 550, 400, 150);
 	public Scanbox victoryScanbox 		= new Scanbox("victory.png", 		440, 500, 100, 100);

@@ -36,6 +36,9 @@ public class HearthReader {
 	private int myHero = -1;
 	private int oppHero = -1;
 	
+	private int selectedDeck = -1;
+	private int exSelectedDeck = -1;
+	
 	private int exMyHero = -1;
 	private int exOppHero = -1;
 	
@@ -66,6 +69,7 @@ public class HearthReader {
 	private Target goSecondImageTarget;
 	private Target victoryImageTarget;
 	private Target defeatImageTarget;
+	private Target deckSelectedImageTarget;
 
 	private Target[] winsImageTarget;
 	
@@ -321,22 +325,26 @@ public class HearthReader {
 		challengeImageTarget = this.prepareImageTarget(readerSettings.challengeScanbox);
 		practiceImageTarget = this.prepareImageTarget(readerSettings.practiceScanbox);
 		arenaLeafImageTarget 	= this.prepareImageTarget(readerSettings.arenaLeafScanbox);
+		victoryImageTarget 		= this.prepareImageTarget(readerSettings.victoryScanbox);
+		defeatImageTarget 		= this.prepareImageTarget(readerSettings.defeatScanbox);
+		
+		winsImageTarget = new ImageTarget[readerSettings.winsScanboxes.length];
+		
+		for(int i = 0; i < readerSettings.winsScanboxes.length; i++){
+			winsImageTarget[i] =  this.prepareImageTarget(readerSettings.winsScanboxes[i]);
+		}
+			
+		if(readerSettings.deckScanboxses.length > 0){
+			deckSelectedImageTarget = this.prepareImageTarget(readerSettings.deckScanboxses[0]);
+		}
 		
 		this.initGameLang();
 	}
 		
 	private void initGameLang(){		
 		//language dependent
-		winsImageTarget = new ImageTarget[readerSettings.winsScanboxes.length];
-		
-		for(int i = 0; i < readerSettings.winsScanboxes.length; i++){
-			winsImageTarget[i] =  this.prepareImageTarget(readerSettings.winsScanboxes[i]);
-		}
-		
 		goFirstImageTarget 		= this.prepareImageTarget(readerSettings.goFirstScanbox);
 		goSecondImageTarget 	= this.prepareImageTarget(readerSettings.goSecondScanbox);
-		victoryImageTarget 		= this.prepareImageTarget(readerSettings.victoryScanbox);
-		defeatImageTarget 		= this.prepareImageTarget(readerSettings.defeatScanbox);
 	}
 	
 	@SuppressWarnings("unused")
@@ -362,6 +370,11 @@ public class HearthReader {
 	}
 		
 	private boolean findImage(HearthReaderSetting.Scanbox sb, Target target, String label){
+		ScreenRegion foundRegion = _findImage(sb, target, label);
+		return (foundRegion != null);
+	}
+	
+	private ScreenRegion _findImage(HearthReaderSetting.Scanbox sb, Target target, String label){
 		Canvas canvas = new DesktopCanvas();
 		int x = 0, y = 0, w = 0, h = 0;
 		float scaling = this.getScaleFactor();
@@ -399,7 +412,7 @@ public class HearthReader {
 			updateLastSeen();
 		}
 		
-		return (foundRegion != null);
+		return foundRegion;
 	}
 
 	private synchronized void scanMode() {
@@ -446,6 +459,11 @@ public class HearthReader {
 			myHero = -1;
 			oppHero = -1;
 			inGameMode = 0;
+			
+			if(isArenaMode()){
+				//reset selected deck for Arena until I find a proper solution to it
+				selectedDeck = -1;
+			}
 	
 			if(exGameMode != gameMode){
 				exGameMode = gameMode; 
@@ -630,6 +648,29 @@ public class HearthReader {
 		goFirst = -1;
 	}
 	
+	private synchronized void scanSeletedDeck() {
+		for(int i = 0; i < readerSettings.deckScanboxses.length; i++){
+			if(this.findImage(readerSettings.deckScanboxses[i], deckSelectedImageTarget, "Deck (" + i + ") ")){
+				System.out.println("Found selected deck #: " + i);
+				selectedDeck = i;
+				
+				if(selectedDeck != exSelectedDeck){
+					
+					if(exSelectedDeck == -1){
+						notifications.add(new HearthReaderNotification("Deck", "Selected #" + (i + 1)));
+					} else {
+						notifications.add(new HearthReaderNotification("Deck", "Switched to #" + (i + 1)));
+					}
+					
+					exSelectedDeck = selectedDeck;
+					isDirty = true;
+				}
+				
+				break;
+			}
+		}
+	}
+	
 	private synchronized void scanArenaHero() {
 		if(this.isInGame() || !this.isArenaMode()){
 			return;
@@ -719,6 +760,13 @@ public class HearthReader {
 	
 	private void saveGameResult(){
 		int totalTime = (int) (new Date().getTime() - startTime.getTime())/1000;
+		HearthDecks decks = (HearthDecks) config.load("." + File.separator + "configs" + File.separator + "decks.xml");
+		String deckName = "";
+		
+		if(decks == null){
+			decks = new HearthDecks();
+			//we don't need to save the decks.xml here because the main UI will handle it if it is missing.
+		}
 		
 		if(victory == 1){
 			System.out.println("Found Victory");
@@ -733,7 +781,10 @@ public class HearthReader {
 		
 		System.out.println("Saving match result...");
 		try {
-			tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime, false);
+			if(selectedDeck > -1 && selectedDeck < decks.list.length){
+				deckName = decks.list[selectedDeck];
+			}
+			tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime, false, deckName);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -1059,6 +1110,10 @@ public class HearthReader {
 		if(this.isArenaMode() && !this.isInGame()){
 			this.scanArenaHero();
 			this.scanArenaScore();
+		}
+		
+		if((this.isRankedMode() || this.isUnrankedMode() || this.isChallengeMode() || this.isPracticeMode()) && !this.isInGame()){
+			this.scanSeletedDeck();
 		}
 		
 		this.scanCoinScreen();

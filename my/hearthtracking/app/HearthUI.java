@@ -2,6 +2,7 @@ package my.hearthtracking.app;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -77,6 +78,8 @@ import org.eclipse.swt.widgets.TrayItem;
 import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MenuDetectEvent;
 
+import java.text.DecimalFormat;
+
 @SuppressWarnings({ "unused", "deprecation" })
 public class HearthUI {
 	protected Shell shlHearthtracker;
@@ -106,6 +109,7 @@ public class HearthUI {
 	private static HearthGameLangList gameLanguages;
 	private static HearthResolutionsList gameResolutions;
 	private static HearthSetting setting;
+	private static HearthDecks decks;
 	private static HearthHeroesList heroesList;
 	private static Logger logger;
 	
@@ -137,6 +141,18 @@ public class HearthUI {
 	
 	private static List<HearthReaderNotification> notifications = new ArrayList<HearthReaderNotification>();
 	private CCombo cbServer;
+	private Text text_1;
+	private Text text_4;
+	private Text text_2;
+	private Text text_3;
+	private Text text_5;
+	private Text text_6;
+	private Text text_7;
+	private Text text_8;
+	private Text text_9;
+	
+	private Text[] txtDecks = new Text[9];
+	private Label[] lblDecks = new Label[9];
 
 	/**
 	 * Launch the application.
@@ -159,10 +175,16 @@ public class HearthUI {
 			config.save(updateLog, "." + File.separator + "configs" + File.separator + "update.xml");
 		}
 		
+		decks = (HearthDecks) config.load("." + File.separator + "configs" + File.separator + "decks.xml");
 		heroesList = (HearthHeroesList) config.load("." + File.separator + "configs" + File.separator + "heroes.xml");
 		gameLanguages = (HearthGameLangList) config.load("." + File.separator + "configs" + File.separator + "gameLangs.xml");
 		gameResolutions = (HearthResolutionsList) config.load("." + File.separator + "configs" + File.separator + "gameResolutions.xml");
 		setting = (HearthSetting) config.load("." + File.separator + "configs" + File.separator + "settings.xml");
+		
+		if(decks == null){
+			decks = new HearthDecks();
+			config.save(decks, "." + File.separator + "configs" + File.separator + "decks.xml");
+		}
 		
 		if(heroesList == null){
 			heroesList = new HearthHeroesList();
@@ -236,7 +258,7 @@ public class HearthUI {
     private static void exit(){
     	while(threadRunning){
     		try {
-				Thread.sleep(1000);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				
 			}
@@ -440,6 +462,7 @@ public class HearthUI {
 					window.fillArenaTable();
 					window.fillMatchesTable();
 					window.updateStatus();
+					window.fillDeckWinRate();
 					tracker.clearDirty();
 				}
 				
@@ -646,6 +669,190 @@ public class HearthUI {
 		
 		TabItem tbtmArenaNew = new TabItem(tabFolder_2, 0);
 		tbtmArenaNew.setText("&New");
+		
+		TabItem tbtmDeck = new TabItem(tabFolder, SWT.NONE);
+		tbtmDeck.setText("De&cks");
+		
+		Composite composite_6 = new Composite(tabFolder, SWT.NONE);
+		tbtmDeck.setControl(composite_6);
+		composite_6.setLayout(new GridLayout(7, false));
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck = new Label(composite_6, SWT.NONE);
+		lblDeck.setText("Slot #1");
+		
+		Label lblNewLabel_17 = new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck_1 = new Label(composite_6, SWT.NONE);
+		lblDeck_1.setText("Slot #2");
+		
+		Label lblNewLabel_20 = new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck_2 = new Label(composite_6, SWT.NONE);
+		lblDeck_2.setText("Slot #3");
+		
+		Label label_3 = new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		txtDecks[0] = text_1 = new Text(composite_6, SWT.BORDER);
+		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_6, SWT.NONE);
+		
+		txtDecks[1] = text_2 = new Text(composite_6, SWT.BORDER);
+		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_6, SWT.NONE);
+		
+		txtDecks[2] = text_3 = new Text(composite_6, SWT.BORDER);
+		text_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck1 = new Label(composite_6, SWT.NONE);
+		lblDeck1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		lblDecks[0] = lblDeck1;
+		lblDeck1.setText("......");
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck2 = new Label(composite_6, SWT.NONE);
+		lblDeck2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		lblDecks[1] = lblDeck2;
+		lblDeck2.setText("......");
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck3 = new Label(composite_6, SWT.NONE);
+		lblDeck3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		lblDecks[2] = lblDeck3;
+		lblDeck3.setText("......");
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblNewLabel_18 = new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeckdsds = new Label(composite_6, SWT.NONE);
+		lblDeckdsds.setText("Slot #4");
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeckxx= new Label(composite_6, SWT.NONE);
+		lblDeckxx.setText("Slot #5");
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeckss = new Label(composite_6, SWT.NONE);
+		lblDeckss.setText("Slot #6");
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		txtDecks[3] = text_4 = new Text(composite_6, SWT.BORDER);
+		text_4.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_6, SWT.NONE);
+		
+		txtDecks[4] = text_5 = new Text(composite_6, SWT.BORDER);
+		text_5.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_6, SWT.NONE);
+		
+		txtDecks[5] = text_6 = new Text(composite_6, SWT.BORDER);
+		text_6.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck4 = new Label(composite_6, SWT.NONE);
+		lblDeck4.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		lblDecks[3] = lblDeck4;
+		lblDeck4.setText("......");
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck5 = new Label(composite_6, SWT.NONE);
+		lblDeck5.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		lblDecks[4] = lblDeck5;
+		lblDeck5.setText("......");
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck6 = new Label(composite_6, SWT.NONE);
+		lblDeck6.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		lblDecks[5] = lblDeck6;
+		lblDeck6.setText("......");
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblNewLabel_19 = new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck_6 = new Label(composite_6, SWT.NONE);
+		lblDeck_6.setText("Slot #7");
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblNewLabel_15 = new Label(composite_6, SWT.NONE);
+		lblNewLabel_15.setText("Slot #8");
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblNewLabel_16 = new Label(composite_6, SWT.NONE);
+		lblNewLabel_16.setText("Slot #9");
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		txtDecks[6] = text_7 = new Text(composite_6, SWT.BORDER);
+		text_7.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_6, SWT.NONE);
+		
+		txtDecks[7] = text_8 = new Text(composite_6, SWT.BORDER);
+		text_8.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_6, SWT.NONE);
+		
+		txtDecks[8] = text_9 = new Text(composite_6, SWT.BORDER);
+		text_9.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck7 = new Label(composite_6, SWT.NONE);
+		lblDeck7.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		lblDecks[6] = lblDeck7;
+		lblDeck7.setText("......");
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck8 = new Label(composite_6, SWT.NONE);
+		lblDeck8.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		lblDecks[7] = lblDeck8;
+		lblDeck8.setText("......");
+		new Label(composite_6, SWT.NONE);
+		
+		Label lblDeck9 = new Label(composite_6, SWT.NONE);
+		lblDeck9.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		lblDecks[8] = lblDeck9;
+		lblDeck9.setText("......");
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		Link link_2 = new Link(composite_6, SWT.NONE);
+		link_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URL("http://blog.hearthtracking.com/2014/01/how-to-use-decks-builder.html").toURI());
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		link_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 5, 1));
+		link_2.setText("<a>How to use the Decks Manager</a>");
+		new Label(composite_6, SWT.NONE);
 			
 		TabItem tbtmPerferences = new TabItem(tabFolder, SWT.NONE);
 		tbtmPerferences.setText("&Preferences");
@@ -673,11 +880,21 @@ public class HearthUI {
 		cmbGameLang.setVisibleItemCount(13);
 		
 		Link link = new Link(grpGeneral, SWT.NONE);
+		link.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URL("http://blog.hearthtracking.com/2014/01/how-to-use-web-sync-function.html").toURI());
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		link.setBounds(63, 80, 163, 15);
 		link.setText("<a>HearthTracker Web Sync Key</a>");
 		
 		txtWebSyncKey = new Text(grpGeneral, SWT.BORDER);
-		txtWebSyncKey.setBounds(232, 78, 241, 21);
+		txtWebSyncKey.setBounds(232, 78, 324, 21);
 		
 		Label lblNewLabel_14 = new Label(grpGeneral, SWT.NONE);
 		lblNewLabel_14.setBounds(144, 53, 81, 15);
@@ -983,6 +1200,60 @@ public class HearthUI {
 		fillMatchesTable();
 		fillArenaTable();
 		setupModeSelection();
+		decksManager();
+	}
+	
+	private void decksManager(){
+		FocusAdapter deckFocus = new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				Text deck = (Text) arg0.getSource();
+				int index = (int) deck.getData("index");
+				String input = deck.getText().trim();
+				System.out.println("Slot #" + index + " lost focus");
+
+				if(!input.toLowerCase().equals(decks.list[index].toLowerCase())){
+					decks.list[index] = input;
+					saveDecks();
+					fillDeckWinRate();
+				}
+			}
+		};
+		
+		for(int i = 0; i < txtDecks.length; i++){
+			txtDecks[i].setText(decks.list[i]);
+			txtDecks[i].setData("index", i);
+			txtDecks[i].addFocusListener(deckFocus);
+			lblDecks[i].setText("");
+		}
+		
+		fillDeckWinRate();
+	}
+	
+	private void fillDeckWinRate(){
+		for(int i = 0; i < txtDecks.length; i++){
+			String deckName = decks.list[i];
+			try {
+				float ranked = tracker.getWinRateByDeck(HearthReader.RANKEDMODE, deckName);
+				float unranked = tracker.getWinRateByDeck(HearthReader.UNRANKEDMODE, deckName);
+				float challenge = tracker.getWinRateByDeck(HearthReader.CHALLENGEMODE, deckName);
+				float practice = tracker.getWinRateByDeck(HearthReader.PRACTICEMODE, deckName);
+				
+				String rankedS = ranked > -1 ? new DecimalFormat("0.00").format(ranked) + "%" : "-\t";
+				String unrankedS = unranked > -1 ? new DecimalFormat("0.00").format(unranked) + "%" : "-";
+				String challengeS = challenge > -1 ? new DecimalFormat("0.00").format(challenge) + "%" : "-\t";
+				String practiceS = practice > -1 ? new DecimalFormat("0.00").format(practice) + "%" : "-";
+
+				lblDecks[i].setText(
+						"R: " + rankedS 
+					   +"\tU: " + unrankedS + "\r\n"
+					   +"C: " + challengeS
+					   +"\tP: " + practiceS + "\r\n" 
+				);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private void fillMatchesTable(){
@@ -1384,7 +1655,7 @@ public class HearthUI {
 				try {
 					btnMatchesEditSave.setEnabled(false);
 					btnMatchesEditSave.setText("Saving...");
-					tracker.saveMatchResult(gMode, myheroid, oppheroid, goes, result, starttime, totaltime, true);
+					tracker.saveMatchResult(gMode, myheroid, oppheroid, goes, result, starttime, totaltime, true, "");
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -1636,6 +1907,10 @@ public class HearthUI {
 	
 	private void savePreferences(){
 		config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
+	}
+	
+	private void saveDecks(){
+		config.save(decks, "." + File.separator + "configs" + File.separator + "decks.xml");
 	}
 	
 	private void poppulateDiagnoticsStatus(){
