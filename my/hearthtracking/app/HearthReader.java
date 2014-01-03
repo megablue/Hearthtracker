@@ -101,6 +101,8 @@ public class HearthReader {
 	
 	private boolean alwaysScan = false;
 	
+	private boolean notify = true;
+	
 	private List<HearthReaderNotification> notifications = new ArrayList<HearthReaderNotification>();
 	
 	public HearthReader(HearthTracker t){
@@ -195,6 +197,10 @@ public class HearthReader {
 		return yOffsetOverrideVal;
 	}
 	
+	public synchronized void setNotification(boolean enable){
+		notify = enable;
+	}
+	
 	public synchronized HearthReaderNotification getNotification(){
 		
 		if(notifications.size() == 0){
@@ -205,6 +211,12 @@ public class HearthReader {
 		notifications.remove(0);
 		
 		return first;
+	}
+	
+	public synchronized void addNotification(HearthReaderNotification note){
+		if(notify == true){
+			notifications.add(note);
+		}
 	}
 	
 	private synchronized void init(){
@@ -472,32 +484,32 @@ public class HearthReader {
 				switch(gameMode){
 					case MENUMODE:
 						System.out.println("Mode: Main Menu");
-						notifications.add(new HearthReaderNotification("Game Mode", "Main menu detected"));
+						addNotification(new HearthReaderNotification("Game Mode", "Main menu detected"));
 					break;
 					
 					case RANKEDMODE:
 						System.out.println("Mode: Ranked Mode");
-						notifications.add(new HearthReaderNotification("Game Mode", "Ranked mode detected"));
+						addNotification(new HearthReaderNotification("Game Mode", "Ranked mode detected"));
 					break;
 					
 					case UNRANKEDMODE:
 						System.out.println("Mode: Unranked Mode");
-						notifications.add(new HearthReaderNotification("Game Mode", "Unranked mode detected"));
+						addNotification(new HearthReaderNotification("Game Mode", "Unranked mode detected"));
 					break;
 					
 					case ARENAMODE:
 						System.out.println("Mode: Arena Mode");
-						notifications.add(new HearthReaderNotification("Game Mode", "Arena mode detected"));
+						addNotification(new HearthReaderNotification("Game Mode", "Arena mode detected"));
 					break;
 					
 					case PRACTICEMODE:
 						System.out.println("Mode: Practice Mode");
-						notifications.add(new HearthReaderNotification("Game Mode", "Practice mode detected"));
+						addNotification(new HearthReaderNotification("Game Mode", "Practice mode detected"));
 					break;
 					
 					case CHALLENGEMODE:
 						System.out.println("Mode: Challenge Mode");
-						notifications.add(new HearthReaderNotification("Game Mode", "Challenge mode detected"));
+						addNotification(new HearthReaderNotification("Game Mode", "Challenge mode detected"));
 					break;
 					
 					default:
@@ -589,9 +601,9 @@ public class HearthReader {
 			String hero = myHero != -1 ? heroesList.getHeroLabel(myHero) : heroesList.getHeroLabel(exMyHero);
 			
 			if(!saved){
-				notifications.add(new HearthReaderNotification("Arena score", "Wins " + wins + ", losses " + losses + " as " + hero));
+				addNotification(new HearthReaderNotification("Arena score", "Wins " + wins + ", losses " + losses + " as " + hero));
 			} else {
-				notifications.add(new HearthReaderNotification("Arena concluded", "Wins " + wins + ", losses " + losses + " as " + hero));
+				addNotification(new HearthReaderNotification("Arena concluded", "Wins " + wins + ", losses " + losses + " as " + hero));
 			}
 			
 			saved = false;
@@ -670,7 +682,7 @@ public class HearthReader {
 					
 					System.out.println("Found selected deck #: " + i);
 					
-					notifications.add(new HearthReaderNotification("Deck #" + (i + 1), deckName));
+					addNotification(new HearthReaderNotification("Deck #" + (i + 1), deckName));
 
 					if(deckName.length() > 0){
 						try {
@@ -680,7 +692,7 @@ public class HearthReader {
 							String winRateS = winRate > -1 ? new DecimalFormat("0.00").format(winRate) + "%" : "N|A";
 							
 							if(winRate > -1 ){
-								notifications.add(new HearthReaderNotification("Deck win rate", 
+								addNotification(new HearthReaderNotification("Deck win rate", 
 										winRateS + " (" + deckWins + " - "  + deckLosses +  ")"
 								));
 							}
@@ -734,7 +746,7 @@ public class HearthReader {
 				if(myHero != exMyHero){
 					exMyHero = myHero;
 					isDirty = true;
-					notifications.add(new HearthReaderNotification("Hero Detected", "Your hero is " + heroesList.getHeroLabel(i)));
+					addNotification(new HearthReaderNotification("Hero Detected", "Your hero is " + heroesList.getHeroLabel(i)));
 				}
 				break;
 			}
@@ -749,7 +761,7 @@ public class HearthReader {
 					exOppHero = oppHero;
 					isDirty = true;
 					
-					notifications.add(new HearthReaderNotification("Hero Detected", "Opponent hero is " + heroesList.getHeroLabel(i)));
+					addNotification(new HearthReaderNotification("Hero Detected", "Opponent hero is " + heroesList.getHeroLabel(i)));
 				}
 				break;
 			}
@@ -798,13 +810,13 @@ public class HearthReader {
 		
 		if(victory == 1){
 			System.out.println("Found Victory");
-			notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Victory!"));
+			addNotification(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Victory!"));
 		} else if(victory == 0) {
 			System.out.println("Found Defeat");
-			notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Defeat!"));
+			addNotification(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Defeat!"));
 		} else {
 			System.out.println("Found Unknown game result");
-			notifications.add(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Result unknown!"));
+			addNotification(new HearthReaderNotification("Game Result", getMyHero() + " vs " + getOppHero() + ", Result unknown!"));
 		}
 		
 		System.out.println("Saving match result...");
@@ -865,10 +877,10 @@ public class HearthReader {
 			
 			if(goFirst == 1){
 				System.out.println("Found coin, go first");
-				notifications.add(new HearthReaderNotification("Coin detected", "You go first!"));
+				addNotification(new HearthReaderNotification("Coin detected", "You go first!"));
 			} else if( goFirst == 0){
 				System.out.println("Found coin, go second");
-				notifications.add(new HearthReaderNotification("Coin detected", "You go second!"));
+				addNotification(new HearthReaderNotification("Coin detected", "You go second!"));
 			}
 						
 			exGoFirst = goFirst;

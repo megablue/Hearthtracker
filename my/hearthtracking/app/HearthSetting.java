@@ -14,15 +14,10 @@ public class HearthSetting {
 	int yOffset = 0;
 	boolean alwaysScan = false;
 	int tracker = 0;
+	boolean popup = true;
 	
 	public boolean upgrade(){
-		boolean upgraded1 = false;
-		boolean upgraded2 = false;
-		
-		upgraded1 = upgrade1();
-		upgraded2 = upgrade2();
-
-		return upgraded1 || upgraded2;
+		return upgrade1() || upgrade2() || upgrade3();
 	}
 	
 	private boolean upgrade1(){
@@ -43,6 +38,18 @@ public class HearthSetting {
 		if(settingVer == 1){
 			alwaysScan = false;
 			settingVer = 2;
+			upgraded = true;
+		}
+	
+		return upgraded;
+	}
+	
+	private boolean upgrade3(){
+		boolean upgraded = false;
+		
+		if(settingVer == 2){
+			popup = true;
+			settingVer = 3;
 			upgraded = true;
 		}
 	

@@ -12,7 +12,7 @@ public class HearthReaderSetting {
 	public Scanbox arenaLeafScanbox		= new Scanbox("arena-leaf.png", 	435, 340, 100, 100);
 	
 	//Ranked mode scan boxes
-	public Scanbox rankedScanbox		= new Scanbox("ranked-mode.png", 	1118, 112, 80, 80);
+	public Scanbox rankedScanbox		= new Scanbox("ranked-mode.png", 	1082, 134, 120, 120);
 
 	//Play mode scan boxes
 	public Scanbox unrankedScanbox		= new Scanbox("unranked-mode.png", 	1070, 138, 100, 100);

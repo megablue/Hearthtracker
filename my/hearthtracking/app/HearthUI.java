@@ -155,6 +155,7 @@ public class HearthUI {
 	
 	private Text[] txtDecks = new Text[9];
 	private Label[] lblDecks = new Label[9];
+	private Button btnPopup;
 
 	/**
 	 * Launch the application.
@@ -914,7 +915,7 @@ public class HearthUI {
 				}
 			}
 		});
-		link.setBounds(63, 80, 163, 15);
+		link.setBounds(95, 80, 136, 15);
 		link.setText("<a>HearthTracker Web Sync Key</a>");
 		
 		txtWebSyncKey = new Text(grpGeneral, SWT.BORDER);
@@ -929,6 +930,14 @@ public class HearthUI {
 		cbServer.setItems(new String[] {"NA", "EU", "Asia", "China"});
 		cbServer.setEditable(false);
 		cbServer.setBounds(231, 49, 150, 21);
+		
+		Label lblNewLabel_21 = new Label(grpGeneral, SWT.NONE);
+		lblNewLabel_21.setBounds(125, 112, 101, 15);
+		lblNewLabel_21.setText("Notification Popup");
+		
+		btnPopup = new Button(grpGeneral, SWT.CHECK);
+		btnPopup.setBounds(232, 111, 93, 16);
+		btnPopup.setText("Enable");
 		
 		Group grpAdvanced = new Group(composite_1, SWT.NONE);
 		grpAdvanced.setText("Advanced");
@@ -2205,6 +2214,24 @@ public class HearthUI {
 			@Override
 			public void focusGained(FocusEvent arg0) {
 				txtWebSyncKey.selectAll();
+			}
+		});
+		
+		btnPopup.setSelection(setting.popup);
+		hearth.setNotification(setting.popup);
+		
+		btnPopup.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(btnPopup.getSelection() != setting.popup){
+					setting.popup = btnPopup.getSelection();
+					hearth.setNotification(setting.popup);
+					savePreferences();
+				}
 			}
 		});
 	}
