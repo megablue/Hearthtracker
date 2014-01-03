@@ -33,3 +33,4 @@ images/backup/
 logs/
 configs/update.xml
 configs/sync.xml
+configs/decks.xml

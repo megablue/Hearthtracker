@@ -57,6 +57,8 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.events.MouseAdapter;
@@ -437,6 +439,10 @@ public class HearthUI {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
+		FontData[] fontData = display.getSystemFont().getFontData();
+		fontData[0].setHeight(8);
+		
+		
 		shlHearthtracker = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE) & (~SWT.MAX));
 		shlHearthtracker.addShellListener(new ShellAdapter() {
 			@Override
@@ -551,9 +557,9 @@ public class HearthUI {
 		grpStats = new Group(sashForm, SWT.NONE);
 		grpStats.setText("Stats");
 		grpStats.setLayout(new FormLayout());
-		
+
 		table = new Table(grpStats, SWT.FULL_SELECTION);
-		table.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
+		table.setFont(new Font(display,fontData[0]));
 		table.setLinesVisible(true);
 		table.setHeaderVisible(true);
 		FormData fd_table = new FormData();
@@ -600,7 +606,7 @@ public class HearthUI {
 		
 		styledTextStatus = new StyledText(grpCurrentStats, SWT.READ_ONLY);
 		styledTextStatus.setBounds(10, 23, 211, 340);
-		styledTextStatus.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
+		styledTextStatus.setFont(new Font(display,fontData[0]));
 		
 		sashForm.setWeights(new int[] {365, 230});
 		GridData gd_lblNewLabel_15 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
@@ -619,7 +625,7 @@ public class HearthUI {
 		matchesTable = new Table(sashForm_1, SWT.FULL_SELECTION);
 		matchesTable.setLinesVisible(true);
 		matchesTable.setHeaderVisible(true);
-		matchesTable.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
+		matchesTable.setFont(new Font(display,fontData[0]));
 		
 		TableColumn tblclmnAs = new TableColumn(matchesTable, SWT.NONE);
 		tblclmnAs.setText("As");
@@ -666,7 +672,7 @@ public class HearthUI {
 		arenaTable = new Table(sashForm_2, SWT.FULL_SELECTION);
 		arenaTable.setLinesVisible(true);
 		arenaTable.setHeaderVisible(true);
-		arenaTable.setFont(SWTResourceManager.getFont("Segoe UI", 8, SWT.NORMAL));
+		arenaTable.setFont(new Font(display,fontData[0]));
 		
 		TableColumn tblclmnAs_1 = new TableColumn(arenaTable, SWT.NONE);
 		tblclmnAs_1.setText("As");
@@ -1092,7 +1098,7 @@ public class HearthUI {
 		
 		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
 		lblCopyrightc.setBounds(24, 153, 150, 15);
-		lblCopyrightc.setText("Copyright \u00A9 2013 megablue");
+		lblCopyrightc.setText("Copyright \u00A9 2014 megablue");
 		
 		Label lblNewLabel_7 = new Label(composite_3, SWT.NONE);
 		lblNewLabel_7.setBounds(5, 65, 0, 15);
@@ -1202,8 +1208,8 @@ public class HearthUI {
 		createArenaEditForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit);
 		createArenaNewForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaNew);
 		
-		poppulatesOffsetOptions();
-		poppulateScannerOptions();
+		populatesOffsetOptions();
+		populatescannerOptions();
 		poppulateGeneralPerferences();
 		poppulateGameServer();
 		poppulateResolutions();
@@ -1531,11 +1537,13 @@ public class HearthUI {
 				
 				if(cbMatchesEditResult.getSelectionIndex() == 0){
 					result = 1;
-				} if(cbMatchesEditResult.getSelectionIndex() == 1){
+				} else if(cbMatchesEditResult.getSelectionIndex() == 1){
 					result = 0;
 				} else {
 					result = -1;
 				}
+				
+				System.out.println(result);
 				
 				if(cbMatchesEditGoes.getSelectionIndex() == 0){
 					goes = 1;
@@ -2014,7 +2022,7 @@ public class HearthUI {
 		
 	}
 	
-	private void poppulatesOffsetOptions(){
+	private void populatesOffsetOptions(){
 		hearth.setXOffetOverride(setting.xOffset);
 		hearth.setYOffetOverride(setting.yOffset);
 		
@@ -2040,7 +2048,7 @@ public class HearthUI {
 		});
 	}
 	
-	private void poppulateScannerOptions(){
+	private void populatescannerOptions(){
 		btnAlwaysScan.setSelection(setting.alwaysScan);
 		btnAlwaysScan.addSelectionListener(new SelectionAdapter() {
 			@Override
