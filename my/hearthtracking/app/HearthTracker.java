@@ -863,7 +863,7 @@ public class HearthTracker {
 	
 	public ResultSet getArenaResults() throws SQLException{
 		ResultSet rs;
-		rs = stat.executeQuery("select * from ARENARESULTS WHERE DELETED=0 ORDER BY ID DESC LIMIT 20");
+		rs = stat.executeQuery("select * from ARENARESULTS WHERE DELETED=0 ORDER BY timecaptured DESC LIMIT 20");
 
 		return rs;
 	}
@@ -954,7 +954,7 @@ public class HearthTracker {
 	
 	public ResultSet getMatches() throws SQLException{
 		ResultSet rs;
-		rs = stat.executeQuery("select * from MATCHES WHERE DELETED=0 ORDER BY ID DESC LIMIT 100");
+		rs = stat.executeQuery("select * from MATCHES WHERE DELETED=0 ORDER BY startTime DESC LIMIT 100");
 
 		return rs;
 	}
