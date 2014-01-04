@@ -102,18 +102,16 @@ public class HearthUI {
 	private Group grpStats;
 	
 	private static Display display;
-	private static HearthUI window;
 	static boolean debugMode = HearthHelper.isDevelopmentEnvironment();
 	
-	private static HearthReader hearth;
-	private static HearthTracker tracker;
-	private static HearthConfigurator config = new HearthConfigurator();
-	private static HearthGameLangList gameLanguages;
-	private static HearthResolutionsList gameResolutions;
-	private static HearthSetting setting;
-	private static HearthDecks decks;
-	private static HearthHeroesList heroesList;
-	private static Logger logger;
+	private HearthReader hearth;
+	private HearthTracker tracker;
+	private HearthConfigurator config = new HearthConfigurator();
+	private HearthGameLangList gameLanguages;
+	private HearthResolutionsList gameResolutions;
+	private HearthSetting setting;
+	private HearthDecks decks;
+	private HearthHeroesList heroesList;
 	
 	Thread hearththread;
 	private Table table;
@@ -157,20 +155,11 @@ public class HearthUI {
 	private Label[] lblDecks = new Label[9];
 	private Button btnPopup;
 
-	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			init();
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public HearthUI(){
+		init();
 	}
 	
-	public static void init(){
+	public void init(){
 		HearthUpdaterLog updateLog = (HearthUpdaterLog) config.load("." + File.separator + "configs" + File.separator + "update.xml");
 		
 		if(updateLog == null){
@@ -213,7 +202,6 @@ public class HearthUI {
 			config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
 		}
 		
-		window = new HearthUI();
 		tracker = new HearthTracker();
 		hearth = new HearthReader(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
 		
@@ -230,7 +218,7 @@ public class HearthUI {
 
 	}
 	
-    private static class ReaderThread
+    private class ReaderThread
     implements Runnable {
 	    public void run() {
 	    	HearthReaderNotification note = null;
@@ -258,7 +246,7 @@ public class HearthUI {
 	    }
     }
     
-    private static void exit(){
+    private void exit(){
     	while(threadRunning){
     		try {
 				Thread.sleep(100);
@@ -380,7 +368,7 @@ public class HearthUI {
     }
     
 	/**
-	 * Open the window.
+	 * Open the this.
 	 */
 	public void open() {
 		display = Display.getDefault();
@@ -399,20 +387,20 @@ public class HearthUI {
 		while (!shlHearthtracker.isDisposed()) {
 			if(hearththread.isAlive()){
 				if(tracker.isDirty()){
-					window.fillOverviewTable();
-					window.fillArenaTable();
-					window.fillMatchesTable();
-					window.updateStatus();
-					window.fillDeckWinRate();
+					this.fillOverviewTable();
+					this.fillArenaTable();
+					this.fillMatchesTable();
+					this.updateStatus();
+					this.fillDeckWinRate();
 					tracker.clearDirty();
 				}
 				
 				if(hearth.isDirty()){
-					window.updateStatus();
+					this.updateStatus();
 				}
 				
 				if(new Date().getTime() - lastUpdate.getTime() > 2000){	
-					window.poppulateDiagnoticsStatus();
+					this.poppulateDiagnoticsStatus();
 					lastUpdate = new Date();
 				}
 			}
@@ -437,7 +425,7 @@ public class HearthUI {
 	}
 
 	/**
-	 * Create contents of the window.
+	 * Create contents of the window
 	 */
 	protected void createContents() {
 		FontData[] fontData = display.getSystemFont().getFontData();
@@ -1948,7 +1936,7 @@ public class HearthUI {
 		Date lastSeen = hearth.getLastseen();
 		int[] area = hearth.getLastScanArea();
 		int[] subArea = hearth.getLastScanSubArea();
-		String last = lastSeen.getTime() == 0 ? "Never" : HearthHelper.getPrettyText(lastSeen); 
+		String last = lastSeen == null || lastSeen.getTime() == 0 ? "Never" : HearthHelper.getPrettyText(lastSeen); 
 
 		if(lastSeen == null){
 			lblLastSeen.setText("N|A");

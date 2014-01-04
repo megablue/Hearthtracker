@@ -185,7 +185,7 @@ public class HearthReader {
 		xOffetOverrideVal = val;
 	}
 	
-	public int getXOffsetOverride(){
+	public synchronized int getXOffsetOverride(){
 		return xOffetOverrideVal;
 	}
 	
@@ -193,7 +193,7 @@ public class HearthReader {
 		yOffsetOverrideVal = val;
 	}
 	
-	public int getYOffetOverride(){
+	public synchronized int getYOffetOverride(){
 		return yOffsetOverrideVal;
 	}
 	

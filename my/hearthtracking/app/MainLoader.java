@@ -36,7 +36,7 @@ public class MainLoader {
 //		sync.syncArenaBatch();
 //		sync.syncMatchBatch();
 				
-		HearthUI.main(args);
+		new HearthUI().open();
 	}
 
 }

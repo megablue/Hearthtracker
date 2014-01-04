@@ -16,7 +16,7 @@ public class HearthDonate extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
-	private static int gamesTracked = 1000;
+	private int gamesTracked = 1000;
 
 	/**
 	 * Create the dialog.
