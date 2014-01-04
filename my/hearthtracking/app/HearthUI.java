@@ -1963,7 +1963,7 @@ public class HearthUI {
 		btnVisualizeNow.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				hearth.pingHearthstone();
+				hearth.forcePing();
 			}
 		});
 	}

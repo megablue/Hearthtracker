@@ -88,6 +88,7 @@ public class HearthReader {
 	private int gameResX = 1920, gameResY = 1080;
 	private int oldGameResX = 1920, oldGameResY = 1080;
 	
+	private boolean forcePing = false;
 	private boolean pingHearthstone = true;
 	private boolean seenHearthstone = false;
 	private boolean autoDetectGameRes = true;
@@ -1059,6 +1060,10 @@ public class HearthReader {
 		}
 	}
 	
+	public void forcePing(){
+		forcePing = true;
+	}
+	
 	public void pingHearthstone(){
 		Canvas canvas = new DesktopCanvas();
 		int lineWidth = 10;
@@ -1160,6 +1165,11 @@ public class HearthReader {
 		this.scanGameHeroes();
 		this.scanVictory();	
 		this.autoPing();
+		
+		if(forcePing){
+			pingHearthstone();
+			forcePing = false;
+		}
 	}
 }
 	
