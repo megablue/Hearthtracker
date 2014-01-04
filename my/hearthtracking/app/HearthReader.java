@@ -100,6 +100,8 @@ public class HearthReader {
 	private int[] lastScanSubArea = {0,0,0,0};
 	private Date lastPing = new Date(new Date().getTime() - pingInterval);
 	
+	private boolean reinitScanner = false;
+	
 	private boolean alwaysScan = false;
 	
 	private boolean notify = true;
@@ -168,18 +170,18 @@ public class HearthReader {
 	
 	public synchronized void setGameLang(String lang){
 		gameLang = lang;
-		this.initGameScanner();
+		reinitScanner = true;
 	}
 	
 	public synchronized void setGameRes(int w, int h){
 		gameResX = w;
 		gameResY = h;
-		this.initGameScanner();
+		reinitScanner = true;
 	}
 	
 	public synchronized void setAutoGameRes(boolean flag){
 		autoDetectGameRes = flag;
-		this.initGameScanner();
+		reinitScanner = true;
 	}
 	
 	public synchronized void setXOffetOverride(int val){
@@ -1165,6 +1167,11 @@ public class HearthReader {
 		this.scanGameHeroes();
 		this.scanVictory();	
 		this.autoPing();
+		
+		if(reinitScanner){
+			initGameScanner();
+			reinitScanner = false;
+		}
 		
 		if(forcePing){
 			pingHearthstone();
