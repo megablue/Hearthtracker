@@ -267,8 +267,9 @@ public class HearthReader {
 	private float getScaleFactor(){
 		int[] gameRes = this.getGameResolution();
 		
-		//do not scale if the height is 1080
-		if(gameRes[1] == 1080){
+		//do not scale if the height is 0 or 1080
+		//zero usually means the game is running full screen
+		if(gameRes[1] == 0 || gameRes[1] == 1080){
 			return 1;
 		}
 		
@@ -690,7 +691,7 @@ public class HearthReader {
 					if(deckName.length() > 0){
 						try {
 							int deckWins = tracker.getWinsByDeck(gameMode, deckName);
-							int deckLosses = tracker.getWinsByDeck(gameMode, deckName);
+							int deckLosses = tracker.getLossesByDeck(gameMode, deckName);
 							float winRate = tracker.getWinRateByDeck(gameMode, deckName);
 							String winRateS = winRate > -1 ? new DecimalFormat("0.00").format(winRate) + "%" : "N|A";
 							
@@ -737,7 +738,7 @@ public class HearthReader {
 	}
 	
 	private synchronized void scanGameHeroes() {
-		if(this.foundGameHero() || new Date().getTime() - lastSave.getTime() < 10000){
+		if(this.foundGameHero() || new Date().getTime() - lastSave.getTime() < 30000){
 			return;
 		}
 				
@@ -802,6 +803,10 @@ public class HearthReader {
 	}
 	
 	private void saveGameResult(){
+		if(new Date().getTime() - lastSave.getTime() < 30000){
+			return;
+		}
+		
 		int totalTime = (int) (new Date().getTime() - startTime.getTime())/1000;
 		HearthDecks decks = (HearthDecks) config.load("." + File.separator + "configs" + File.separator + "decks.xml");
 		String deckName = "";
