@@ -24,15 +24,15 @@ public class HearthReaderSetting {
 	public Scanbox challengeScanbox		= new Scanbox("challenge-mode.png", 1200, 100, 120, 120);
 	
 	public Scanbox[] deckScanboxses = {
-			new Scanbox("deck-selected.png",		185, 245, 100, 30, 1f, 0.8f),
-			new Scanbox("deck-selected.png",		425, 245, 100, 30, 1f, 0.8f),
-			new Scanbox("deck-selected.png",		665, 245, 100, 30, 1f, 0.8f),
-			new Scanbox("deck-selected.png",		185, 473, 100, 30, 1f, 0.8f),
-			new Scanbox("deck-selected.png",		425, 473, 100, 30, 1f, 0.8f),
-			new Scanbox("deck-selected.png",		665, 473, 100, 30, 1f, 0.8f),
-			new Scanbox("deck-selected.png",		185, 690, 100, 30, 1f, 0.8f),
-			new Scanbox("deck-selected.png",		425, 690, 100, 30, 1f, 0.8f),
-			new Scanbox("deck-selected.png",		665, 690, 100, 30, 1f, 0.8f),
+			new Scanbox("deck-selected.png",		130, 220, 55, 55, 1f, 0.7f),
+			new Scanbox("deck-selected.png",		370, 220, 55, 55, 1f, 0.7f),
+			new Scanbox("deck-selected.png",		610, 220, 55, 55, 1f, 0.7f),
+			new Scanbox("deck-selected.png",		130, 445, 55, 55, 1f, 0.7f),
+			new Scanbox("deck-selected.png",		370, 445, 55, 55, 1f, 0.7f),
+			new Scanbox("deck-selected.png",		610, 445, 55, 55, 1f, 0.7f),
+			new Scanbox("deck-selected.png",		130, 667, 55, 55, 1f, 0.7f),
+			new Scanbox("deck-selected.png",		370, 667, 55, 55, 1f, 0.7f),
+			new Scanbox("deck-selected.png",		610, 667, 55, 55, 1f, 0.7f),
 	};
 	
 	

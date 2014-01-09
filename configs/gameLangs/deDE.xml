@@ -65,93 +65,93 @@
   </challengeScanbox>
   <deckScanboxses>
     <Scanbox>
-      <xOffset>185</xOffset>
-      <yOffset>245</yOffset>
-      <width>100</width>
-      <height>30</height>
+      <xOffset>130</xOffset>
+      <yOffset>220</yOffset>
+      <width>55</width>
+      <height>55</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.8</matchQuality>
+      <matchQuality>0.7</matchQuality>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>425</xOffset>
-      <yOffset>245</yOffset>
-      <width>100</width>
-      <height>30</height>
+      <xOffset>370</xOffset>
+      <yOffset>220</yOffset>
+      <width>55</width>
+      <height>55</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.8</matchQuality>
+      <matchQuality>0.7</matchQuality>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>665</xOffset>
-      <yOffset>245</yOffset>
-      <width>100</width>
-      <height>30</height>
+      <xOffset>610</xOffset>
+      <yOffset>220</yOffset>
+      <width>55</width>
+      <height>55</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.8</matchQuality>
+      <matchQuality>0.7</matchQuality>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>185</xOffset>
-      <yOffset>473</yOffset>
-      <width>100</width>
-      <height>30</height>
+      <xOffset>130</xOffset>
+      <yOffset>445</yOffset>
+      <width>55</width>
+      <height>55</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.8</matchQuality>
+      <matchQuality>0.7</matchQuality>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>425</xOffset>
-      <yOffset>473</yOffset>
-      <width>100</width>
-      <height>30</height>
+      <xOffset>370</xOffset>
+      <yOffset>445</yOffset>
+      <width>55</width>
+      <height>55</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.8</matchQuality>
+      <matchQuality>0.7</matchQuality>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>665</xOffset>
-      <yOffset>473</yOffset>
-      <width>100</width>
-      <height>30</height>
+      <xOffset>610</xOffset>
+      <yOffset>445</yOffset>
+      <width>55</width>
+      <height>55</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.8</matchQuality>
+      <matchQuality>0.7</matchQuality>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>185</xOffset>
-      <yOffset>690</yOffset>
-      <width>100</width>
-      <height>30</height>
+      <xOffset>130</xOffset>
+      <yOffset>667</yOffset>
+      <width>55</width>
+      <height>55</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.8</matchQuality>
+      <matchQuality>0.7</matchQuality>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>425</xOffset>
-      <yOffset>690</yOffset>
-      <width>100</width>
-      <height>30</height>
+      <xOffset>370</xOffset>
+      <yOffset>667</yOffset>
+      <width>55</width>
+      <height>55</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.8</matchQuality>
+      <matchQuality>0.7</matchQuality>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>665</xOffset>
-      <yOffset>690</yOffset>
-      <width>100</width>
-      <height>30</height>
+      <xOffset>610</xOffset>
+      <yOffset>667</yOffset>
+      <width>55</width>
+      <height>55</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.8</matchQuality>
+      <matchQuality>0.7</matchQuality>
       <outer-class reference="../../.."/>
     </Scanbox>
   </deckScanboxses>
