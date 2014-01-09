@@ -86,7 +86,7 @@ public class HearthTracker {
 	public void createTables() throws SQLException{
 		ResultSet rs;
 		boolean newdb = false;
-		int currentDBversion = 4;
+		int currentDBversion = 5;
 		
 		dbSetting = (HearthDatabase) config.load("." + File.separator + "data" + File.separator + "database.xml");
 		
@@ -280,6 +280,21 @@ public class HearthTracker {
 			stat.execute("CREATE INDEX DECK ON MATCHES(DECK, MODE)");
 			//save upgraded version
 			dbSetting.version = 4;
+			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		}
+		
+		if(!newdb && dbSetting.version == 4){
+			HearthSetting setting = (HearthSetting) config.load("." + File.separator + "configs" + File.separator + "settings.xml");
+			
+			if(setting != null){
+				if(!setting.gameServer.equals("")){
+					stat.execute("UPDATE ARENARESULTS SET SERVER='" + setting.gameServer +"' WHERE SERVER=''");
+					stat.execute("UPDATE MATCHES SET SERVER='" + setting.gameServer +"' WHERE SERVER=''");
+				}
+			}
+			
+			//save upgraded version
+			dbSetting.version = 5;
 			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
 		}
 	}
