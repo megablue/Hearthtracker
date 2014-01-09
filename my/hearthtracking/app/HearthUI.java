@@ -370,6 +370,9 @@ public class HearthUI {
 	/**
 	 * Open the this.
 	 */
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public void open() {
 		display = Display.getDefault();
 		createContents();
@@ -426,6 +429,7 @@ public class HearthUI {
 
 	/**
 	 * Create contents of the window
+	 * @wbp.parser.entryPoint
 	 */
 	protected void createContents() {
 		FontData[] fontData = display.getSystemFont().getFontData();
@@ -2235,6 +2239,7 @@ public class HearthUI {
 			
 			if(servers.getServerName(i).equals(setting.gameServer)){
 				selected = i;
+				tracker.setServer(setting.gameServer);
 			}
 		}
 		
