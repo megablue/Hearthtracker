@@ -81,6 +81,12 @@ import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MenuDetectEvent;
 
 import java.text.DecimalFormat;
+import org.eclipse.swt.custom.CBanner;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
 
 @SuppressWarnings({ "unused", "deprecation" })
 public class HearthUI {
@@ -154,6 +160,8 @@ public class HearthUI {
 	private Text[] txtDecks = new Text[9];
 	private Label[] lblDecks = new Label[9];
 	private Button btnPopup;
+	private Button btnRearrangeDeck;
+	
 
 	public HearthUI(){
 		init();
@@ -712,15 +720,21 @@ public class HearthUI {
 		new Label(composite_6, SWT.NONE);
 		
 		txtDecks[0] = text_1 = new Text(composite_6, SWT.BORDER);
-		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridData gd_text_1 = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_text_1.widthHint = 85;
+		text_1.setLayoutData(gd_text_1);
 		new Label(composite_6, SWT.NONE);
 		
 		txtDecks[1] = text_2 = new Text(composite_6, SWT.BORDER);
-		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridData gd_text_2 = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_text_2.widthHint = 85;
+		text_2.setLayoutData(gd_text_2);
 		new Label(composite_6, SWT.NONE);
 		
 		txtDecks[2] = text_3 = new Text(composite_6, SWT.BORDER);
-		text_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		GridData gd_text_3 = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_text_3.widthHint = 85;
+		text_3.setLayoutData(gd_text_3);
 		new Label(composite_6, SWT.NONE);
 		new Label(composite_6, SWT.NONE);
 		
@@ -855,6 +869,18 @@ public class HearthUI {
 		new Label(composite_6, SWT.NONE);
 		new Label(composite_6, SWT.NONE);
 		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
+		
+		btnRearrangeDeck = new Button(composite_6, SWT.NONE);
+		GridData gd_btnR = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_btnR.widthHint = 85;
+		btnRearrangeDeck.setLayoutData(gd_btnR);
+		btnRearrangeDeck.setText("Trim Empty &Slots ");
+		new Label(composite_6, SWT.NONE);
+		new Label(composite_6, SWT.NONE);
 		
 		Link link_2 = new Link(composite_6, SWT.NONE);
 		link_2.addMouseListener(new MouseAdapter() {
@@ -870,33 +896,60 @@ public class HearthUI {
 		link_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 5, 1));
 		link_2.setText("<a>How to use the Decks Manager</a>");
 		new Label(composite_6, SWT.NONE);
-			
-		TabItem tbtmPerferences = new TabItem(tabFolder, SWT.NONE);
-		tbtmPerferences.setText("&Preferences");
 		
-		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
-		tbtmPerferences.setControl(composite_1);
-		composite_1.setLayout(new GridLayout(1, false));
+		TabItem tbtmpreferences = new TabItem(tabFolder, SWT.NONE);
+		tbtmpreferences.setText("&Preferences");
 		
-		Group grpGeneral = new Group(composite_1, SWT.NONE);
-		grpGeneral.setText("General");
-		grpGeneral.setLayout(null);
-		GridData gd_grpGeneral = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_grpGeneral.heightHint = 134;
-		gd_grpGeneral.widthHint = 585;
-		grpGeneral.setLayoutData(gd_grpGeneral);
+		ScrolledComposite scrolledComposite = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		tbtmpreferences.setControl(scrolledComposite);
+		scrolledComposite.setExpandHorizontal(true);
+		scrolledComposite.setExpandVertical(true);
 		
-		Label lblNewLabel_1 = new Label(grpGeneral, SWT.NONE);
-		lblNewLabel_1.setBounds(134, 25, 92, 15);
+		ExpandBar expandBar = new ExpandBar(scrolledComposite, SWT.NONE);
+		
+		ExpandItem xpndtmGeneral = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmGeneral.setExpanded(true);
+		xpndtmGeneral.setText("General");
+		
+		Composite composite_7 = new Composite(expandBar, SWT.NONE);
+		xpndtmGeneral.setControl(composite_7);
+		xpndtmGeneral.setHeight(110);
+		composite_7.setLayout(new GridLayout(4, false));
+		
+		Label lblNewLabel_1 = new Label(composite_7, SWT.NONE);
+		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_1.setSize(92, 15);
 		lblNewLabel_1.setText("Game Language");
+		new Label(composite_7, SWT.NONE);
+		new Label(composite_7, SWT.NONE);
 		
-		cmbGameLang = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
-		cmbGameLang.setBounds(232, 22, 150, 21);
+		cmbGameLang = new CCombo(composite_7, SWT.BORDER | SWT.READ_ONLY);
+		GridData gd_cmbGameLang = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_cmbGameLang.widthHint = 372;
+		cmbGameLang.setLayoutData(gd_cmbGameLang);
+		cmbGameLang.setSize(150, 21);
 		cmbGameLang.setEditable(false);
 		cmbGameLang.setItems(new String[] {});
 		cmbGameLang.setVisibleItemCount(13);
+		scrolledComposite.setContent(expandBar);
+		scrolledComposite.setMinSize(expandBar.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		
-		Link link = new Link(grpGeneral, SWT.NONE);
+		Label lblNewLabel_14 = new Label(composite_7, SWT.NONE);
+		lblNewLabel_14.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_14.setBounds(144, 53, 81, 15);
+		lblNewLabel_14.setText("Batte.net server");
+		new Label(composite_7, SWT.NONE);
+		new Label(composite_7, SWT.NONE);
+		
+		cbServer = new CCombo(composite_7, SWT.BORDER | SWT.READ_ONLY);
+		cbServer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		cbServer.setVisibleItemCount(4);
+		cbServer.setItems(new String[] {"NA", "EU", "Asia", "China"});
+		cbServer.setEditable(false);
+		cbServer.setBounds(231, 49, 150, 21);
+		
+		Link link = new Link(composite_7, SWT.NONE);
+		link.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		link.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
@@ -909,120 +962,138 @@ public class HearthUI {
 		});
 		link.setBounds(95, 80, 136, 15);
 		link.setText("<a>HearthTracker Web Sync Key</a>");
+		new Label(composite_7, SWT.NONE);
+		new Label(composite_7, SWT.NONE);
 		
-		txtWebSyncKey = new Text(grpGeneral, SWT.BORDER);
+		txtWebSyncKey = new Text(composite_7, SWT.BORDER);
+		txtWebSyncKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		txtWebSyncKey.setBounds(232, 78, 324, 21);
 		
-		Label lblNewLabel_14 = new Label(grpGeneral, SWT.NONE);
-		lblNewLabel_14.setBounds(144, 53, 81, 15);
-		lblNewLabel_14.setText("Batte.net server");
-		
-		cbServer = new CCombo(grpGeneral, SWT.BORDER | SWT.READ_ONLY);
-		cbServer.setVisibleItemCount(4);
-		cbServer.setItems(new String[] {"NA", "EU", "Asia", "China"});
-		cbServer.setEditable(false);
-		cbServer.setBounds(231, 49, 150, 21);
-		
-		Label lblNewLabel_21 = new Label(grpGeneral, SWT.NONE);
+		Label lblNewLabel_21 = new Label(composite_7, SWT.NONE);
+		lblNewLabel_21.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_21.setBounds(125, 112, 101, 15);
 		lblNewLabel_21.setText("Notification Popup");
+		new Label(composite_7, SWT.NONE);
+		new Label(composite_7, SWT.NONE);
 		
-		btnPopup = new Button(grpGeneral, SWT.CHECK);
+		btnPopup = new Button(composite_7, SWT.CHECK);
+		btnPopup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnPopup.setBounds(232, 111, 93, 16);
 		btnPopup.setText("Enable");
 		
-		Group grpAdvanced = new Group(composite_1, SWT.NONE);
-		grpAdvanced.setText("Advanced");
-		grpAdvanced.setLayout(null);
-		GridData gd_grpAdvanced = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
-		gd_grpAdvanced.heightHint = 194;
-		gd_grpAdvanced.widthHint = 585;
-		grpAdvanced.setLayoutData(gd_grpAdvanced);
+		ExpandItem xpndtmAdvanced = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmAdvanced.setExpanded(true);
+		xpndtmAdvanced.setText("Advanced");
 		
-		Label lblDetect = new Label(grpAdvanced, SWT.NONE);
-		lblDetect.setBounds(71, 21, 156, 15);
+		Composite composite_10 = new Composite(expandBar, SWT.NONE);
+		xpndtmAdvanced.setControl(composite_10);
+		xpndtmAdvanced.setHeight(200);
+		composite_10.setLayout(new GridLayout(9, false));
+		
+		Label lblDetect = new Label(composite_10, SWT.NONE);
+		lblDetect.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblDetect.setText("Auto Detect Game Resolution");
 		
-		btnAutoDetectGameRes = new Button(grpAdvanced, SWT.CHECK);
-		btnAutoDetectGameRes.setBounds(239, 20, 183, 16);
+		btnAutoDetectGameRes = new Button(composite_10, SWT.CHECK);
+		btnAutoDetectGameRes.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 8, 1));
 		btnAutoDetectGameRes.setToolTipText("It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.");
 		btnAutoDetectGameRes.setText("Enable");
 		
-		Label lblGameResolution = new Label(grpAdvanced, SWT.NONE);
-		lblGameResolution.setBounds(24, 48, 211, 15);
+		Label lblGameResolution = new Label(composite_10, SWT.NONE);
+		lblGameResolution.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblGameResolution.setText("Game Resolution (if auto detect failed)");
 		
-		cmbGameRes = new CCombo(grpAdvanced, SWT.BORDER | SWT.READ_ONLY);
-		cmbGameRes.setBounds(239, 42, 150, 21);
+		cmbGameRes = new CCombo(composite_10, SWT.BORDER | SWT.READ_ONLY);
+		GridData gd_cmbGameRes = new GridData(SWT.LEFT, SWT.CENTER, false, false, 5, 1);
+		gd_cmbGameRes.widthHint = 356;
+		cmbGameRes.setLayoutData(gd_cmbGameRes);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
 		
-		Label lblNewLabel = new Label(grpAdvanced, SWT.NONE);
-		lblNewLabel.setBounds(167, 156, 60, 15);
-		lblNewLabel.setText("Scan Speed");
-		
-		Label lblNewLabel_2 = new Label(grpAdvanced, SWT.NONE);
-		lblNewLabel_2.setBounds(185, 129, 42, 15);
-		lblNewLabel_2.setText("Scanner");
-		
-		btnEnableScanner = new Button(grpAdvanced, SWT.CHECK);
-		btnEnableScanner.setBounds(241, 128, 56, 16);
-		btnEnableScanner.setSelection(true);
-		btnEnableScanner.setText("Enable");
-		
-		Button button_0 = new Button(grpAdvanced, SWT.RADIO);
-		button_0.setBounds(239, 155, 75, 16);
-		btnScanSpeed[3] = button_0;
-		button_0.setText("Really Fast");
-		
-		Button button = new Button(grpAdvanced, SWT.RADIO);
-		button.setBounds(321, 156, 42, 16);
-		btnScanSpeed[0] = button;
-		button.setText("Fast");
-		
-		Button button_1 = new Button(grpAdvanced, SWT.RADIO);
-		button_1.setBounds(368, 156, 85, 16);
-		btnScanSpeed[1] = button_1;
-		button_1.setText("Intermediate");
-		
-		Button button_2 = new Button(grpAdvanced, SWT.RADIO);
-		button_2.setBounds(459, 156, 46, 16);
-		btnScanSpeed[2] = button_2;
-		button_2.setText("Slow");
-		
-//		Button button_3 = new Button(grpAdvanced, SWT.RADIO);
+//		Button button_3 = new Button(composite_10, SWT.RADIO);
 //		button_3.setBounds(379, 155, 46, 16);
 //		btnScanSpeed[3] = button_3;
 //		button_3.setText("Slowest");
 		
-		Label lblNewLabel_11 = new Label(grpAdvanced, SWT.NONE);
-		lblNewLabel_11.setBounds(10, 78, 225, 15);
+		Label lblNewLabel_11 = new Label(composite_10, SWT.NONE);
 		lblNewLabel_11.setText("Override Offsets (Multi monitors dirty fix)");
 		
-		spXOffset = new Spinner(grpAdvanced, SWT.BORDER);
-		spXOffset.setMaximum(10240);
-		spXOffset.setMinimum(-10240);
-		spXOffset.setBounds(288, 75, 75, 22);
-		
-		spYOffset = new Spinner(grpAdvanced, SWT.BORDER);
-		spYOffset.setMaximum(10240);
-		spYOffset.setMinimum(-10240);
-		spYOffset.setBounds(442, 75, 75, 22);
-		
-		Label lblNewLabel_12 = new Label(grpAdvanced, SWT.NONE);
-		lblNewLabel_12.setBounds(241, 78, 42, 15);
+		Label lblNewLabel_12 = new Label(composite_10, SWT.NONE);
+		lblNewLabel_12.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_12.setText("X offset");
 		
-		Label lblYOffset = new Label(grpAdvanced, SWT.NONE);
+		spXOffset = new Spinner(composite_10, SWT.BORDER);
+		spXOffset.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		spXOffset.setMaximum(10240);
+		spXOffset.setMinimum(-10240);
+		
+		Label lblYOffset = new Label(composite_10, SWT.NONE);
+		lblYOffset.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblYOffset.setText("Y offset");
-		lblYOffset.setBounds(398, 78, 42, 15);
 		
-		Label lblNewLabel_13 = new Label(grpAdvanced, SWT.NONE);
-		lblNewLabel_13.setBounds(23, 187, 204, 15);
-		lblNewLabel_13.setText("Force Scanning even if HS is not found");
+		spYOffset = new Spinner(composite_10, SWT.BORDER);
+		spYOffset.setMaximum(10240);
+		spYOffset.setMinimum(-10240);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
 		
-		btnAlwaysScan = new Button(grpAdvanced, SWT.CHECK);
-		btnAlwaysScan.setBounds(239, 186, 93, 16);
+		Label lblNewLabel_2 = new Label(composite_10, SWT.NONE);
+		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_2.setText("Scanner");
+		
+		btnEnableScanner = new Button(composite_10, SWT.CHECK);
+		btnEnableScanner.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		btnEnableScanner.setSelection(true);
+		btnEnableScanner.setText("Enable");
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		
+		Label lblNewLabel = new Label(composite_10, SWT.NONE);
+		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel.setText("Scan Speed");
+		
+		Button button_0 = new Button(composite_10, SWT.RADIO);
+		GridData gd_button_0 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_button_0.widthHint = 75;
+		button_0.setLayoutData(gd_button_0);
+		btnScanSpeed[3] = button_0;
+		button_0.setText("Really Fast");
+		
+		Button button = new Button(composite_10, SWT.RADIO);
+		btnScanSpeed[0] = button;
+		button.setText("Fast");
+		new Label(composite_10, SWT.NONE);
+		
+		Button button_1 = new Button(composite_10, SWT.RADIO);
+		btnScanSpeed[1] = button_1;
+		button_1.setText("Intermediate");
+		
+		Button button_2 = new Button(composite_10, SWT.RADIO);
+		btnScanSpeed[2] = button_2;
+		button_2.setText("Slow");
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		
+		Label lblNewLabel_13 = new Label(composite_10, SWT.NONE);
+		lblNewLabel_13.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_13.setText("Forced Scanning");
+		
+		btnAlwaysScan = new Button(composite_10, SWT.CHECK);
+		btnAlwaysScan.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 		btnAlwaysScan.setText("Enable");
-		
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+
 		TabItem tbtmDiagnostics = new TabItem(tabFolder, SWT.NONE);
 		tbtmDiagnostics.setText("&Tools");
 		
@@ -1204,7 +1275,8 @@ public class HearthUI {
 		sashForm_1.setWeights(new int[] {277, 318});
 		sashForm_2.setWeights(new int[] {277, 318});
 		
-		createMatchesEditForm(new Composite(tabFolder_1, SWT.NONE), tbtmMatchesEdit);
+		Composite composite_1 = new Composite(tabFolder_1, SWT.NONE);
+		createMatchesEditForm(composite_1, tbtmMatchesEdit);
 		createMatchesNewForm(new Composite(tabFolder_1, SWT.NONE), 	tbtmMatchesNew);
 		createArenaEditForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaEdit);
 		createArenaNewForm(new Composite(tabFolder_2, SWT.NONE), 	tbtmArenaNew);
@@ -1221,10 +1293,20 @@ public class HearthUI {
 		fillMatchesTable();
 		fillArenaTable();
 		setupModeSelection();
-		decksManager();
+		initDecksManager();
 	}
 	
-	private void decksManager(){
+	private void initDecksManager(){
+		btnRearrangeDeck.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				decks.rearrange();
+				saveDecks();
+				fillDeckSlots();
+				fillDeckWinRate();
+			}
+		});
+
 		FocusAdapter deckFocus = new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
@@ -1242,13 +1324,23 @@ public class HearthUI {
 		};
 		
 		for(int i = 0; i < txtDecks.length; i++){
-			txtDecks[i].setText(decks.list[i]);
-			txtDecks[i].setData("index", i);
 			txtDecks[i].addFocusListener(deckFocus);
-			lblDecks[i].setText("");
 		}
 		
+		fillDeckSlots();
 		fillDeckWinRate();
+	}
+	
+	private void fillDeckSlots(){
+
+		for(int i = 0; i < txtDecks.length; i++){
+			if(decks.list[i] != null){
+				txtDecks[i].setText(decks.list[i]);
+			}
+			
+			txtDecks[i].setData("index", i);
+			lblDecks[i].setText("");
+		}
 	}
 	
 	private void fillDeckWinRate(){
@@ -1369,12 +1461,8 @@ public class HearthUI {
 			cbMatchesEditVs.add(heroesList.getHeroLabel(i));
 		}
 		
-		Label lblNewLabel_4 = new Label(composite_4, SWT.NONE);
-		lblNewLabel_4.setBounds(148, 101, 26, 15);
-		lblNewLabel_4.setText("Goes");
-		
 		final Combo cbMatchesEditGoes = new Combo(composite_4, SWT.READ_ONLY);
-		cbMatchesEditGoes.setBounds(125, 123, 74, 23);
+		cbMatchesEditGoes.setBounds(123, 101, 74, 23);
 		cbMatchesEditGoes.setItems(new String[] {"First", "Second", "Unknown"});
 		
 		final Combo cbMatchesEditGameMode = new Combo(composite_4, SWT.READ_ONLY);
@@ -1382,7 +1470,7 @@ public class HearthUI {
 		cbMatchesEditGameMode.setItems(new String[] {"Unknown mode", "Arena", "Ranked", "Unranked", "Challenge", "Practice"});
 		
 		final Combo cbMatchesEditResult = new Combo(composite_4, SWT.READ_ONLY);
-		cbMatchesEditResult.setBounds(136, 165, 49, 23);
+		cbMatchesEditResult.setBounds(134, 136, 49, 23);
 		cbMatchesEditResult.setItems(new String[] {"Win", "Loss", "Unknown"});
 		
 		final DateTime dtMatchesEditDate = new DateTime(composite_4, SWT.NONE);
@@ -1418,6 +1506,10 @@ public class HearthUI {
 		lblID.setBounds(10, 10, 303, 15);
 		lblID.setText("ID #00000");
 		lblID.setData("id", 0);
+		
+		final Text cbMatchesEditDeck = new Text(composite_4, SWT.BORDER);
+		cbMatchesEditDeck.setBounds(88, 172, 139, 21);
+		
 		
 		final Button btnConfirmChanges = new Button(composite_4, SWT.CHECK);
 		btnConfirmChanges.addSelectionListener(new SelectionAdapter() {
@@ -1459,6 +1551,7 @@ public class HearthUI {
 							int win	= rs.getInt("WIN");				
 							int totaltime = rs.getInt("TOTALTIME") / 60;
 							int gameMode = rs.getInt("MODE");
+							String deck = rs.getString("deck");
 							
 							Date startdate = new Date(rs.getLong("STARTTIME"));
 							Calendar calDate = Calendar.getInstance();
@@ -1498,6 +1591,7 @@ public class HearthUI {
 								cbMatchesEditResult.select(2);
 							}
 							
+							cbMatchesEditDeck.setText(deck);
 							spMatchesEditMinute.setSelection(totaltime);
 						
 							dtMatchesEditDate.setYear(calDate.get(Calendar.YEAR));
@@ -1531,6 +1625,7 @@ public class HearthUI {
 				int goes = -1;
 				int result = -1;
 				int totaltime = spMatchesEditMinute.getSelection() * 60;
+				String deckName = cbMatchesEditDeck.getText();
 				
 				if(id == 0){
 					return;
@@ -1565,7 +1660,7 @@ public class HearthUI {
 				try {
 					btnMatchesEditSave.setEnabled(false);
 					btnMatchesEditSave.setText("Saving...");
-					tracker.saveModifiedMatchResult(id, gMode, myheroid, oppheroid, goes, result, totaltime);
+					tracker.saveModifiedMatchResult(id, gMode, myheroid, oppheroid, goes, result, totaltime, deckName);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -1734,7 +1829,6 @@ public class HearthUI {
 		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
 		lblNewLabel_3.setBounds(145, 81, 20, 15);
 		lblNewLabel_3.setText("-");
-		
 		
 		final Button btnArenaConfirm = new Button(composite_4, SWT.CHECK);
 		btnArenaConfirm.addSelectionListener(new SelectionAdapter() {

@@ -426,7 +426,7 @@ public class HearthTracker {
 		isDirty = true;
 	}
 	
-	public void saveModifiedMatchResult(int id, int mode, int myHeroId, int oppHeroId, int goesFirst, int win, int totalTime) throws SQLException{
+	public void saveModifiedMatchResult(int id, int mode, int myHeroId, int oppHeroId, int goesFirst, int win, int totalTime, String deckName) throws SQLException{
 		long modTime = new Date().getTime();
 		String table = "MATCHES";
 		ResultSet rs = this.getMatch(id);
@@ -450,9 +450,14 @@ public class HearthTracker {
 					+ " win=" + win + ", "
 					+ " totalTime=" + totalTime + ", "
 					+ " lastmodified=" + modTime + ", "
+					+ " deck=?,"
 					+ " modified=" + modified
 					+ " WHERE id=" + id;
-		stat.execute(sql);
+		
+		PreparedStatement prepareSql = conn.prepareStatement(sql);
+		prepareSql.setString(1, deckName);
+		prepareSql.execute();
+		
 		isDirty = true;
 	}
 	
@@ -480,7 +485,8 @@ public class HearthTracker {
 					rs.getInt("oppHeroId"),
 					rs.getInt("goesFirst"),
 					win,
-					rs.getInt("totalTime")
+					rs.getInt("totalTime"),
+					rs.getString("deck")
 			);
 		}
 	}
@@ -497,7 +503,8 @@ public class HearthTracker {
 					rs.getInt("oppHeroId"),
 					rs.getInt("goesFirst"),
 					win,
-					rs.getInt("totalTime")
+					rs.getInt("totalTime"),
+					rs.getString("deck")
 			);
 		}
 	}
@@ -514,7 +521,8 @@ public class HearthTracker {
 					rs.getInt("oppHeroId"),
 					wentFirst,
 					rs.getInt("win"),
-					rs.getInt("totalTime")
+					rs.getInt("totalTime"),
+					rs.getString("deck")
 			);
 		}
 	}
@@ -531,7 +539,8 @@ public class HearthTracker {
 					rs.getInt("oppHeroId"),
 					wentFirst,
 					rs.getInt("win"),
-					rs.getInt("totalTime")
+					rs.getInt("totalTime"),
+					rs.getString("deck")
 			);
 		}
 	}
@@ -878,7 +887,7 @@ public class HearthTracker {
 	
 	public ResultSet getArenaResults() throws SQLException{
 		ResultSet rs;
-		rs = stat.executeQuery("select * from ARENARESULTS WHERE DELETED=0 ORDER BY timecaptured DESC LIMIT 20");
+		rs = stat.executeQuery("select * from ARENARESULTS WHERE DELETED=0 ORDER BY timecaptured DESC LIMIT 50");
 
 		return rs;
 	}
@@ -969,7 +978,7 @@ public class HearthTracker {
 	
 	public ResultSet getMatches() throws SQLException{
 		ResultSet rs;
-		rs = stat.executeQuery("select * from MATCHES WHERE DELETED=0 ORDER BY startTime DESC LIMIT 100");
+		rs = stat.executeQuery("select * from MATCHES WHERE DELETED=0 ORDER BY startTime DESC LIMIT 500");
 
 		return rs;
 	}

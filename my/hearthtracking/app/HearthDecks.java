@@ -12,4 +12,22 @@ public class HearthDecks {
 			"Awesome Deck #8", 
 			"Awesome Deck #9", 
 	};
+	
+	public void rearrange(){
+		String [] newList = new String[list.length];
+		int y = 0;
+		
+		for(int i = 0; i < list.length; i++){
+			
+			if(!list[i].equals("")){
+				newList[y++] = list[i];
+			}
+		}
+		
+		for(; y < list.length; y++){
+			newList[y] = "";
+		}
+		
+		list = newList;
+	}
 }
