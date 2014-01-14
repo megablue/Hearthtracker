@@ -15,9 +15,10 @@ public class HearthSetting {
 	boolean alwaysScan = false;
 	int tracker = 0;
 	boolean popup = true;
+	String uiLang = "english";
 	
 	public boolean upgrade(){
-		return upgrade1() || upgrade2() || upgrade3();
+		return upgrade1() || upgrade2() || upgrade3() || upgrade4();
 	}
 	
 	private boolean upgrade1(){
@@ -50,6 +51,18 @@ public class HearthSetting {
 		if(settingVer == 2){
 			popup = true;
 			settingVer = 3;
+			upgraded = true;
+		}
+	
+		return upgraded;
+	}
+	
+	private boolean upgrade4(){
+		boolean upgraded = false;
+		
+		if(settingVer == 3){
+			uiLang = "english";
+			settingVer = 4;
 			upgraded = true;
 		}
 	

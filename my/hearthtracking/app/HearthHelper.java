@@ -163,8 +163,7 @@ public class HearthHelper {
 		
 		return false;
 	}
-	
-	
+
 	public static int[] getHearthstonePosition(){
 		int[] pos = {0,0,0,0};
 
@@ -210,11 +209,13 @@ public class HearthHelper {
         int limit = 1000000; 
         int rotate = 10;
         Calendar cal = Calendar.getInstance();
-        String logfile = cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DATE) + "-" + cal.get(Calendar.YEAR) + ".log";
+        
+        String fileName = cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DATE) + "-" + cal.get(Calendar.YEAR);
+        String logfile = String.format(HearthFilesNameManager.logFile, fileName);
         
         try {
             // This block configure the logger with handler and formatter  
-            fh = new FileHandler("." + File.separator + "logs" + File.separator + logfile, limit, rotate, true);
+            fh = new FileHandler(logfile, limit, rotate, true);
             logger.addHandler(fh);  
             logger.setLevel(loglevel);  
             SimpleFormatter formatter = new SimpleFormatter();  
@@ -243,25 +244,26 @@ public class HearthHelper {
 	public static String getPrettyText(Date date) {
 	    long diff = (new Date().getTime() - date.getTime()) / 1000;
 	    double dayDiff = Math.floor(diff / 86400);
+	    HearthLanguageManager uiLang = HearthLanguageManager.getInstance();
 
 	    if (diff < 0) {
-	      return "in the future?";
+	      return uiLang.t("in the future?");
 	    } else if (diff < 60) {
-	      return "moments ago";
+	      return uiLang.t("moments ago");
 	    } else if (diff < 120) {
-	      return "one minute ago";
+	      return uiLang.t("one minute ago");
 	    } else if (diff < 3600) {
-	      return diff / 60 + " minutes ago";
+	      return uiLang.t("%d minutes ago", diff / 60);
 	    } else if (diff < 7200) {
-	      return "one hour ago";
+	      return uiLang.t("one hour ago");
 	    } else if (diff < 86400) {
-	      return diff / 3600 + " hours ago";
+	      return uiLang.t("%d hours ago", diff / 3600);
 	    } else if (dayDiff == 1) {
-	      return "yesterday";
+	      return uiLang.t("yesterday");
 	    } else if (dayDiff < 7) {
-	      return dayDiff + " days ago";
+	      return uiLang.t("%d days ago", dayDiff);
 	    } else {
-	      return Math.ceil(dayDiff / 7) + " weeks ago";
+	      return uiLang.t("%d weeks ago", Math.ceil(dayDiff / 7));
 	    }
 	 }
 }

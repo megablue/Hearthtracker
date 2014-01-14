@@ -25,6 +25,9 @@ public class HearthConfigurator {
 		xstream.alias("HearthResolutionsList", 			HearthResolutionsList.class);
 		xstream.alias("Resolution", 					HearthResolutionsList.Resolution.class);
 		xstream.alias("Sync", 							HearthSyncLog.class);
+		xstream.alias("HearthLanguage", 				HearthLanguage.class);
+		xstream.alias("HearthDecks", 					HearthDecks.class);
+		xstream.alias("HearthSetting", 					HearthSetting.class);
 	}
 	
 	public <t> Object load(String path){

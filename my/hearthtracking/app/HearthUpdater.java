@@ -1,7 +1,6 @@
 package my.hearthtracking.app;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Date;
@@ -21,10 +20,10 @@ public class HearthUpdater {
 	public HearthUpdater(){
 		xstream.alias("HearthUpdaterLog", HearthUpdaterLog.class);
 		
-		updateLog = (HearthUpdaterLog) config.load("." + File.separator + "configs" + File.separator + "update.xml");
+		updateLog = (HearthUpdaterLog) config.load(HearthFilesNameManager.logFile);
 		if(updateLog == null){
 			updateLog = new HearthUpdaterLog();
-			config.save(updateLog, "." + File.separator + "configs" + File.separator + "update.xml");
+			config.save(updateLog, HearthFilesNameManager.logFile);
 		}
 		this.compare();
 	}
@@ -53,7 +52,7 @@ public class HearthUpdater {
 			this.compare();
 			
 			if(updateLog != null){
-				config.save(updateLog, "." + File.separator + "configs" + File.separator + "update.xml");
+				config.save(updateLog, HearthFilesNameManager.logFile);
 			}
 			
 		} catch (Throwable e) {

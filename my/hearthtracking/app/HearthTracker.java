@@ -1,6 +1,5 @@
 package my.hearthtracking.app;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -56,17 +55,17 @@ public class HearthTracker {
 		this.saveArenaResult(0, 9, 0, new Date().getTime(), false);
 		this.saveArenaResult(0, 9, 0, new Date().getTime(), false);
 		this.saveArenaResult(0, 9, 9, new Date().getTime(), false);
-		assert this.getOverallWinRate(HearthReader.ARENAMODE) == 75.0f;
+		assert this.getOverallWinRate(HearthScanner.ARENAMODE) == 75.0f;
 		
-		this.saveMatchResult(HearthReader.ARENAMODE, 0, 0, 1, 1, new Date().getTime(), 0, false, "");
-		this.saveMatchResult(HearthReader.ARENAMODE, 1, 0, 1, 0, new Date().getTime(), 0, false, "");
-		this.saveMatchResult(HearthReader.ARENAMODE, 2, 0, 0, 0, new Date().getTime(), 0, false, "");
-		this.saveMatchResult(HearthReader.ARENAMODE, 3, 0, 0, 1, new Date().getTime(), 0, false, "");
-		this.saveMatchResult(HearthReader.ARENAMODE, 4, 0, 0, 1, new Date().getTime(), 0, false, "");
-		this.saveMatchResult(HearthReader.ARENAMODE, 5, 0, 0, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScanner.ARENAMODE, 0, 0, 1, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScanner.ARENAMODE, 1, 0, 1, 0, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScanner.ARENAMODE, 2, 0, 0, 0, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScanner.ARENAMODE, 3, 0, 0, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScanner.ARENAMODE, 4, 0, 0, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScanner.ARENAMODE, 5, 0, 0, 1, new Date().getTime(), 0, false, "");
 		
-		assert this.getWinRateByGoesFirst(HearthReader.ARENAMODE) == 50.0f;
-		assert this.getWinRateByGoesSecond(HearthReader.ARENAMODE) == 75.0f;
+		assert this.getWinRateByGoesFirst(HearthScanner.ARENAMODE) == 50.0f;
+		assert this.getWinRateByGoesSecond(HearthScanner.ARENAMODE) == 75.0f;
 	}
 	
 	private void truncateDB() throws SQLException{
@@ -88,11 +87,11 @@ public class HearthTracker {
 		boolean newdb = false;
 		int currentDBversion = 5;
 		
-		dbSetting = (HearthDatabase) config.load("." + File.separator + "data" + File.separator + "database.xml");
+		dbSetting = (HearthDatabase) config.load(HearthFilesNameManager.dbFile);
 		
 		if(dbSetting == null){
 			dbSetting = new HearthDatabase();
-			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+			config.save(dbSetting, HearthFilesNameManager.dbFile);
 		}
 		
 		if(dbSetting.version >= currentDBversion){
@@ -105,7 +104,7 @@ public class HearthTracker {
 			//dirty fix for database.xml which I forgot to save the change of version 
 			//if the app created a database for the first time on v1.1.0 and v1.1.1 
 			dbSetting.version = 1;
-			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+			config.save(dbSetting, HearthFilesNameManager.dbFile);
 		}
 
 		rs = stat.executeQuery("select count(*) from information_schema.tables where table_name = 'ARENARESULTS'");
@@ -160,7 +159,7 @@ public class HearthTracker {
 		if(newdb){
 			dbSetting.serverSelected = 0;
 			dbSetting.version = currentDBversion;
-			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+			config.save(dbSetting, HearthFilesNameManager.dbFile);
 			return;
 		}
 		
@@ -218,7 +217,7 @@ public class HearthTracker {
 			stat.execute("ALTER TABLE MATCHES ADD MODIFIED INT");
 			stat.execute("ALTER TABLE MATCHES ADD LASTMODIFIED BIGINT");
 			stat.execute("ALTER TABLE MATCHES ADD SUBMITTED INT");
-			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODE SET DEFAULT " + HearthReader.ARENAMODE);
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODE SET DEFAULT " + HearthScanner.ARENAMODE);
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN DELETED SET DEFAULT 0");
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODIFIED SET DEFAULT 0");
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN SUBMITTED SET DEFAULT 0");
@@ -232,7 +231,7 @@ public class HearthTracker {
 			stat.execute("CREATE INDEX OPPHERO_MODE ON MATCHES(OPPHEROID, MODE, DELETED)");
 			stat.execute("CREATE INDEX HEROES_MODE ON MATCHES(MYHEROID, OPPHEROID, MODE, DELETED)");
 			
-			stat.execute("UPDATE MATCHES SET MODE=" + HearthReader.ARENAMODE);
+			stat.execute("UPDATE MATCHES SET MODE=" + HearthScanner.ARENAMODE);
 			stat.execute("UPDATE MATCHES SET MODIFIED=0");
 			stat.execute("UPDATE MATCHES SET LASTMODIFIED=STARTTIME");
 			stat.execute("UPDATE MATCHES SET DELETED=0");
@@ -244,7 +243,7 @@ public class HearthTracker {
 			
 			//save upgraded version
 			dbSetting.version = 1;
-			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+			config.save(dbSetting, HearthFilesNameManager.dbFile);
 		}
 		
 		if(!newdb && dbSetting.version == 1){
@@ -257,7 +256,7 @@ public class HearthTracker {
 			stat.execute("UPDATE MATCHES SET starttime=(starttime/1000)*1000");
 			//save upgraded version
 			dbSetting.version = 2;
-			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+			config.save(dbSetting, HearthFilesNameManager.dbFile);
 		}
 		
 		if(!newdb && dbSetting.version == 2){
@@ -270,7 +269,7 @@ public class HearthTracker {
 
 			//save upgraded version
 			dbSetting.version = 3;
-			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+			config.save(dbSetting, HearthFilesNameManager.dbFile);
 		}
 		
 		if(!newdb && dbSetting.version == 3){
@@ -280,11 +279,11 @@ public class HearthTracker {
 			stat.execute("CREATE INDEX DECK ON MATCHES(DECK, MODE)");
 			//save upgraded version
 			dbSetting.version = 4;
-			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+			config.save(dbSetting, HearthFilesNameManager.dbFile);
 		}
 		
 		if(!newdb && dbSetting.version == 4){
-			HearthSetting setting = (HearthSetting) config.load("." + File.separator + "configs" + File.separator + "settings.xml");
+			HearthSetting setting = (HearthSetting) config.load(HearthFilesNameManager.settingFile);
 			
 			if(setting != null){
 				if(!setting.gameServer.equals("")){
@@ -295,7 +294,7 @@ public class HearthTracker {
 			
 			//save upgraded version
 			dbSetting.version = 5;
-			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+			config.save(dbSetting, HearthFilesNameManager.dbFile);
 		}
 	}
 	
@@ -305,7 +304,7 @@ public class HearthTracker {
 	
 	private void setServerSelected(){
 		dbSetting.serverSelected = 1;
-		config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+		config.save(dbSetting, HearthFilesNameManager.dbFile);
 	}
 	
 	public void setServer(String server){
@@ -549,7 +548,7 @@ public class HearthTracker {
 		ResultSet rs;
 		int total = 0;
 
-		if(mode == HearthReader.ARENAMODE){
+		if(mode == HearthScanner.ARENAMODE){
 			rs = stat.executeQuery("select count(*) as TOTAL from ARENARESULTS WHERE heroid = " + heroid + " AND DELETED=0");
 			
 			if(rs.next()){
@@ -575,7 +574,7 @@ public class HearthTracker {
 		float winrate = -1;
 		boolean found = false;
 		
-		if(mode == HearthReader.ARENAMODE){
+		if(mode == HearthScanner.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS where heroId = " + heroId + " AND DELETED=0");
 			
 			while(rs.next()){
@@ -613,7 +612,7 @@ public class HearthTracker {
 		float winrate = -1;
 		boolean found = false;
 		
-		if(mode == HearthReader.ARENAMODE){
+		if(mode == HearthScanner.ARENAMODE){
 			rs = stat.executeQuery("select wins from ARENARESULTS where heroId = " + heroId + " AND DELETED=0");
 			
 			while(rs.next()){
@@ -641,7 +640,7 @@ public class HearthTracker {
 		float winrate = -1;
 		boolean found = false;
 		
-		if(mode == HearthReader.ARENAMODE){
+		if(mode == HearthScanner.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE DELETED=0");
 			
 			while(rs.next()){
@@ -651,8 +650,8 @@ public class HearthTracker {
 			}
 		} else {
 			
-			if(mode == HearthReader.CHALLENGEMODE || mode == HearthReader.PRACTICEMODE){
-				rs = stat.executeQuery("select WIN from MATCHES WHERE (MODE=" + HearthReader.CHALLENGEMODE + " OR MODE=" + HearthReader.PRACTICEMODE + ") AND DELETED=0");
+			if(mode == HearthScanner.CHALLENGEMODE || mode == HearthScanner.PRACTICEMODE){
+				rs = stat.executeQuery("select WIN from MATCHES WHERE (MODE=" + HearthScanner.CHALLENGEMODE + " OR MODE=" + HearthScanner.PRACTICEMODE + ") AND DELETED=0");
 			} else {
 				rs = stat.executeQuery("select WIN from MATCHES WHERE MODE=" + mode + " AND DELETED=0");
 			}
@@ -682,7 +681,7 @@ public class HearthTracker {
 		ResultSet rs;
 		int total = 0;
 
-		if(mode == HearthReader.ARENAMODE){
+		if(mode == HearthScanner.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE " + " DELETED = 0");
 			while(rs.next()){
 				total += rs.getInt("WINS");
@@ -719,7 +718,7 @@ public class HearthTracker {
 		ResultSet rs;
 		int total = 0;
 
-		if(mode == HearthReader.ARENAMODE){
+		if(mode == HearthScanner.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED = 0");
 			while(rs.next()){
 				total += rs.getInt("WINS");
@@ -740,7 +739,7 @@ public class HearthTracker {
 		ResultSet rs;
 		int total = 0;
 
-		if(mode == HearthReader.ARENAMODE){
+		if(mode == HearthScanner.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE DELETED=0");
 			while(rs.next()){
 				total += rs.getInt("LOSSES");
@@ -761,7 +760,7 @@ public class HearthTracker {
 		ResultSet rs;
 		int total = 0;
 
-		if(mode == HearthReader.ARENAMODE){
+		if(mode == HearthScanner.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED=0" );
 			while(rs.next()){
 				total += rs.getInt("LOSSES");

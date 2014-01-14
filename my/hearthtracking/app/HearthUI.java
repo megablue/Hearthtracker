@@ -1,6 +1,5 @@
 package my.hearthtracking.app;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -110,7 +109,7 @@ public class HearthUI {
 	private static Display display;
 	static boolean debugMode = HearthHelper.isDevelopmentEnvironment();
 	
-	private HearthReader hearth;
+	private HearthScanner hearth;
 	private HearthTracker tracker;
 	private HearthConfigurator config = new HearthConfigurator();
 	private HearthGameLangList gameLanguages;
@@ -162,56 +161,57 @@ public class HearthUI {
 	private Button btnPopup;
 	private Button btnRearrangeDeck;
 	
+	public static HearthLanguageManager lang = HearthLanguageManager.getInstance();
 
 	public HearthUI(){
 		init();
 	}
 	
 	public void init(){
-		HearthUpdaterLog updateLog = (HearthUpdaterLog) config.load("." + File.separator + "configs" + File.separator + "update.xml");
+		HearthUpdaterLog updateLog = (HearthUpdaterLog) config.load(HearthFilesNameManager.updaterLog);
 		
 		if(updateLog == null){
 			updateLog = new HearthUpdaterLog();
-			config.save(updateLog, "." + File.separator + "configs" + File.separator + "update.xml");
+			config.save(updateLog, HearthFilesNameManager.updaterLog);
 		}
 		
-		decks = (HearthDecks) config.load("." + File.separator + "configs" + File.separator + "decks.xml");
-		heroesList = (HearthHeroesList) config.load("." + File.separator + "configs" + File.separator + "heroes.xml");
-		gameLanguages = (HearthGameLangList) config.load("." + File.separator + "configs" + File.separator + "gameLangs.xml");
-		gameResolutions = (HearthResolutionsList) config.load("." + File.separator + "configs" + File.separator + "gameResolutions.xml");
-		setting = (HearthSetting) config.load("." + File.separator + "configs" + File.separator + "settings.xml");
+		setting =			(HearthSetting) 		config.load(HearthFilesNameManager.settingFile);
+		decks =				(HearthDecks)			config.load(HearthFilesNameManager.decksFile);
+		heroesList =		(HearthHeroesList) 		config.load(HearthFilesNameManager.heroesFile);
+		gameLanguages = 	(HearthGameLangList) 	config.load(HearthFilesNameManager.gameLangsFile);
+		gameResolutions = 	(HearthResolutionsList) config.load(HearthFilesNameManager.gameResFile);
+		
+		if(setting == null){
+			setting = new HearthSetting();
+			config.save(setting, HearthFilesNameManager.settingFile);
+		}
 		
 		if(decks == null){
 			decks = new HearthDecks();
-			config.save(decks, "." + File.separator + "configs" + File.separator + "decks.xml");
+			config.save(decks, HearthFilesNameManager.decksFile);
 		}
 		
 		if(heroesList == null){
 			heroesList = new HearthHeroesList();
-			config.save(heroesList, "." + File.separator + "configs" + File.separator + "heroes.xml");
+			config.save(heroesList, HearthFilesNameManager.heroesFile);
 		}
 		
 		if(gameLanguages == null){
 			gameLanguages = new HearthGameLangList();
-			config.save(gameLanguages, "." + File.separator + "configs" + File.separator + "gameLangs.xml");
+			config.save(gameLanguages, HearthFilesNameManager.gameLangsFile);
 		}
 		
 		if(gameResolutions == null){
 			gameResolutions = new HearthResolutionsList();
-			config.save(gameResolutions, "." + File.separator + "configs" + File.separator + "gameResolutions.xml");
+			config.save(gameResolutions, HearthFilesNameManager.gameResFile);
 		}
-		
-		if(setting == null){
-			setting = new HearthSetting();
-			config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
-		}
-		
+
 		if(setting.upgrade()){
-			config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
+			config.save(setting, HearthFilesNameManager.settingFile);
 		}
 		
 		tracker = new HearthTracker();
-		hearth = new HearthReader(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
+		hearth = new HearthScanner(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
 		
 		if(!setting.scannerEnabled){
 			hearth.pause();
@@ -220,10 +220,9 @@ public class HearthUI {
 		heroImgs = new Image[heroesList.getTotal()+1];
 		
 		for(int i = -1; i < heroesList.getTotal(); i++){
-			heroImgs[i+1] = new Image(display, "." + File.separator + "images" + File.separator + heroesList.getHeroName(i) + "-s.png");
+			heroImgs[i+1] = new Image(display, String.format(HearthFilesNameManager.miniHeroImage, heroesList.getHeroName(i)));
 			heroImgs[i+1] = resize(heroImgs[i+1], 24, 24);
 		}
-
 	}
 	
     private class ReaderThread
@@ -264,6 +263,7 @@ public class HearthUI {
     	}
     	
 		tracker.closeDB();
+		lang.dispose();
 		System.exit(0);
     }
     
@@ -299,14 +299,14 @@ public class HearthUI {
 				    		
 				    		if(hasEffected && success){
 				    			HearthReaderNotification note = new HearthReaderNotification(
-				    					"Web Sync", 
-				    					"Without errors. " + (matchRecordsCount + arenaRecordsCount) + " records. "
+				    					lang.t("Web Sync"), 
+				    					lang.t("Synced %d records", matchRecordsCount + arenaRecordsCount)
 				    			);
 				    			notifications.add(note);
 				    		} else if(hasEffected) {
 				    			HearthReaderNotification note = new HearthReaderNotification(
 				    					"Web Sync", 
-				    					"With errors. " + (matchRecordsCount + arenaRecordsCount) + " records. "
+				    					lang.t("Error with %d records", matchRecordsCount + arenaRecordsCount)
 				    			);
 				    			notifications.add(note);
 				    		}
@@ -314,8 +314,8 @@ public class HearthUI {
 			    		
 			    		if(sync.isTimeout()){
 			    			HearthReaderNotification note = new HearthReaderNotification(
-			    					"Web Sync", 
-			    					"Sync timeout. Will retry later."
+			    					lang.t("Web Sync"), 
+			    					lang.t("Sync timeout. Will retry later!")
 			    			);
 			    			notifications.add(note);	 				
 			 				nextSync = (int) (sync.getTimeout() - new Date().getTime());
@@ -346,7 +346,7 @@ public class HearthUI {
 		 				NotifierDialog.notify(
         						note.title, 
         						note.message, 
-        						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
+        						new Image( display, HearthFilesNameManager.logo32),
         						shlHearthtracker.getMonitor()
         				);
 			    	}
@@ -384,7 +384,7 @@ public class HearthUI {
 	public void open() {
 		display = Display.getDefault();
 		createContents();
-		shlHearthtracker.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-128.png" ));
+		shlHearthtracker.setImage(new Image( display, HearthFilesNameManager.logo128));
 		shlHearthtracker.open();
 		shlHearthtracker.layout();
 		Date lastUpdate = new Date(); 
@@ -453,22 +453,23 @@ public class HearthUI {
 			}
 		});
 		shlHearthtracker.setSize(620, 456);
-		shlHearthtracker.setText("HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!");
+		shlHearthtracker.setText(
+			lang.t("HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!")
+		);
 		
 		if(experimental > 0){
-			shlHearthtracker.setText("HearthTracker (Experimental build " 
-									+ experimental 
-									+ ") - Automated Stats Tracking for Hearthstone enthusiasts!");
+			shlHearthtracker.setText(
+					lang.t("HearthTracker ( Experimental build %d ) - Automated Stats Tracking for Hearthstone enthusiasts!", experimental)
+			);
 		}
 		
 		shlHearthtracker.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
 
 		Menu menu = new Menu(shlHearthtracker, SWT.BAR);
 		shlHearthtracker.setMenuBar(menu);
 		
 		MenuItem mntmNewSubmenu = new MenuItem(menu, SWT.CASCADE);
-		mntmNewSubmenu.setText("&File");
+		mntmNewSubmenu.setText(lang.t("&File"));
 		
 		Menu menu_1 = new Menu(mntmNewSubmenu);
 		mntmNewSubmenu.setMenu(menu_1);
@@ -480,10 +481,10 @@ public class HearthUI {
 				shutdown();
 			}
 		});
-		mntmNewItem.setText("E&xit");
+		mntmNewItem.setText(lang.t("E&xit"));
 		
 		MenuItem mntmNewSubmenu_1 = new MenuItem(menu, SWT.CASCADE);
-		mntmNewSubmenu_1.setText("&Edit");
+		mntmNewSubmenu_1.setText(lang.t("&Edit"));
 		
 		Menu menu_2 = new Menu(mntmNewSubmenu_1);
 		mntmNewSubmenu_1.setMenu(menu_2);
@@ -499,10 +500,10 @@ public class HearthUI {
 				}
 			}
 		});
-		mntmNewItem_1.setText("Last Match -> Won");
+		mntmNewItem_1.setText(lang.t("Last Match -> Won"));
 		
 		MenuItem mntmLastMatch = new MenuItem(menu_2, SWT.NONE);
-		mntmLastMatch.setText("Last Match -> Lost");
+		mntmLastMatch.setText(lang.t("Last Match -> Lost"));
 		
 		mntmLastMatch.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -516,7 +517,7 @@ public class HearthUI {
 		});
 		
 		MenuItem mntmLastMatch_1 = new MenuItem(menu_2, SWT.NONE);
-		mntmLastMatch_1.setText("Last Match -> went first");
+		mntmLastMatch_1.setText(lang.t("Last Match -> went first"));
 		
 		mntmLastMatch_1.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -530,7 +531,7 @@ public class HearthUI {
 		});
 		
 		MenuItem mntmNewItem_2 = new MenuItem(menu_2, SWT.NONE);
-		mntmNewItem_2.setText("Last Match -> went second");
+		mntmNewItem_2.setText(lang.t("Last Match -> went second"));
 		
 		mntmNewItem_2.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -546,7 +547,7 @@ public class HearthUI {
 		TabFolder tabFolder = new TabFolder(shlHearthtracker, SWT.NONE);
 		
 		TabItem tbtmDashboard = new TabItem(tabFolder, SWT.NONE);
-		tbtmDashboard.setText("&Overview");
+		tbtmDashboard.setText(lang.t("&Overview"));
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmDashboard.setControl(composite);
@@ -556,7 +557,7 @@ public class HearthUI {
 		sashForm.setLayoutData(new RowData(598, 373));
 		
 		grpStats = new Group(sashForm, SWT.NONE);
-		grpStats.setText("Stats");
+		grpStats.setText(lang.t("Stats"));
 		grpStats.setLayout(new FormLayout());
 
 		table = new Table(grpStats, SWT.FULL_SELECTION);
@@ -575,26 +576,34 @@ public class HearthUI {
 		
 		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_1.setWidth(55);
-		tblclmnNewColumn_1.setText("Wins");
+		tblclmnNewColumn_1.setText(lang.t("Wins"));
 		
 		TableColumn tblclmnNewColumn_2 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_2.setWidth(55);
-		tblclmnNewColumn_2.setText("Losses");
+		tblclmnNewColumn_2.setText(lang.t("Losses"));
 		
 		TableColumn tblclmnWin = new TableColumn(table, SWT.RIGHT);
 		tblclmnWin.setWidth(55);
-		tblclmnWin.setText("Win %");
+		tblclmnWin.setText(lang.t("Win %"));
 		
 		TableColumn tblclmnNewColumn_3 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_3.setWidth(55);
-		tblclmnNewColumn_3.setText("7+ %");
+		tblclmnNewColumn_3.setText(lang.t("7+ %"));
 		
 		TableColumn tblclmnNewColumn_4 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_4.setWidth(72);
-		tblclmnNewColumn_4.setText("Total Runs");
+		tblclmnNewColumn_4.setText(lang.t("Total Runs"));
 		
 		cmbStatsMode = new Combo(grpStats, SWT.READ_ONLY);
-		cmbStatsMode.setItems(new String[] {"Arena mode (played as)", "Ranked mode (played as)", "Unranked mode (played as)", "Challenge mode (played as)", "Practice mode (played as)"});
+		cmbStatsMode.setItems(
+				new String[] {
+						lang.t("Arena mode (played as)"), 
+						lang.t("Ranked mode (played as)"), 
+						lang.t("Unranked mode (played as)"), 
+						lang.t("Challenge mode (played as)"), 
+						lang.t("Practice mode (played as)")
+					}
+		);
 		FormData fd_cmbStatsMode = new FormData();
 		fd_cmbStatsMode.top = new FormAttachment(0, 10);
 		fd_cmbStatsMode.left = new FormAttachment(0, 10);
@@ -602,7 +611,9 @@ public class HearthUI {
 		cmbStatsMode.select(0);
 		
 		grpCurrentStats = new Group(sashForm, SWT.NONE);
-		grpCurrentStats.setText("Sideboard");
+		grpCurrentStats.setText(
+				lang.t("Sideboard")
+		);
 		grpCurrentStats.setLayout(null);
 		
 		styledTextStatus = new StyledText(grpCurrentStats, SWT.READ_ONLY);
@@ -614,7 +625,9 @@ public class HearthUI {
 		gd_lblNewLabel_15.widthHint = 60;
 		
 		TabItem tbtmRecords = new TabItem(tabFolder, SWT.NONE);
-		tbtmRecords.setText("&Matches");
+		tbtmRecords.setText(
+			lang.t("&Matches")
+		);
 		
 		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
 		tbtmRecords.setControl(composite_2);
@@ -629,39 +642,39 @@ public class HearthUI {
 		matchesTable.setFont(new Font(display,fontData[0]));
 		
 		TableColumn tblclmnAs = new TableColumn(matchesTable, SWT.NONE);
-		tblclmnAs.setText("As");
+		tblclmnAs.setText(lang.t("As"));
 		tblclmnAs.setWidth(29);
 		
 		TableColumn tblclmnVs = new TableColumn(matchesTable, SWT.NONE);
 		tblclmnVs.setWidth(29);
-		tblclmnVs.setText("Vs");
+		tblclmnVs.setText(lang.t("Vs"));
 		
 		TableColumn tblclmnMode = new TableColumn(matchesTable, SWT.NONE);
 		tblclmnMode.setWidth(68);
-		tblclmnMode.setText("Mode");
+		tblclmnMode.setText(lang.t("Mode"));
 		
 		TableColumn tblclmnResult = new TableColumn(matchesTable, SWT.NONE);
 		tblclmnResult.setWidth(45);
-		tblclmnResult.setText("Result");
+		tblclmnResult.setText(lang.t("Result"));
 		
 		TableColumn tblclmnOn = new TableColumn(matchesTable, SWT.NONE);
 		tblclmnOn.setWidth(88);
-		tblclmnOn.setText("On");
+		tblclmnOn.setText(lang.t("On"));
 		
 		tabFolder_1 = new TabFolder(sashForm_1, SWT.NONE);
 		
 		tbtmMatchesEdit = new TabItem(tabFolder_1, SWT.NONE);
-		tbtmMatchesEdit.setText("&Edit");
+		tbtmMatchesEdit.setText(lang.t("&Edit"));
 		
 		tbtmMatchesNew = new TabItem(tabFolder_1, SWT.NONE);
-		tbtmMatchesNew.setText("&New");
+		tbtmMatchesNew.setText(lang.t("&New"));
 		
 		Composite composite_5  = new Composite(tabFolder_1, SWT.NONE);
 		tbtmMatchesNew.setControl(composite_5);
 		composite_5.setLayout(new FormLayout());
 		
 		TabItem tbtmArena = new TabItem(tabFolder, 0);
-		tbtmArena.setText("&Arena");
+		tbtmArena.setText(lang.t("&Arena"));
 		
 		Composite composite_8 = new Composite(tabFolder, SWT.NONE);
 		tbtmArena.setControl(composite_8);
@@ -676,27 +689,27 @@ public class HearthUI {
 		arenaTable.setFont(new Font(display,fontData[0]));
 		
 		TableColumn tblclmnAs_1 = new TableColumn(arenaTable, SWT.NONE);
-		tblclmnAs_1.setText("As");
+		tblclmnAs_1.setText(lang.t("As"));
 		tblclmnAs_1.setWidth(29);
 		
 		TableColumn tableColumn_3 = new TableColumn(arenaTable, SWT.NONE);
 		tableColumn_3.setWidth(45);
-		tableColumn_3.setText("Result");
+		tableColumn_3.setText(lang.t("Result"));
 		
 		TableColumn tableColumn_4 = new TableColumn(arenaTable, SWT.NONE);
 		tableColumn_4.setWidth(88);
-		tableColumn_4.setText("On");
+		tableColumn_4.setText(lang.t("On"));
 		
 		tabFolder_2 = new TabFolder(sashForm_2, SWT.NONE);
 		
 		tbtmArenaEdit = new TabItem(tabFolder_2, 0);
-		tbtmArenaEdit.setText("&Edit");
+		tbtmArenaEdit.setText(lang.t("&Edit"));
 		
 		TabItem tbtmArenaNew = new TabItem(tabFolder_2, 0);
-		tbtmArenaNew.setText("&New");
+		tbtmArenaNew.setText(lang.t("&New"));
 		
 		TabItem tbtmDeck = new TabItem(tabFolder, SWT.NONE);
-		tbtmDeck.setText("De&cks");
+		tbtmDeck.setText(lang.t("De&cks"));
 		
 		Composite composite_6 = new Composite(tabFolder, SWT.NONE);
 		tbtmDeck.setControl(composite_6);
@@ -704,17 +717,17 @@ public class HearthUI {
 		new Label(composite_6, SWT.NONE);
 		
 		Label lblDeck = new Label(composite_6, SWT.NONE);
-		lblDeck.setText("Slot #1");
+		lblDeck.setText(lang.t("Slot #1"));
 		
 		Label lblNewLabel_17 = new Label(composite_6, SWT.NONE);
 		
 		Label lblDeck_1 = new Label(composite_6, SWT.NONE);
-		lblDeck_1.setText("Slot #2");
+		lblDeck_1.setText(lang.t("Slot #2"));
 		
 		Label lblNewLabel_20 = new Label(composite_6, SWT.NONE);
 		
 		Label lblDeck_2 = new Label(composite_6, SWT.NONE);
-		lblDeck_2.setText("Slot #3");
+		lblDeck_2.setText(lang.t("Slot #3"));
 		
 		Label label_3 = new Label(composite_6, SWT.NONE);
 		new Label(composite_6, SWT.NONE);
@@ -766,15 +779,15 @@ public class HearthUI {
 		new Label(composite_6, SWT.NONE);
 		
 		Label lblDeckdsds = new Label(composite_6, SWT.NONE);
-		lblDeckdsds.setText("Slot #4");
+		lblDeckdsds.setText(lang.t("Slot #4"));
 		new Label(composite_6, SWT.NONE);
 		
 		Label lblDeckxx= new Label(composite_6, SWT.NONE);
-		lblDeckxx.setText("Slot #5");
+		lblDeckxx.setText(lang.t("Slot #5"));
 		new Label(composite_6, SWT.NONE);
 		
 		Label lblDeckss = new Label(composite_6, SWT.NONE);
-		lblDeckss.setText("Slot #6");
+		lblDeckss.setText(lang.t("Slot #6"));
 		new Label(composite_6, SWT.NONE);
 		new Label(composite_6, SWT.NONE);
 		
@@ -819,15 +832,15 @@ public class HearthUI {
 		new Label(composite_6, SWT.NONE);
 		
 		Label lblDeck_6 = new Label(composite_6, SWT.NONE);
-		lblDeck_6.setText("Slot #7");
+		lblDeck_6.setText(lang.t("Slot #7"));
 		new Label(composite_6, SWT.NONE);
 		
 		Label lblNewLabel_15 = new Label(composite_6, SWT.NONE);
-		lblNewLabel_15.setText("Slot #8");
+		lblNewLabel_15.setText(lang.t("Slot #8"));
 		new Label(composite_6, SWT.NONE);
 		
 		Label lblNewLabel_16 = new Label(composite_6, SWT.NONE);
-		lblNewLabel_16.setText("Slot #9");
+		lblNewLabel_16.setText(lang.t("Slot #9"));
 		new Label(composite_6, SWT.NONE);
 		new Label(composite_6, SWT.NONE);
 		
@@ -878,7 +891,7 @@ public class HearthUI {
 		GridData gd_btnR = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
 		gd_btnR.widthHint = 85;
 		btnRearrangeDeck.setLayoutData(gd_btnR);
-		btnRearrangeDeck.setText("Trim Empty &Slots ");
+		btnRearrangeDeck.setText(lang.t("Trim Empty &Slots "));
 		new Label(composite_6, SWT.NONE);
 		new Label(composite_6, SWT.NONE);
 		
@@ -894,11 +907,11 @@ public class HearthUI {
 			}
 		});
 		link_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 5, 1));
-		link_2.setText("<a>How to use the Decks Manager</a>");
+		link_2.setText(lang.t("%sHow to use the Decks Manager%s", "<a>", "</a>"));
 		new Label(composite_6, SWT.NONE);
 		
 		TabItem tbtmpreferences = new TabItem(tabFolder, SWT.NONE);
-		tbtmpreferences.setText("&Preferences");
+		tbtmpreferences.setText(lang.t("&Preferences"));
 		
 		ScrolledComposite scrolledComposite = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		tbtmpreferences.setControl(scrolledComposite);
@@ -909,7 +922,7 @@ public class HearthUI {
 		
 		ExpandItem xpndtmGeneral = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmGeneral.setExpanded(true);
-		xpndtmGeneral.setText("General");
+		xpndtmGeneral.setText(lang.t("General"));
 		
 		Composite composite_7 = new Composite(expandBar, SWT.NONE);
 		xpndtmGeneral.setControl(composite_7);
@@ -919,7 +932,7 @@ public class HearthUI {
 		Label lblNewLabel_1 = new Label(composite_7, SWT.NONE);
 		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_1.setSize(92, 15);
-		lblNewLabel_1.setText("Game Language");
+		lblNewLabel_1.setText(lang.t("Game Language"));
 		new Label(composite_7, SWT.NONE);
 		new Label(composite_7, SWT.NONE);
 		
@@ -937,14 +950,13 @@ public class HearthUI {
 		Label lblNewLabel_14 = new Label(composite_7, SWT.NONE);
 		lblNewLabel_14.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_14.setBounds(144, 53, 81, 15);
-		lblNewLabel_14.setText("Batte.net server");
+		lblNewLabel_14.setText(lang.t("Batte.net server"));
 		new Label(composite_7, SWT.NONE);
 		new Label(composite_7, SWT.NONE);
 		
 		cbServer = new CCombo(composite_7, SWT.BORDER | SWT.READ_ONLY);
 		cbServer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		cbServer.setVisibleItemCount(4);
-		cbServer.setItems(new String[] {"NA", "EU", "Asia", "China"});
 		cbServer.setEditable(false);
 		cbServer.setBounds(231, 49, 150, 21);
 		
@@ -961,7 +973,7 @@ public class HearthUI {
 			}
 		});
 		link.setBounds(95, 80, 136, 15);
-		link.setText("<a>HearthTracker Web Sync Key</a>");
+		link.setText(lang.t("%sHearthTracker Web Sync Key%s", "<a>", "</a>"));
 		new Label(composite_7, SWT.NONE);
 		new Label(composite_7, SWT.NONE);
 		
@@ -972,18 +984,20 @@ public class HearthUI {
 		Label lblNewLabel_21 = new Label(composite_7, SWT.NONE);
 		lblNewLabel_21.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_21.setBounds(125, 112, 101, 15);
-		lblNewLabel_21.setText("Notification Popup");
+		lblNewLabel_21.setText(
+			lang.t("Notification Popup")
+		);
 		new Label(composite_7, SWT.NONE);
 		new Label(composite_7, SWT.NONE);
 		
 		btnPopup = new Button(composite_7, SWT.CHECK);
 		btnPopup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		btnPopup.setBounds(232, 111, 93, 16);
-		btnPopup.setText("Enable");
+		btnPopup.setText(lang.t("Enable"));
 		
 		ExpandItem xpndtmAdvanced = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmAdvanced.setExpanded(true);
-		xpndtmAdvanced.setText("Advanced");
+		xpndtmAdvanced.setText(lang.t("Advanced"));
 		
 		Composite composite_10 = new Composite(expandBar, SWT.NONE);
 		xpndtmAdvanced.setControl(composite_10);
@@ -992,16 +1006,18 @@ public class HearthUI {
 		
 		Label lblDetect = new Label(composite_10, SWT.NONE);
 		lblDetect.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblDetect.setText("Auto Detect Game Resolution");
+		lblDetect.setText(lang.t("Auto Detect Game Resolution"));
 		
 		btnAutoDetectGameRes = new Button(composite_10, SWT.CHECK);
 		btnAutoDetectGameRes.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 8, 1));
-		btnAutoDetectGameRes.setToolTipText("It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.");
-		btnAutoDetectGameRes.setText("Enable");
+		btnAutoDetectGameRes.setToolTipText(
+			lang.t("It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.")
+		);
+		btnAutoDetectGameRes.setText(lang.t("Enable"));
 		
 		Label lblGameResolution = new Label(composite_10, SWT.NONE);
 		lblGameResolution.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblGameResolution.setText("Game Resolution (if auto detect failed)");
+		lblGameResolution.setText(lang.t("Game Resolution (if auto detect failed)"));
 		
 		cmbGameRes = new CCombo(composite_10, SWT.BORDER | SWT.READ_ONLY);
 		GridData gd_cmbGameRes = new GridData(SWT.LEFT, SWT.CENTER, false, false, 5, 1);
@@ -1017,11 +1033,11 @@ public class HearthUI {
 //		button_3.setText("Slowest");
 		
 		Label lblNewLabel_11 = new Label(composite_10, SWT.NONE);
-		lblNewLabel_11.setText("Override Offsets (Multi monitors dirty fix)");
+		lblNewLabel_11.setText(lang.t("Override Offsets (Multi monitors dirty fix)"));
 		
 		Label lblNewLabel_12 = new Label(composite_10, SWT.NONE);
 		lblNewLabel_12.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_12.setText("X offset");
+		lblNewLabel_12.setText(lang.t("X offset"));
 		
 		spXOffset = new Spinner(composite_10, SWT.BORDER);
 		spXOffset.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
@@ -1030,7 +1046,7 @@ public class HearthUI {
 		
 		Label lblYOffset = new Label(composite_10, SWT.NONE);
 		lblYOffset.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblYOffset.setText("Y offset");
+		lblYOffset.setText(lang.t("Y offset"));
 		
 		spYOffset = new Spinner(composite_10, SWT.BORDER);
 		spYOffset.setMaximum(10240);
@@ -1041,12 +1057,12 @@ public class HearthUI {
 		
 		Label lblNewLabel_2 = new Label(composite_10, SWT.NONE);
 		lblNewLabel_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_2.setText("Scanner");
+		lblNewLabel_2.setText(lang.t("Scanner"));
 		
 		btnEnableScanner = new Button(composite_10, SWT.CHECK);
 		btnEnableScanner.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
 		btnEnableScanner.setSelection(true);
-		btnEnableScanner.setText("Enable");
+		btnEnableScanner.setText(lang.t("Enable"));
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
@@ -1056,38 +1072,38 @@ public class HearthUI {
 		
 		Label lblNewLabel = new Label(composite_10, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel.setText("Scan Speed");
+		lblNewLabel.setText(lang.t("Scan Speed"));
 		
 		Button button_0 = new Button(composite_10, SWT.RADIO);
 		GridData gd_button_0 = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_button_0.widthHint = 75;
 		button_0.setLayoutData(gd_button_0);
 		btnScanSpeed[3] = button_0;
-		button_0.setText("Really Fast");
+		button_0.setText(lang.t("Really Fast"));
 		
 		Button button = new Button(composite_10, SWT.RADIO);
 		btnScanSpeed[0] = button;
-		button.setText("Fast");
+		button.setText(lang.t("Fast"));
 		new Label(composite_10, SWT.NONE);
 		
 		Button button_1 = new Button(composite_10, SWT.RADIO);
 		btnScanSpeed[1] = button_1;
-		button_1.setText("Intermediate");
+		button_1.setText(lang.t("Intermediate"));
 		
 		Button button_2 = new Button(composite_10, SWT.RADIO);
 		btnScanSpeed[2] = button_2;
-		button_2.setText("Slow");
+		button_2.setText(lang.t("Slow"));
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
 		
 		Label lblNewLabel_13 = new Label(composite_10, SWT.NONE);
 		lblNewLabel_13.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_13.setText("Forced Scanning");
+		lblNewLabel_13.setText(lang.t("Forced Scanning"));
 		
 		btnAlwaysScan = new Button(composite_10, SWT.CHECK);
 		btnAlwaysScan.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
-		btnAlwaysScan.setText("Enable");
+		btnAlwaysScan.setText(lang.t("Enable"));
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
@@ -1095,7 +1111,7 @@ public class HearthUI {
 		new Label(composite_10, SWT.NONE);
 
 		TabItem tbtmDiagnostics = new TabItem(tabFolder, SWT.NONE);
-		tbtmDiagnostics.setText("&Tools");
+		tbtmDiagnostics.setText(lang.t("&Tools"));
 		
 		Composite composite_4 = new Composite(tabFolder, SWT.NONE);
 		tbtmDiagnostics.setControl(composite_4);
@@ -1106,12 +1122,12 @@ public class HearthUI {
 		gd_grpDiagnostics.heightHint = 353;
 		gd_grpDiagnostics.widthHint = 589;
 		grpDiagnostics.setLayoutData(gd_grpDiagnostics);
-		grpDiagnostics.setText("Diagnostics");
+		grpDiagnostics.setText(lang.t("Diagnostics"));
 		grpDiagnostics.setLayout(null);
 		
 		Label lblLastSeenLabel = new Label(grpDiagnostics, SWT.NONE);
 		lblLastSeenLabel.setBounds(206, 21, 48, 15);
-		lblLastSeenLabel.setText("Last seen");
+		lblLastSeenLabel.setText(lang.t("Last seen"));
 		
 		lblLastSeen = new Label(grpDiagnostics, SWT.NONE);
 		lblLastSeen.setBounds(260, 21, 300, 15);
@@ -1119,7 +1135,7 @@ public class HearthUI {
 		
 		Label lblLastScanCoordinate = new Label(grpDiagnostics, SWT.NONE);
 		lblLastScanCoordinate.setBounds(181, 41, 73, 15);
-		lblLastScanCoordinate.setText("Last scan area");
+		lblLastScanCoordinate.setText(lang.t("Last scanned area"));
 		
 		lblLastscreencoordinate = new Label(grpDiagnostics, SWT.NONE);
 		lblLastscreencoordinate.setBounds(260, 41, 300, 15);
@@ -1127,7 +1143,7 @@ public class HearthUI {
 		
 		Label lblNewLabel_5 = new Label(grpDiagnostics, SWT.NONE);
 		lblNewLabel_5.setBounds(157, 61, 97, 15);
-		lblNewLabel_5.setText("Last scan sub-area");
+		lblNewLabel_5.setText(lang.t("Last scanned sub-area"));
 		
 		lblLastScanSubArea = new Label(grpDiagnostics, SWT.NONE);
 		lblLastScanSubArea.setBounds(260, 61, 300, 15);
@@ -1135,30 +1151,30 @@ public class HearthUI {
 		
 		Label lblAutoPingLabel = new Label(grpDiagnostics, SWT.NONE);
 		lblAutoPingLabel.setBounds(132, 113, 117, 15);
-		lblAutoPingLabel.setText("Visualize scanned area");
+		lblAutoPingLabel.setText(lang.t("Visualize scanned area"));
 		
 		btnAutoPing = new Button(grpDiagnostics, SWT.CHECK);
 		btnAutoPing.setBounds(255, 112, 56, 16);
-		btnAutoPing.setToolTipText("Visualize scanned areas after Hearthstone being out of sight for more than 1 min.");
-		btnAutoPing.setText("Enable");
+		btnAutoPing.setToolTipText(lang.t("Visualize scanned areas after Hearthstone being out of sight for more than 1 min."));
+		btnAutoPing.setText(lang.t("Enable"));
 		
 		Label lblNewLabel_6 = new Label(grpDiagnostics, SWT.NONE);
 		lblNewLabel_6.setBounds(171, 138, 78, 15);
-		lblNewLabel_6.setText("Diagnotic Tool");
+		lblNewLabel_6.setText(lang.t("Diagnotic Tool"));
 		
 		btnVisualizeNow = new Button(grpDiagnostics, SWT.NONE);
 		btnVisualizeNow.setBounds(255, 133, 83, 25);
-		btnVisualizeNow.setText("Visualize now");
+		btnVisualizeNow.setText(lang.t("Visualize now"));
 		
 		Label label_2 = new Label(grpDiagnostics, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label_2.setBounds(10, 93, 575, 2);
 		
 		TabItem tbtmAbout = new TabItem(tabFolder, SWT.NONE);
-		tbtmAbout.setText("A&bout");
+		tbtmAbout.setText(lang.t("A&bout"));
 		
 		Group grpAbout = new Group(tabFolder, SWT.NONE);
 		tbtmAbout.setControl(grpAbout);
-		grpAbout.setText("About");
+		grpAbout.setText(lang.t("About"));
 		grpAbout.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		Composite composite_3 = new Composite(grpAbout, SWT.NONE);
@@ -1166,11 +1182,11 @@ public class HearthUI {
 		
 		Label lblVersion = new Label(composite_3, SWT.NONE);
 		lblVersion.setBounds(42, 132, 108, 15);
-		lblVersion.setText("HearthTracker v" + version[0] + "." + version[1] + "." + version[2]);
+		lblVersion.setText(lang.t("HearthTracker v%d.%d.%d",  version[0], version[1], version[2]));
 		
 		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
 		lblCopyrightc.setBounds(24, 153, 150, 15);
-		lblCopyrightc.setText("Copyright \u00A9 2014 megablue");
+		lblCopyrightc.setText(lang.t("Copyright \u00A9 2014 megablue"));
 		
 		Label lblNewLabel_7 = new Label(composite_3, SWT.NONE);
 		lblNewLabel_7.setBounds(5, 65, 0, 15);
@@ -1183,18 +1199,18 @@ public class HearthUI {
 		Label lblPaypal = new Label(composite_3, SWT.NONE);
 		lblPaypal.setBounds(236, 258, 153, 96);
 		lblPaypal.setText("");
-		lblPaypal.setToolTipText("Your support means a lot to me. Thank you for even hovering over the donate button!");
+		lblPaypal.setToolTipText(lang.t("Your support means a lot to me. Thank you for even hovering over the donate button!"));
 		lblPaypal.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
 				HearthHelper.openDonateLink();
 			}
 		});
-		lblPaypal.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "paypal.png" ));
+		lblPaypal.setImage(new Image( display, HearthFilesNameManager.payapl));
 		
 		StyledText styledText = new StyledText(composite_3, SWT.READ_ONLY | SWT.WRAP);
 		styledText.setBounds(208, 31, 382, 183);
-		styledText.setText("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!");
+		styledText.setText(lang.t("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!"));
 		
 		Link link_1 = new Link(composite_3, SWT.NONE);
 		link_1.addSelectionListener(new SelectionAdapter() {
@@ -1212,7 +1228,7 @@ public class HearthUI {
 		
 		Label lblFacebook = new Label(composite_3, SWT.NONE);
 		lblFacebook.setBounds(10, 258, 96, 96);
-		lblFacebook.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "facebook.png" ));
+		lblFacebook.setImage(new Image( display, HearthFilesNameManager.facebook));
 		
 		lblFacebook.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1227,7 +1243,7 @@ public class HearthUI {
 		
 		Label lblTLQ = new Label(composite_3, SWT.NONE);
 		lblTLQ.setBounds(124, 258, 96, 96);
-		lblTLQ.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "teamliquid.png" ));
+		lblTLQ.setImage(new Image( display, HearthFilesNameManager.teamliquid));
 		
 		lblTLQ.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1242,7 +1258,7 @@ public class HearthUI {
 		
 		Label lblTwitter = new Label(composite_3, SWT.NONE);
 		lblTwitter.setBounds(407, 258, 96, 96);
-		lblTwitter.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "twitter.png" ));
+		lblTwitter.setImage(new Image( display,  HearthFilesNameManager.twitter));
 		
 		lblTwitter.addMouseListener(new MouseAdapter() {
 			@Override
@@ -1256,18 +1272,18 @@ public class HearthUI {
 		});
 		
 		Label lblFindUsOn = new Label(composite_3, SWT.NONE);
-		lblFindUsOn.setBounds(10, 237, 96, 15);
-		lblFindUsOn.setText("Show us the love!");
+		lblFindUsOn.setBounds(10, 237, 580, 15);
+		lblFindUsOn.setText(lang.t("Show us the love!"));
 		
 		Label lblNewLabel_10 = new Label(composite_3, SWT.NONE);
 		lblNewLabel_10.setBounds(208, 10, 96, 15);
-		lblNewLabel_10.setText("How it all began...");
+		lblNewLabel_10.setText(lang.t("How it all began..."));
 		
 		Label label_1 = new Label(composite_3, SWT.SEPARATOR | SWT.HORIZONTAL);
 		label_1.setBounds(10, 222, 580, 2);
 		
 		Label label = new Label(composite_3, SWT.NONE);
-		label.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo.png" ));
+		label.setImage(new Image( display, HearthFilesNameManager.logo));
 		label.setBounds(46, 31, 96, 96);
 
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
@@ -1347,10 +1363,10 @@ public class HearthUI {
 		for(int i = 0; i < txtDecks.length; i++){
 			String deckName = decks.list[i];
 			try {
-				float ranked = tracker.getWinRateByDeck(HearthReader.RANKEDMODE, deckName);
-				float unranked = tracker.getWinRateByDeck(HearthReader.UNRANKEDMODE, deckName);
-				float challenge = tracker.getWinRateByDeck(HearthReader.CHALLENGEMODE, deckName);
-				float practice = tracker.getWinRateByDeck(HearthReader.PRACTICEMODE, deckName);
+				float ranked = tracker.getWinRateByDeck(HearthScanner.RANKEDMODE, deckName);
+				float unranked = tracker.getWinRateByDeck(HearthScanner.UNRANKEDMODE, deckName);
+				float challenge = tracker.getWinRateByDeck(HearthScanner.CHALLENGEMODE, deckName);
+				float practice = tracker.getWinRateByDeck(HearthScanner.PRACTICEMODE, deckName);
 				
 				String rankedS = ranked > -1 ? new DecimalFormat("0.00").format(ranked) + "%" : "-\t";
 				String unrankedS = unranked > -1 ? new DecimalFormat("0.00").format(unranked) + "%" : "-";
@@ -1358,10 +1374,10 @@ public class HearthUI {
 				String practiceS = practice > -1 ? new DecimalFormat("0.00").format(practice) + "%" : "-";
 
 				lblDecks[i].setText(
-						"R: " + rankedS 
-					   +"\tU: " + unrankedS + "\r\n"
-					   +"C: " + challengeS
-					   +"\tP: " + practiceS + "\r\n" 
+						lang.t("R: ") + rankedS 
+					   +"\t" + lang.t("U: ") + unrankedS + "\r\n"
+					   + lang.t("C: ") + challengeS
+					   +"\t" + lang.t("P: ") + practiceS + "\r\n" 
 				);
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -1385,19 +1401,19 @@ public class HearthUI {
 
 			while(rs.next()){
 				TableItem tableItem = new TableItem(matchesTable, SWT.NONE);
-				String result = "Unknown";
+				String result = lang.t("Unknown");
 				cal.setTime(new Date(rs.getLong("STARTTIME")));
 				
 				if(rs.getInt("WIN") == 1){
-					result = "Win";
+					result = lang.t("Win");
 				} else if(rs.getInt("WIN") == 0){
-					result = "Lose";
+					result = lang.t("Lose");
 				}
 				
 				tableItem.setData("id", rs.getInt("ID"));
 				tableItem.setImage(0, heroImgs[rs.getInt("MYHEROID")+1]);
 				tableItem.setImage(1, heroImgs[rs.getInt("OPPHEROID")+1]);
-				tableItem.setText(2, HearthReader.gameModeToString(rs.getInt("MODE")));
+				tableItem.setText(2, HearthScanner.gameModeToStringLabel(rs.getInt("MODE")));
 				tableItem.setText(3, result);
 				tableItem.setText(4, (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
 				
@@ -1451,7 +1467,7 @@ public class HearthUI {
 		
 		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
 		lblNewLabel_3.setBounds(154, 69, 11, 15);
-		lblNewLabel_3.setText("vs");
+		lblNewLabel_3.setText(lang.t("vs"));
 		
 		final Combo cbMatchesEditVs = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditVs.setBounds(184, 66, 90, 23);
@@ -1463,15 +1479,30 @@ public class HearthUI {
 		
 		final Combo cbMatchesEditGoes = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditGoes.setBounds(123, 101, 74, 23);
-		cbMatchesEditGoes.setItems(new String[] {"First", "Second", "Unknown"});
+		cbMatchesEditGoes.setItems(new String[] {
+			lang.t("Go First"), 
+			lang.t("Go Second"), 
+			lang.t("Unknown")
+		});
 		
 		final Combo cbMatchesEditGameMode = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditGameMode.setBounds(109, 25, 99, 23);
-		cbMatchesEditGameMode.setItems(new String[] {"Unknown mode", "Arena", "Ranked", "Unranked", "Challenge", "Practice"});
+		cbMatchesEditGameMode.setItems(new String[] {
+			lang.t("Unknown mode"), 
+			lang.t("Arena"), 
+			lang.t("Ranked"), 
+			lang.t("Unranked"), 
+			lang.t("Challenge"), 
+			lang.t("Practice")
+		});
 		
 		final Combo cbMatchesEditResult = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditResult.setBounds(134, 136, 49, 23);
-		cbMatchesEditResult.setItems(new String[] {"Win", "Loss", "Unknown"});
+		cbMatchesEditResult.setItems(new String[] {
+				lang.t("Win"), 
+				lang.t("Lose"), 
+				lang.t("Unknown")
+		});
 		
 		final DateTime dtMatchesEditDate = new DateTime(composite_4, SWT.NONE);
 		dtMatchesEditDate.setEnabled(false);
@@ -1486,21 +1517,21 @@ public class HearthUI {
 		
 		Label lblNewLabel_9 = new Label(composite_4, SWT.NONE);
 		lblNewLabel_9.setBounds(88, 257, 35, 15);
-		lblNewLabel_9.setText("Played");
+		lblNewLabel_9.setText(lang.t("Played"));
 		
 		Label lblMinutes = new Label(composite_4, SWT.NONE);
 		lblMinutes.setBounds(212, 257, 43, 15);
-		lblMinutes.setText("minutes");
+		lblMinutes.setText(lang.t("minutes"));
 		
 		final Button btnMatchesEditSave = new Button(composite_4, SWT.NONE);
 		btnMatchesEditSave.setEnabled(false);
 		btnMatchesEditSave.setBounds(88, 310, 36, 25);
-		btnMatchesEditSave.setText("&Save");
+		btnMatchesEditSave.setText(lang.t("&Save"));
 
 		final Button btnMatchesEditDelete = new Button(composite_4, SWT.NONE);
 		btnMatchesEditDelete.setEnabled(false);
 		btnMatchesEditDelete.setBounds(212, 310, 45, 25);
-		btnMatchesEditDelete.setText("&Delete");
+		btnMatchesEditDelete.setText(lang.t("&Delete"));
 		
 		final Label lblID = new Label(composite_4, SWT.NONE);
 		lblID.setBounds(10, 10, 303, 15);
@@ -1527,7 +1558,7 @@ public class HearthUI {
 			}
 		});
 		btnConfirmChanges.setBounds(134, 293, 65, 16);
-		btnConfirmChanges.setText("&Confirm");
+		btnConfirmChanges.setText(lang.t("&Confirm"));
 		
 		matchesTable.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -1639,8 +1670,6 @@ public class HearthUI {
 					result = -1;
 				}
 				
-				System.out.println(result);
-				
 				if(cbMatchesEditGoes.getSelectionIndex() == 0){
 					goes = 1;
 				} else if (cbMatchesEditGoes.getSelectionIndex() == 1){
@@ -1659,7 +1688,6 @@ public class HearthUI {
 				
 				try {
 					btnMatchesEditSave.setEnabled(false);
-					btnMatchesEditSave.setText("Saving...");
 					tracker.saveModifiedMatchResult(id, gMode, myheroid, oppheroid, goes, result, totaltime, deckName);
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -1667,7 +1695,6 @@ public class HearthUI {
 				
 				fillMatchesTable();
 				btnMatchesEditSave.setEnabled(true);
-				btnMatchesEditSave.setText("&Save");
 			}
 		});
 		
@@ -1677,7 +1704,6 @@ public class HearthUI {
 				int id = (int) lblID.getData("id");
 				try {
 					btnMatchesEditDelete.setEnabled(false);
-					btnMatchesEditDelete.setText("Deleting...");
 					tracker.deleteMatchResult(id);
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -1685,7 +1711,6 @@ public class HearthUI {
 				
 				fillMatchesTable();
 				btnMatchesEditDelete.setEnabled(true);
-				btnMatchesEditDelete.setText("&Delete");
 			}
 		});
 	}
@@ -1714,15 +1739,33 @@ public class HearthUI {
 		
 		final Combo cbMatchesEditGoes = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditGoes.setBounds(125, 123, 74, 23);
-		cbMatchesEditGoes.setItems(new String[] {"First", "Second", "Unknown"});
+		cbMatchesEditGoes.setItems(
+			new String[] {
+				lang.t("First"), 
+				lang.t("Second"), 
+				lang.t("Unknown")
+			}
+		);
 		
 		final Combo cbMatchesEditGameMode = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditGameMode.setBounds(109, 25, 99, 23);
-		cbMatchesEditGameMode.setItems(new String[] {"Unknown mode", "Arena", "Ranked", "Unranked", "Challenge", "Practice"});
+		cbMatchesEditGameMode.setItems(new String[] {
+				lang.t("Unknown mode"), 
+				lang.t("Arena"), 
+				lang.t("Ranked"), 
+				lang.t("Unranked"), 
+				lang.t("Challenge"), 
+				lang.t("Practice")
+			}
+		);
 		
 		final Combo cbMatchesEditResult = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditResult.setBounds(136, 165, 49, 23);
-		cbMatchesEditResult.setItems(new String[] {"Win", "Loss", "Unknown"});
+		cbMatchesEditResult.setItems(new String[] {
+				lang.t("Win"), 
+				lang.t("Lose"), 
+				lang.t("Unknown")
+			});
 		
 		final DateTime dtMatchesEditDate = new DateTime(composite_4, SWT.NONE);
 		dtMatchesEditDate.setBounds(69, 211, 80, 24);
@@ -1735,15 +1778,15 @@ public class HearthUI {
 		
 		Label lblNewLabel_9 = new Label(composite_4, SWT.NONE);
 		lblNewLabel_9.setBounds(88, 257, 35, 15);
-		lblNewLabel_9.setText("Played");
+		lblNewLabel_9.setText(lang.t("Played"));
 		
 		Label lblMinutes = new Label(composite_4, SWT.NONE);
 		lblMinutes.setBounds(212, 257, 43, 15);
-		lblMinutes.setText("minutes");
+		lblMinutes.setText(lang.t("minutes"));
 		
 		final Button btnMatchesEditSave = new Button(composite_4, SWT.NONE);
 		btnMatchesEditSave.setBounds(150, 310, 36, 25);
-		btnMatchesEditSave.setText("&Save");
+		btnMatchesEditSave.setText(lang.t("&Save"));
 				
 		btnMatchesEditSave.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -1772,7 +1815,6 @@ public class HearthUI {
 				
 				try {
 					btnMatchesEditSave.setEnabled(false);
-					btnMatchesEditSave.setText("Saving...");
 					tracker.saveMatchResult(gMode, myheroid, oppheroid, goes, result, starttime, totaltime, true, "");
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -1780,7 +1822,6 @@ public class HearthUI {
 				
 				fillMatchesTable();
 				btnMatchesEditSave.setEnabled(true);
-				btnMatchesEditSave.setText("&Save");
 			}
 		});
 	}
@@ -1811,12 +1852,12 @@ public class HearthUI {
 		final Button btnArenaSave = new Button(composite_4, SWT.NONE);
 		btnArenaSave.setEnabled(false);
 		btnArenaSave.setBounds(59, 303, 44, 25);
-		btnArenaSave.setText("&Save");
+		btnArenaSave.setText(lang.t("&Save"));
 		
 		final Button btnArenaDelete = new Button(composite_4, SWT.NONE);
 		btnArenaDelete.setEnabled(false);
 		btnArenaDelete.setBounds(197, 303, 45, 25);
-		btnArenaDelete.setText("&Delete");
+		btnArenaDelete.setText(lang.t("&Delete"));
 		
 		final Spinner spEditArenaWins = new Spinner(composite_4, SWT.BORDER);
 		spEditArenaWins.setMaximum(12);
@@ -1845,7 +1886,7 @@ public class HearthUI {
 			}
 		});
 		btnArenaConfirm.setBounds(119, 169, 65, 16);
-		btnArenaConfirm.setText("&Confirm");
+		btnArenaConfirm.setText(lang.t("&Confirm"));
 		
 		
 		arenaTable.addSelectionListener(new SelectionAdapter() {
@@ -1927,7 +1968,6 @@ public class HearthUI {
 				
 				try {
 					btnArenaSave.setEnabled(false);
-					btnArenaSave.setText("Saving...");
 					tracker.saveModifiedArenaResult(id, heroid, wins, losses);
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -1935,7 +1975,6 @@ public class HearthUI {
 				
 				fillArenaTable();
 				btnArenaSave.setEnabled(true);
-				btnArenaSave.setText("&Save");
 			}
 		});
 		
@@ -1945,14 +1984,12 @@ public class HearthUI {
 				int id = (int) lblID.getData("id");
 				try {
 					btnArenaDelete.setEnabled(false);
-					btnArenaDelete.setText("Deleting...");
 					tracker.deleteModifiedArenaResult(id);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 				
 				fillArenaTable();
-				btnArenaDelete.setText("&Delete");
 				btnArenaDelete.setEnabled(true);
 			}
 		});
@@ -1976,7 +2013,7 @@ public class HearthUI {
 		
 		final Button btnArenaSave = new Button(composite_4, SWT.NONE);
 		btnArenaSave.setBounds(139, 310, 44, 25);
-		btnArenaSave.setText("&Save");
+		btnArenaSave.setText(lang.t("&Save"));
 
 		final Spinner spEditArenaWins = new Spinner(composite_4, SWT.BORDER);
 		spEditArenaWins.setMaximum(12);
@@ -2009,7 +2046,6 @@ public class HearthUI {
 				
 				try {
 					btnArenaSave.setEnabled(false);
-					btnArenaSave.setText("Saving...");
 					tracker.saveArenaResult(heroid, wins, losses, time, true);
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -2017,27 +2053,26 @@ public class HearthUI {
 				
 				fillArenaTable();
 				btnArenaSave.setEnabled(true);
-				btnArenaSave.setText("&Save");
 			}
 		});
 	}
 	
 	private void savePreferences(){
-		config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
+		config.save(setting, HearthFilesNameManager.settingFile);
 	}
 	
 	private void saveDecks(){
-		config.save(decks, "." + File.separator + "configs" + File.separator + "decks.xml");
+		config.save(decks, HearthFilesNameManager.decksFile);
 	}
 	
 	private void poppulateDiagnoticsStatus(){
 		Date lastSeen = hearth.getLastseen();
 		int[] area = hearth.getLastScanArea();
 		int[] subArea = hearth.getLastScanSubArea();
-		String last = lastSeen == null || lastSeen.getTime() == 0 ? "Never" : HearthHelper.getPrettyText(lastSeen); 
+		String last = lastSeen == null || lastSeen.getTime() == 0 ? lang.t("Never") : HearthHelper.getPrettyText(lastSeen); 
 
 		if(lastSeen == null){
-			lblLastSeen.setText("N|A");
+			lblLastSeen.setText(lang.t("N|A"));
 		} else {
 			lblLastSeen.setText(last);
 		}
@@ -2281,7 +2316,7 @@ public class HearthUI {
 	 				NotifierDialog.notify(
     						"Web Access Key", 
     						"Validated. Key saved. Sync started.", 
-    						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
+    						new Image( display, HearthFilesNameManager.logo32),
     						shlHearthtracker.getMonitor()
     				);
 	 				
@@ -2292,7 +2327,7 @@ public class HearthUI {
 					NotifierDialog.notify(
     						"Web Access Key", 
     						"Invalid. Key is not saved!", 
-    						new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png" ),
+    						new Image( display, HearthFilesNameManager.logo32),
     						shlHearthtracker.getMonitor()
     				);
 				}
@@ -2350,7 +2385,7 @@ public class HearthUI {
 					if(setting.gameServer == null || !setting.gameServer.equals(server)){
 						setting.gameServer = server;
 						tracker.setServer(server);
-						config.save(setting, "." + File.separator + "configs" + File.separator + "settings.xml");
+						config.save(setting,HearthFilesNameManager.settingFile);
 					}
 				}
 			}
@@ -2390,18 +2425,18 @@ public class HearthUI {
 		
 		switch(mode){
 			case 0:
-				return HearthReader.ARENAMODE;
+				return HearthScanner.ARENAMODE;
 			case 1:
-				return HearthReader.RANKEDMODE;
+				return HearthScanner.RANKEDMODE;
 			case 2:
-				return HearthReader.UNRANKEDMODE;
+				return HearthScanner.UNRANKEDMODE;
 			case 3:
-				return HearthReader.CHALLENGEMODE;
+				return HearthScanner.CHALLENGEMODE;
 			case 4:
-				return HearthReader.PRACTICEMODE;
+				return HearthScanner.PRACTICEMODE;
 		}
 		
-		return HearthReader.UNKNOWNMODE;
+		return HearthScanner.UNKNOWNMODE;
 	}
 	
 	private void fillOverviewTable(){

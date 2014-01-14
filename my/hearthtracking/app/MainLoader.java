@@ -8,7 +8,17 @@ public class MainLoader {
 	public static void main(String[] args) {
 		File swtJar = new File(HearthHelper.getArchFilename("lib/swt"));
 		HearthHelper.addJarToClasspath(swtJar);
-
+		
+		HearthConfigurator config = new HearthConfigurator();
+		HearthSetting setting =	(HearthSetting) config.load(HearthFilesNameManager.settingFile);
+		
+		if(setting == null){
+			setting = new HearthSetting();
+			config.save(setting, HearthFilesNameManager.settingFile);
+		}
+		
+		HearthLanguageManager.getInstance().loadLang(setting.uiLang);
+		
 		HearthUpdater updater = new HearthUpdater();
 
 		if(updater.lastCheckExpired()){
@@ -18,13 +28,13 @@ public class MainLoader {
 				new HearthUpdateUI().open();
 			}		
 		}
+	
 		
-		HearthConfigurator config = new HearthConfigurator();
-		HearthDatabase dbSetting = (HearthDatabase) config.load("." + File.separator + "data" + File.separator + "database.xml");
+		HearthDatabase dbSetting = (HearthDatabase) config.load(HearthFilesNameManager.dbFile);
 		
 		if(dbSetting == null){
 			dbSetting = new HearthDatabase();
-			config.save(dbSetting, "." + File.separator + "data" + File.separator + "database.xml");
+			config.save(dbSetting, HearthFilesNameManager.dbFile);
 		}
 		
 		if(dbSetting.serverSelected == 0){

@@ -30,12 +30,16 @@ public class HearthBnetServersList {
 	}
 	
 	public String getServerName(int id){
+		
 		return (id >= 0 && id < servers.length) ? servers[id].name : "";
 	}
 	
 	
 	public String getServerLabel(int id){
-		return (id >= 0 && id < servers.length) ? servers[id].label : "";
+		String label = (id >= 0 && id < servers.length) ? 
+				HearthLanguageManager.getInstance().t(servers[id].label) : "";
+		
+		return label;
 	}
 	public int getNextId(){
 		++total;

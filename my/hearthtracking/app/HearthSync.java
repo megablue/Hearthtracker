@@ -2,7 +2,6 @@ package my.hearthtracking.app;
 
 import static us.monoid.web.Resty.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -66,7 +65,7 @@ public class HearthSync {
 		tracker = new HearthTracker();
 		nonce = generateNonce();
 
-		syncLog = (HearthSyncLog) config.load("." + File.separator + "configs" + File.separator + "sync.xml");
+		syncLog = (HearthSyncLog) config.load(HearthFilesNameManager.syncFile);
 		
 		if(syncLog == null){
 			syncLog = new HearthSyncLog();
@@ -82,11 +81,11 @@ public class HearthSync {
 			return;
 		}
 		
-		heroesList = (HearthHeroesList) config.load("." + File.separator + "configs" + File.separator + "heroes.xml");
+		heroesList = (HearthHeroesList) config.load(HearthFilesNameManager.heroesFile);
 		
 		if(heroesList == null){
 			heroesList = new HearthHeroesList();
-			config.save(heroesList, "." + File.separator + "configs" + File.separator + "heroes.xml");
+			config.save(heroesList, HearthFilesNameManager.heroesFile);
 		}
 	}
 	
@@ -100,7 +99,7 @@ public class HearthSync {
 	}
 	
 	private void saveSyncLog(){
-		config.save(syncLog, "." + File.separator + "configs" + File.separator + "sync.xml");
+		config.save(syncLog, HearthFilesNameManager.syncFile);
 	}
 	
 	public void setKey(String key){
@@ -113,12 +112,12 @@ public class HearthSync {
 	
 	public void saveKey(){
 		syncLog.secretKey = secretKey;
-		config.save(syncLog, "." + File.separator + "configs" + File.separator + "sync.xml");
+		saveSyncLog();
 	}
 	
 	public void invalidateKey(){
 		syncLog.secretKey = "";
-		config.save(syncLog, "." + File.separator + "configs" + File.separator + "sync.xml");
+		saveSyncLog();
 	}
 	
 	public boolean isValidKeyFormat(){
@@ -366,11 +365,11 @@ public class HearthSync {
 				ar[index].cid 			= rs.getInt("id");
 				ar[index].myhero 		= heroesList.getHeroName(rs.getInt("myheroid"));
 				ar[index].opphero		= heroesList.getHeroName(rs.getInt("oppheroid"));
-				ar[index].goes			= HearthReader.goesFirstToString(rs.getInt("goesfirst"));
+				ar[index].goes			= HearthScanner.goesFirstToString(rs.getInt("goesfirst"));
 				ar[index].win			= rs.getInt("win");
 				ar[index].starttime		= rs.getLong("starttime");
 				ar[index].totaltime		= rs.getInt("totaltime");
-				ar[index].mode			= HearthReader.gameModeToString(rs.getInt("mode")).toLowerCase();
+				ar[index].mode			= HearthScanner.gameModeToString(rs.getInt("mode")).toLowerCase();
 				ar[index].deleted		= rs.getInt("deleted");
 				ar[index].modified		= rs.getInt("modified");
 				ar[index].lastmodified	= rs.getLong("lastmodified");

@@ -1,7 +1,6 @@
 package my.hearthtracking.app;
 
 import org.eclipse.swt.graphics.Image;
-import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -18,6 +17,7 @@ import org.eclipse.swt.events.SelectionEvent;
 
 
 public class HearthUpdateUI {
+	private static HearthLanguageManager uiLang = HearthLanguageManager.getInstance();
 	
 	/**
 	 * Open the window.
@@ -27,9 +27,11 @@ public class HearthUpdateUI {
 		HearthUpdater updater = new HearthUpdater();
 		Display display = Display.getDefault();
 		Shell shlHearthtrackerUpdateNotification = new Shell(display, SWT.TITLE | SWT.CLOSE | SWT.BORDER);
-		shlHearthtrackerUpdateNotification.setText("HearthTracker Update Notification!");
+		shlHearthtrackerUpdateNotification.setText(
+				uiLang.t("HearthTracker Update Notification!")
+		);
 		shlHearthtrackerUpdateNotification.setSize(388, 228);
-		shlHearthtrackerUpdateNotification.setImage(new Image( display, "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-128.png" ));
+		shlHearthtrackerUpdateNotification.setImage(new Image( display, HearthFilesNameManager.logo128 ));
 		
 		Link link = new Link(shlHearthtrackerUpdateNotification, SWT.NONE);
 		link.addSelectionListener(new SelectionAdapter() {
@@ -43,7 +45,7 @@ public class HearthUpdateUI {
 			}
 		});
 		link.setBounds(166, 180, 59, 15);
-		link.setText("<a>Get update</a>");
+		link.setText(uiLang.t("%sGet update%s", "<a>", "</a>"));
 		
 		StyledText styledText = new StyledText(shlHearthtrackerUpdateNotification, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP);
 		styledText.setBounds(10, 77, 362, 97);
@@ -52,15 +54,15 @@ public class HearthUpdateUI {
 		
 		Label lblNewLabel = new Label(shlHearthtrackerUpdateNotification, SWT.NONE);
 		lblNewLabel.setBounds(10, 10, 69, 15);
-		lblNewLabel.setText("Your version:");
+		lblNewLabel.setText(uiLang.t("Your version:"));
 		
 		Label lblNewLabel_1 = new Label(shlHearthtrackerUpdateNotification, SWT.NONE);
 		lblNewLabel_1.setBounds(10, 31, 76, 15);
-		lblNewLabel_1.setText("Latest version:");
+		lblNewLabel_1.setText(uiLang.t("Latest version:"));
 		
 		Label lblNewLabel_2 = new Label(shlHearthtrackerUpdateNotification, SWT.NONE);
 		lblNewLabel_2.setBounds(10, 52, 69, 15);
-		lblNewLabel_2.setText("Released on:");
+		lblNewLabel_2.setText(uiLang.t("Released on:"));
 		
 		Label lblYourVersion = new Label(shlHearthtrackerUpdateNotification, SWT.NONE);
 		lblYourVersion.setBounds(95, 10, 277, 15);

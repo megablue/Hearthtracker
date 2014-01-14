@@ -1,7 +1,6 @@
 package my.hearthtracking.app;
 
 public class HearthHeroesList {
-	
 	public class Hero {
 		public int id;
 		public String name;
@@ -57,12 +56,15 @@ public class HearthHeroesList {
 	}
 	
 	public String getHeroLabel(int heroId){
+		HearthLanguageManager uiLang = HearthLanguageManager.getInstance();
+
 		for(int i = 0; i < heroes.length; i++){
 			if(heroes[i].id == heroId){
-				return heroes[i].label;
+				return uiLang.t(heroes[i].label);
 			}
 		}
-		return "Unknown";
+		
+		return uiLang.t("Unknown hero");
 	}
 	
 	public int getNextId(){

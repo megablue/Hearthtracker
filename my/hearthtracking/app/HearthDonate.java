@@ -17,6 +17,7 @@ public class HearthDonate extends Dialog {
 	protected Object result;
 	protected Shell shell;
 	private int gamesTracked = 1000;
+	private HearthLanguageManager lang = HearthLanguageManager.getInstance();
 
 	/**
 	 * Create the dialog.
@@ -53,27 +54,38 @@ public class HearthDonate extends Dialog {
 		shell = new Shell(getParent(), SWT.PRIMARY_MODAL);
 		shell.setSize(450, 327);
 		shell.setText(getText());
+		String formattedNumber = new DecimalFormat("#,###").format(gamesTracked);
 		
 		Label lblHearthtrackerHadTracked = new Label(shell, SWT.NONE);
 		lblHearthtrackerHadTracked.setBounds(20, 54, 428, 15);
-		lblHearthtrackerHadTracked.setText("Congrats! HearthTracker had tracked " + new DecimalFormat("#,###").format(gamesTracked) + " games for you.");
+		lblHearthtrackerHadTracked.setText(		
+				lang.t("Congrats! HearthTracker had tracked %s games for you.", formattedNumber)
+		);
 		
 		Label lblHearthtrackerHadTracked_1 = new Label(shell, SWT.NONE);
 		lblHearthtrackerHadTracked_1.setFont(SWTResourceManager.getFont("Segoe UI", 18, SWT.BOLD));
 		lblHearthtrackerHadTracked_1.setBounds(10, 10, 399, 38);
-		lblHearthtrackerHadTracked_1.setText( new DecimalFormat("#,###").format(gamesTracked) + "+ Games Tracked!");
+		lblHearthtrackerHadTracked_1.setText( 
+				lang.t("%s+ Games Tracked!", formattedNumber)
+		);
 		
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setBounds(20, 75, 418, 15);
-		lblNewLabel.setText("I am sincerely hope that you like it! I've spent countless hours to develope it. ");
+		lblNewLabel.setText(
+				lang.t("I am sincerely hope that you like it! I've spent countless hours to develope it. ")
+		);
 		
 		Label lblIfYouThink = new Label(shell, SWT.WRAP);
 		lblIfYouThink.setBounds(20, 110, 418, 46);
-		lblIfYouThink.setText("If you think HearthTracker helped you. Please consider donating a few bucks so that I can get better web servers for the upcoming Web Sync feature and keep the developing on it!");
+		lblIfYouThink.setText(
+				lang.t("If you think HearthTracker helped you. Please consider donating a few bucks so that I can get better web servers for the upcoming Web Sync feature and keep the developing on it!")
+		);
 		
 		Label lblNewLabel_1 = new Label(shell, SWT.NONE);
 		lblNewLabel_1.setBounds(21, 172, 406, 15);
-		lblNewLabel_1.setText("It really means a lot to me. Your support is greatly appreciated!");
+		lblNewLabel_1.setText(
+				lang.t("It really means a lot to me. Your support is greatly appreciated!")
+		);
 		
 		Button btnNewButton = new Button(shell, SWT.NONE);
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
@@ -84,11 +96,15 @@ public class HearthDonate extends Dialog {
 			}
 		});
 		btnNewButton.setBounds(131, 212, 163, 45);
-		btnNewButton.setText("Yes, I want to donate!");
+		btnNewButton.setText(
+				lang.t("Yes, I want to donate!")
+		);
 		
 		Button btnNewButton_1 = new Button(shell, SWT.NONE);
 		btnNewButton_1.setBounds(145, 272, 132, 25);
-		btnNewButton_1.setText("No, I refuse to help!");
+		btnNewButton_1.setText(
+				lang.t("No, I refuse to help!")
+		);
 		
 		btnNewButton_1.addSelectionListener(new SelectionAdapter() {
 			@Override
