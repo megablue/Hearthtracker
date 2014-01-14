@@ -1,0 +1,528 @@
+<HearthLanguage>
+  <map>
+    <entry>
+      <string>Sync timeout. Will retry later!</string>
+      <string>Sync timeout. Will retry later!</string>
+    </entry>
+    <entry>
+      <string>HearthTracker v%d.%d.%d</string>
+      <string>HearthTracker v%d.%d.%d</string>
+    </entry>
+    <entry>
+      <string>Unknown</string>
+      <string>Unknown</string>
+    </entry>
+    <entry>
+      <string>How it all began...</string>
+      <string>How it all began...</string>
+    </entry>
+    <entry>
+      <string>First</string>
+      <string>First</string>
+    </entry>
+    <entry>
+      <string>Ranked mode (played as)</string>
+      <string>Ranked mode (played as)</string>
+    </entry>
+    <entry>
+      <string>Arena mode (played as)</string>
+      <string>Arena mode (played as)</string>
+    </entry>
+    <entry>
+      <string>Fast</string>
+      <string>Fast</string>
+    </entry>
+    <entry>
+      <string>Go Second</string>
+      <string>Go Second</string>
+    </entry>
+    <entry>
+      <string>Ranked</string>
+      <string>Ranked</string>
+    </entry>
+    <entry>
+      <string>Unranked : %s</string>
+      <string>Unranked : %s</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; Lost</string>
+      <string>Last Match -&gt; Lost</string>
+    </entry>
+    <entry>
+      <string>Asia</string>
+      <string>Asia</string>
+    </entry>
+    <entry>
+      <string>Notification Popup</string>
+      <string>Notification Popup</string>
+    </entry>
+    <entry>
+      <string>Result</string>
+      <string>Result</string>
+    </entry>
+    <entry>
+      <string>&amp;Confirm</string>
+      <string>&amp;Confirm</string>
+    </entry>
+    <entry>
+      <string>Paladin</string>
+      <string>Paladin</string>
+    </entry>
+    <entry>
+      <string>go second</string>
+      <string>go second</string>
+    </entry>
+    <entry>
+      <string>EU</string>
+      <string>EU</string>
+    </entry>
+    <entry>
+      <string>Slow</string>
+      <string>Slow</string>
+    </entry>
+    <entry>
+      <string>Mode</string>
+      <string>Mode</string>
+    </entry>
+    <entry>
+      <string>Visualize scanned areas after Hearthstone being out of sight for more than 1 min.</string>
+      <string>Visualize scanned areas after Hearthstone being out of sight for more than 1 min.</string>
+    </entry>
+    <entry>
+      <string>R: </string>
+      <string>R: </string>
+    </entry>
+    <entry>
+      <string>Batte.net server</string>
+      <string>Batte.net server</string>
+    </entry>
+    <entry>
+      <string>HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!</string>
+    </entry>
+    <entry>
+      <string>Win</string>
+      <string>Win</string>
+    </entry>
+    <entry>
+      <string>P: </string>
+      <string>P: </string>
+    </entry>
+    <entry>
+      <string>Auto Detect Game Resolution</string>
+      <string>Auto Detect Game Resolution</string>
+    </entry>
+    <entry>
+      <string>Losses</string>
+      <string>Losses</string>
+    </entry>
+    <entry>
+      <string>&amp;Save</string>
+      <string>&amp;Save</string>
+    </entry>
+    <entry>
+      <string>Unranked mode (played as)</string>
+      <string>Unranked mode (played as)</string>
+    </entry>
+    <entry>
+      <string>&amp;New</string>
+      <string>&amp;New</string>
+    </entry>
+    <entry>
+      <string>NA</string>
+      <string>NA</string>
+    </entry>
+    <entry>
+      <string>Override Offsets (Multi monitors dirty fix)</string>
+      <string>Override Offsets (Multi monitors dirty fix)</string>
+    </entry>
+    <entry>
+      <string>Diagnotic Tool</string>
+      <string>Diagnotic Tool</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; went second</string>
+      <string>Last Match -&gt; went second</string>
+    </entry>
+    <entry>
+      <string>Second</string>
+      <string>Second</string>
+    </entry>
+    <entry>
+      <string>vs</string>
+      <string>vs</string>
+    </entry>
+    <entry>
+      <string>Web Sync</string>
+      <string>Web Sync</string>
+    </entry>
+    <entry>
+      <string>Intermediate</string>
+      <string>Intermediate</string>
+    </entry>
+    <entry>
+      <string>Practice</string>
+      <string>Practice</string>
+    </entry>
+    <entry>
+      <string>7+ %</string>
+      <string>7+ %</string>
+    </entry>
+    <entry>
+      <string>X offset</string>
+      <string>X offset</string>
+    </entry>
+    <entry>
+      <string>&amp;Preferences</string>
+      <string>&amp;Preferences</string>
+    </entry>
+    <entry>
+      <string>Unknown hero</string>
+      <string>Unknown hero</string>
+    </entry>
+    <entry>
+      <string>Never</string>
+      <string>Never</string>
+    </entry>
+    <entry>
+      <string>Vs</string>
+      <string>Vs</string>
+    </entry>
+    <entry>
+      <string>Win %</string>
+      <string>Win %</string>
+    </entry>
+    <entry>
+      <string>Challenge mode (played as)</string>
+      <string>Challenge mode (played as)</string>
+    </entry>
+    <entry>
+      <string>Last scanned area</string>
+      <string>Last scanned area</string>
+    </entry>
+    <entry>
+      <string>Rogue</string>
+      <string>Rogue</string>
+    </entry>
+    <entry>
+      <string>Latest match(es): </string>
+      <string>Latest match(es): </string>
+    </entry>
+    <entry>
+      <string>Advanced</string>
+      <string>Advanced</string>
+    </entry>
+    <entry>
+      <string>Unranked: %s</string>
+      <string>Unranked: %s</string>
+    </entry>
+    <entry>
+      <string>On</string>
+      <string>On</string>
+    </entry>
+    <entry>
+      <string>Enable</string>
+      <string>Enable</string>
+    </entry>
+    <entry>
+      <string>Arena</string>
+      <string>Arena</string>
+    </entry>
+    <entry>
+      <string>Diagnostics</string>
+      <string>Diagnostics</string>
+    </entry>
+    <entry>
+      <string>Challenge</string>
+      <string>Challenge</string>
+    </entry>
+    <entry>
+      <string>%sHow to use the Decks Manager%s</string>
+      <string>%sHow to use the Decks Manager%s</string>
+    </entry>
+    <entry>
+      <string>Total Runs</string>
+      <string>Total Runs</string>
+    </entry>
+    <entry>
+      <string>Unranked</string>
+      <string>Unranked</string>
+    </entry>
+    <entry>
+      <string>Priest</string>
+      <string>Priest</string>
+    </entry>
+    <entry>
+      <string>&amp;Overview</string>
+      <string>&amp;Overview</string>
+    </entry>
+    <entry>
+      <string>Wins</string>
+      <string>Wins</string>
+    </entry>
+    <entry>
+      <string>E&amp;xit</string>
+      <string>E&amp;xit</string>
+    </entry>
+    <entry>
+      <string>Druid</string>
+      <string>Druid</string>
+    </entry>
+    <entry>
+      <string>Really Fast</string>
+      <string>Really Fast</string>
+    </entry>
+    <entry>
+      <string>&amp;Tools</string>
+      <string>&amp;Tools</string>
+    </entry>
+    <entry>
+      <string>HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!</string>
+      <string>HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; Won</string>
+      <string>Last Match -&gt; Won</string>
+    </entry>
+    <entry>
+      <string>Lose</string>
+      <string>Lose</string>
+    </entry>
+    <entry>
+      <string>General</string>
+      <string>General</string>
+    </entry>
+    <entry>
+      <string>Game mode: %s</string>
+      <string>Game mode: %s</string>
+    </entry>
+    <entry>
+      <string>Show us the love!</string>
+      <string>Show us the love!</string>
+    </entry>
+    <entry>
+      <string>C: </string>
+      <string>C: </string>
+    </entry>
+    <entry>
+      <string>Go First</string>
+      <string>Go First</string>
+    </entry>
+    <entry>
+      <string>Game Resolution (if auto detect failed)</string>
+      <string>Game Resolution (if auto detect failed)</string>
+    </entry>
+    <entry>
+      <string>About</string>
+      <string>About</string>
+    </entry>
+    <entry>
+      <string>Mage</string>
+      <string>Mage</string>
+    </entry>
+    <entry>
+      <string>A&amp;bout</string>
+      <string>A&amp;bout</string>
+    </entry>
+    <entry>
+      <string>Last scanned sub-area</string>
+      <string>Last scanned sub-area</string>
+    </entry>
+    <entry>
+      <string>Unknown mode</string>
+      <string>Unknown mode</string>
+    </entry>
+    <entry>
+      <string>Last seen</string>
+      <string>Last seen</string>
+    </entry>
+    <entry>
+      <string>Y offset</string>
+      <string>Y offset</string>
+    </entry>
+    <entry>
+      <string>Played</string>
+      <string>Played</string>
+    </entry>
+    <entry>
+      <string>Visualize scanned area</string>
+      <string>Visualize scanned area</string>
+    </entry>
+    <entry>
+      <string>Game Language</string>
+      <string>Game Language</string>
+    </entry>
+    <entry>
+      <string>&amp;File</string>
+      <string>&amp;File</string>
+    </entry>
+    <entry>
+      <string>go first</string>
+      <string>go first</string>
+    </entry>
+    <entry>
+      <string>Arena: %s</string>
+      <string>Arena: %s</string>
+    </entry>
+    <entry>
+      <string>&amp;Delete</string>
+      <string>&amp;Delete</string>
+    </entry>
+    <entry>
+      <string>&amp;Edit</string>
+      <string>&amp;Edit</string>
+    </entry>
+    <entry>
+      <string>U: </string>
+      <string>U: </string>
+    </entry>
+    <entry>
+      <string>Practice mode (played as)</string>
+      <string>Practice mode (played as)</string>
+    </entry>
+    <entry>
+      <string>Scanner</string>
+      <string>Scanner</string>
+    </entry>
+    <entry>
+      <string>Scan Speed</string>
+      <string>Scan Speed</string>
+    </entry>
+    <entry>
+      <string>Copyright © 2014 megablue</string>
+      <string>Copyright © 2014 megablue</string>
+    </entry>
+    <entry>
+      <string>Slot #9</string>
+      <string>Slot #9</string>
+    </entry>
+    <entry>
+      <string>As</string>
+      <string>As</string>
+    </entry>
+    <entry>
+      <string>Slot #8</string>
+      <string>Slot #8</string>
+    </entry>
+    <entry>
+      <string>Slot #7</string>
+      <string>Slot #7</string>
+    </entry>
+    <entry>
+      <string>Shaman</string>
+      <string>Shaman</string>
+    </entry>
+    <entry>
+      <string>Slot #6</string>
+      <string>Slot #6</string>
+    </entry>
+    <entry>
+      <string>Forced Scanning</string>
+      <string>Forced Scanning</string>
+    </entry>
+    <entry>
+      <string>Slot #5</string>
+      <string>Slot #5</string>
+    </entry>
+    <entry>
+      <string>Slot #4</string>
+      <string>Slot #4</string>
+    </entry>
+    <entry>
+      <string>Slot #3</string>
+      <string>Slot #3</string>
+    </entry>
+    <entry>
+      <string>%sHearthTracker Web Sync Key%s</string>
+      <string>%sHearthTracker Web Sync Key%s</string>
+    </entry>
+    <entry>
+      <string>Slot #2</string>
+      <string>Slot #2</string>
+    </entry>
+    <entry>
+      <string>Slot #1</string>
+      <string>Slot #1</string>
+    </entry>
+    <entry>
+      <string>It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.</string>
+      <string>It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.</string>
+    </entry>
+    <entry>
+      <string>Ranked : %s</string>
+      <string>Ranked : %s</string>
+    </entry>
+    <entry>
+      <string>Warlock</string>
+      <string>Warlock</string>
+    </entry>
+    <entry>
+      <string>De&amp;cks</string>
+      <string>De&amp;cks</string>
+    </entry>
+    <entry>
+      <string>Warrior</string>
+      <string>Warrior</string>
+    </entry>
+    <entry>
+      <string>minutes</string>
+      <string>minutes</string>
+    </entry>
+    <entry>
+      <string>Your support means a lot to me. Thank you for even hovering over the donate button!</string>
+      <string>Your support means a lot to me. Thank you for even hovering over the donate button!</string>
+    </entry>
+    <entry>
+      <string>Hunter</string>
+      <string>Hunter</string>
+    </entry>
+    <entry>
+      <string>%s vs %s, %s, %s</string>
+      <string>%s vs %s, %s, %s</string>
+    </entry>
+    <entry>
+      <string>Ranked: %s</string>
+      <string>Ranked: %s</string>
+    </entry>
+    <entry>
+      <string>7+ %%</string>
+      <string>7+ %%</string>
+    </entry>
+    <entry>
+      <string>&amp;Matches</string>
+      <string>&amp;Matches</string>
+    </entry>
+    <entry>
+      <string>&amp;Arena</string>
+      <string>&amp;Arena</string>
+    </entry>
+    <entry>
+      <string>Visualize now</string>
+      <string>Visualize now</string>
+    </entry>
+    <entry>
+      <string>Latest Arena: </string>
+      <string>Latest Arena: </string>
+    </entry>
+    <entry>
+      <string>Trim Empty &amp;Slots </string>
+      <string>Trim Empty &amp;Slots </string>
+    </entry>
+    <entry>
+      <string>Stats</string>
+      <string>Stats</string>
+    </entry>
+    <entry>
+      <string>Sideboard</string>
+      <string>Sideboard</string>
+    </entry>
+    <entry>
+      <string>CN</string>
+      <string>CN</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; went first</string>
+      <string>Last Match -&gt; went first</string>
+    </entry>
+  </map>
+</HearthLanguage>

@@ -1,0 +1,524 @@
+<HearthLanguage>
+  <map>
+    <entry>
+      <string>Sync timeout. Will retry later!</string>
+      <string>同步超时，稍后会重试！</string>
+    </entry>
+    <entry>
+      <string>HearthTracker v%d.%d.%d</string>
+      <string>HearthTracker v%d.%d.%d</string>
+    </entry>
+    <entry>
+      <string>Unknown</string>
+      <string>未知</string>
+    </entry>
+    <entry>
+      <string>How it all began...</string>
+      <string>旅程的起点...</string>
+    </entry>
+    <entry>
+      <string>First</string>
+      <string>First</string>
+    </entry>
+    <entry>
+      <string>Ranked mode (played as)</string>
+      <string>天梯模式（选用）</string>
+    </entry>
+    <entry>
+      <string>Arena mode (played as)</string>
+      <string>竞技模式（选用）</string>
+    </entry>
+    <entry>
+      <string>Fast</string>
+      <string>高速</string>
+    </entry>
+    <entry>
+      <string>Go Second</string>
+      <string>后手</string>
+    </entry>
+    <entry>
+      <string>Ranked</string>
+      <string>天梯</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; Lost</string>
+      <string>上一场 -&gt; 我败</string>
+    </entry>
+    <entry>
+      <string>Asia</string>
+      <string>亚洲</string>
+    </entry>
+    <entry>
+      <string>Notification Popup</string>
+      <string>弹出提醒</string>
+    </entry>
+    <entry>
+      <string>Result</string>
+      <string>战果</string>
+    </entry>
+    <entry>
+      <string>&amp;Confirm</string>
+      <string>&amp;Confirm</string>
+    </entry>
+    <entry>
+      <string>Paladin</string>
+      <string>圣骑</string>
+    </entry>
+    <entry>
+      <string>go second</string>
+      <string>后手</string>
+    </entry>
+    <entry>
+      <string>EU</string>
+      <string>欧洲</string>
+    </entry>
+    <entry>
+      <string>Slow</string>
+      <string>缓慢</string>
+    </entry>
+    <entry>
+      <string>Mode</string>
+      <string>模式</string>
+    </entry>
+    <entry>
+      <string>Visualize scanned areas after Hearthstone being out of sight for more than 1 min.</string>
+      <string>Visualize scanned areas after Hearthstone being out of sight for more than 1 min.</string>
+    </entry>
+    <entry>
+      <string>R: </string>
+      <string>天梯: </string>
+    </entry>
+    <entry>
+      <string>Batte.net server</string>
+      <string>战网服务器</string>
+    </entry>
+    <entry>
+      <string>HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>HearthTracker 炉石战绩 - 炉石发烧友的神器，自动记录您的战绩！</string>
+    </entry>
+    <entry>
+      <string>Win</string>
+      <string>胜</string>
+    </entry>
+    <entry>
+      <string>P: </string>
+      <string>练习: </string>
+    </entry>
+    <entry>
+      <string>Auto Detect Game Resolution</string>
+      <string>自动侦测游戏分辨率</string>
+    </entry>
+    <entry>
+      <string>Losses</string>
+      <string>败场</string>
+    </entry>
+    <entry>
+      <string>&amp;Save</string>
+      <string>保存(&amp;S)</string>
+    </entry>
+    <entry>
+      <string>Unranked mode (played as)</string>
+      <string>休闲模式（选用）</string>
+    </entry>
+    <entry>
+      <string>&amp;New</string>
+      <string>新档(&amp;N)</string>
+    </entry>
+    <entry>
+      <string>NA</string>
+      <string>北美</string>
+    </entry>
+    <entry>
+      <string>Override Offsets (Multi monitors dirty fix)</string>
+      <string>覆盖偏移值 （多屏幕的暂时方案）</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; went second</string>
+      <string>上一场 -&gt; 我后手</string>
+    </entry>
+    <entry>
+      <string>Diagnotic Tool</string>
+      <string>诊断工具</string>
+    </entry>
+    <entry>
+      <string>Second</string>
+      <string>Second</string>
+    </entry>
+    <entry>
+      <string>vs</string>
+      <string>对上</string>
+    </entry>
+    <entry>
+      <string>Intermediate</string>
+      <string>中等</string>
+    </entry>
+    <entry>
+      <string>Web Sync</string>
+      <string>网上同步</string>
+    </entry>
+    <entry>
+      <string>Practice</string>
+      <string>练习</string>
+    </entry>
+    <entry>
+      <string>7+ %</string>
+      <string>7+胜</string>
+    </entry>
+    <entry>
+      <string>X offset</string>
+      <string>X 偏移值</string>
+    </entry>
+    <entry>
+      <string>&amp;Preferences</string>
+      <string>喜好设置(&amp;P)</string>
+    </entry>
+    <entry>
+      <string>Unknown hero</string>
+      <string>未知英雄</string>
+    </entry>
+    <entry>
+      <string>Never</string>
+      <string>从未</string>
+    </entry>
+    <entry>
+      <string>Vs</string>
+      <string>敌</string>
+    </entry>
+    <entry>
+      <string>Win %</string>
+      <string>胜率</string>
+    </entry>
+    <entry>
+      <string>Challenge mode (played as)</string>
+      <string>挑战模式（选用）</string>
+    </entry>
+    <entry>
+      <string>Last scanned area</string>
+      <string>最后扫描的区块</string>
+    </entry>
+    <entry>
+      <string>Rogue</string>
+      <string>盗贼</string>
+    </entry>
+    <entry>
+      <string>Latest match(es): </string>
+      <string>最近几场: </string>
+    </entry>
+    <entry>
+      <string>Advanced</string>
+      <string>进阶设置</string>
+    </entry>
+    <entry>
+      <string>Unranked: %s</string>
+      <string>休闲模式: %s</string>
+    </entry>
+    <entry>
+      <string>On</string>
+      <string>于</string>
+    </entry>
+    <entry>
+      <string>Enable</string>
+      <string>启用</string>
+    </entry>
+    <entry>
+      <string>Arena</string>
+      <string>竞技</string>
+    </entry>
+    <entry>
+      <string>Diagnostics</string>
+      <string>诊断</string>
+    </entry>
+    <entry>
+      <string>Challenge</string>
+      <string>挑战</string>
+    </entry>
+    <entry>
+      <string>%sHow to use the Decks Manager%s</string>
+      <string>%s如何使用牌组管理器%s</string>
+    </entry>
+    <entry>
+      <string>Total Runs</string>
+      <string>场数总和</string>
+    </entry>
+    <entry>
+      <string>Unranked</string>
+      <string>休闲</string>
+    </entry>
+    <entry>
+      <string>Priest</string>
+      <string>牧师</string>
+    </entry>
+    <entry>
+      <string>&amp;Overview</string>
+      <string>一览(&amp;O)</string>
+    </entry>
+    <entry>
+      <string>Wins</string>
+      <string>胜场</string>
+    </entry>
+    <entry>
+      <string>E&amp;xit</string>
+      <string>退出(&amp;X)</string>
+    </entry>
+    <entry>
+      <string>Really Fast</string>
+      <string>超高速</string>
+    </entry>
+    <entry>
+      <string>Druid</string>
+      <string>德鲁伊</string>
+    </entry>
+    <entry>
+      <string>&amp;Tools</string>
+      <string>工具(&amp;T)</string>
+    </entry>
+    <entry>
+      <string>HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!</string>
+      <string>HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!</string>
+    </entry>
+    <entry>
+      <string>Lose</string>
+      <string>败</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; Won</string>
+      <string>上一场 -&gt; 我胜</string>
+    </entry>
+    <entry>
+      <string>%s 对上 %s, %s, %s</string>
+      <string>%s 对上 %s, %s, %s</string>
+    </entry>
+    <entry>
+      <string>General</string>
+      <string>一般设置</string>
+    </entry>
+    <entry>
+      <string>Game mode: %s</string>
+      <string>游戏模式: %s</string>
+    </entry>
+    <entry>
+      <string>Show us the love!</string>
+      <string>给予我们最大的关怀！</string>
+    </entry>
+    <entry>
+      <string>C: </string>
+      <string>挑战: </string>
+    </entry>
+    <entry>
+      <string>Go First</string>
+      <string>先手</string>
+    </entry>
+    <entry>
+      <string>Game Resolution (if auto detect failed)</string>
+      <string>游戏分辨率（如果自动侦测失败）</string>
+    </entry>
+    <entry>
+      <string>About</string>
+      <string>关于</string>
+    </entry>
+    <entry>
+      <string>Mage</string>
+      <string>法师</string>
+    </entry>
+    <entry>
+      <string>A&amp;bout</string>
+      <string>关于(&amp;B)</string>
+    </entry>
+    <entry>
+      <string>Last scanned sub-area</string>
+      <string>最后扫描的分区</string>
+    </entry>
+    <entry>
+      <string>Unknown mode</string>
+      <string>未知</string>
+    </entry>
+    <entry>
+      <string>Last seen</string>
+      <string>最后看见</string>
+    </entry>
+    <entry>
+      <string>Y offset</string>
+      <string>Y 偏移值</string>
+    </entry>
+    <entry>
+      <string>Played</string>
+      <string>玩了</string>
+    </entry>
+    <entry>
+      <string>Visualize scanned area</string>
+      <string>把扫描过的区域视觉化</string>
+    </entry>
+    <entry>
+      <string>Game Language</string>
+      <string>游戏语言</string>
+    </entry>
+    <entry>
+      <string>&amp;File</string>
+      <string>文件(&amp;F)</string>
+    </entry>
+    <entry>
+      <string>go first</string>
+      <string>先手</string>
+    </entry>
+    <entry>
+      <string>Arena: %s</string>
+      <string>竞技模式: %s</string>
+    </entry>
+    <entry>
+      <string>&amp;Delete</string>
+      <string>删除(&amp;D)</string>
+    </entry>
+    <entry>
+      <string>&amp;Edit</string>
+      <string>修改(&amp;E)</string>
+    </entry>
+    <entry>
+      <string>U: </string>
+      <string>休闲: </string>
+    </entry>
+    <entry>
+      <string>Scan Speed</string>
+      <string>扫描速度</string>
+    </entry>
+    <entry>
+      <string>Scanner</string>
+      <string>扫描器</string>
+    </entry>
+    <entry>
+      <string>Practice mode (played as)</string>
+      <string>练习模式（选用）</string>
+    </entry>
+    <entry>
+      <string>Copyright © 2014 megablue</string>
+      <string>Copyright © 2014 megablue</string>
+    </entry>
+    <entry>
+      <string>As</string>
+      <string>我</string>
+    </entry>
+    <entry>
+      <string>Slot #9</string>
+      <string>九号槽</string>
+    </entry>
+    <entry>
+      <string>Slot #8</string>
+      <string>八号槽</string>
+    </entry>
+    <entry>
+      <string>Shaman</string>
+      <string>萨满</string>
+    </entry>
+    <entry>
+      <string>Slot #7</string>
+      <string>七号槽</string>
+    </entry>
+    <entry>
+      <string>Forced Scanning</string>
+      <string>强制扫描</string>
+    </entry>
+    <entry>
+      <string>Slot #6</string>
+      <string>六号槽</string>
+    </entry>
+    <entry>
+      <string>Slot #5</string>
+      <string>五号槽</string>
+    </entry>
+    <entry>
+      <string>Slot #4</string>
+      <string>四号槽</string>
+    </entry>
+    <entry>
+      <string>%sHearthTracker Web Sync Key%s</string>
+      <string>%s网上同步的钥匙%s</string>
+    </entry>
+    <entry>
+      <string>Slot #3</string>
+      <string>三号槽</string>
+    </entry>
+    <entry>
+      <string>Slot #2</string>
+      <string>二号槽</string>
+    </entry>
+    <entry>
+      <string>Slot #1</string>
+      <string>一号槽</string>
+    </entry>
+    <entry>
+      <string>It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.</string>
+      <string>建议启用！</string>
+    </entry>
+    <entry>
+      <string>De&amp;cks</string>
+      <string>牌组管理(&amp;C)</string>
+    </entry>
+    <entry>
+      <string>Warlock</string>
+      <string>术士</string>
+    </entry>
+    <entry>
+      <string>Warrior</string>
+      <string>战士</string>
+    </entry>
+    <entry>
+      <string>minutes</string>
+      <string>分钟</string>
+    </entry>
+    <entry>
+      <string>Hunter</string>
+      <string>猎人</string>
+    </entry>
+    <entry>
+      <string>Your support means a lot to me. Thank you for even hovering over the donate button!</string>
+      <string>你的支持是我最大的动力！感激不尽！</string>
+    </entry>
+    <entry>
+      <string>%s vs %s, %s, %s</string>
+      <string>%s 对上 %s, %s, %s</string>
+    </entry>
+    <entry>
+      <string>Ranked: %s</string>
+      <string>天梯模式: %s</string>
+    </entry>
+    <entry>
+      <string>7+ %%</string>
+      <string>7+ %%</string>
+    </entry>
+    <entry>
+      <string>&amp;Matches</string>
+      <string>战绩(&amp;M)</string>
+    </entry>
+    <entry>
+      <string>&amp;Arena</string>
+      <string>竞技模式(&amp;A)</string>
+    </entry>
+    <entry>
+      <string>Visualize now</string>
+      <string>视觉化</string>
+    </entry>
+    <entry>
+      <string>Latest Arena: </string>
+      <string>最近的竞技战果: </string>
+    </entry>
+    <entry>
+      <string>Trim Empty &amp;Slots </string>
+      <string> 整理空槽(&amp;S)</string>
+    </entry>
+    <entry>
+      <string>Stats</string>
+      <string>统计</string>
+    </entry>
+    <entry>
+      <string>Sideboard</string>
+      <string>布告板</string>
+    </entry>
+    <entry>
+      <string>CN</string>
+      <string>中国</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; went first</string>
+      <string>上一场 -&gt; 我先手</string>
+    </entry>
+  </map>
+</HearthLanguage>
