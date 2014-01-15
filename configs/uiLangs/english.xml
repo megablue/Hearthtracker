@@ -5,20 +5,16 @@
       <string>Sync timeout. Will retry later!</string>
     </entry>
     <entry>
-      <string>HearthTracker v%d.%d.%d</string>
-      <string>HearthTracker v%d.%d.%d</string>
-    </entry>
-    <entry>
       <string>Unknown</string>
       <string>Unknown</string>
     </entry>
     <entry>
-      <string>How it all began...</string>
-      <string>How it all began...</string>
+      <string>It really means a lot to me. Your support is greatly appreciated!</string>
+      <string>It really means a lot to me. Your support is greatly appreciated!</string>
     </entry>
     <entry>
-      <string>First</string>
-      <string>First</string>
+      <string>Ranked mode detected</string>
+      <string>Ranked mode detected</string>
     </entry>
     <entry>
       <string>Ranked mode (played as)</string>
@@ -53,6 +49,10 @@
       <string>Asia</string>
     </entry>
     <entry>
+      <string>User Interface Language</string>
+      <string>User Interface Language</string>
+    </entry>
+    <entry>
       <string>Notification Popup</string>
       <string>Notification Popup</string>
     </entry>
@@ -81,6 +81,10 @@
       <string>Slow</string>
     </entry>
     <entry>
+      <string>Deck #%d</string>
+      <string>Deck #%d</string>
+    </entry>
+    <entry>
       <string>Mode</string>
       <string>Mode</string>
     </entry>
@@ -97,8 +101,8 @@
       <string>Batte.net server</string>
     </entry>
     <entry>
-      <string>HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!</string>
-      <string>HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
     </entry>
     <entry>
       <string>Win</string>
@@ -137,16 +141,16 @@
       <string>Override Offsets (Multi monitors dirty fix)</string>
     </entry>
     <entry>
+      <string>If you think HearthTracker helped you. Please consider donating a few bucks so that I can get better web servers for the upcoming Web Sync feature and keep the developing on it!</string>
+      <string>If you think HearthTracker helped you. Please consider donating a few bucks so that I can get better web servers for the upcoming Web Sync feature and keep the developing on it!</string>
+    </entry>
+    <entry>
       <string>Diagnotic Tool</string>
       <string>Diagnotic Tool</string>
     </entry>
     <entry>
       <string>Last Match -&gt; went second</string>
       <string>Last Match -&gt; went second</string>
-    </entry>
-    <entry>
-      <string>Second</string>
-      <string>Second</string>
     </entry>
     <entry>
       <string>vs</string>
@@ -165,8 +169,8 @@
       <string>Practice</string>
     </entry>
     <entry>
-      <string>7+ %</string>
-      <string>7+ %</string>
+      <string>No, I refuse to help!</string>
+      <string>No, I refuse to help!</string>
     </entry>
     <entry>
       <string>X offset</string>
@@ -181,16 +185,16 @@
       <string>Unknown hero</string>
     </entry>
     <entry>
-      <string>Never</string>
-      <string>Never</string>
+      <string>moments ago</string>
+      <string>moments ago</string>
     </entry>
     <entry>
       <string>Vs</string>
       <string>Vs</string>
     </entry>
     <entry>
-      <string>Win %</string>
-      <string>Win %</string>
+      <string>Never</string>
+      <string>Never</string>
     </entry>
     <entry>
       <string>Challenge mode (played as)</string>
@@ -211,6 +215,10 @@
     <entry>
       <string>Advanced</string>
       <string>Advanced</string>
+    </entry>
+    <entry>
+      <string>Congrats! HearthTracker had tracked %s games for you.</string>
+      <string>Congrats! HearthTracker had tracked %s games for you.</string>
     </entry>
     <entry>
       <string>Unranked: %s</string>
@@ -277,10 +285,6 @@
       <string>&amp;Tools</string>
     </entry>
     <entry>
-      <string>HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!</string>
-      <string>HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!</string>
-    </entry>
-    <entry>
       <string>Last Match -&gt; Won</string>
       <string>Last Match -&gt; Won</string>
     </entry>
@@ -295,6 +299,10 @@
     <entry>
       <string>Game mode: %s</string>
       <string>Game mode: %s</string>
+    </entry>
+    <entry>
+      <string>I am sincerely hope that you like it! I&apos;ve spent countless hours to develope it. </string>
+      <string>I am sincerely hope that you like it! I&apos;ve spent countless hours to develope it. </string>
     </entry>
     <entry>
       <string>Show us the love!</string>
@@ -377,12 +385,12 @@
       <string>U: </string>
     </entry>
     <entry>
-      <string>Practice mode (played as)</string>
-      <string>Practice mode (played as)</string>
+      <string>Scanner</string>
+      <string>Scanner</string>
     </entry>
     <entry>
-      <string>Scanner</string>
-      <string>Scanner</string>
+      <string>Practice mode (played as)</string>
+      <string>Practice mode (played as)</string>
     </entry>
     <entry>
       <string>Scan Speed</string>
@@ -391,6 +399,10 @@
     <entry>
       <string>Copyright © 2014 megablue</string>
       <string>Copyright © 2014 megablue</string>
+    </entry>
+    <entry>
+      <string>Game Mode</string>
+      <string>Game Mode</string>
     </entry>
     <entry>
       <string>Slot #9</string>
@@ -427,6 +439,10 @@
     <entry>
       <string>Slot #4</string>
       <string>Slot #4</string>
+    </entry>
+    <entry>
+      <string>Yes, I want to donate!</string>
+      <string>Yes, I want to donate!</string>
     </entry>
     <entry>
       <string>Slot #3</string>
@@ -491,6 +507,14 @@
     <entry>
       <string>&amp;Matches</string>
       <string>&amp;Matches</string>
+    </entry>
+    <entry>
+      <string>%s+ Games Tracked!</string>
+      <string>%s+ Games Tracked!</string>
+    </entry>
+    <entry>
+      <string>Win %%</string>
+      <string>Win %%</string>
     </entry>
     <entry>
       <string>&amp;Arena</string>

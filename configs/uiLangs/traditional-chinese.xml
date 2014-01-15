@@ -5,12 +5,12 @@
       <string>同步超時，稍後會重試！</string>
     </entry>
     <entry>
-      <string>HearthTracker v%d.%d.%d</string>
-      <string>HearthTracker v%d.%d.%d</string>
-    </entry>
-    <entry>
       <string>Unknown</string>
       <string>未知</string>
+    </entry>
+    <entry>
+      <string>It really means a lot to me. Your support is greatly appreciated!</string>
+      <string>您的支持是我的动力！</string>
     </entry>
     <entry>
       <string>How it all began...</string>
@@ -18,11 +18,15 @@
     </entry>
     <entry>
       <string>First</string>
-      <string>First</string>
+      <string>先手</string>
     </entry>
     <entry>
       <string>Ranked mode (played as)</string>
       <string>天梯模式（選用）</string>
+    </entry>
+    <entry>
+      <string>Ranked mode detected</string>
+      <string>Ranked mode detected</string>
     </entry>
     <entry>
       <string>Arena mode (played as)</string>
@@ -47,6 +51,10 @@
     <entry>
       <string>Asia</string>
       <string>亞洲</string>
+    </entry>
+    <entry>
+      <string>User Interface Language</string>
+      <string>界面语言</string>
     </entry>
     <entry>
       <string>Notification Popup</string>
@@ -77,6 +85,10 @@
       <string>緩慢</string>
     </entry>
     <entry>
+      <string>Deck #%d</string>
+      <string>Deck #%d</string>
+    </entry>
+    <entry>
       <string>Mode</string>
       <string>模式</string>
     </entry>
@@ -85,16 +97,16 @@
       <string>Visualize scanned areas after Hearthstone being out of sight for more than 1 min.</string>
     </entry>
     <entry>
-      <string>R: </string>
-      <string>天梯: </string>
-    </entry>
-    <entry>
       <string>Batte.net server</string>
       <string>戰網服務器</string>
     </entry>
     <entry>
-      <string>HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!</string>
-      <string>HearthTracker 爐石戰績 - 爐石發燒友的神器，自動記錄您的戰績！</string>
+      <string>R: </string>
+      <string>天梯: </string>
+    </entry>
+    <entry>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>爐石戰績 - 爐石發燒友的神器，自動記錄您的戰績！</string>
     </entry>
     <entry>
       <string>Win</string>
@@ -133,6 +145,10 @@
       <string>覆蓋偏移值 （多屏幕的暫時方案）</string>
     </entry>
     <entry>
+      <string>If you think HearthTracker helped you. Please consider donating a few bucks so that I can get better web servers for the upcoming Web Sync feature and keep the developing on it!</string>
+      <string>如果爐石戰績幫助了你，請慷慨地捐助一點錢好讓我能夠有更多的款項繼續開發和推出新的網上同步功能！</string>
+    </entry>
+    <entry>
       <string>Last Match -&gt; went second</string>
       <string>上一場 -&gt; 我後手</string>
     </entry>
@@ -142,7 +158,7 @@
     </entry>
     <entry>
       <string>Second</string>
-      <string>Second</string>
+      <string>後手</string>
     </entry>
     <entry>
       <string>vs</string>
@@ -161,8 +177,8 @@
       <string>練習</string>
     </entry>
     <entry>
-      <string>7+ %</string>
-      <string>7+勝</string>
+      <string>No, I refuse to help!</string>
+      <string>我拒絕幫助你！</string>
     </entry>
     <entry>
       <string>X offset</string>
@@ -177,20 +193,24 @@
       <string>未知英雄</string>
     </entry>
     <entry>
-      <string>Never</string>
-      <string>從未</string>
+      <string>moments ago</string>
+      <string>moments ago</string>
     </entry>
     <entry>
       <string>Vs</string>
       <string>敵</string>
     </entry>
     <entry>
-      <string>Win %</string>
-      <string>勝率</string>
+      <string>Never</string>
+      <string>從未</string>
     </entry>
     <entry>
       <string>Challenge mode (played as)</string>
       <string>挑戰模式（選用）</string>
+    </entry>
+    <entry>
+      <string>Win %</string>
+      <string>勝率</string>
     </entry>
     <entry>
       <string>Last scanned area</string>
@@ -209,6 +229,10 @@
       <string>進階設置</string>
     </entry>
     <entry>
+      <string>Congrats! HearthTracker had tracked %s games for you.</string>
+      <string>恭喜！HearthTracker已經幫您記錄了%s場遊戲!</string>
+    </entry>
+    <entry>
       <string>Unranked: %s</string>
       <string>休閑模式: %s</string>
     </entry>
@@ -223,6 +247,10 @@
     <entry>
       <string>Arena</string>
       <string>競技</string>
+    </entry>
+    <entry>
+      <string>one minute ago</string>
+      <string>one minute ago</string>
     </entry>
     <entry>
       <string>Diagnostics</string>
@@ -269,12 +297,16 @@
       <string>德魯伊</string>
     </entry>
     <entry>
+      <string>C&amp;onfirm</string>
+      <string>C&amp;onfirm</string>
+    </entry>
+    <entry>
       <string>&amp;Tools</string>
       <string>工具(&amp;T)</string>
     </entry>
     <entry>
-      <string>HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!</string>
-      <string>HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!</string>
+      <string>Unranked mode detected</string>
+      <string>Unranked mode detected</string>
     </entry>
     <entry>
       <string>Lose</string>
@@ -285,16 +317,16 @@
       <string>上一場 -&gt; 我勝</string>
     </entry>
     <entry>
-      <string>%s 對上 %s, %s, %s</string>
-      <string>%s 對上 %s, %s, %s</string>
-    </entry>
-    <entry>
       <string>General</string>
       <string>一般設置</string>
     </entry>
     <entry>
       <string>Game mode: %s</string>
       <string>遊戲模式: %s</string>
+    </entry>
+    <entry>
+      <string>I am sincerely hope that you like it! I&apos;ve spent countless hours to develope it. </string>
+      <string>我花了不少時間開發，希望你會喜歡這程式！</string>
     </entry>
     <entry>
       <string>Show us the love!</string>
@@ -311,6 +343,10 @@
     <entry>
       <string>Game Resolution (if auto detect failed)</string>
       <string>遊戲分辨率（如果自動偵測失敗）</string>
+    </entry>
+    <entry>
+      <string>Please select the server you played on for your existing arena and matches records. The server field for existing records can not be altered after this.</string>
+      <string>請選擇您的當前選用的遊戲服務器，已存在的記錄也會一併被設定為你的所選。請謹慎選擇，稍後不能再修改。</string>
     </entry>
     <entry>
       <string>About</string>
@@ -331,6 +367,10 @@
     <entry>
       <string>Unknown mode</string>
       <string>未知</string>
+    </entry>
+    <entry>
+      <string>%s 對上 %s, %s, %s</string>
+      <string>%s 對上 %s, %s, %s</string>
     </entry>
     <entry>
       <string>Last seen</string>
@@ -377,12 +417,12 @@
       <string>休閑: </string>
     </entry>
     <entry>
-      <string>Scan Speed</string>
-      <string>掃描速度</string>
-    </entry>
-    <entry>
       <string>Scanner</string>
       <string>掃描器</string>
+    </entry>
+    <entry>
+      <string>Scan Speed</string>
+      <string>掃描速度</string>
     </entry>
     <entry>
       <string>Practice mode (played as)</string>
@@ -399,6 +439,10 @@
     <entry>
       <string>Slot #9</string>
       <string>九號槽</string>
+    </entry>
+    <entry>
+      <string>Game Mode</string>
+      <string>Game Mode</string>
     </entry>
     <entry>
       <string>Slot #8</string>
@@ -425,8 +469,16 @@
       <string>五號槽</string>
     </entry>
     <entry>
+      <string>HearthTracker Upgrade Confirmation</string>
+      <string>HearthTracker 更新確認</string>
+    </entry>
+    <entry>
       <string>Slot #4</string>
       <string>四號槽</string>
+    </entry>
+    <entry>
+      <string>Yes, I want to donate!</string>
+      <string>我很樂意捐助！</string>
     </entry>
     <entry>
       <string>%sHearthTracker Web Sync Key%s</string>
@@ -482,11 +534,23 @@
     </entry>
     <entry>
       <string>7+ %%</string>
-      <string>7+ %%</string>
+      <string>7+勝</string>
+    </entry>
+    <entry>
+      <string>%d minutes ago</string>
+      <string>%d minutes ago</string>
     </entry>
     <entry>
       <string>&amp;Matches</string>
       <string>戰績(&amp;M)</string>
+    </entry>
+    <entry>
+      <string>%s+ Games Tracked!</string>
+      <string>已追踪了%s場遊戲!</string>
+    </entry>
+    <entry>
+      <string>Win %%</string>
+      <string>Win %%</string>
     </entry>
     <entry>
       <string>&amp;Arena</string>
@@ -502,7 +566,7 @@
     </entry>
     <entry>
       <string>Trim Empty &amp;Slots </string>
-      <string> 整理空槽(&amp;S)</string>
+      <string>整理空槽(&amp;S)</string>
     </entry>
     <entry>
       <string>Stats</string>

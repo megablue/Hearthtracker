@@ -28,6 +28,7 @@ public class HearthConfigurator {
 		xstream.alias("HearthLanguage", 				HearthLanguage.class);
 		xstream.alias("HearthDecks", 					HearthDecks.class);
 		xstream.alias("HearthSetting", 					HearthSetting.class);
+		xstream.alias("HearthULangsList", 				HearthULangsList.class);
 	}
 	
 	public <t> Object load(String path){

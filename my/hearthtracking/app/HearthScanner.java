@@ -729,8 +729,7 @@ public class HearthScanner {
 					decks = new HearthDecks();
 					//we don't need to save the decks.xml here because the main UI will handle it if it is missing.
 				}
-				
-				
+
 				selectedDeck = i;
 				
 				if(selectedDeck != exSelectedDeck){

@@ -1,14 +1,16 @@
 package my.hearthtracking.app;
 
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 public class HearthLanguageManager {
 	private static HearthLanguageManager instance = null;
 	String currentLang = "english";
 	boolean langLoaded = false;
+	boolean overrided = false;
 	boolean isDirty = false;
-	public Map<String, String> map = new HashMap<String, String>();
+	public Map<String, String> map = null;
 	private HearthConfigurator config = new HearthConfigurator();
 
 	public static HearthLanguageManager getInstance() {
@@ -24,7 +26,7 @@ public class HearthLanguageManager {
 			instance = this;
 		}
 	}
-	
+		
 	public void loadLang(String lang){
 		langLoaded = true;
 		currentLang = lang.toLowerCase();
@@ -39,6 +41,35 @@ public class HearthLanguageManager {
 		}
 		
 		map = hLang.map;
+		
+		loadOverride();
+	}
+	
+	private void loadOverride(){
+		if(map == null){
+			return;
+		}
+		
+		HearthLanguage hLang = (HearthLanguage) config.load(String.format(HearthFilesNameManager.uiLangFile, "customOverride"));
+		
+		if(hLang == null || hLang.map == null){
+			return;
+		}
+		
+		Iterator<Entry<String, String>> it = hLang.map.entrySet().iterator();
+		String value = "";
+		
+	    while (it.hasNext()) {
+	        Map.Entry <String, String> pairs = it.next();
+	        value = map.get(pairs.getKey());
+	        
+	        //replace the original values
+	        if(value != null){
+	        	map.put(pairs.getKey(), pairs.getValue());
+	        }
+	    }
+	    
+	    overrided = true;
 	}
 	
 	private String getFormat(String orgFormat){
@@ -64,11 +95,7 @@ public class HearthLanguageManager {
 			isDirty = true;
 		}
 		
-		if(vals.length == 0){
-			formatted = format;
-		} else {
-			formatted = String.format(format, vals);
-		}
+		formatted = String.format(format, vals);
 		
 		return formatted;
 	}

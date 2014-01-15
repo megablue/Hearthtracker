@@ -10,8 +10,11 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import notifier.NotifierDialog;
@@ -80,6 +83,7 @@ import org.eclipse.swt.events.MenuDetectListener;
 import org.eclipse.swt.events.MenuDetectEvent;
 
 import java.text.DecimalFormat;
+
 import org.eclipse.swt.custom.CBanner;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.custom.CTabFolder;
@@ -89,6 +93,9 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 @SuppressWarnings({ "unused", "deprecation" })
 public class HearthUI {
+	public static int[] version = {1, 1, 7};
+	public static int experimental = 0;
+	
 	protected Shell shlHearthtracker;
 	private CCombo cmbGameLang;
 	private Button btnEnableScanner;
@@ -109,16 +116,17 @@ public class HearthUI {
 	private static Display display;
 	static boolean debugMode = HearthHelper.isDevelopmentEnvironment();
 	
-	private HearthScanner hearth;
+	private HearthScanner hearthScanner;
 	private HearthTracker tracker;
 	private HearthConfigurator config = new HearthConfigurator();
-	private HearthGameLangList gameLanguages;
-	private HearthResolutionsList gameResolutions;
-	private HearthSetting setting;
-	private HearthDecks decks;
-	private HearthHeroesList heroesList;
 	
-	Thread hearththread;
+	private HearthSetting setting = MainLoader.setting;
+	private HearthGameLangList gameLanguages = MainLoader.gameLanguages;
+	private HearthResolutionsList gameResolutions = MainLoader.gameResolutions;
+	private HearthDecks decks = MainLoader.decks;
+	private HearthHeroesList heroesList = MainLoader.heroesList;
+	private HearthULangsList uiLangsList = MainLoader.uiLangsList;
+	
 	private Table table;
 	private Table matchesTable;
 	private Table arenaTable;
@@ -130,21 +138,14 @@ public class HearthUI {
 	private TabItem tbtmArenaNew;
 	private static Image[] heroImgs;
 	private Composite composite_9;
-
-	public static int[] version = {1, 1, 7};
-	public static int experimental = 0;
+	
 	private Text txtWebSyncKey;
 	private Composite composite_11;
 	private Spinner spXOffset;
 	private Spinner spYOffset;
-	
-	public static int syncInterval =  1 * 60 * 1000;
-	
-	volatile static boolean shutdown = false;
-	volatile static boolean threadRunning = true;
+
 	private Button btnAlwaysScan;
-	
-	private static List<HearthReaderNotification> notifications = new ArrayList<HearthReaderNotification>();
+
 	private CCombo cbServer;
 	private Text text_1;
 	private Text text_4;
@@ -160,63 +161,27 @@ public class HearthUI {
 	private Label[] lblDecks = new Label[9];
 	private Button btnPopup;
 	private Button btnRearrangeDeck;
-	
-	public static HearthLanguageManager lang = HearthLanguageManager.getInstance();
 
-	public HearthUI(){
+	public static HearthLanguageManager lang = HearthLanguageManager.getInstance();
+	private CCombo cbUILangs;
+	
+	private boolean restart = false;
+
+	public HearthUI(HearthScanner s, HearthTracker t){
+		hearthScanner = s;
+		tracker = t;
 		init();
 	}
 	
+	public boolean isRestart(){
+		return restart;
+	}
+	
+	public void setRetart(){
+		restart = true;
+	}
+	
 	public void init(){
-		HearthUpdaterLog updateLog = (HearthUpdaterLog) config.load(HearthFilesNameManager.updaterLog);
-		
-		if(updateLog == null){
-			updateLog = new HearthUpdaterLog();
-			config.save(updateLog, HearthFilesNameManager.updaterLog);
-		}
-		
-		setting =			(HearthSetting) 		config.load(HearthFilesNameManager.settingFile);
-		decks =				(HearthDecks)			config.load(HearthFilesNameManager.decksFile);
-		heroesList =		(HearthHeroesList) 		config.load(HearthFilesNameManager.heroesFile);
-		gameLanguages = 	(HearthGameLangList) 	config.load(HearthFilesNameManager.gameLangsFile);
-		gameResolutions = 	(HearthResolutionsList) config.load(HearthFilesNameManager.gameResFile);
-		
-		if(setting == null){
-			setting = new HearthSetting();
-			config.save(setting, HearthFilesNameManager.settingFile);
-		}
-		
-		if(decks == null){
-			decks = new HearthDecks();
-			config.save(decks, HearthFilesNameManager.decksFile);
-		}
-		
-		if(heroesList == null){
-			heroesList = new HearthHeroesList();
-			config.save(heroesList, HearthFilesNameManager.heroesFile);
-		}
-		
-		if(gameLanguages == null){
-			gameLanguages = new HearthGameLangList();
-			config.save(gameLanguages, HearthFilesNameManager.gameLangsFile);
-		}
-		
-		if(gameResolutions == null){
-			gameResolutions = new HearthResolutionsList();
-			config.save(gameResolutions, HearthFilesNameManager.gameResFile);
-		}
-
-		if(setting.upgrade()){
-			config.save(setting, HearthFilesNameManager.settingFile);
-		}
-		
-		tracker = new HearthTracker();
-		hearth = new HearthScanner(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
-		
-		if(!setting.scannerEnabled){
-			hearth.pause();
-		}
-		
 		heroImgs = new Image[heroesList.getTotal()+1];
 		
 		for(int i = -1; i < heroesList.getTotal(); i++){
@@ -225,140 +190,10 @@ public class HearthUI {
 		}
 	}
 	
-    private class ReaderThread
-    implements Runnable {
-	    public void run() {
-	    	HearthReaderNotification note = null;
-	    	
-	    	while(!shutdown){
-	        	try {
-	        		long sleepTime;
-
-	        		hearth.process();
-	        		
-        			Thread.sleep(setting.scanInterval);
-        			
-        			note = hearth.getNotification();
-        			
-        			if(note != null){
-        				notifications.add(note);
-        			}
-	    		} catch (InterruptedException e) {
-	    			break;
-	    		}
-	    	}
-	    	
-	    	threadRunning = false;
-
-	    }
-    }
-    
-    private void exit(){
-    	while(threadRunning){
-    		try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				
-			}
-    	}
-    	
-		tracker.closeDB();
-		lang.dispose();
-		System.exit(0);
-    }
-    
-    private void recordSyncTimer(){
-    	Runnable runnable = new Runnable() {
-		    public void run() {
-		    	while(!shutdown){
-		    		HearthSync sync = new HearthSync();
-			    	boolean success = true;
-			    	boolean hasEffected = false;
-			    	
-			    	long lastSync = sync.getLastSync();
-			    	long timeDiff = new Date().getTime() - lastSync;
-			    	int nextSync = (int) (timeDiff > syncInterval ? syncInterval : timeDiff - syncInterval);
-			    	
-			    	if(timeDiff >= syncInterval && sync.isValidKeyFormat()){	
-			    		
-			    		if(sync.checkAccessKey()){
-			    			int arenaRecordsCount = sync.getUnsyncArenaCount();
-			    			int matchRecordsCount = sync.getUnsyncMatchCount();
-
-			    			if(arenaRecordsCount > 0){
-			    				success = sync.syncArenaBatch();
-			    				hasEffected = true;
-			    				lastSync = new Date().getTime();
-			    			}
-			    			
-			    			if(matchRecordsCount > 0){
-			    				success = sync.syncMatchBatch() && success;
-			    				hasEffected = true;
-			    				lastSync = new Date().getTime();
-			    			}
-				    		
-				    		if(hasEffected && success){
-				    			HearthReaderNotification note = new HearthReaderNotification(
-				    					lang.t("Web Sync"), 
-				    					lang.t("Synced %d records", matchRecordsCount + arenaRecordsCount)
-				    			);
-				    			notifications.add(note);
-				    		} else if(hasEffected) {
-				    			HearthReaderNotification note = new HearthReaderNotification(
-				    					"Web Sync", 
-				    					lang.t("Error with %d records", matchRecordsCount + arenaRecordsCount)
-				    			);
-				    			notifications.add(note);
-				    		}
-			    		}
-			    		
-			    		if(sync.isTimeout()){
-			    			HearthReaderNotification note = new HearthReaderNotification(
-			    					lang.t("Web Sync"), 
-			    					lang.t("Sync timeout. Will retry later!")
-			    			);
-			    			notifications.add(note);	 				
-			 				nextSync = (int) (sync.getTimeout() - new Date().getTime());
-			    		}
-			    	}
-			    	
-			    	try {
-						Thread.sleep(nextSync);
-					} catch (InterruptedException e) {
-						
-					}
-		    	}
-		    }
-		};
-		
-		Thread myThread = new Thread(runnable);
-		myThread.start();
-    }
-    
-    private void processNotification(){
-    	Runnable runnable = new Runnable() {
-		    public void run() {
-		    	if(notifications.size() > 0){
-			    	HearthReaderNotification note = notifications.get(0);
-			    	notifications.remove(note);
-			    	
-			    	if(note != null){
-		 				NotifierDialog.notify(
-        						note.title, 
-        						note.message, 
-        						new Image( display, HearthFilesNameManager.logo32),
-        						shlHearthtracker.getMonitor()
-        				);
-			    	}
-		    	}
-		    	
-		    	Display.getDefault().timerExec(100, this);
-		    }
-		};
-    	
-		Display.getDefault().timerExec(100, runnable);
-    }
- 
+	public Shell getShell(){
+		return shlHearthtracker;
+	}
+	
     private void openDonationDialog(){
 		try {
 			int totalMatches = tracker.getTotalMatches();
@@ -388,32 +223,25 @@ public class HearthUI {
 		shlHearthtracker.open();
 		shlHearthtracker.layout();
 		Date lastUpdate = new Date(); 
-		
-		hearththread = new Thread(new ReaderThread());
-		hearththread.start();
-		processNotification();
-		recordSyncTimer();
 		openDonationDialog();
 
 		while (!shlHearthtracker.isDisposed()) {
-			if(hearththread.isAlive()){
-				if(tracker.isDirty()){
-					this.fillOverviewTable();
-					this.fillArenaTable();
-					this.fillMatchesTable();
-					this.updateStatus();
-					this.fillDeckWinRate();
-					tracker.clearDirty();
-				}
-				
-				if(hearth.isDirty()){
-					this.updateStatus();
-				}
-				
-				if(new Date().getTime() - lastUpdate.getTime() > 2000){	
-					this.poppulateDiagnoticsStatus();
-					lastUpdate = new Date();
-				}
+			if(tracker.isDirty()){
+				this.fillOverviewTable();
+				this.fillArenaTable();
+				this.fillMatchesTable();
+				this.updateStatus();
+				this.fillDeckWinRate();
+				tracker.clearDirty();
+			}
+			
+			if(hearthScanner.isDirty()){
+				this.updateStatus();
+			}
+			
+			if(new Date().getTime() - lastUpdate.getTime() > 2000){	
+				this.poppulateDiagnoticsStatus();
+				lastUpdate = new Date();
 			}
 						
 			if (!display.readAndDispatch()) {
@@ -423,16 +251,7 @@ public class HearthUI {
 	}
 	
 	private void shutdown(){
-		hearththread.interrupt();
-		shutdown = true;
-		HearthSync sync = new HearthSync();
-		
-		if(sync.isValidKeyFormat() && sync.checkAccessKey()){
-			sync.syncArenaBatch();
-			sync.syncMatchBatch();
-		}
-		
-		exit();
+		shlHearthtracker.getShell().dispose();
 	}
 
 	/**
@@ -442,8 +261,7 @@ public class HearthUI {
 	protected void createContents() {
 		FontData[] fontData = display.getSystemFont().getFontData();
 		fontData[0].setHeight(8);
-		
-		
+
 		shlHearthtracker = new Shell(display, SWT.SHELL_TRIM & (~SWT.RESIZE) & (~SWT.MAX));
 		shlHearthtracker.addShellListener(new ShellAdapter() {
 			@Override
@@ -454,12 +272,12 @@ public class HearthUI {
 		});
 		shlHearthtracker.setSize(620, 456);
 		shlHearthtracker.setText(
-			lang.t("HearthTracker - Automated Stats Tracking for Hearthstone enthusiasts!")
+				"HearthTracker - " + lang.t("Automated Stats Tracking for Hearthstone enthusiasts!")
 		);
 		
 		if(experimental > 0){
 			shlHearthtracker.setText(
-					lang.t("HearthTracker ( Experimental build %d ) - Automated Stats Tracking for Hearthstone enthusiasts!", experimental)
+					"HearthTracker - " + lang.t("Experimental build %s", experimental)
 			);
 		}
 		
@@ -584,11 +402,11 @@ public class HearthUI {
 		
 		TableColumn tblclmnWin = new TableColumn(table, SWT.RIGHT);
 		tblclmnWin.setWidth(55);
-		tblclmnWin.setText(lang.t("Win %"));
+		tblclmnWin.setText(lang.t("Win %%"));
 		
 		TableColumn tblclmnNewColumn_3 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_3.setWidth(55);
-		tblclmnNewColumn_3.setText(lang.t("7+ %"));
+		tblclmnNewColumn_3.setText(lang.t("7+ %%"));
 		
 		TableColumn tblclmnNewColumn_4 = new TableColumn(table, SWT.RIGHT);
 		tblclmnNewColumn_4.setWidth(72);
@@ -913,10 +731,11 @@ public class HearthUI {
 		TabItem tbtmpreferences = new TabItem(tabFolder, SWT.NONE);
 		tbtmpreferences.setText(lang.t("&Preferences"));
 		
-		ScrolledComposite scrolledComposite = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		tbtmpreferences.setControl(scrolledComposite);
-		scrolledComposite.setExpandHorizontal(true);
+		ScrolledComposite scrolledComposite = new ScrolledComposite(tabFolder, SWT.BORDER | SWT.V_SCROLL);
+		scrolledComposite.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
 		scrolledComposite.setExpandVertical(true);
+		scrolledComposite.setExpandHorizontal(true);
+		tbtmpreferences.setControl(scrolledComposite);
 		
 		ExpandBar expandBar = new ExpandBar(scrolledComposite, SWT.NONE);
 		
@@ -926,7 +745,7 @@ public class HearthUI {
 		
 		Composite composite_7 = new Composite(expandBar, SWT.NONE);
 		xpndtmGeneral.setControl(composite_7);
-		xpndtmGeneral.setHeight(110);
+		xpndtmGeneral.setHeight(150);
 		composite_7.setLayout(new GridLayout(4, false));
 		
 		Label lblNewLabel_1 = new Label(composite_7, SWT.NONE);
@@ -944,8 +763,6 @@ public class HearthUI {
 		cmbGameLang.setEditable(false);
 		cmbGameLang.setItems(new String[] {});
 		cmbGameLang.setVisibleItemCount(13);
-		scrolledComposite.setContent(expandBar);
-		scrolledComposite.setMinSize(expandBar.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		
 		Label lblNewLabel_14 = new Label(composite_7, SWT.NONE);
 		lblNewLabel_14.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -981,6 +798,20 @@ public class HearthUI {
 		txtWebSyncKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		txtWebSyncKey.setBounds(232, 78, 324, 21);
 		
+		Label lblNewLabel_4 = new Label(composite_7, SWT.NONE);
+		lblNewLabel_4.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_4.setText(lang.t("User Interface Language"));
+		new Label(composite_7, SWT.NONE);
+		new Label(composite_7, SWT.NONE);
+		scrolledComposite.setContent(expandBar);
+		scrolledComposite.setMinSize(expandBar.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		
+		cbUILangs = new CCombo(composite_7, SWT.BORDER | SWT.READ_ONLY);
+		cbUILangs.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		cbUILangs.setVisibleItemCount(13);
+		cbUILangs.setItems(new String[] {});
+		cbUILangs.setEditable(false);
+		
 		Label lblNewLabel_21 = new Label(composite_7, SWT.NONE);
 		lblNewLabel_21.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_21.setBounds(125, 112, 101, 15);
@@ -1001,7 +832,7 @@ public class HearthUI {
 		
 		Composite composite_10 = new Composite(expandBar, SWT.NONE);
 		xpndtmAdvanced.setControl(composite_10);
-		xpndtmAdvanced.setHeight(200);
+		xpndtmAdvanced.setHeight(160);
 		composite_10.setLayout(new GridLayout(9, false));
 		
 		Label lblDetect = new Label(composite_10, SWT.NONE);
@@ -1178,26 +1009,29 @@ public class HearthUI {
 		grpAbout.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		Composite composite_3 = new Composite(grpAbout, SWT.NONE);
-		composite_3.setLayout(null);
-		
-		Label lblVersion = new Label(composite_3, SWT.NONE);
-		lblVersion.setBounds(42, 132, 108, 15);
-		lblVersion.setText(lang.t("HearthTracker v%d.%d.%d",  version[0], version[1], version[2]));
-		
-		Label lblCopyrightc = new Label(composite_3, SWT.NONE);
-		lblCopyrightc.setBounds(24, 153, 150, 15);
-		lblCopyrightc.setText(lang.t("Copyright \u00A9 2014 megablue"));
+		composite_3.setLayout(new FormLayout());
 		
 		Label lblNewLabel_7 = new Label(composite_3, SWT.NONE);
-		lblNewLabel_7.setBounds(5, 65, 0, 15);
+		FormData fd_lblNewLabel_7 = new FormData();
+		fd_lblNewLabel_7.top = new FormAttachment(0, 65);
+		fd_lblNewLabel_7.left = new FormAttachment(0, 5);
+		lblNewLabel_7.setLayoutData(fd_lblNewLabel_7);
 		lblNewLabel_7.setText("");
 		
 		Label lblNewLabel_8 = new Label(composite_3, SWT.NONE);
-		lblNewLabel_8.setBounds(5, 209, 0, 15);
+		FormData fd_lblNewLabel_8 = new FormData();
+		fd_lblNewLabel_8.top = new FormAttachment(0, 209);
+		fd_lblNewLabel_8.left = new FormAttachment(0, 5);
+		lblNewLabel_8.setLayoutData(fd_lblNewLabel_8);
 		lblNewLabel_8.setText("");
 		
 		Label lblPaypal = new Label(composite_3, SWT.NONE);
-		lblPaypal.setBounds(236, 258, 153, 96);
+		FormData fd_lblPaypal = new FormData();
+		fd_lblPaypal.bottom = new FormAttachment(0, 354);
+		fd_lblPaypal.right = new FormAttachment(0, 389);
+		fd_lblPaypal.top = new FormAttachment(0, 258);
+		fd_lblPaypal.left = new FormAttachment(0, 236);
+		lblPaypal.setLayoutData(fd_lblPaypal);
 		lblPaypal.setText("");
 		lblPaypal.setToolTipText(lang.t("Your support means a lot to me. Thank you for even hovering over the donate button!"));
 		lblPaypal.addMouseListener(new MouseAdapter() {
@@ -1208,26 +1042,13 @@ public class HearthUI {
 		});
 		lblPaypal.setImage(new Image( display, HearthFilesNameManager.payapl));
 		
-		StyledText styledText = new StyledText(composite_3, SWT.READ_ONLY | SWT.WRAP);
-		styledText.setBounds(208, 31, 382, 183);
-		styledText.setText(lang.t("HearthTracker is designed specifically to automate and ease score tracking for Hearthstone enthusiasts. It is coded by megablue. He first created the prototype to display arena score on his stream. Later, realizing it might help a lot of players and streamers, he continued to add new features and refine the code. He still has a lot of interesting ideas that are yet to be implemented. A lot of time and efforts need to be invested into it in order to implement all the exciting features. He hopes that you can show your support by donating. Your support will be greatly appreciated and keep the project alive!"));
-		
-		Link link_1 = new Link(composite_3, SWT.NONE);
-		link_1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				try {
-					java.awt.Desktop.getDesktop().browse(new URL("http://bit.ly/HearthTracking").toURI());
-				} catch (Throwable e) {
-					//.printStackTrace();
-				}
-			}
-		});
-		link_1.setBounds(32, 176, 150, 15);
-		link_1.setText("<a>www.HearthTracking.com</a>");
-		
 		Label lblFacebook = new Label(composite_3, SWT.NONE);
-		lblFacebook.setBounds(10, 258, 96, 96);
+		FormData fd_lblFacebook = new FormData();
+		fd_lblFacebook.bottom = new FormAttachment(0, 354);
+		fd_lblFacebook.right = new FormAttachment(0, 106);
+		fd_lblFacebook.top = new FormAttachment(0, 258);
+		fd_lblFacebook.left = new FormAttachment(0, 10);
+		lblFacebook.setLayoutData(fd_lblFacebook);
 		lblFacebook.setImage(new Image( display, HearthFilesNameManager.facebook));
 		
 		lblFacebook.addMouseListener(new MouseAdapter() {
@@ -1242,7 +1063,12 @@ public class HearthUI {
 		});
 		
 		Label lblTLQ = new Label(composite_3, SWT.NONE);
-		lblTLQ.setBounds(124, 258, 96, 96);
+		FormData fd_lblTLQ = new FormData();
+		fd_lblTLQ.bottom = new FormAttachment(0, 354);
+		fd_lblTLQ.right = new FormAttachment(0, 220);
+		fd_lblTLQ.top = new FormAttachment(0, 258);
+		fd_lblTLQ.left = new FormAttachment(0, 124);
+		lblTLQ.setLayoutData(fd_lblTLQ);
 		lblTLQ.setImage(new Image( display, HearthFilesNameManager.teamliquid));
 		
 		lblTLQ.addMouseListener(new MouseAdapter() {
@@ -1257,7 +1083,12 @@ public class HearthUI {
 		});
 		
 		Label lblTwitter = new Label(composite_3, SWT.NONE);
-		lblTwitter.setBounds(407, 258, 96, 96);
+		FormData fd_lblTwitter = new FormData();
+		fd_lblTwitter.bottom = new FormAttachment(0, 354);
+		fd_lblTwitter.right = new FormAttachment(0, 503);
+		fd_lblTwitter.top = new FormAttachment(0, 258);
+		fd_lblTwitter.left = new FormAttachment(0, 407);
+		lblTwitter.setLayoutData(fd_lblTwitter);
 		lblTwitter.setImage(new Image( display,  HearthFilesNameManager.twitter));
 		
 		lblTwitter.addMouseListener(new MouseAdapter() {
@@ -1272,19 +1103,57 @@ public class HearthUI {
 		});
 		
 		Label lblFindUsOn = new Label(composite_3, SWT.NONE);
-		lblFindUsOn.setBounds(10, 237, 580, 15);
+		FormData fd_lblFindUsOn = new FormData();
+		fd_lblFindUsOn.right = new FormAttachment(0, 590);
+		fd_lblFindUsOn.top = new FormAttachment(0, 237);
+		fd_lblFindUsOn.left = new FormAttachment(0, 10);
+		lblFindUsOn.setLayoutData(fd_lblFindUsOn);
 		lblFindUsOn.setText(lang.t("Show us the love!"));
 		
-		Label lblNewLabel_10 = new Label(composite_3, SWT.NONE);
-		lblNewLabel_10.setBounds(208, 10, 96, 15);
-		lblNewLabel_10.setText(lang.t("How it all began..."));
-		
 		Label label_1 = new Label(composite_3, SWT.SEPARATOR | SWT.HORIZONTAL);
-		label_1.setBounds(10, 222, 580, 2);
+		FormData fd_label_1 = new FormData();
+		fd_label_1.right = new FormAttachment(0, 590);
+		fd_label_1.top = new FormAttachment(0, 222);
+		fd_label_1.left = new FormAttachment(0, 10);
+		label_1.setLayoutData(fd_label_1);
 		
 		Label label = new Label(composite_3, SWT.NONE);
+		FormData fd_label = new FormData();
+		fd_label.top = new FormAttachment(0, 47);
+		fd_label.height = 96;
+		fd_label.width = 96;
+		fd_label.left = new FormAttachment(0, 157);
+		label.setLayoutData(fd_label);
 		label.setImage(new Image( display, HearthFilesNameManager.logo));
-		label.setBounds(46, 31, 96, 96);
+		
+		Composite composite_12 = new Composite(composite_3, SWT.NONE);
+		fd_label.right = new FormAttachment(composite_12, -23);
+		FormData fd_composite_12 = new FormData();
+		fd_composite_12.bottom = new FormAttachment(label_1, -92);
+		fd_composite_12.top = new FormAttachment(lblNewLabel_7, 0, SWT.TOP);
+		fd_composite_12.right = new FormAttachment(100, -65);
+		fd_composite_12.left = new FormAttachment(0, 276);
+		composite_12.setLayoutData(fd_composite_12);
+		composite_12.setLayout(new GridLayout(1, false));
+		
+		Label lblVersion = new Label(composite_12, SWT.NONE);
+		lblVersion.setText(String.format("HearthTracker v%d.%d.%d",  version[0], version[1], version[2]));
+		
+		Label lblCopyrightc = new Label(composite_12, SWT.NONE);
+		lblCopyrightc.setText("Copyright \u00A9 2014 megablue");
+		
+		Link link_1 = new Link(composite_12, SWT.NONE);
+		link_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					java.awt.Desktop.getDesktop().browse(new URL("http://bit.ly/HearthTracking").toURI());
+				} catch (Throwable e) {
+					//.printStackTrace();
+				}
+			}
+		});
+		link_1.setText("<a>www.HearthTracking.com</a>");
 
 		shlHearthtracker.setTabList(new Control[]{tabFolder});
 
@@ -1723,7 +1592,7 @@ public class HearthUI {
 		
 		Label lblNewLabel_3 = new Label(composite_4, SWT.NONE);
 		lblNewLabel_3.setBounds(154, 69, 11, 15);
-		lblNewLabel_3.setText("vs");
+		lblNewLabel_3.setText(lang.t("vs"));
 		
 		final Combo cbMatchesEditVs = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditVs.setBounds(184, 66, 90, 23);
@@ -1733,16 +1602,12 @@ public class HearthUI {
 			cbMatchesEditVs.add(heroesList.getHeroLabel(i));
 		}
 		
-		Label lblNewLabel_4 = new Label(composite_4, SWT.NONE);
-		lblNewLabel_4.setBounds(148, 101, 26, 15);
-		lblNewLabel_4.setText("Goes");
-		
 		final Combo cbMatchesEditGoes = new Combo(composite_4, SWT.READ_ONLY);
 		cbMatchesEditGoes.setBounds(125, 123, 74, 23);
 		cbMatchesEditGoes.setItems(
 			new String[] {
-				lang.t("First"), 
-				lang.t("Second"), 
+				lang.t("Go First"), 
+				lang.t("Go Second"), 
 				lang.t("Unknown")
 			}
 		);
@@ -2066,9 +1931,9 @@ public class HearthUI {
 	}
 	
 	private void poppulateDiagnoticsStatus(){
-		Date lastSeen = hearth.getLastseen();
-		int[] area = hearth.getLastScanArea();
-		int[] subArea = hearth.getLastScanSubArea();
+		Date lastSeen = hearthScanner.getLastseen();
+		int[] area = hearthScanner.getLastScanArea();
+		int[] subArea = hearthScanner.getLastScanSubArea();
 		String last = lastSeen == null || lastSeen.getTime() == 0 ? lang.t("Never") : HearthHelper.getPrettyText(lastSeen); 
 
 		if(lastSeen == null){
@@ -2088,7 +1953,7 @@ public class HearthUI {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				setting.autoPing = btnAutoPing.getSelection();
-				hearth.setAutoPing(setting.autoPing);
+				hearthScanner.setAutoPing(setting.autoPing);
 				savePreferences();
 			}
 		});
@@ -2096,7 +1961,7 @@ public class HearthUI {
 		btnVisualizeNow.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				hearth.forcePing();
+				hearthScanner.forcePing();
 			}
 		});
 	}
@@ -2135,7 +2000,7 @@ public class HearthUI {
 				
 				savePreferences();
 				
-				hearth.setGameRes(res.width, res.height);
+				hearthScanner.setGameRes(res.width, res.height);
 			}
 		});
 		
@@ -2146,15 +2011,15 @@ public class HearthUI {
 			public void widgetSelected(SelectionEvent arg0) {
 				setting.autoRes = btnAutoDetectGameRes.getSelection();
 				savePreferences();
-				hearth.setAutoGameRes(setting.autoRes);
+				hearthScanner.setAutoGameRes(setting.autoRes);
 			}
 		});
 		
 	}
 	
 	private void populatesOffsetOptions(){
-		hearth.setXOffetOverride(setting.xOffset);
-		hearth.setYOffetOverride(setting.yOffset);
+		hearthScanner.setXOffetOverride(setting.xOffset);
+		hearthScanner.setYOffetOverride(setting.yOffset);
 		
 		spXOffset.setSelection(setting.xOffset);
 		spYOffset.setSelection(setting.yOffset);
@@ -2163,7 +2028,7 @@ public class HearthUI {
 			@Override
 			public void focusLost(FocusEvent arg0) {
 				setting.xOffset = Integer.parseInt(spXOffset.getText());
-				hearth.setXOffetOverride(setting.xOffset);
+				hearthScanner.setXOffetOverride(setting.xOffset);
 				savePreferences();
 			}
 		});
@@ -2172,7 +2037,7 @@ public class HearthUI {
 			@Override
 			public void focusLost(FocusEvent arg0) {
 				setting.yOffset = Integer.parseInt(spYOffset.getText());
-				hearth.setYOffetOverride(setting.yOffset);
+				hearthScanner.setYOffetOverride(setting.yOffset);
 				savePreferences();
 			}
 		});
@@ -2185,7 +2050,7 @@ public class HearthUI {
 			public void widgetSelected(SelectionEvent arg0) {
 				setting.alwaysScan = btnAlwaysScan.getSelection();
 				savePreferences();
-				hearth.setAlwaysScan(setting.alwaysScan);
+				hearthScanner.setAlwaysScan(setting.alwaysScan);
 			}
 		});
 		
@@ -2198,9 +2063,9 @@ public class HearthUI {
 				savePreferences();
 				
 				if(setting.scannerEnabled){
-					hearth.resume();
+					hearthScanner.resume();
 				} else {
-					hearth.pause();
+					hearthScanner.pause();
 				}
 			}
 		});
@@ -2273,7 +2138,7 @@ public class HearthUI {
 					setting.gameLang = langCode;
 					
 					if(previousSelection != i){
-						hearth.setGameLang(langCode);
+						hearthScanner.setGameLang(langCode);
 						previousSelection = i; 
 						savePreferences();
 					}
@@ -2289,6 +2154,67 @@ public class HearthUI {
 				this.selected(e);
 			}
 		});
+		
+		
+		cbUILangs.removeAll();
+		
+		int index = 0;
+		Iterator<Entry<String, String>> it = uiLangsList.map.entrySet().iterator();
+
+	    while (it.hasNext()) {
+	        Map.Entry <String, String> pairs = it.next();
+	        
+	        cbUILangs.add(pairs.getKey());
+	        cbUILangs.setData(pairs.getKey(), pairs.getValue());
+			
+			if(pairs.getValue().equals(setting.uiLang)){
+				cbUILangs.select(index);
+			}
+			
+	        ++index;
+	    }
+	    
+	    cbUILangs.addSelectionListener(new SelectionAdapter() {
+			
+			int previousSelection = -1;
+			
+			private void selected(SelectionEvent e){
+				int i = cbUILangs.getSelectionIndex();
+				
+				if(i != -1){
+					String uiLangFile = (String) cbUILangs.getData(cbUILangs.getItem(i));
+					System.out.println("preferences ui lang selected: " + uiLangFile);
+					setting.uiLang = uiLangFile;
+					
+					if(previousSelection != i){
+						lang.loadLang(setting.uiLang);
+						//restart = true;
+						previousSelection = i; 
+						savePreferences();
+						setRetart();
+						shutdown();
+					}
+				}
+			}
+			
+			@Override
+			public void widgetDefaultSelected(SelectionEvent e) {
+				this.selected(e);
+			}
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				this.selected(e);
+			}
+		});
+		
+		for(int i = 0; i < gameLanguages.langs.length; i++){
+			cmbGameLang.add(gameLanguages.langs[i].label);
+			cmbGameLang.setData(gameLanguages.langs[i].label, gameLanguages.langs[i].code);
+			
+			if(setting.gameLang.toLowerCase().equals(gameLanguages.langs[i].code.toLowerCase())){
+				selected = i;
+			}
+		}
 		
 		txtWebSyncKey.setText(new HearthSync().getKey());
 		
@@ -2339,7 +2265,7 @@ public class HearthUI {
 		});
 		
 		btnPopup.setSelection(setting.popup);
-		hearth.setNotification(setting.popup);
+		hearthScanner.setNotification(setting.popup);
 		
 		btnPopup.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -2350,7 +2276,7 @@ public class HearthUI {
 			public void widgetSelected(SelectionEvent e) {
 				if(btnPopup.getSelection() != setting.popup){
 					setting.popup = btnPopup.getSelection();
-					hearth.setNotification(setting.popup);
+					hearthScanner.setNotification(setting.popup);
 					savePreferences();
 				}
 			}
@@ -2393,7 +2319,7 @@ public class HearthUI {
 	}
 	
 	private void updateStatus(){
-		String overview = hearth.getOverview();
+		String overview = hearthScanner.getOverview();
 		styledTextStatus.setText(overview);
 		tracker.writeLines(overview);
 	}

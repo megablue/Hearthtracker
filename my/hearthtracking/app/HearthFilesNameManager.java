@@ -6,6 +6,7 @@ public class HearthFilesNameManager {
 	
 	//log/settings
 	static String updaterLog 		= "." + File.separator + "configs" + File.separator + "update.xml";
+	static String uiLangsListFile 	= "." + File.separator + "configs" + File.separator + "uiLangs.xml";
 	static String settingFile 		= "." + File.separator + "configs" + File.separator + "settings.xml";
 	static String decksFile 		= "." + File.separator + "configs" + File.separator + "decks.xml";
 	static String heroesFile 		= "." + File.separator + "configs" + File.separator + "heroes.xml";
