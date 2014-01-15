@@ -20,10 +20,10 @@ public class HearthUpdater {
 	public HearthUpdater(){
 		xstream.alias("HearthUpdaterLog", HearthUpdaterLog.class);
 		
-		updateLog = (HearthUpdaterLog) config.load(HearthFilesNameManager.logFile);
+		updateLog = (HearthUpdaterLog) config.load(HearthFilesNameManager.updateLog);
 		if(updateLog == null){
 			updateLog = new HearthUpdaterLog();
-			config.save(updateLog, HearthFilesNameManager.logFile);
+			config.save(updateLog, HearthFilesNameManager.updateLog);
 		}
 		this.compare();
 	}
@@ -52,7 +52,7 @@ public class HearthUpdater {
 			this.compare();
 			
 			if(updateLog != null){
-				config.save(updateLog, HearthFilesNameManager.logFile);
+				config.save(updateLog, HearthFilesNameManager.updateLog);
 			}
 			
 		} catch (Throwable e) {
