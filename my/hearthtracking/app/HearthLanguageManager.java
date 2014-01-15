@@ -6,7 +6,8 @@ import java.util.Map.Entry;
 
 public class HearthLanguageManager {
 	private static HearthLanguageManager instance = null;
-	String currentLang = "english";
+	String defaultLang = "english";
+	String currentLang = defaultLang;
 	boolean langLoaded = false;
 	boolean overrided = false;
 	boolean isDirty = false;
@@ -35,8 +36,15 @@ public class HearthLanguageManager {
 		
 		//if the language xml file is not found
 		if(hLang == null){
-			//create a new skeleton object
-			hLang = new HearthLanguage();
+			//load the default language file
+			hLang = (HearthLanguage) config.load(String.format(HearthFilesNameManager.uiLangFile, defaultLang));
+			
+			//if the default language file doesn't work
+			if(hLang == null){
+				//we will use the actual string in the code
+				hLang = new HearthLanguage();
+			}
+			
 			isDirty = true;
 		}
 		
