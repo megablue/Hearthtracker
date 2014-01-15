@@ -66,7 +66,7 @@ public class HearthUpdateUI {
 		
 		Label lblYourVersion = new Label(shlHearthtrackerUpdateNotification, SWT.NONE);
 		lblYourVersion.setBounds(95, 10, 277, 15);
-		lblYourVersion.setText(HearthUI.version[0] + "." + HearthUI.version[1] + "." + HearthUI.version[2]);
+		lblYourVersion.setText(MainLoader.version[0] + "." + MainLoader.version[1] + "." + MainLoader.version[2]);
 		
 		Label lblLatestVersion = new Label(shlHearthtrackerUpdateNotification, SWT.NONE);
 		lblLatestVersion.setBounds(95, 31, 277, 15);

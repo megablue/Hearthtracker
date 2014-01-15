@@ -62,9 +62,9 @@ public class HearthUpdater {
 	
 	private void compare(){
 		if( 
-				(updateLog.version[0] > HearthUI.version[0])
-				|| (updateLog.version[0] >= HearthUI.version[0] && updateLog.version[1] > HearthUI.version[1])
-				|| (updateLog.version[0] >= HearthUI.version[0] && updateLog.version[1] >= HearthUI.version[1] && updateLog.version[2] > HearthUI.version[2])
+				(updateLog.version[0] > MainLoader.version[0])
+				|| (updateLog.version[0] >= MainLoader.version[0] && updateLog.version[1] > MainLoader.version[1])
+				|| (updateLog.version[0] >= MainLoader.version[0] && updateLog.version[1] >= MainLoader.version[1] && updateLog.version[2] > MainLoader.version[2])
 		){
 			foundUpdate = true;
 			message = updateLog.message;

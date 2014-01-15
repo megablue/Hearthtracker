@@ -92,10 +92,7 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 
 @SuppressWarnings({ "unused", "deprecation" })
-public class HearthUI {
-	public static int[] version = {1, 1, 7};
-	public static int experimental = 0;
-	
+public class HearthUI {	
 	protected Shell shlHearthtracker;
 	private CCombo cmbGameLang;
 	private Button btnEnableScanner;
@@ -275,9 +272,9 @@ public class HearthUI {
 				"HearthTracker - " + lang.t("Automated Stats Tracking for Hearthstone enthusiasts!")
 		);
 		
-		if(experimental > 0){
+		if(MainLoader.experimental > 0){
 			shlHearthtracker.setText(
-					"HearthTracker - " + lang.t("Experimental build %s", experimental)
+					"HearthTracker - " + lang.t("Experimental build %s", MainLoader.experimental)
 			);
 		}
 		
@@ -1137,7 +1134,7 @@ public class HearthUI {
 		composite_12.setLayout(new GridLayout(1, false));
 		
 		Label lblVersion = new Label(composite_12, SWT.NONE);
-		lblVersion.setText(String.format("HearthTracker v%d.%d.%d",  version[0], version[1], version[2]));
+		lblVersion.setText(String.format("HearthTracker v%d.%d.%d",  MainLoader.version[0], MainLoader.version[1], MainLoader.version[2]));
 		
 		Label lblCopyrightc = new Label(composite_12, SWT.NONE);
 		lblCopyrightc.setText("Copyright \u00A9 2014 megablue");

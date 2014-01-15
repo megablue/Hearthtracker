@@ -1,7 +1,7 @@
 package my.hearthtracking.app;
 
 public class HearthUpdaterLog {
-	int[] version = {HearthUI.version[0], HearthUI.version[1], HearthUI.version[2]};
+	int[] version = {MainLoader.version[0], MainLoader.version[1], MainLoader.version[2]};
 	long lastCheck = 0;
 	long updated = 0;
 	String message = "";

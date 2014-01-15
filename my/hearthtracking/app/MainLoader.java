@@ -11,6 +11,9 @@ import java.util.Date;
 import java.util.List;
 
 public class MainLoader {
+	public static int[] version = {1, 1, 8};
+	public static int experimental = 0;
+	
 	//static Logger logger = HearthHelper.getLogger(Level.ALL);
 	public static HearthConfigurator config = new HearthConfigurator();
 	public static HearthSetting setting;
