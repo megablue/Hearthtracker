@@ -1,0 +1,564 @@
+<HearthLanguage>
+  <map>
+    <entry>
+      <string>Sync timeout. Will retry later!</string>
+      <string>Время синхронизации истекло. Повторите попытку!</string>
+    </entry>
+    <entry>
+      <string>Unknown</string>
+      <string>Неизвестно</string>
+    </entry>
+    <entry>
+      <string>It really means a lot to me. Your support is greatly appreciated!</string>
+      <string>Это действительно много значит для меня. Я высоко ценю вашу поддержку!</string>
+    </entry>
+    <entry>
+      <string>Ranked mode (played as)</string>
+      <string>Рейтинг</string>
+    </entry>
+    <entry>
+      <string>Ranked mode detected</string>
+      <string>Рейтинговый режим определен</string>
+    </entry>
+    <entry>
+      <string>Arena mode (played as)</string>
+      <string>Арена</string>
+    </entry>
+    <entry>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>Автоматизированное отслеживание статистики для любителей Hearthstone!</string>
+    </entry>
+    <entry>
+      <string>Fast</string>
+      <string>Быстро</string>
+    </entry>
+    <entry>
+      <string>Go Second</string>
+      <string>Ход вторым</string>
+    </entry>
+    <entry>
+      <string>Ranked</string>
+      <string>Рейтинг</string>
+    </entry>
+    <entry>
+      <string>Unranked : %s</string>
+      <string>Обычный : %s</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; Lost</string>
+      <string>Последняя игра -&gt; проиграна</string>
+    </entry>
+    <entry>
+      <string>Asia</string>
+      <string>Азия</string>
+    </entry>
+    <entry>
+      <string>User Interface Language</string>
+      <string>Язык интерфейса</string>
+    </entry>
+    <entry>
+      <string>Notification Popup</string>
+      <string>Всплывающие уведомления</string>
+    </entry>
+    <entry>
+      <string>Result</string>
+      <string>Результат</string>
+    </entry>
+    <entry>
+      <string>&amp;Confirm</string>
+      <string>&amp;Принять</string>
+    </entry>
+    <entry>
+      <string>Paladin</string>
+      <string>Паладин</string>
+    </entry>
+    <entry>
+      <string>go second</string>
+      <string>Ход вторым</string>
+    </entry>
+    <entry>
+      <string>EU</string>
+      <string>EU</string>
+    </entry>
+    <entry>
+      <string>Slow</string>
+      <string>Медленно</string>
+    </entry>
+    <entry>
+      <string>Deck #%d</string>
+      <string>Колода #%d</string>
+    </entry>
+    <entry>
+      <string>Mode</string>
+      <string>Режим</string>
+    </entry>
+    <entry>
+      <string>Visualize scanned areas after Hearthstone being out of sight for more than 1 min.</string>
+      <string>Отображение отсканированной области после Hearthstone будет скрыто более чем на 1 мин.</string>
+    </entry>
+    <entry>
+      <string>Batte.net server</string>
+      <string>Сервер Batte.net</string>
+    </entry>
+    <entry>
+      <string>R: </string>
+      <string>R: </string>
+    </entry>
+    <entry>
+      <string>Win</string>
+      <string>Победа</string>
+    </entry>
+    <entry>
+      <string>P: </string>
+      <string>P: </string>
+    </entry>
+    <entry>
+      <string>Auto Detect Game Resolution</string>
+      <string>Автоопределение разрешения игры</string>
+    </entry>
+    <entry>
+      <string>Losses</string>
+      <string>Поражений</string>
+    </entry>
+    <entry>
+      <string>&amp;Save</string>
+      <string>&amp;Сохранить</string>
+    </entry>
+    <entry>
+      <string>&amp;New</string>
+      <string>&amp;Новый</string>
+    </entry>
+    <entry>
+      <string>Unranked mode (played as)</string>
+      <string>Обычный</string>
+    </entry>
+    <entry>
+      <string>NA</string>
+      <string>NA</string>
+    </entry>
+    <entry>
+      <string>Override Offsets (Multi monitors dirty fix)</string>
+      <string>Переопределенное смещение (Грязный фикс для мульти мониторов)</string>
+    </entry>
+    <entry>
+      <string>If you think HearthTracker helped you. Please consider donating a few bucks so that I can get better web servers for the upcoming Web Sync feature and keep the developing on it!</string>
+      <string>Если HearthTracker помог вам. Пожалуйста, поддержите несколькими долларами, чтобы я смог получить лучшие веб-сервера для предстоящий функции веб-синхронизации!</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; went second</string>
+      <string>Последняя игра -&gt; ход вторым</string>
+    </entry>
+    <entry>
+      <string>Diagnotic Tool</string>
+      <string>Средство диагностики</string>
+    </entry>
+    <entry>
+      <string>Intermediate</string>
+      <string>Средне</string>
+    </entry>
+    <entry>
+      <string>Web Sync</string>
+      <string>Веб Синхронизация</string>
+    </entry>
+    <entry>
+      <string>vs</string>
+      <string>х</string>
+    </entry>
+    <entry>
+      <string>Practice</string>
+      <string>Тренировка</string>
+    </entry>
+    <entry>
+      <string>No, I refuse to help!</string>
+      <string>Нет, я отказываюсь помогать!</string>
+    </entry>
+    <entry>
+      <string>X offset</string>
+      <string>Смещение по Х </string>
+    </entry>
+    <entry>
+      <string>&amp;Preferences</string>
+      <string>&amp;Настройки</string>
+    </entry>
+    <entry>
+      <string>Unknown hero</string>
+      <string>Неизвестный герой</string>
+    </entry>
+    <entry>
+      <string>moments ago</string>
+      <string>минут назад</string>
+    </entry>
+    <entry>
+      <string>Vs</string>
+      <string>Против</string>
+    </entry>
+    <entry>
+      <string>Never</string>
+      <string>Никогда</string>
+    </entry>
+    <entry>
+      <string>Challenge mode (played as)</string>
+      <string>С друзьями</string>
+    </entry>
+    <entry>
+      <string>Last scanned area</string>
+      <string>Последняя область</string>
+    </entry>
+    <entry>
+      <string>Rogue</string>
+      <string>Разбойник</string>
+    </entry>
+    <entry>
+      <string>Latest match(es): </string>
+      <string>Последние игры: </string>
+    </entry>
+    <entry>
+      <string>Advanced</string>
+      <string>Дополнительно</string>
+    </entry>
+    <entry>
+      <string>Congrats! HearthTracker had tracked %s games for you.</string>
+      <string>Поздравляю! HearthTracker обнаружил %s игру для Вас.</string>
+    </entry>
+    <entry>
+      <string>Unranked: %s</string>
+      <string>Обычный: %s</string>
+    </entry>
+    <entry>
+      <string>On</string>
+      <string>Дата</string>
+    </entry>
+    <entry>
+      <string>Enable</string>
+      <string>Включить</string>
+    </entry>
+    <entry>
+      <string>Arena</string>
+      <string>Арена</string>
+    </entry>
+    <entry>
+      <string>Diagnostics</string>
+      <string>Диагностика</string>
+    </entry>
+    <entry>
+      <string>Challenge</string>
+      <string>C друзьями</string>
+    </entry>
+    <entry>
+      <string>%sHow to use the Decks Manager%s</string>
+      <string>%sКак использовать менеджер колод%s</string>
+    </entry>
+    <entry>
+      <string>Total Runs</string>
+      <string>Число запусков</string>
+    </entry>
+    <entry>
+      <string>Unranked</string>
+      <string>Обычный</string>
+    </entry>
+    <entry>
+      <string>Priest</string>
+      <string>Жрец</string>
+    </entry>
+    <entry>
+      <string>&amp;Overview</string>
+      <string>&amp;Просмотр</string>
+    </entry>
+    <entry>
+      <string>Wins</string>
+      <string>Побед</string>
+    </entry>
+    <entry>
+      <string>E&amp;xit</string>
+      <string>E&amp;xit</string>
+    </entry>
+    <entry>
+      <string>Druid</string>
+      <string>Друид</string>
+    </entry>
+    <entry>
+      <string>Really Fast</string>
+      <string>Очень быстро</string>
+    </entry>
+    <entry>
+      <string>&amp;Tools</string>
+      <string>&amp;Инструменты</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; Won</string>
+      <string>Последняя игра -&gt; выиграна</string>
+    </entry>
+    <entry>
+      <string>Lose</string>
+      <string>Поражений</string>
+    </entry>
+    <entry>
+      <string>General</string>
+      <string>Основные</string>
+    </entry>
+    <entry>
+      <string>Game mode: %s</string>
+      <string>Режим игры: %s</string>
+    </entry>
+    <entry>
+      <string>I am sincerely hope that you like it! I&apos;ve spent countless hours to develope it. </string>
+      <string>I am sincerely hope that you like it! I&apos;ve spent countless hours to develope it. </string>
+    </entry>
+    <entry>
+      <string>Show us the love!</string>
+      <string>Проявите свою любовь!</string>
+    </entry>
+    <entry>
+      <string>C: </string>
+      <string>C: </string>
+    </entry>
+    <entry>
+      <string>Go First</string>
+      <string>Ход первым</string>
+    </entry>
+    <entry>
+      <string>Game Resolution (if auto detect failed)</string>
+      <string>Разрешение игры (если авто не работает)</string>
+    </entry>
+    <entry>
+      <string>About</string>
+      <string>About</string>
+    </entry>
+    <entry>
+      <string>%sКлюч HearthTracker Web Sync%s</string>
+      <string>%sКлюч HearthTracker Web Sync%s</string>
+    </entry>
+    <entry>
+      <string>Mage</string>
+      <string>Маг</string>
+    </entry>
+    <entry>
+      <string>A&amp;bout</string>
+      <string>О программе</string>
+    </entry>
+    <entry>
+      <string>Last scanned sub-area</string>
+      <string>Последнее сканирование подобласти</string>
+    </entry>
+    <entry>
+      <string>Unknown mode</string>
+      <string>Неопределено</string>
+    </entry>
+    <entry>
+      <string>Last seen</string>
+      <string>Последний раз</string>
+    </entry>
+    <entry>
+      <string>Y offset</string>
+      <string>Cмещение по Y</string>
+    </entry>
+    <entry>
+      <string>Played</string>
+      <string>Сыграно</string>
+    </entry>
+    <entry>
+      <string>Visualize scanned area</string>
+      <string>Отображение сканируемой области</string>
+    </entry>
+    <entry>
+      <string>Game Language</string>
+      <string>Язык клиента</string>
+    </entry>
+    <entry>
+      <string>&amp;File</string>
+      <string>&amp;Файл</string>
+    </entry>
+    <entry>
+      <string>go first</string>
+      <string>Ход первым</string>
+    </entry>
+    <entry>
+      <string>Arena: %s</string>
+      <string>Арена: %s</string>
+    </entry>
+    <entry>
+      <string>&amp;Delete</string>
+      <string>&amp;Удалить</string>
+    </entry>
+    <entry>
+      <string>&amp;Edit</string>
+      <string>&amp;Правка</string>
+    </entry>
+    <entry>
+      <string>U: </string>
+      <string>U: </string>
+    </entry>
+    <entry>
+      <string>Scan Speed</string>
+      <string>Скорость сканирования</string>
+    </entry>
+    <entry>
+      <string>Practice mode (played as)</string>
+      <string>Тренировка</string>
+    </entry>
+    <entry>
+      <string>Scanner</string>
+      <string>Сканер</string>
+    </entry>
+    <entry>
+      <string>Copyright © 2014 megablue</string>
+      <string>Copyright © 2014 megablue</string>
+    </entry>
+    <entry>
+      <string>As</string>
+      <string>За</string>
+    </entry>
+    <entry>
+      <string>Slot #9</string>
+      <string>Слот #9</string>
+    </entry>
+    <entry>
+      <string>Game Mode</string>
+      <string>Режим игры</string>
+    </entry>
+    <entry>
+      <string>Slot #8</string>
+      <string>Слот #8</string>
+    </entry>
+    <entry>
+      <string>Shaman</string>
+      <string>Шаман</string>
+    </entry>
+    <entry>
+      <string>Slot #7</string>
+      <string>Слот #7</string>
+    </entry>
+    <entry>
+      <string>%sКлюч HearthTracker Web Sync %s</string>
+      <string>%sКлючHearthTracker Web Sync %s</string>
+    </entry>
+    <entry>
+      <string>Forced Scanning</string>
+      <string>Принудительное cканирование</string>
+    </entry>
+    <entry>
+      <string>Slot #6</string>
+      <string>Слот #6</string>
+    </entry>
+    <entry>
+      <string>Slot #5</string>
+      <string>Слот #5</string>
+    </entry>
+    <entry>
+      <string>Yes, I want to donate!</string>
+      <string>Да, я хочу пожертвовать!</string>
+    </entry>
+    <entry>
+      <string>Slot #4</string>
+      <string>Слот #4</string>
+    </entry>
+    <entry>
+      <string>Slot #3</string>
+      <string>Слот #3</string>
+    </entry>
+    <entry>
+      <string>%sHearthTracker Web Sync Key%s</string>
+      <string>%sHearthTracker Web Sync Key%s</string>
+    </entry>
+    <entry>
+      <string>Slot #2</string>
+      <string>Слот #2</string>
+    </entry>
+    <entry>
+      <string>Slot #1</string>
+      <string>Слот #1</string>
+    </entry>
+    <entry>
+      <string>It is recommended to enable it specially your desktop is running at same resolution with your Hearthstone resolution.</string>
+      <string>Рекомендуется включить, если разрешение вашего рабочего стола такое же как у Heartstone.</string>
+    </entry>
+    <entry>
+      <string>Ranked : %s</string>
+      <string>Рейтинг : %s</string>
+    </entry>
+    <entry>
+      <string>De&amp;cks</string>
+      <string>De&amp;cks</string>
+    </entry>
+    <entry>
+      <string>Warlock</string>
+      <string>Чернокнижник</string>
+    </entry>
+    <entry>
+      <string>%s Ключ HearthTracker Web Sync%s</string>
+      <string>%s Ключ HearthTracker Web Sync%s</string>
+    </entry>
+    <entry>
+      <string>Warrior</string>
+      <string>Воин</string>
+    </entry>
+    <entry>
+      <string>Hunter</string>
+      <string>Охотник</string>
+    </entry>
+    <entry>
+      <string>Your support means a lot to me. Thank you for even hovering over the donate button!</string>
+      <string>Your support means a lot to me. Thank you for even hovering over the donate button!</string>
+    </entry>
+    <entry>
+      <string>minutes</string>
+      <string>минут</string>
+    </entry>
+    <entry>
+      <string>%s vs %s, %s, %s</string>
+      <string>%s х %s, %s, %s</string>
+    </entry>
+    <entry>
+      <string>Ranked: %s</string>
+      <string>Рейтинг:    %s</string>
+    </entry>
+    <entry>
+      <string>7+ %%</string>
+      <string>7+ %%</string>
+    </entry>
+    <entry>
+      <string>&amp;Matches</string>
+      <string>&amp;Игры</string>
+    </entry>
+    <entry>
+      <string>%s+ Games Tracked!</string>
+      <string>%s+ Игра Отслеживается!</string>
+    </entry>
+    <entry>
+      <string>Win %%</string>
+      <string>Побед %%</string>
+    </entry>
+    <entry>
+      <string>&amp;Arena</string>
+      <string>&amp;Арена</string>
+    </entry>
+    <entry>
+      <string>Visualize now</string>
+      <string>Показать сейчас</string>
+    </entry>
+    <entry>
+      <string>Stats</string>
+      <string>Статистика</string>
+    </entry>
+    <entry>
+      <string>Trim Empty &amp;Slots </string>
+      <string>Обрезать Пустые &amp;Слоты </string>
+    </entry>
+    <entry>
+      <string>Latest Arena: </string>
+      <string>Последняя Арена: </string>
+    </entry>
+    <entry>
+      <string>CN</string>
+      <string>CN</string>
+    </entry>
+    <entry>
+      <string>Sideboard</string>
+      <string>История</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; went first</string>
+      <string>Последняя игра -&gt; ход первым</string>
+    </entry>
+  </map>
+</HearthLanguage>
