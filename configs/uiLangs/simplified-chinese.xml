@@ -29,6 +29,10 @@
       <string>竞技模式（选用）</string>
     </entry>
     <entry>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>炉石战绩 - 炉石发烧友的神器，自动记录您的战绩！</string>
+    </entry>
+    <entry>
       <string>Fast</string>
       <string>高速</string>
     </entry>
@@ -81,6 +85,10 @@
       <string>缓慢</string>
     </entry>
     <entry>
+      <string>Deck #%d</string>
+      <string>Deck #%d</string>
+    </entry>
+    <entry>
       <string>Mode</string>
       <string>模式</string>
     </entry>
@@ -95,10 +103,6 @@
     <entry>
       <string>Batte.net server</string>
       <string>战网服务器</string>
-    </entry>
-    <entry>
-      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
-      <string>炉石战绩 - 炉石发烧友的神器，自动记录您的战绩！</string>
     </entry>
     <entry>
       <string>Win</string>
@@ -121,12 +125,12 @@
       <string>保存(&amp;S)</string>
     </entry>
     <entry>
-      <string>&amp;New</string>
-      <string>新档(&amp;N)</string>
-    </entry>
-    <entry>
       <string>Unranked mode (played as)</string>
       <string>休闲模式（选用）</string>
+    </entry>
+    <entry>
+      <string>&amp;New</string>
+      <string>新档(&amp;N)</string>
     </entry>
     <entry>
       <string>NA</string>
@@ -141,28 +145,28 @@
       <string>如果炉石战绩帮助了你，请慷慨地捐助一点钱好让我能够有更多的款项继续开发和推出新的网上同步功能！</string>
     </entry>
     <entry>
-      <string>Diagnotic Tool</string>
-      <string>诊断工具</string>
-    </entry>
-    <entry>
       <string>Last Match -&gt; went second</string>
       <string>上一场 -&gt; 我后手</string>
+    </entry>
+    <entry>
+      <string>Diagnotic Tool</string>
+      <string>诊断工具</string>
     </entry>
     <entry>
       <string>Second</string>
       <string>后手</string>
     </entry>
     <entry>
-      <string>Web Sync</string>
-      <string>网上同步</string>
+      <string>vs</string>
+      <string>对上</string>
     </entry>
     <entry>
       <string>Intermediate</string>
       <string>中等</string>
     </entry>
     <entry>
-      <string>vs</string>
-      <string>对上</string>
+      <string>Web Sync</string>
+      <string>网上同步</string>
     </entry>
     <entry>
       <string>Practice</string>
@@ -185,12 +189,16 @@
       <string>未知英雄</string>
     </entry>
     <entry>
-      <string>Vs</string>
-      <string>敌</string>
+      <string>moments ago</string>
+      <string>moments ago</string>
     </entry>
     <entry>
       <string>Never</string>
       <string>从未</string>
+    </entry>
+    <entry>
+      <string>Vs</string>
+      <string>敌</string>
     </entry>
     <entry>
       <string>Challenge mode (played as)</string>
@@ -231,6 +239,10 @@
     <entry>
       <string>Arena</string>
       <string>竞技</string>
+    </entry>
+    <entry>
+      <string>one minute ago</string>
+      <string>one minute ago</string>
     </entry>
     <entry>
       <string>Diagnostics</string>
@@ -393,72 +405,72 @@
       <string>休闲: </string>
     </entry>
     <entry>
-      <string>Practice mode (played as)</string>
-      <string>练习模式（选用）</string>
+      <string>Scanner</string>
+      <string>扫描器</string>
     </entry>
     <entry>
       <string>Scan Speed</string>
       <string>扫描速度</string>
     </entry>
     <entry>
-      <string>Scanner</string>
-      <string>扫描器</string>
+      <string>Practice mode (played as)</string>
+      <string>练习模式（选用）</string>
     </entry>
     <entry>
       <string>Copyright © 2014 megablue</string>
       <string>Copyright © 2014 megablue</string>
-    </entry>
-    <entry>
-      <string>Slot #9</string>
-      <string>九号槽</string>
     </entry>
     <entry>
       <string>As</string>
       <string>我</string>
     </entry>
     <entry>
-      <string>Slot #8</string>
-      <string>八号槽</string>
+      <string>Slot #9</string>
+      <string>九号槽</string>
     </entry>
     <entry>
-      <string>Slot #7</string>
-      <string>七号槽</string>
+      <string>Slot #8</string>
+      <string>八号槽</string>
     </entry>
     <entry>
       <string>Shaman</string>
       <string>萨满</string>
     </entry>
     <entry>
-      <string>Slot #6</string>
-      <string>六号槽</string>
+      <string>Slot #7</string>
+      <string>七号槽</string>
     </entry>
     <entry>
       <string>Forced Scanning</string>
       <string>强制扫描</string>
     </entry>
     <entry>
+      <string>Slot #6</string>
+      <string>六号槽</string>
+    </entry>
+    <entry>
       <string>Slot #5</string>
       <string>五号槽</string>
-    </entry>
-    <entry>
-      <string>Yes, I want to donate!</string>
-      <string>我很乐意捐助！</string>
-    </entry>
-    <entry>
-      <string>Slot #4</string>
-      <string>四号槽</string>
     </entry>
     <entry>
       <string>HearthTracker Upgrade Confirmation</string>
       <string>HearthTracker 更新确认</string>
     </entry>
     <entry>
-      <string>Slot #3</string>
-      <string>三号槽</string>
+      <string>Slot #4</string>
+      <string>四号槽</string>
+    </entry>
+    <entry>
+      <string>Yes, I want to donate!</string>
+      <string>我很乐意捐助！</string>
     </entry>
     <entry>
       <string>%sHearthTracker Web Sync Key%s</string>
       <string>%s网上同步的钥匙%s</string>
+    </entry>
+    <entry>
+      <string>Slot #3</string>
+      <string>三号槽</string>
     </entry>
     <entry>
       <string>Slot #2</string>
@@ -473,28 +485,28 @@
       <string>建议启用！</string>
     </entry>
     <entry>
-      <string>Warlock</string>
-      <string>术士</string>
-    </entry>
-    <entry>
       <string>De&amp;cks</string>
       <string>牌组管理(&amp;C)</string>
+    </entry>
+    <entry>
+      <string>Warlock</string>
+      <string>术士</string>
     </entry>
     <entry>
       <string>Warrior</string>
       <string>战士</string>
     </entry>
     <entry>
-      <string>Your support means a lot to me. Thank you for even hovering over the donate button!</string>
-      <string>你的支持是我最大的动力！感激不尽！</string>
+      <string>minutes</string>
+      <string>分钟</string>
     </entry>
     <entry>
       <string>Hunter</string>
       <string>猎人</string>
     </entry>
     <entry>
-      <string>minutes</string>
-      <string>分钟</string>
+      <string>Your support means a lot to me. Thank you for even hovering over the donate button!</string>
+      <string>你的支持是我最大的动力！感激不尽！</string>
     </entry>
     <entry>
       <string>%s vs %s, %s, %s</string>
@@ -503,6 +515,10 @@
     <entry>
       <string>Ranked: %s</string>
       <string>天梯模式: %s</string>
+    </entry>
+    <entry>
+      <string>%d minutes ago</string>
+      <string>%d minutes ago</string>
     </entry>
     <entry>
       <string>7+ %%</string>
@@ -529,24 +545,24 @@
       <string>视觉化</string>
     </entry>
     <entry>
-      <string>Stats</string>
-      <string>统计</string>
+      <string>Latest Arena: </string>
+      <string>最近的竞技战果: </string>
     </entry>
     <entry>
       <string>Trim Empty &amp;Slots </string>
       <string> 整理空槽(&amp;S)</string>
     </entry>
     <entry>
-      <string>Latest Arena: </string>
-      <string>最近的竞技战果: </string>
-    </entry>
-    <entry>
-      <string>CN</string>
-      <string>中国</string>
+      <string>Stats</string>
+      <string>统计</string>
     </entry>
     <entry>
       <string>Sideboard</string>
       <string>布告板</string>
+    </entry>
+    <entry>
+      <string>CN</string>
+      <string>中国</string>
     </entry>
     <entry>
       <string>Last Match -&gt; went first</string>

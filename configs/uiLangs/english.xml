@@ -25,6 +25,10 @@
       <string>Arena mode (played as)</string>
     </entry>
     <entry>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
+    </entry>
+    <entry>
       <string>Fast</string>
       <string>Fast</string>
     </entry>
@@ -41,12 +45,24 @@
       <string>Unranked : %s</string>
     </entry>
     <entry>
+      <string>Coin detected</string>
+      <string>Coin detected</string>
+    </entry>
+    <entry>
       <string>Last Match -&gt; Lost</string>
       <string>Last Match -&gt; Lost</string>
     </entry>
     <entry>
       <string>Asia</string>
       <string>Asia</string>
+    </entry>
+    <entry>
+      <string>%s vs %s, %s</string>
+      <string>%s vs %s, %s</string>
+    </entry>
+    <entry>
+      <string>Hero Detected</string>
+      <string>Hero Detected</string>
     </entry>
     <entry>
       <string>User Interface Language</string>
@@ -81,12 +97,12 @@
       <string>Slow</string>
     </entry>
     <entry>
-      <string>Deck #%d</string>
-      <string>Deck #%d</string>
+      <string>Mode</string>
+      <string>Mode</string>
     </entry>
     <entry>
-      <string>Mode</string>
-      <string>Mode</string>
+      <string>Deck #%d</string>
+      <string>Deck #%d</string>
     </entry>
     <entry>
       <string>Visualize scanned areas after Hearthstone being out of sight for more than 1 min.</string>
@@ -101,8 +117,8 @@
       <string>Batte.net server</string>
     </entry>
     <entry>
-      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
-      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>Game Result</string>
+      <string>Game Result</string>
     </entry>
     <entry>
       <string>Win</string>
@@ -169,6 +185,10 @@
       <string>Practice</string>
     </entry>
     <entry>
+      <string>%s vs %s, Defeat!</string>
+      <string>%s vs %s, Defeat!</string>
+    </entry>
+    <entry>
       <string>No, I refuse to help!</string>
       <string>No, I refuse to help!</string>
     </entry>
@@ -217,6 +237,10 @@
       <string>Advanced</string>
     </entry>
     <entry>
+      <string>Practice mode detected</string>
+      <string>Practice mode detected</string>
+    </entry>
+    <entry>
       <string>Congrats! HearthTracker had tracked %s games for you.</string>
       <string>Congrats! HearthTracker had tracked %s games for you.</string>
     </entry>
@@ -237,8 +261,16 @@
       <string>Arena</string>
     </entry>
     <entry>
+      <string>one minute ago</string>
+      <string>one minute ago</string>
+    </entry>
+    <entry>
       <string>Diagnostics</string>
       <string>Diagnostics</string>
+    </entry>
+    <entry>
+      <string>You go second!</string>
+      <string>You go second!</string>
     </entry>
     <entry>
       <string>Challenge</string>
@@ -251,6 +283,10 @@
     <entry>
       <string>Total Runs</string>
       <string>Total Runs</string>
+    </entry>
+    <entry>
+      <string>Your hero is %s</string>
+      <string>Your hero is %s</string>
     </entry>
     <entry>
       <string>Unranked</string>
@@ -285,6 +321,10 @@
       <string>&amp;Tools</string>
     </entry>
     <entry>
+      <string>Unranked mode detected</string>
+      <string>Unranked mode detected</string>
+    </entry>
+    <entry>
       <string>Last Match -&gt; Won</string>
       <string>Last Match -&gt; Won</string>
     </entry>
@@ -295,6 +335,10 @@
     <entry>
       <string>General</string>
       <string>General</string>
+    </entry>
+    <entry>
+      <string>Deck win rate</string>
+      <string>Deck win rate</string>
     </entry>
     <entry>
       <string>Game mode: %s</string>
@@ -319,6 +363,10 @@
     <entry>
       <string>Game Resolution (if auto detect failed)</string>
       <string>Game Resolution (if auto detect failed)</string>
+    </entry>
+    <entry>
+      <string>Opponent hero is %s</string>
+      <string>Opponent hero is %s</string>
     </entry>
     <entry>
       <string>About</string>
@@ -401,6 +449,10 @@
       <string>Copyright © 2014 megablue</string>
     </entry>
     <entry>
+      <string>%s vs %s, Unknown result!</string>
+      <string>%s vs %s, Unknown result!</string>
+    </entry>
+    <entry>
       <string>Game Mode</string>
       <string>Game Mode</string>
     </entry>
@@ -423,6 +475,10 @@
     <entry>
       <string>Shaman</string>
       <string>Shaman</string>
+    </entry>
+    <entry>
+      <string>Live match status</string>
+      <string>Live match status</string>
     </entry>
     <entry>
       <string>Slot #6</string>
@@ -505,6 +561,10 @@
       <string>7+ %%</string>
     </entry>
     <entry>
+      <string>%d minutes ago</string>
+      <string>%d minutes ago</string>
+    </entry>
+    <entry>
       <string>&amp;Matches</string>
       <string>&amp;Matches</string>
     </entry>
@@ -515,6 +575,10 @@
     <entry>
       <string>Win %%</string>
       <string>Win %%</string>
+    </entry>
+    <entry>
+      <string>Challenge mode detected</string>
+      <string>Challenge mode detected</string>
     </entry>
     <entry>
       <string>&amp;Arena</string>
