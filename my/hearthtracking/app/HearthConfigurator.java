@@ -20,8 +20,8 @@ public class HearthConfigurator {
 		xstream.alias("HearthGameLangList", 			HearthGameLangList.class);
 		xstream.alias("HearthHeroesList", 				HearthHeroesList.class);
 		xstream.alias("Hero", 							HearthHeroesList.Hero.class);
-		xstream.alias("HearthReaderSetting", 			HearthReaderSetting.class);
-		xstream.alias("Scanbox",						HearthReaderSetting.Scanbox.class);
+		xstream.alias("HearthScannerSettings", 			HearthScannerSettings.class);
+		xstream.alias("Scanbox",						HearthScannerSettings.Scanbox.class);
 		xstream.alias("HearthResolutionsList", 			HearthResolutionsList.class);
 		xstream.alias("Resolution", 					HearthResolutionsList.Resolution.class);
 		xstream.alias("Sync", 							HearthSyncLog.class);

@@ -52,11 +52,26 @@ public class HearthHelper {
 			
 			return bufferedThumbnail;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		return null;
+	}
+	
+	public static BufferedImage cropImage(BufferedImage src, int x, int y, int w, int h){
+		BufferedImage dest = src.getSubimage(x, y, w, h);
+		return dest;
+	}
+	
+	public static boolean bufferedImageToFile(BufferedImage src, String path){
+		try {
+			File outputFile = new File(path);
+			ImageIO.write(src, "png", outputFile);
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public static BufferedImage resizeImage(File imgFile, float scaleFactor, File outputFile){
@@ -65,7 +80,6 @@ public class HearthHelper {
 			ImageIO.write(resizedBuffer, "png", outputFile);
 			return resizedBuffer;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

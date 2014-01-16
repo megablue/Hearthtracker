@@ -37,4 +37,6 @@ public class HearthFilesNameManager {
 													+ File.separator + "%s" 
 													+ File.separator + "%d" + "x" + "%d"
 													+ ".xml"; 
+
+	static String scannerImageCacheFile	= "." + File.separator + "cache" + File.separator + "%s"; 
 }
