@@ -68,17 +68,24 @@
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
       <scene>deckSelection</scene>
-      <nestedSB>
-        <xOffset>0</xOffset>
-        <yOffset>0</yOffset>
-        <width>270</width>
-        <height>128</height>
-        <imgfile></imgfile>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
         <matchQuality>0.7</matchQuality>
         <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
         <outer-class reference="../../../.."/>
-      </nestedSB>
+      </nestedSb>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -90,17 +97,24 @@
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
       <scene>deckSelection</scene>
-      <nestedSB>
-        <xOffset>0</xOffset>
-        <yOffset>0</yOffset>
-        <width>270</width>
-        <height>128</height>
-        <imgfile></imgfile>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
         <matchQuality>0.7</matchQuality>
         <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
         <outer-class reference="../../../.."/>
-      </nestedSB>
+      </nestedSb>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -112,17 +126,24 @@
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
       <scene>deckSelection</scene>
-      <nestedSB>
-        <xOffset>0</xOffset>
-        <yOffset>0</yOffset>
-        <width>270</width>
-        <height>128</height>
-        <imgfile></imgfile>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
         <matchQuality>0.7</matchQuality>
         <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
         <outer-class reference="../../../.."/>
-      </nestedSB>
+      </nestedSb>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -134,17 +155,24 @@
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
       <scene>deckSelection</scene>
-      <nestedSB>
-        <xOffset>0</xOffset>
-        <yOffset>0</yOffset>
-        <width>270</width>
-        <height>128</height>
-        <imgfile></imgfile>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
         <matchQuality>0.7</matchQuality>
         <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
         <outer-class reference="../../../.."/>
-      </nestedSB>
+      </nestedSb>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -156,17 +184,24 @@
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
       <scene>deckSelection</scene>
-      <nestedSB>
-        <xOffset>0</xOffset>
-        <yOffset>0</yOffset>
-        <width>270</width>
-        <height>128</height>
-        <imgfile></imgfile>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
         <matchQuality>0.7</matchQuality>
         <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
         <outer-class reference="../../../.."/>
-      </nestedSB>
+      </nestedSb>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -178,17 +213,24 @@
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
       <scene>deckSelection</scene>
-      <nestedSB>
-        <xOffset>0</xOffset>
-        <yOffset>0</yOffset>
-        <width>270</width>
-        <height>128</height>
-        <imgfile></imgfile>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
         <matchQuality>0.7</matchQuality>
         <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
         <outer-class reference="../../../.."/>
-      </nestedSB>
+      </nestedSb>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -200,17 +242,24 @@
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
       <scene>deckSelection</scene>
-      <nestedSB>
-        <xOffset>0</xOffset>
-        <yOffset>0</yOffset>
-        <width>270</width>
-        <height>128</height>
-        <imgfile></imgfile>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
         <matchQuality>0.7</matchQuality>
         <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
         <outer-class reference="../../../.."/>
-      </nestedSB>
+      </nestedSb>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -222,17 +271,24 @@
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
       <scene>deckSelection</scene>
-      <nestedSB>
-        <xOffset>0</xOffset>
-        <yOffset>0</yOffset>
-        <width>270</width>
-        <height>128</height>
-        <imgfile></imgfile>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
         <matchQuality>0.7</matchQuality>
         <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
         <outer-class reference="../../../.."/>
-      </nestedSB>
+      </nestedSb>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -244,17 +300,24 @@
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
       <scene>deckSelection</scene>
-      <nestedSB>
-        <xOffset>0</xOffset>
-        <yOffset>0</yOffset>
-        <width>270</width>
-        <height>128</height>
-        <imgfile></imgfile>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
         <matchQuality>0.7</matchQuality>
         <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
         <outer-class reference="../../../.."/>
-      </nestedSB>
+      </nestedSb>
       <outer-class reference="../../.."/>
     </Scanbox>
   </deckScanboxses>

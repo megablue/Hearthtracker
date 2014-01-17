@@ -2204,15 +2204,6 @@ public class HearthUI {
 			}
 		});
 		
-		for(int i = 0; i < gameLanguages.langs.length; i++){
-			cmbGameLang.add(gameLanguages.langs[i].label);
-			cmbGameLang.setData(gameLanguages.langs[i].label, gameLanguages.langs[i].code);
-			
-			if(setting.gameLang.toLowerCase().equals(gameLanguages.langs[i].code.toLowerCase())){
-				selected = i;
-			}
-		}
-		
 		txtWebSyncKey.setText(new HearthSync().getKey());
 		
 		txtWebSyncKey.addFocusListener(new FocusAdapter() {

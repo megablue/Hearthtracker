@@ -24,39 +24,48 @@ public class HearthScannerSettings {
 	public Scanbox[] deckScanboxses = {
 			new Scanbox("deck-selected.png", "deckSelection", 130, 220, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("", "deckSelection", 0, 0, 270, 128, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 370, 220, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("", "deckSelection", 0, 0, 270, 128, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 610, 220, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("", "deckSelection", 0, 0, 270, 128, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 130, 445, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("", "deckSelection", 0, 0, 270, 128, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 370, 445, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("", "deckSelection", 0, 0, 270, 128, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 610, 445, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("", "deckSelection", 0, 0, 270, 128, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 130, 667, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("", "deckSelection", 0, 0, 270, 128, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 370, 667, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("", "deckSelection", 0, 0, 270, 128, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 610, 667, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("", "deckSelection", 0, 0, 270, 128, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					.addMask(new Mask(22, 20, 204, 64))
 				),
 	};
 
@@ -138,8 +147,9 @@ public class HearthScannerSettings {
 		float scale = 1f;
 		float matchQuality = -1;
 		String scene = "";
-		Mask[] masks;
-		Scanbox nestedSB = null;
+		Mask mask;
+		Scanbox nestedSb = null;
+		HearthImageTarget target = null;
 
 		public Scanbox(String filename, String sce, int x, int y, int w, int h){
 			imgfile = filename;
@@ -161,13 +171,22 @@ public class HearthScannerSettings {
 			scene = sce;
 		}
 		
+		public Scanbox makeCopy(){
+			Scanbox cloned = new Scanbox(imgfile, scene, xOffset, yOffset, width, height, scale, matchQuality);
+			cloned.addNested(this.nestedSb);
+			cloned.addMask(mask);
+			cloned.target = target;
+			return cloned;
+		}
+		
 		public Scanbox addNested(Scanbox nesting){
-			nestedSB = nesting;
+			nestedSb = nesting;
 			return this;
 		}
 		
-		public void setMask(Mask[] masks){
-			this.masks = masks;
+		public Scanbox addMask(Mask mask){
+			this.mask = mask;
+			return this;
 		}
 	}
 	
@@ -176,5 +195,12 @@ public class HearthScannerSettings {
 		int yOffset = 0;
 		int width = 0;
 		int height = 0;
+		
+		public Mask(int x, int y, int w, int h){
+			xOffset=x;
+			yOffset=y;
+			width = w;
+			height = h;
+		}
 	}
 }

@@ -39,23 +39,52 @@ public class HearthHelper {
 		return encoding.decode(ByteBuffer.wrap(encoded)).toString();
 	}
 	
-	public static BufferedImage resizeImage(File imgFile, float scaleFactor){
+	public static BufferedImage loadImage(File imgFile){
 		try {
-			BufferedImage sourceImage = ImageIO.read(imgFile);
-			
-			int resizedWidth = (int) (sourceImage.getWidth() * scaleFactor);  
-			Image thumbnail = sourceImage.getScaledInstance(resizedWidth, -1, Image.SCALE_SMOOTH);
-			BufferedImage bufferedThumbnail = new BufferedImage(thumbnail.getWidth(null),
-			                                                    thumbnail.getHeight(null),
-			                                                    BufferedImage.TYPE_INT_RGB);
-			bufferedThumbnail.getGraphics().drawImage(thumbnail, 0, 0, null);
-			
-			return bufferedThumbnail;
+			return ImageIO.read(imgFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		return null;
+	}
+	
+	public static BufferedImage resizeImage(File imgFile, float scaleFactor){
+		BufferedImage sourceImage = loadImage(imgFile);
+		
+		int resizedWidth = (int) (sourceImage.getWidth() * scaleFactor);  
+		Image thumbnail = sourceImage.getScaledInstance(resizedWidth, -1, Image.SCALE_SMOOTH);
+		BufferedImage bufferedThumbnail = new BufferedImage(thumbnail.getWidth(null),
+		                                                    thumbnail.getHeight(null),
+		                                                    BufferedImage.TYPE_INT_RGB);
+		bufferedThumbnail.getGraphics().drawImage(thumbnail, 0, 0, null);
+		
+		return bufferedThumbnail;
+	}
+	
+	public static void applyMaskImage(BufferedImage src, int x, int y, int w, int h){
+
+		if(x < 0){
+			x = 0;
+		}
+		
+		if(y < 0){
+			y = 0;
+		}
+		
+		int maxOffsetX = x + w;
+		int maxOffsetY = y + h;
+		
+		for(int xCounter = x; xCounter < maxOffsetX; xCounter++){
+			for(int yCoutner = y; yCoutner < maxOffsetY; yCoutner++){
+				
+				if(yCoutner > src.getHeight() || xCounter > src.getWidth()){
+					break;
+				}
+				
+				src.setRGB(xCounter, yCoutner, 0);
+			}
+		}
 	}
 	
 	public static BufferedImage cropImage(BufferedImage src, int x, int y, int w, int h){

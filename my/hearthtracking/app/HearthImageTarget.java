@@ -131,4 +131,17 @@ public class HearthImageTarget extends DefaultTarget implements Target {
 		return convertToScreenRegions(screenRegion, matches);
 	}
 	
+	public boolean find(BufferedImage targetWithin) {
+		BufferedImage backgroundImage = targetImage;
+		
+		if (targetWithin.getWidth() < backgroundImage.getWidth() || targetWithin.getHeight() < backgroundImage.getHeight()){
+			return false;
+		}
+		
+		List<RegionMatch> matches;
+
+		matches = TemplateMatcher.findMatchesByGrayscaleAtOriginalResolution(backgroundImage, targetWithin, getLimit(), getMinScore());
+
+		return (matches.size() > 0);
+	}
 }
