@@ -94,6 +94,7 @@ public class MainLoader {
 			}
 		}
 		
+		hearthScanner.dispose();
 		tracker.closeDB();
 		lang.dispose();
 		

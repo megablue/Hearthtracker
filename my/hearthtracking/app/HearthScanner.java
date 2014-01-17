@@ -49,8 +49,8 @@ public class HearthScanner {
 	private int exVictory = -1;
 	private int goFirst = -1;
 	private int exGoFirst = -1;
-	private Date startTime = new Date();
-	private Date lastSave = new Date(new Date().getTime() - 30000);
+	private long startTime = System.currentTimeMillis();
+	private long lastSave  = System.currentTimeMillis() - 30000;
 
 	private int gameMode = UNKNOWNMODE;
 	private int exGameMode = UNKNOWNMODE;
@@ -69,7 +69,8 @@ public class HearthScanner {
 	private HearthHeroesList heroesList;
 	
 	private int gameResX = 1920, gameResY = 1080;
-	private int oldGameResX = 1920, oldGameResY = 1080;
+	private int oldGameResX = -1, oldGameResY = -1;
+	private boolean gameScannerInitialized = false;
 	
 	private boolean forcePing = false;
 	private boolean pingHearthstone = true;
@@ -77,11 +78,11 @@ public class HearthScanner {
 	private boolean autoDetectGameRes = true;
 	
 	private long pingInterval = 60 * 1000;
-	private Date lastSeen =  new Date(0);
+	private long lastSeen =  0;
 	private boolean isDirty = true;
 	private int[] lastScanArea = {0,0,0,0};
 	private int[] lastScanSubArea = {0,0,0,0};
-	private Date lastPing = new Date(new Date().getTime() - pingInterval);
+	private long lastPing = System.currentTimeMillis() - pingInterval;
 	
 	private boolean reinitScanner = false;
 	
@@ -95,21 +96,24 @@ public class HearthScanner {
 	
 	Hashtable<String, ScreenRegion> regionsMap = new Hashtable<String, ScreenRegion>();
 	
-	public HearthScanner(HearthTracker t){
-		//debugMode = HearthHelper.isDevelopmentEnvironment();
-		tracker = t;
-		init();
-	}
+	Hashtable<String, String> imageCacheMap = new Hashtable<String, String>();
+	
+	private boolean generateBeterOffsets = true; 
+	
+	private boolean enableMagicHash = false;
+	
+	private ImagePHash pHash = new ImagePHash();
 	
 	public HearthScanner (HearthTracker t, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
 		//debugMode = HearthHelper.isDevelopmentEnvironment();
 		tracker = t;
-		oldGameResX = gameResX = resX;
-		oldGameResY = gameResY = resY;
+		gameResX = resX;
+		gameResY = resY;
 		gameLang = lang.toLowerCase();
 		setAlwaysScan(alwaysScanFlag);
 		setAutoPing(autoping);
 		init();
+		initGameScanner();
 	}
 	
 	public static String gameModeToStringLabel(int mode){
@@ -261,7 +265,68 @@ public class HearthScanner {
 			config.save(gameLanguages, HearthFilesNameManager.gameLangsFile);
 		}
 		
-		this.initGameScanner();
+		inited = true;
+	}
+	
+	private synchronized void initGameScanner(){
+		int[] gameRes = this.getGameResolution();
+		
+		gameLang = sanitizeGameLang(gameLang);
+		
+		String pathScannerSettingByRes = String.format(HearthFilesNameManager.scannerSettingFileOverrideByRes, gameLang, gameRes[0], gameRes[1]);
+		
+		String pathScannerSetting = String.format(HearthFilesNameManager.scannerSettingFileDefault, gameLang);
+		
+		scannerSettings = (HearthScannerSettings) config.load(pathScannerSettingByRes);
+		
+		if(scannerSettings == null){
+			scannerSettings = (HearthScannerSettings) config.load(pathScannerSetting);
+		}
+		
+		if(scannerSettings == null){
+			scannerSettings = new HearthScannerSettings();
+			config.save(scannerSettings, pathScannerSetting);
+		}
+		
+		for(int i = 0; i < heroesList.getTotal(); i++){
+			this.prepareImageTarget(scannerSettings.arenaHeroScanboxes[i]);
+			this.prepareImageTarget(scannerSettings.myHeroScanboxes[i]);
+			this.prepareImageTarget(scannerSettings.opponentHeroScanboxes[i]);
+		}
+		
+		for(int i = 0; i < scannerSettings.lossesScanboxes.length; i++){
+			this.prepareImageTarget(scannerSettings.lossesScanboxes[i]);
+		}
+		
+		for(int i = 0; i < scannerSettings.lossesUncheckedScanboxes.length; i++){
+			this.prepareImageTarget(scannerSettings.lossesUncheckedScanboxes[i]);
+		}
+		
+		for(int i = 0; i < scannerSettings.winsScanboxes.length; i++){
+			this.prepareImageTarget(scannerSettings.winsScanboxes[i]);
+		}
+		
+		for(int i = 0; i < scannerSettings.deckScanboxses.length; i++){
+			this.prepareImageTarget(scannerSettings.deckScanboxses[i]);
+		}
+		
+		this.prepareImageTarget(scannerSettings.rankedScanbox);
+		this.prepareImageTarget(scannerSettings.unrankedScanbox);
+		this.prepareImageTarget(scannerSettings.challengeScanbox);
+		this.prepareImageTarget(scannerSettings.practiceScanbox);
+		this.prepareImageTarget(scannerSettings.arenaLeafScanbox);
+		this.prepareImageTarget(scannerSettings.victoryScanbox);
+		this.prepareImageTarget(scannerSettings.defeatScanbox);
+
+		this.initGameLang();
+		gameScannerInitialized = true;
+	}
+		
+	private void initGameLang(){		
+		//language dependent
+		this.prepareImageTarget(scannerSettings.goFirstScanbox);
+		this.prepareImageTarget(scannerSettings.goSecondScanbox);
+		inited = true;
 	}
 	
 	private String sanitizeGameLang(String gLang){
@@ -335,91 +400,10 @@ public class HearthScanner {
 		sb.target = it;
 		
 		if(sb.nestedSb != null){
-			System.out.println("Trying to load nested: " + sb.nestedSb.imgfile);
 			prepareImageTarget(sb.nestedSb);
 		}
 	}
-	
-	private synchronized void initGameScanner(){
-		System.out.println("initGameScanner()");
-		
-		int[] gameRes = this.getGameResolution();
-		
-		gameLang = sanitizeGameLang(gameLang);
-		
-		String pathScannerSettingByRes = String.format(HearthFilesNameManager.scannerSettingFileOverrideByRes, gameLang, gameRes[0], gameRes[1]);
-		
-		String pathScannerSetting = String.format(HearthFilesNameManager.scannerSettingFileDefault, gameLang);
-		
-		scannerSettings = (HearthScannerSettings) config.load(pathScannerSettingByRes);
-		
-		if(scannerSettings == null){
-			scannerSettings = (HearthScannerSettings) config.load(pathScannerSetting);
-		}
-		
-		if(scannerSettings == null){
-			scannerSettings = new HearthScannerSettings();
-			config.save(scannerSettings, pathScannerSetting);
-		}
-		
-		for(int i = 0; i < heroesList.getTotal(); i++){
-			this.prepareImageTarget(scannerSettings.arenaHeroScanboxes[i]);
-			this.prepareImageTarget(scannerSettings.myHeroScanboxes[i]);
-			this.prepareImageTarget(scannerSettings.opponentHeroScanboxes[i]);
-		}
-		
-		this.prepareImageTarget(scannerSettings.lossesScanboxes[0]);
-		this.prepareImageTarget(scannerSettings.lossesUncheckedScanboxes[0]);
-		
-		this.prepareImageTarget(scannerSettings.rankedScanbox);
-		this.prepareImageTarget(scannerSettings.unrankedScanbox);
-		this.prepareImageTarget(scannerSettings.challengeScanbox);
-		this.prepareImageTarget(scannerSettings.practiceScanbox);
-		this.prepareImageTarget(scannerSettings.arenaLeafScanbox);
-		this.prepareImageTarget(scannerSettings.victoryScanbox);
-		this.prepareImageTarget(scannerSettings.defeatScanbox);
-
-		for(int i = 0; i < scannerSettings.winsScanboxes.length; i++){
-			this.prepareImageTarget(scannerSettings.winsScanboxes[i]);
-		}
-		
-		for(int i = 0; i < scannerSettings.deckScanboxses.length; i++){
-			this.prepareImageTarget(scannerSettings.deckScanboxses[i]);
-		}
-
-		this.initGameLang();
-		inited = true;
-	}
-		
-	private void initGameLang(){		
-		//language dependent
-		this.prepareImageTarget(scannerSettings.goFirstScanbox);
-		this.prepareImageTarget(scannerSettings.goSecondScanbox);
-		inited = true;
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean findText(ScreenRegion region, TextTarget target, String label){
-		Canvas canvas = new DesktopCanvas();
-		ScreenRegion foundRegion;
-
-		if(debugMode)
-		{
-			canvas.addBox(region);
-			canvas.addLabel(region, "Region " + label).display(1);
-		}
-		
-		foundRegion = region.find(target);
-		
-		if((foundRegion != null) && debugMode)
-		{
-			canvas.addBox(region);
-			canvas.addLabel(region, "Found region " + label).display(1);
-		}
-		
-		return (foundRegion != null);
-	}
-		
+			
 	private boolean findImage(HearthScannerSettings.Scanbox sb, String label){
 		return _findImage(sb, label);
 	}
@@ -434,9 +418,7 @@ public class HearthScanner {
 				
 		int boardX = this.getBoardX() + this.getXOffsetOverride();
 		int boardY = this.getBoardY() + this.getYOffetOverride();
-//		int boardW = this.getBoardWidth();
-//		int boardH = this.getBoardHeight();
-		
+
 		int roiX = (int) (sb.xOffset * scaleFactor);
 		int roiY = (int) (sb.yOffset * scaleFactor);
 		int roiW = (int) (sb.width * scaleFactor);
@@ -451,8 +433,9 @@ public class HearthScanner {
 		lastScanSubArea[2] = roiW;
 		lastScanSubArea[3] = roiH;
 
-		String hashKey = roiX + "-" + roiY + "-" + roiW + "-" + roiH; 
+		String hashKey = getBoardWidth() + "-" + getBoardHeight() + "-" + roiX + "-" + roiY + "-" + roiW + "-" + roiH + "-" + sb.imgfile; 
 		ScreenRegion cachedRegion = regionsMap.get(hashKey);
+		String magicHash = imageCacheMap.get(hashKey);
 
 		//if the desktop region is not cached
 		if(cachedRegion == null){
@@ -474,7 +457,7 @@ public class HearthScanner {
 		}
 		
 		//masked image requires very specific offsets
-		//make sure you set close enough offsets
+		//make sure you the offsets are accurate enough
 		if(sb.mask != null){
 			BufferedImage regionImage = cachedRegion.getLastCapturedImage();
 			
@@ -486,9 +469,41 @@ public class HearthScanner {
 				(int) (sb.mask.height 	* scaleFactor)
 			);
 		}
-	
-		ScreenRegion foundRegion = cachedRegion.find(target);
 		
+		ScreenRegion foundRegion = null;
+		
+		if(!enableMagicHash || magicHash == null){
+			foundRegion = cachedRegion.find(target);
+		} else {
+			String[] parts = magicHash.split("-");
+						
+			if(parts.length == 5){
+				int x = Integer.parseInt(parts[0]);
+				int y = Integer.parseInt(parts[1]);
+				int w = Integer.parseInt(parts[2]);
+				int h = Integer.parseInt(parts[3]);
+				String phashVal = parts[4];	
+				
+				BufferedImage targetImage = cachedRegion.getLastCapturedImage();
+				targetImage = HearthHelper.cropImage(targetImage, x, y, w, h);
+				String targetHash = null;
+
+				try {
+					targetHash = pHash.getHash(targetImage);
+					int distance = pHash.distance(phashVal, targetHash);
+					
+					System.out.println("Magic Hash: " + magicHash);
+					System.out.println("Distance: " + distance);
+					
+					if(distance < 20){
+						foundRegion = cachedRegion.find(target);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	
+			}
+		}
+
 		if((foundRegion != null) && debugMode)
 		{
 			canvas.addBox(foundRegion);
@@ -496,6 +511,46 @@ public class HearthScanner {
 		}
 		
 		if(foundRegion != null){
+			
+			if(enableMagicHash && magicHash == null){
+				Rectangle rec = foundRegion.getBounds();
+				int targetRelativeX = rec.x - (roiX + boardX);
+				int targetRelativeY = rec.y - (roiY + boardY);
+				int targetWidth = rec.width;
+				int targetHeight = rec.height;
+								
+				BufferedImage targetImage = cachedRegion.getLastCapturedImage();
+				targetImage = HearthHelper.cropImage(targetImage, targetRelativeX, targetRelativeY, targetWidth, targetHeight);
+				
+				try {
+					String phashVal = pHash.getHash(targetImage);
+					magicHash = targetRelativeX 
+								+ "-" + targetRelativeY 
+								+ "-" + targetWidth 
+								+ "-" + targetHeight
+								+ "-" + phashVal;
+					
+					imageCacheMap.put(hashKey, magicHash);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				//String output = String.format(HearthFilesNameManager.scannerImageCacheFile, "out-" + hashKey);
+				//HearthHelper.bufferedImageToFile(targetImage, output);
+			}
+			
+			
+			if(generateBeterOffsets){
+				Rectangle rec = foundRegion.getBounds();
+				int targetRelativeX = rec.x - boardX;
+				int targetRelativeY = rec.y - boardY;
+				
+				sb.xOffset = ((int) (targetRelativeX/scaleFactor)) -4;
+				sb.yOffset = ((int) (targetRelativeY/scaleFactor)) -4;
+				sb.width   = ((int) (rec.width/scaleFactor)) + 8;
+				sb.height  = ((int) (rec.height/scaleFactor)) + 8;
+			}
+
 			updateLastSeen();
 			
 			if(sb.nestedSb != null){
@@ -515,62 +570,6 @@ public class HearthScanner {
 				found = true;
 			}
 		}
-		
-//		if(foundRegion != null){
-//			found = true;
-//			Rectangle rec = foundRegion.getBounds();
-//			
-//			//convert from absolute to relative offsets from captured region
-//			int targetRelativeX = rec.x - (roiX + boardX);
-//			int targetRelativeY = rec.y - (roiY + boardY);
-//
-//			BufferedImage regionImage = cachedRegion.getLastCapturedImage();
-//			BufferedImage targetImage = regionImage.getSubimage(
-//				targetRelativeX, 
-//				targetRelativeY, 
-//				rec.width, 
-//				rec.height
-//			);
-//			
-//			HearthHelper.bufferedImageToFile(
-//				targetImage,
-//				String.format(HearthFilesNameManager.scannerImageCacheFile, hashKey + "-" + sb.imgfile)
-//			);
-//			
-//			if(sb.nestedSb != null){
-//				HearthScannerSettings.Scanbox nestedSb = sb.nestedSb.makeCopy();
-//				
-//				nestedSb.xOffset = ((int) (targetRelativeX/scaleFactor)) + nestedSb.xOffset;
-//				nestedSb.yOffset = ((int) (targetRelativeY/scaleFactor)) + nestedSb.yOffset;
-//				
-//				int nestedRoiX  = (int) (nestedSb.xOffset 	* scaleFactor);
-//				int nestedRoiY  = (int) (nestedSb.yOffset 	* scaleFactor);
-//				int nestedRoiW  = (int) (nestedSb.width 	* scaleFactor);
-//				int nestedRoiH  = (int) (nestedSb.height 	* scaleFactor);
-//				
-//				hashKey = nestedSb.xOffset + "-" + nestedSb.yOffset + "-" + nestedSb.width + "-" + nestedSb.height;
-//				
-//				ScreenRegion nestedRegion = new DesktopScreenRegion(boardX + roiX + nestedRoiX, boardY + roiY + nestedRoiY, nestedRoiW, nestedRoiH);
-//				BufferedImage nestedImage = nestedRegion.capture();
-//
-//				if(nestedSb.mask != null){				
-//					HearthHelper.applyMaskImage(
-//							nestedImage, 
-//							(int) (nestedSb.mask.xOffset 	* scaleFactor), 
-//							(int) (nestedSb.mask.yOffset 	* scaleFactor), 
-//							(int) (nestedSb.mask.width 		* scaleFactor), 
-//							(int) (nestedSb.mask.height 	* scaleFactor)
-//					);
-//				}
-//
-//				HearthHelper.bufferedImageToFile(
-//					nestedImage,
-//					String.format(HearthFilesNameManager.scannerImageCacheFile, hashKey + "-nested-" + sb.imgfile)
-//				);
-//			}
-//			
-//			updateLastSeen();
-//		}
 		
 		return found;
 	}
@@ -903,7 +902,7 @@ public class HearthScanner {
 	}
 	
 	private synchronized void scanGameHeroes() {
-		if(this.foundGameHero() || new Date().getTime() - lastSave.getTime() < 30000){
+		if(this.foundGameHero() || System.currentTimeMillis() - lastSave < 30000){
 			return;
 		}
 				
@@ -971,11 +970,11 @@ public class HearthScanner {
 	}
 	
 	private void saveGameResult(){
-		if(new Date().getTime() - lastSave.getTime() < 30000){
+		if(System.currentTimeMillis() - lastSave < 30000){
 			return;
 		}
 		
-		int totalTime = (int) (new Date().getTime() - startTime.getTime())/1000;
+		int totalTime = (int) (System.currentTimeMillis() - startTime)/1000;
 		HearthDecks decks = (HearthDecks) config.load(HearthFilesNameManager.decksFile);
 		String deckName = "";
 		
@@ -1015,13 +1014,13 @@ public class HearthScanner {
 			if(selectedDeck > -1 && selectedDeck < decks.list.length){
 				deckName = decks.list[selectedDeck];
 			}
-			tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime.getTime(), totalTime, false, deckName);
+			tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, startTime, totalTime, false, deckName);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		System.out.println("Done saving match result...");
 		
-		lastSave = new Date();		
+		lastSave = System.currentTimeMillis();		
 		exVictory = victory;
 		inGameMode = 0;
 		victory = -1;
@@ -1086,7 +1085,7 @@ public class HearthScanner {
 						
 			exGoFirst = goFirst;
 			inGameMode = 1;
-			startTime = new Date();
+			startTime = System.currentTimeMillis();
 			isDirty = true;
 		}
 		
@@ -1117,7 +1116,7 @@ public class HearthScanner {
 		return yOffset;
 	}
 	
-	public Date getLastseen(){		
+	public long getLastseen(){		
 		return lastSeen;
 	}
 	
@@ -1136,14 +1135,14 @@ public class HearthScanner {
 	public synchronized void setAutoPing(boolean enabled){
 		pingHearthstone = enabled;
 		seenHearthstone = false;
-		lastPing = new Date(new Date().getTime() - pingInterval);
+		lastPing = System.currentTimeMillis() - pingInterval;
 	}
 	
 	private void autoPing(){
 		if(pingHearthstone && seenHearthstone ){
-			if( lastPing.getTime() + pingInterval < new Date().getTime() ){
+			if( lastPing + pingInterval < System.currentTimeMillis() ){
 				pingHearthstone();
-				lastPing = new Date();
+				lastPing = System.currentTimeMillis();
 				seenHearthstone = false;
 			}
 		}
@@ -1210,10 +1209,13 @@ public class HearthScanner {
 		}
 		
 		//if resolution is different from previous scan
-		if(inited && (resolution[0] != oldGameResX || resolution[1] != oldGameResY)){
+		if(resolution[0] != oldGameResX || resolution[1] != oldGameResY){
 			oldGameResX = resolution[0];
 			oldGameResY = resolution[1];
-			this.initGameScanner();
+			
+			if(gameScannerInitialized){
+				this.initGameScanner();
+			}			
 		}
 		
 		return resolution;
@@ -1221,11 +1223,11 @@ public class HearthScanner {
 	
 	private void updateLastSeen(){
 		//if more than 1 minutes, force ping
-		if(lastSeen.getTime() + pingInterval < new Date().getTime()){
+		if(lastSeen + pingInterval < System.currentTimeMillis()){
 			seenHearthstone = true;
 		}
 		
-		lastSeen = new Date();		
+		lastSeen = System.currentTimeMillis();		
 	}
 	
 	public String getOverview(){
@@ -1350,6 +1352,8 @@ public class HearthScanner {
 			return;
 		}
 		
+		long startBench = System.currentTimeMillis();
+		
 		scanMode();
 		
 		if(isArenaMode() && !isInGame()){
@@ -1369,6 +1373,8 @@ public class HearthScanner {
 		//clear the cached regions
 		clearRegionsCache();
 		
+		System.out.println("Process() time spent: " + (System.currentTimeMillis() - startBench) + " ms");
+		
 		if(reinitScanner){
 			initGameScanner();
 			reinitScanner = false;
@@ -1377,6 +1383,15 @@ public class HearthScanner {
 		if(forcePing){
 			pingHearthstone();
 			forcePing = false;
+		}
+	}
+	
+	public void dispose(){
+		
+		if(generateBeterOffsets){
+			System.out.println("saving 'better' offsets");
+			String path = String.format(HearthFilesNameManager.scannerSettingFileDefault, "better");
+			config.save(scannerSettings, path);
 		}
 	}
 }

@@ -4,10 +4,10 @@
   <overwriteAutoScale>false</overwriteAutoScale>
   <autoScaleFactor>1.0</autoScaleFactor>
   <arenaLeafScanbox>
-    <xOffset>435</xOffset>
-    <yOffset>340</yOffset>
-    <width>100</width>
-    <height>100</height>
+    <xOffset>457</xOffset>
+    <yOffset>363</yOffset>
+    <width>57</width>
+    <height>57</height>
     <imgfile>arena-leaf.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
@@ -15,10 +15,10 @@
     <outer-class reference="../.."/>
   </arenaLeafScanbox>
   <rankedScanbox>
-    <xOffset>1082</xOffset>
-    <yOffset>134</yOffset>
-    <width>120</width>
-    <height>120</height>
+    <xOffset>1088</xOffset>
+    <yOffset>140</yOffset>
+    <width>107</width>
+    <height>107</height>
     <imgfile>ranked-mode.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
@@ -26,10 +26,10 @@
     <outer-class reference="../.."/>
   </rankedScanbox>
   <unrankedScanbox>
-    <xOffset>1070</xOffset>
-    <yOffset>138</yOffset>
-    <width>100</width>
-    <height>100</height>
+    <xOffset>1091</xOffset>
+    <yOffset>159</yOffset>
+    <width>57</width>
+    <height>57</height>
     <imgfile>unranked-mode.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
@@ -37,10 +37,10 @@
     <outer-class reference="../.."/>
   </unrankedScanbox>
   <practiceScanbox>
-    <xOffset>985</xOffset>
-    <yOffset>50</yOffset>
-    <width>80</width>
-    <height>80</height>
+    <xOffset>995</xOffset>
+    <yOffset>60</yOffset>
+    <width>57</width>
+    <height>57</height>
     <imgfile>practice-mode.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
@@ -48,10 +48,10 @@
     <outer-class reference="../.."/>
   </practiceScanbox>
   <challengeScanbox>
-    <xOffset>1200</xOffset>
-    <yOffset>100</yOffset>
-    <width>120</width>
-    <height>120</height>
+    <xOffset>1261</xOffset>
+    <yOffset>112</yOffset>
+    <width>57</width>
+    <height>57</height>
     <imgfile>challenge-mode.png</imgfile>
     <scale>1.0</scale>
     <matchQuality>-1.0</matchQuality>
@@ -60,10 +60,10 @@
   </challengeScanbox>
   <deckScanboxses>
     <Scanbox>
-      <xOffset>130</xOffset>
-      <yOffset>220</yOffset>
-      <width>55</width>
-      <height>55</height>
+      <xOffset>132</xOffset>
+      <yOffset>222</yOffset>
+      <width>53</width>
+      <height>53</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
@@ -75,7 +75,7 @@
         <height>108</height>
         <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
-        <matchQuality>0.7</matchQuality>
+        <matchQuality>0.6</matchQuality>
         <scene>deckSelection</scene>
         <mask>
           <xOffset>22</xOffset>
@@ -89,10 +89,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>370</xOffset>
-      <yOffset>220</yOffset>
-      <width>55</width>
-      <height>55</height>
+      <xOffset>368</xOffset>
+      <yOffset>222</yOffset>
+      <width>53</width>
+      <height>53</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
@@ -104,7 +104,7 @@
         <height>108</height>
         <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
-        <matchQuality>0.7</matchQuality>
+        <matchQuality>0.6</matchQuality>
         <scene>deckSelection</scene>
         <mask>
           <xOffset>22</xOffset>
@@ -118,10 +118,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>220</yOffset>
-      <width>55</width>
-      <height>55</height>
+      <xOffset>611</xOffset>
+      <yOffset>222</yOffset>
+      <width>53</width>
+      <height>53</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
@@ -133,7 +133,7 @@
         <height>108</height>
         <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
-        <matchQuality>0.7</matchQuality>
+        <matchQuality>0.6</matchQuality>
         <scene>deckSelection</scene>
         <mask>
           <xOffset>22</xOffset>
@@ -147,10 +147,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>130</xOffset>
-      <yOffset>445</yOffset>
-      <width>55</width>
-      <height>55</height>
+      <xOffset>132</xOffset>
+      <yOffset>446</yOffset>
+      <width>53</width>
+      <height>53</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
@@ -162,7 +162,7 @@
         <height>108</height>
         <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
-        <matchQuality>0.7</matchQuality>
+        <matchQuality>0.6</matchQuality>
         <scene>deckSelection</scene>
         <mask>
           <xOffset>22</xOffset>
@@ -176,10 +176,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>370</xOffset>
-      <yOffset>445</yOffset>
-      <width>55</width>
-      <height>55</height>
+      <xOffset>371</xOffset>
+      <yOffset>446</yOffset>
+      <width>53</width>
+      <height>53</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
@@ -191,94 +191,7 @@
         <height>108</height>
         <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
-        <matchQuality>0.7</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>445</yOffset>
-      <width>55</width>
-      <height>55</height>
-      <imgfile>deck-selected.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.7</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>130</xOffset>
-      <yOffset>667</yOffset>
-      <width>55</width>
-      <height>55</height>
-      <imgfile>deck-selected.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.7</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>370</xOffset>
-      <yOffset>667</yOffset>
-      <width>55</width>
-      <height>55</height>
-      <imgfile>deck-selected.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.7</matchQuality>
+        <matchQuality>0.6</matchQuality>
         <scene>deckSelection</scene>
         <mask>
           <xOffset>22</xOffset>
@@ -293,9 +206,9 @@
     </Scanbox>
     <Scanbox>
       <xOffset>610</xOffset>
-      <yOffset>667</yOffset>
-      <width>55</width>
-      <height>55</height>
+      <yOffset>446</yOffset>
+      <width>53</width>
+      <height>53</height>
       <imgfile>deck-selected.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.7</matchQuality>
@@ -307,7 +220,94 @@
         <height>108</height>
         <imgfile>deck-selected-verify.png</imgfile>
         <scale>1.0</scale>
-        <matchQuality>0.7</matchQuality>
+        <matchQuality>0.6</matchQuality>
+        <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
+        <outer-class reference="../../../.."/>
+      </nestedSb>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>132</xOffset>
+      <yOffset>669</yOffset>
+      <width>53</width>
+      <height>53</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.7</matchQuality>
+      <scene>deckSelection</scene>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
+        <scale>1.0</scale>
+        <matchQuality>0.6</matchQuality>
+        <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
+        <outer-class reference="../../../.."/>
+      </nestedSb>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>371</xOffset>
+      <yOffset>669</yOffset>
+      <width>53</width>
+      <height>53</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.7</matchQuality>
+      <scene>deckSelection</scene>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
+        <scale>1.0</scale>
+        <matchQuality>0.6</matchQuality>
+        <scene>deckSelection</scene>
+        <mask>
+          <xOffset>22</xOffset>
+          <yOffset>20</yOffset>
+          <width>204</width>
+          <height>64</height>
+          <outer-class reference="../../../../.."/>
+        </mask>
+        <outer-class reference="../../../.."/>
+      </nestedSb>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>610</xOffset>
+      <yOffset>669</yOffset>
+      <width>53</width>
+      <height>53</height>
+      <imgfile>deck-selected.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.7</matchQuality>
+      <scene>deckSelection</scene>
+      <nestedSb>
+        <xOffset>-22</xOffset>
+        <yOffset>23</yOffset>
+        <width>245</width>
+        <height>108</height>
+        <imgfile>deck-selected-verify.png</imgfile>
+        <scale>1.0</scale>
+        <matchQuality>0.6</matchQuality>
         <scene>deckSelection</scene>
         <mask>
           <xOffset>22</xOffset>
@@ -367,10 +367,10 @@
   </defeatScanbox>
   <winsScanboxes>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>343</xOffset>
+      <yOffset>232</yOffset>
+      <width>107</width>
+      <height>107</height>
       <imgfile>0.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
@@ -547,10 +547,10 @@
   </lossesScanboxes>
   <lossesUncheckedScanboxes>
     <Scanbox>
-      <xOffset>400</xOffset>
-      <yOffset>507</yOffset>
-      <width>110</width>
-      <height>110</height>
+      <xOffset>419</xOffset>
+      <yOffset>530</yOffset>
+      <width>75</width>
+      <height>65</height>
       <imgfile>lose-checkbox-unchecked.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
@@ -582,10 +582,10 @@
   </lossesUncheckedScanboxes>
   <arenaHeroScanboxes>
     <Scanbox>
-      <xOffset>80</xOffset>
-      <yOffset>720</yOffset>
-      <width>240</width>
-      <height>160</height>
+      <xOffset>170</xOffset>
+      <yOffset>742</yOffset>
+      <width>71</width>
+      <height>71</height>
       <imgfile>mage.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>

@@ -29,6 +29,8 @@ public class HearthConfigurator {
 		xstream.alias("HearthDecks", 					HearthDecks.class);
 		xstream.alias("HearthSetting", 					HearthSetting.class);
 		xstream.alias("HearthULangsList", 				HearthULangsList.class);
+		
+		xstream.omitField(HearthScannerSettings.Scanbox.class, "target");
 	}
 	
 	public <t> Object load(String path){

@@ -1928,7 +1928,7 @@ public class HearthUI {
 	}
 	
 	private void poppulateDiagnoticsStatus(){
-		Date lastSeen = hearthScanner.getLastseen();
+		Date lastSeen = new Date(hearthScanner.getLastseen());
 		int[] area = hearthScanner.getLastScanArea();
 		int[] subArea = hearthScanner.getLastScanSubArea();
 		String last = lastSeen == null || lastSeen.getTime() == 0 ? lang.t("Never") : HearthHelper.getPrettyText(lastSeen); 

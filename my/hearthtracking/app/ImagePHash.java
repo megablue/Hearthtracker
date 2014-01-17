@@ -4,14 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
-import java.io.InputStream;
 
-import javax.imageio.ImageIO;
-/*
- * pHash-like image hash. 
- * Author: Elliot Shepherd (elliot@jarofworms.com
- * Based On: http://www.hackerfactor.com/blog/index.php?/archives/432-Looks-Like-It.html
- */
 public class ImagePHash {
 
 	private int size = 32;
@@ -39,9 +32,8 @@ public class ImagePHash {
 	}
 	
 	// Returns a 'binary string' (like. 001010111011100010) which is easy to do a hamming distance on. 
-	public String getHash(InputStream is) throws Exception {
-		BufferedImage img = ImageIO.read(is);
-		
+	public String getHash(BufferedImage img) throws Exception {
+
 		/* 1. Reduce size. 
 		 * Like Average Hash, pHash starts with a small image. 
 		 * However, the image is larger than 8x8; 32x32 is a good size. 
@@ -69,9 +61,9 @@ public class ImagePHash {
 		 * and scalars. While JPEG uses an 8x8 DCT, this algorithm uses 
 		 * a 32x32 DCT.
 		 */
-		long start = System.currentTimeMillis();
+		//long start = System.currentTimeMillis();
 		double[][] dctVals = applyDCT(vals);
-		System.out.println("DCT: " + (System.currentTimeMillis() - start));
+		//System.out.println("DCT: " + (System.currentTimeMillis() - start));
 		
 		/* 4. Reduce the DCT. 
 		 * This is the magic step. While the DCT is 32x32, just keep the 

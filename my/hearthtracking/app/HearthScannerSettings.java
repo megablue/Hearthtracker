@@ -10,7 +10,7 @@ public class HearthScannerSettings {
 	public Scanbox arenaLeafScanbox		= new Scanbox("arena-leaf.png", 	"gameMode", 435, 340, 100, 100);
 	
 	//Ranked mode scan boxes
-	public Scanbox rankedScanbox		= new Scanbox("ranked-mode.png",	"gameMode", 1082, 134, 120, 120);
+	public Scanbox rankedScanbox		= new Scanbox("ranked-mode.png",	"gameMode", 1080, 134, 200, 200);
 
 	//Play mode scan boxes
 	public Scanbox unrankedScanbox		= new Scanbox("unranked-mode.png",	"gameMode", 1070, 138, 100, 100);
@@ -24,47 +24,47 @@ public class HearthScannerSettings {
 	public Scanbox[] deckScanboxses = {
 			new Scanbox("deck-selected.png", "deckSelection", 130, 220, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.6f)
 					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 370, 220, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.6f)
 					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 610, 220, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.6f)
 					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 130, 445, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.6f)
 					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 370, 445, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.6f)
 					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 610, 445, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.6f)
 					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 130, 667, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.6f)
 					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 370, 667, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.6f)
 					.addMask(new Mask(22, 20, 204, 64))
 				),
 			new Scanbox("deck-selected.png", "deckSelection", 610, 667, 55, 55, 1f, 0.7f)
 				.addNested(
-					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.7f)
+					new Scanbox("deck-selected-verify.png", "deckSelection", -22, 23, 245, 108, 1f, 0.6f)
 					.addMask(new Mask(22, 20, 204, 64))
 				),
 	};
