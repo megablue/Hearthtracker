@@ -3,40 +3,53 @@ package my.hearthtracking.app;
 import java.io.File;
 
 public class HearthFilesNameManager {
+	static String workingDir	= "."		+ File.separator;
+	static String configsPath 	= "configs" + File.separator;
+	static String imagesPath 	= "images"	+ File.separator;
+	static String logsPath 		= "logs"	+ File.separator;
+	static String dataPath 		= "data"	+ File.separator;
+	static String cachePath 	= "cache"	+ File.separator;
 	
-	//log/settings
-	static String updaterLog 		= "." + File.separator + "configs" + File.separator + "update.xml";
-	static String uiLangsListFile 	= "." + File.separator + "configs" + File.separator + "uiLangs.xml";
-	static String settingFile 		= "." + File.separator + "configs" + File.separator + "settings.xml";
-	static String decksFile 		= "." + File.separator + "configs" + File.separator + "decks.xml";
-	static String heroesFile 		= "." + File.separator + "configs" + File.separator + "heroes.xml";
-	static String gameLangsFile 	= "." + File.separator + "configs" + File.separator + "gameLangs.xml";
-	static String gameResFile 		= "." + File.separator + "configs" + File.separator + "gameResolutions.xml";
-	static String uiLangFile 		= "." + File.separator + "configs"  + File.separator + "uiLangs" + File.separator + "%s.xml";
-	static String logFile 			= "." + File.separator + "logs" + File.separator + "%s.log";
-	static String syncFile 			= "." + File.separator + "configs" + File.separator + "sync.xml";
-	static String dbFile 			= "." + File.separator + "data" + File.separator + "database.xml";
-	static String updateLog 		= "." + File.separator + "configs" + File.separator + "update.xml";
+	//configs
+	static String updaterLog 		= workingDir 	+ configsPath	+ "update.xml";
+	static String uiLangsListFile 	= workingDir 	+ configsPath	+ "uiLangs.xml";
+	static String settingFile 		= workingDir 	+ configsPath	+ "settings.xml";
+	static String decksFile 		= workingDir 	+ configsPath	+ "decks.xml";
+	static String heroesFile 		= workingDir 	+ configsPath	+ "heroes.xml";
+	static String gameLangsFile 	= workingDir 	+ configsPath	+ "gameLangs.xml";
+	static String gameResFile 		= workingDir 	+ configsPath 	+ "gameResolutions.xml";
+	static String uiLangFile 		= workingDir 	+ configsPath	+ "uiLangs" + File.separator + "%s.xml";
+	static String syncFile 			= workingDir 	+ configsPath 	+ "sync.xml";
+	static String updateLog 		= workingDir 	+ configsPath 	+ "update.xml";
+	
+	//log
+	static String logFile 			= workingDir 	+ logsPath 		+ "%s.log";
+
+	//db
+	static String dbFile 			= workingDir	+ dataPath		+ "database.xml";
+
 	
 	//UI related files
-	static String miniHeroImage		= "." + File.separator + "images" + File.separator + "%s-s.png";
-	static String logo				= "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo.png";
-	static String logo32			= "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-32.png";
-	static String logo128			= "." + File.separator + "images" + File.separator + "etc" + File.separator + "logo-128.png";
-	static String payapl			= "." + File.separator + "images" + File.separator + "etc" + File.separator + "paypal.png";
-	static String facebook			= "." + File.separator + "images" + File.separator + "etc" + File.separator + "facebook.png";
-	static String teamliquid		= "." + File.separator + "images" + File.separator + "etc" + File.separator + "teamliquid.png";
-	static String twitter			= "." + File.separator + "images" + File.separator + "etc" + File.separator + "twitter.png";
+	static String miniHeroImage		= workingDir 	+ imagesPath 	+ "%s-s.png";
+	static String logo				= workingDir 	+ imagesPath 	+ "etc" + File.separator + "logo.png";
+	static String logo32			= workingDir 	+ imagesPath 	+ "etc" + File.separator + "logo-32.png";
+	static String logo128			= workingDir 	+ imagesPath 	+ "etc" + File.separator + "logo-128.png";
+	static String payapl			= workingDir 	+ imagesPath 	+ "etc" + File.separator + "paypal.png";
+	static String facebook			= workingDir 	+ imagesPath 	+ "etc" + File.separator + "facebook.png";
+	static String teamliquid		= workingDir 	+ imagesPath 	+ "etc" + File.separator + "teamliquid.png";
+	static String twitter			= workingDir 	+ imagesPath 	+ "etc" + File.separator + "twitter.png";
 	
 	//scanner related files
-	static String scanTargetFileOverrideByLang		= "." + File.separator + "images" + File.separator + "%s" + File.separator + "%s";
-	static String scanTargetFileDefault				= "." + File.separator + "images" + File.separator + "%s";
-	static String scannerSettingFileDefault			= "." + File.separator + "configs" + File.separator + "gameLangs" + File.separator + "%s.xml"; 
-	static String scannerSettingFileOverrideByRes	= "." + File.separator + "configs" 
-													+ File.separator + "gameLangs" 
+	static String scanTargetFileOverrideByLang		= workingDir 	+ imagesPath 	+ "%s" + File.separator + "%s";
+	static String scanTargetFileDefault				= workingDir 	+ imagesPath 	+ "%s";
+	static String scannerSettingFileDefault			= workingDir + configsPath + "gameLangs" + File.separator + "%s.xml"; 
+
+	static String scannerSettingFileOverrideByRes	= workingDir + configsPath 
+													+ "gameLangs" 
 													+ File.separator + "%s" 
 													+ File.separator + "%d" + "x" + "%d"
 													+ ".xml"; 
 
-	static String scannerImageCacheFile	= "." + File.separator + "cache" + File.separator + "%s"; 
+	//cache												
+	static String scannerImageCacheFile	= workingDir	+ cachePath		+ "%s"; 
 }

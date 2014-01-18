@@ -48,20 +48,7 @@ public class HearthHelper {
 		
 		return null;
 	}
-	
-	public static BufferedImage resizeImage(File imgFile, float scaleFactor){
-		BufferedImage sourceImage = loadImage(imgFile);
 		
-		int resizedWidth = (int) (sourceImage.getWidth() * scaleFactor);  
-		Image thumbnail = sourceImage.getScaledInstance(resizedWidth, -1, Image.SCALE_SMOOTH);
-		BufferedImage bufferedThumbnail = new BufferedImage(thumbnail.getWidth(null),
-		                                                    thumbnail.getHeight(null),
-		                                                    BufferedImage.TYPE_INT_RGB);
-		bufferedThumbnail.getGraphics().drawImage(thumbnail, 0, 0, null);
-		
-		return bufferedThumbnail;
-	}
-	
 	public static void applyMaskImage(BufferedImage src, int x, int y, int w, int h){
 
 		if(x < 0){
@@ -101,6 +88,22 @@ public class HearthHelper {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	public static BufferedImage resizeImage(File imgFile, float scaleFactor){
+		BufferedImage sourceImage = loadImage(imgFile);
+		return resizeImage(sourceImage, scaleFactor);
+	}
+	
+	public static BufferedImage resizeImage(BufferedImage sourceImage, float scaleFactor){
+		int resizedWidth = (int) (sourceImage.getWidth() * scaleFactor);  
+		Image thumbnail = sourceImage.getScaledInstance(resizedWidth, -1, Image.SCALE_SMOOTH);
+		BufferedImage bufferedThumbnail = new BufferedImage(thumbnail.getWidth(null),
+		                                                    thumbnail.getHeight(null),
+		                                                    BufferedImage.TYPE_INT_RGB);
+		bufferedThumbnail.getGraphics().drawImage(thumbnail, 0, 0, null);
+		
+		return bufferedThumbnail;
 	}
 	
 	public static BufferedImage resizeImage(File imgFile, float scaleFactor, File outputFile){
@@ -309,4 +312,60 @@ public class HearthHelper {
 	      return uiLang.t("%d weeks ago", Math.ceil(dayDiff / 7));
 	    }
 	 }
+	
+	public static String goesFirstToString(int goesFirst){
+		switch(goesFirst){
+			case 1:
+				return "First";
+	
+			case 0:
+				return "Second";
+		}
+		
+		return "Unknown";
+	}
+	
+	public static String gameModeToString(int mode){
+		switch(mode){
+			case HearthScannerManager.ARENAMODE:
+				return "Arena";
+	
+			case HearthScannerManager.RANKEDMODE:
+				return "Ranked";
+		
+			case HearthScannerManager.UNRANKEDMODE:
+				return "Unranked";
+			
+			case HearthScannerManager.PRACTICEMODE:
+				return"Practice";
+				
+			case HearthScannerManager.CHALLENGEMODE:
+				return "Challenge";
+		}
+		
+		return "Unknown mode";
+	}
+	
+	public static String gameModeToStringLabel(int mode){
+		HearthLanguageManager uiLang = HearthLanguageManager.getInstance();
+		
+		switch(mode){
+			case HearthScannerManager.ARENAMODE:
+				return uiLang.t("Arena");
+	
+			case HearthScannerManager.RANKEDMODE:
+				return uiLang.t("Ranked");
+		
+			case HearthScannerManager.UNRANKEDMODE:
+				return uiLang.t("Unranked");
+			
+			case HearthScannerManager.PRACTICEMODE:
+				return uiLang.t("Practice");
+				
+			case HearthScannerManager.CHALLENGEMODE:
+				return uiLang.t("Challenge");
+		}
+		
+		return uiLang.t("Unknown mode");
+	}
 }

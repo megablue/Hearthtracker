@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="lib/jna-platform-4.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/resty-0.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/jtransforms-2.4.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

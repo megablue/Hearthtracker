@@ -365,11 +365,11 @@ public class HearthSync {
 				ar[index].cid 			= rs.getInt("id");
 				ar[index].myhero 		= heroesList.getHeroName(rs.getInt("myheroid"));
 				ar[index].opphero		= heroesList.getHeroName(rs.getInt("oppheroid"));
-				ar[index].goes			= HearthScanner.goesFirstToString(rs.getInt("goesfirst"));
+				ar[index].goes			= HearthHelper.goesFirstToString(rs.getInt("goesfirst"));
 				ar[index].win			= rs.getInt("win");
 				ar[index].starttime		= rs.getLong("starttime");
 				ar[index].totaltime		= rs.getInt("totaltime");
-				ar[index].mode			= HearthScanner.gameModeToString(rs.getInt("mode")).toLowerCase();
+				ar[index].mode			= HearthHelper.gameModeToString(rs.getInt("mode")).toLowerCase();
 				ar[index].deleted		= rs.getInt("deleted");
 				ar[index].modified		= rs.getInt("modified");
 				ar[index].lastmodified	= rs.getLong("lastmodified");

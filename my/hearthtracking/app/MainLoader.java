@@ -24,7 +24,7 @@ public class MainLoader {
 	public static HearthULangsList uiLangsList;
 	
 	public static HearthTracker tracker;
-	public static HearthScanner hearthScanner;
+	public static HearthScannerManager hearthScanner;
 	private static Thread scannerThread;
 	
 	volatile static boolean shutdown = false;
@@ -38,6 +38,27 @@ public class MainLoader {
 	private static HearthUI theUI = null;
 
 	public static void main(String[] args) {
+		debug();
+	}
+	
+	private static void debug(){
+		init();
+		
+		tracker = new HearthTracker();
+		
+		hearthScanner = new HearthScannerManager(
+			tracker, 
+			setting.gameLang, 
+			setting.gameWidth, 
+			setting.gameHeight, 
+			setting.autoPing, 
+			true
+		);
+		
+		hearthScanner.process();
+	}
+	
+	private static void startup(){
 		File swtJar = new File(HearthHelper.getArchFilename("lib/swt"));
 		HearthHelper.addJarToClasspath(swtJar);
 		
@@ -157,7 +178,7 @@ public class MainLoader {
 	
 	private static void startEngine(){
 		tracker = new HearthTracker();
-		hearthScanner = new HearthScanner(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
+		hearthScanner = new HearthScannerManager(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
 		
 		if(!setting.scannerEnabled){
 			hearthScanner.pause();

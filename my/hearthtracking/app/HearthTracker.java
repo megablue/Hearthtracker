@@ -55,17 +55,17 @@ public class HearthTracker {
 		this.saveArenaResult(0, 9, 0, new Date().getTime(), false);
 		this.saveArenaResult(0, 9, 0, new Date().getTime(), false);
 		this.saveArenaResult(0, 9, 9, new Date().getTime(), false);
-		assert this.getOverallWinRate(HearthScanner.ARENAMODE) == 75.0f;
+		assert this.getOverallWinRate(HearthScannerManager.ARENAMODE) == 75.0f;
 		
-		this.saveMatchResult(HearthScanner.ARENAMODE, 0, 0, 1, 1, new Date().getTime(), 0, false, "");
-		this.saveMatchResult(HearthScanner.ARENAMODE, 1, 0, 1, 0, new Date().getTime(), 0, false, "");
-		this.saveMatchResult(HearthScanner.ARENAMODE, 2, 0, 0, 0, new Date().getTime(), 0, false, "");
-		this.saveMatchResult(HearthScanner.ARENAMODE, 3, 0, 0, 1, new Date().getTime(), 0, false, "");
-		this.saveMatchResult(HearthScanner.ARENAMODE, 4, 0, 0, 1, new Date().getTime(), 0, false, "");
-		this.saveMatchResult(HearthScanner.ARENAMODE, 5, 0, 0, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScannerManager.ARENAMODE, 0, 0, 1, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScannerManager.ARENAMODE, 1, 0, 1, 0, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScannerManager.ARENAMODE, 2, 0, 0, 0, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScannerManager.ARENAMODE, 3, 0, 0, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScannerManager.ARENAMODE, 4, 0, 0, 1, new Date().getTime(), 0, false, "");
+		this.saveMatchResult(HearthScannerManager.ARENAMODE, 5, 0, 0, 1, new Date().getTime(), 0, false, "");
 		
-		assert this.getWinRateByGoesFirst(HearthScanner.ARENAMODE) == 50.0f;
-		assert this.getWinRateByGoesSecond(HearthScanner.ARENAMODE) == 75.0f;
+		assert this.getWinRateByGoesFirst(HearthScannerManager.ARENAMODE) == 50.0f;
+		assert this.getWinRateByGoesSecond(HearthScannerManager.ARENAMODE) == 75.0f;
 	}
 	
 	private void truncateDB() throws SQLException{
@@ -217,7 +217,7 @@ public class HearthTracker {
 			stat.execute("ALTER TABLE MATCHES ADD MODIFIED INT");
 			stat.execute("ALTER TABLE MATCHES ADD LASTMODIFIED BIGINT");
 			stat.execute("ALTER TABLE MATCHES ADD SUBMITTED INT");
-			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODE SET DEFAULT " + HearthScanner.ARENAMODE);
+			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODE SET DEFAULT " + HearthScannerManager.ARENAMODE);
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN DELETED SET DEFAULT 0");
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN MODIFIED SET DEFAULT 0");
 			stat.execute("ALTER TABLE MATCHES ALTER COLUMN SUBMITTED SET DEFAULT 0");
@@ -231,7 +231,7 @@ public class HearthTracker {
 			stat.execute("CREATE INDEX OPPHERO_MODE ON MATCHES(OPPHEROID, MODE, DELETED)");
 			stat.execute("CREATE INDEX HEROES_MODE ON MATCHES(MYHEROID, OPPHEROID, MODE, DELETED)");
 			
-			stat.execute("UPDATE MATCHES SET MODE=" + HearthScanner.ARENAMODE);
+			stat.execute("UPDATE MATCHES SET MODE=" + HearthScannerManager.ARENAMODE);
 			stat.execute("UPDATE MATCHES SET MODIFIED=0");
 			stat.execute("UPDATE MATCHES SET LASTMODIFIED=STARTTIME");
 			stat.execute("UPDATE MATCHES SET DELETED=0");
@@ -548,7 +548,7 @@ public class HearthTracker {
 		ResultSet rs;
 		int total = 0;
 
-		if(mode == HearthScanner.ARENAMODE){
+		if(mode == HearthScannerManager.ARENAMODE){
 			rs = stat.executeQuery("select count(*) as TOTAL from ARENARESULTS WHERE heroid = " + heroid + " AND DELETED=0");
 			
 			if(rs.next()){
@@ -574,7 +574,7 @@ public class HearthTracker {
 		float winrate = -1;
 		boolean found = false;
 		
-		if(mode == HearthScanner.ARENAMODE){
+		if(mode == HearthScannerManager.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS where heroId = " + heroId + " AND DELETED=0");
 			
 			while(rs.next()){
@@ -612,7 +612,7 @@ public class HearthTracker {
 		float winrate = -1;
 		boolean found = false;
 		
-		if(mode == HearthScanner.ARENAMODE){
+		if(mode == HearthScannerManager.ARENAMODE){
 			rs = stat.executeQuery("select wins from ARENARESULTS where heroId = " + heroId + " AND DELETED=0");
 			
 			while(rs.next()){
@@ -640,7 +640,7 @@ public class HearthTracker {
 		float winrate = -1;
 		boolean found = false;
 		
-		if(mode == HearthScanner.ARENAMODE){
+		if(mode == HearthScannerManager.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE DELETED=0");
 			
 			while(rs.next()){
@@ -650,8 +650,8 @@ public class HearthTracker {
 			}
 		} else {
 			
-			if(mode == HearthScanner.CHALLENGEMODE || mode == HearthScanner.PRACTICEMODE){
-				rs = stat.executeQuery("select WIN from MATCHES WHERE (MODE=" + HearthScanner.CHALLENGEMODE + " OR MODE=" + HearthScanner.PRACTICEMODE + ") AND DELETED=0");
+			if(mode == HearthScannerManager.CHALLENGEMODE || mode == HearthScannerManager.PRACTICEMODE){
+				rs = stat.executeQuery("select WIN from MATCHES WHERE (MODE=" + HearthScannerManager.CHALLENGEMODE + " OR MODE=" + HearthScannerManager.PRACTICEMODE + ") AND DELETED=0");
 			} else {
 				rs = stat.executeQuery("select WIN from MATCHES WHERE MODE=" + mode + " AND DELETED=0");
 			}
@@ -681,7 +681,7 @@ public class HearthTracker {
 		ResultSet rs;
 		int total = 0;
 
-		if(mode == HearthScanner.ARENAMODE){
+		if(mode == HearthScannerManager.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE " + " DELETED = 0");
 			while(rs.next()){
 				total += rs.getInt("WINS");
@@ -718,7 +718,7 @@ public class HearthTracker {
 		ResultSet rs;
 		int total = 0;
 
-		if(mode == HearthScanner.ARENAMODE){
+		if(mode == HearthScannerManager.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED = 0");
 			while(rs.next()){
 				total += rs.getInt("WINS");
@@ -739,7 +739,7 @@ public class HearthTracker {
 		ResultSet rs;
 		int total = 0;
 
-		if(mode == HearthScanner.ARENAMODE){
+		if(mode == HearthScannerManager.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE DELETED=0");
 			while(rs.next()){
 				total += rs.getInt("LOSSES");
@@ -760,7 +760,7 @@ public class HearthTracker {
 		ResultSet rs;
 		int total = 0;
 
-		if(mode == HearthScanner.ARENAMODE){
+		if(mode == HearthScannerManager.ARENAMODE){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED=0" );
 			while(rs.next()){
 				total += rs.getInt("LOSSES");

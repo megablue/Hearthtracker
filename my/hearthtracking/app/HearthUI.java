@@ -113,7 +113,7 @@ public class HearthUI {
 	private static Display display;
 	static boolean debugMode = HearthHelper.isDevelopmentEnvironment();
 	
-	private HearthScanner hearthScanner;
+	private HearthScannerManager hearthScanner;
 	private HearthTracker tracker;
 	private HearthConfigurator config = new HearthConfigurator();
 	
@@ -164,7 +164,7 @@ public class HearthUI {
 	
 	private boolean restart = false;
 
-	public HearthUI(HearthScanner s, HearthTracker t){
+	public HearthUI(HearthScannerManager s, HearthTracker t){
 		hearthScanner = s;
 		tracker = t;
 		init();
@@ -1229,10 +1229,10 @@ public class HearthUI {
 		for(int i = 0; i < txtDecks.length; i++){
 			String deckName = decks.list[i];
 			try {
-				float ranked = tracker.getWinRateByDeck(HearthScanner.RANKEDMODE, deckName);
-				float unranked = tracker.getWinRateByDeck(HearthScanner.UNRANKEDMODE, deckName);
-				float challenge = tracker.getWinRateByDeck(HearthScanner.CHALLENGEMODE, deckName);
-				float practice = tracker.getWinRateByDeck(HearthScanner.PRACTICEMODE, deckName);
+				float ranked = tracker.getWinRateByDeck(HearthScannerManager.RANKEDMODE, deckName);
+				float unranked = tracker.getWinRateByDeck(HearthScannerManager.UNRANKEDMODE, deckName);
+				float challenge = tracker.getWinRateByDeck(HearthScannerManager.CHALLENGEMODE, deckName);
+				float practice = tracker.getWinRateByDeck(HearthScannerManager.PRACTICEMODE, deckName);
 				
 				String rankedS = ranked > -1 ? new DecimalFormat("0.00").format(ranked) + "%" : "-\t";
 				String unrankedS = unranked > -1 ? new DecimalFormat("0.00").format(unranked) + "%" : "-";
@@ -1279,7 +1279,7 @@ public class HearthUI {
 				tableItem.setData("id", rs.getInt("ID"));
 				tableItem.setImage(0, heroImgs[rs.getInt("MYHEROID")+1]);
 				tableItem.setImage(1, heroImgs[rs.getInt("OPPHEROID")+1]);
-				tableItem.setText(2, HearthScanner.gameModeToStringLabel(rs.getInt("MODE")));
+				tableItem.setText(2, HearthHelper.gameModeToStringLabel(rs.getInt("MODE")));
 				tableItem.setText(3, result);
 				tableItem.setText(4, (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
 				
@@ -2339,18 +2339,18 @@ public class HearthUI {
 		
 		switch(mode){
 			case 0:
-				return HearthScanner.ARENAMODE;
+				return HearthScannerManager.ARENAMODE;
 			case 1:
-				return HearthScanner.RANKEDMODE;
+				return HearthScannerManager.RANKEDMODE;
 			case 2:
-				return HearthScanner.UNRANKEDMODE;
+				return HearthScannerManager.UNRANKEDMODE;
 			case 3:
-				return HearthScanner.CHALLENGEMODE;
+				return HearthScannerManager.CHALLENGEMODE;
 			case 4:
-				return HearthScanner.PRACTICEMODE;
+				return HearthScannerManager.PRACTICEMODE;
 		}
 		
-		return HearthScanner.UNKNOWNMODE;
+		return HearthScannerManager.UNKNOWNMODE;
 	}
 	
 	private void fillOverviewTable(){
