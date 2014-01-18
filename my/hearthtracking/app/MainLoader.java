@@ -24,8 +24,8 @@ public class MainLoader {
 	public static HearthULangsList uiLangsList;
 	
 	public static HearthTracker tracker;
-	public static HearthScannerManager hearthScanner;
-	private static Thread scannerThread;
+	public static HearthScannerManager scannerManager;
+	private static Thread scannerManagerThread;
 	
 	volatile static boolean shutdown = false;
 	volatile static boolean threadRunning = true;
@@ -38,15 +38,18 @@ public class MainLoader {
 	private static HearthUI theUI = null;
 
 	public static void main(String[] args) {
-		debug();
+		startup();
 	}
 	
 	private static void debug(){
+		int timeLimit = 20;
+		long start = System.currentTimeMillis();
+
 		init();
 		
 		tracker = new HearthTracker();
 		
-		hearthScanner = new HearthScannerManager(
+		scannerManager = new HearthScannerManager(
 			tracker, 
 			setting.gameLang, 
 			setting.gameWidth, 
@@ -55,7 +58,13 @@ public class MainLoader {
 			true
 		);
 		
-		hearthScanner.process();
+		start = System.currentTimeMillis();
+
+		while( (int) Math.round( (System.currentTimeMillis() - start) / 1000) < timeLimit ){
+			scannerManager.process();
+		}
+		
+		scannerManager.dispose();
 	}
 	
 	private static void startup(){
@@ -90,7 +99,7 @@ public class MainLoader {
 		startEngine();
 		
 		do{
-			theUI = new HearthUI(hearthScanner, tracker);
+			theUI = new HearthUI(scannerManager, tracker);
 			theUI.open();
 		}while(theUI.isRestart());
 		
@@ -115,7 +124,7 @@ public class MainLoader {
 			}
 		}
 		
-		hearthScanner.dispose();
+		scannerManager.dispose();
 		tracker.closeDB();
 		lang.dispose();
 		
@@ -178,28 +187,28 @@ public class MainLoader {
 	
 	private static void startEngine(){
 		tracker = new HearthTracker();
-		hearthScanner = new HearthScannerManager(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
+		scannerManager = new HearthScannerManager(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
 		
 		if(!setting.scannerEnabled){
-			hearthScanner.pause();
+			scannerManager.pause();
 		}
 		
-		scannerThread = new Thread(new ScannerThread());
-		scannerThread.start();
+		scannerManagerThread = new Thread(new ScannerManagerThread());
+		scannerManagerThread.start();
 	}
 
-    private static class ScannerThread
+    private static class ScannerManagerThread
     implements Runnable {
 	    public void run() {
 	    	HearthReaderNotification note = null;
 	    	
 	    	while(!shutdown){
 	        	try {
-	        		hearthScanner.process();
+	        		scannerManager.process();
 	        		
         			Thread.sleep(setting.scanInterval);
         			
-        			note = hearthScanner.getNotification();
+        			note = scannerManager.getNotification();
         			
         			if(note != null){
         				notifications.add(note);
@@ -236,8 +245,7 @@ public class MainLoader {
     	
 		Display.getDefault().timerExec(100, runnable);
     }
-    
-    
+ 
     private static void startSync(){
     	Runnable runnable = new Runnable() {
 		    public void run() {

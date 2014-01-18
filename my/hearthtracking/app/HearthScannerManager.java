@@ -6,7 +6,6 @@ import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-import my.hearthtracking.app.HearthScannerSettings.ScanGroup;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 public class HearthScannerManager {
@@ -54,6 +53,17 @@ public class HearthScannerManager {
 		alwaysScan = alwaysScanFlag; 
 		init();
 		initScannerSettings();
+	}
+	
+	public class MyThread implements Runnable {
+
+		public MyThread(Object parameter) {
+			// store parameter for later user
+		}
+
+		public void run() {
+			
+		}
 	}
 
 	private synchronized void init(){
@@ -104,12 +114,18 @@ public class HearthScannerManager {
 		
 		//if resolution is different from previous scan
 		if(resolution[0] != oldGameResX || resolution[1] != oldGameResY){
+			if(scannerSettingsInitialzed){
+				System.out.println("Resolution change detected.");
+				System.out.println("Old resolution: " + oldGameResX + "x" + oldGameResY);
+				System.out.println("New resolution: " + resolution[0] + "x" + resolution[1]);
+			}
+			
 			oldGameResX = resolution[0];
 			oldGameResY = resolution[1];
 			
 			if(scannerSettingsInitialzed){
 				initScannerSettings();
-			}			
+			}
 		}
 		
 		return resolution;
@@ -201,26 +217,11 @@ public class HearthScannerManager {
 			config.save(scannerSettings, pathScannerSetting);
 		}
 		
-		for(Scanbox sb : scannerSettings.singleList){
+		for(Scanbox sb : scannerSettings.list){
 			prepareScanbox(sb);
 			scanner.addScanbox(sb);
 		}
-		
-		for(ScanGroup group : scannerSettings.groupList){
-			for(int i = 0; i < group.scanBoxes.length; i++){
 				
-				//copy the settings to each individual scanbox
-				group.scanBoxes[i].scene 		= group.scene;
-				group.scanBoxes[i].width 		= group.width;
-				group.scanBoxes[i].height 		= group.height;
-				group.scanBoxes[i].xOffset 		= group.xOffset;
-				group.scanBoxes[i].yOffset 		= group.yOffset;
-				group.scanBoxes[i].matchQuality = group.scanBoxes[i].matchQuality == -1 ? group.matchQuality: group.scanBoxes[i].matchQuality;
-				group.scanBoxes[i].scale 		= group.scanBoxes[i].scale == 1f ? group.scale: group.scanBoxes[i].scale;
-				prepareScanbox(group.scanBoxes[i]);
-			}
-		}
-		
 		scanner.setScale(getScaleFactor());
 		scanner.init();
 		
@@ -253,10 +254,10 @@ public class HearthScannerManager {
 		if(sb.mask != null){
 			HearthHelper.applyMaskImage(
 				preTarget, 
-				(int) (sb.mask.xOffset 	* scaling), 
-				(int) (sb.mask.yOffset 	* scaling), 
-				(int) (sb.mask.width 	* scaling), 
-				(int) (sb.mask.height 	* scaling)
+				(int) Math.round(sb.mask.xOffset 	* scaling), 
+				(int) Math.round(sb.mask.yOffset 	* scaling), 
+				(int) Math.round(sb.mask.width 		* scaling), 
+				(int) Math.round(sb.mask.height 	* scaling)
 			);
 		}
 		
@@ -265,7 +266,7 @@ public class HearthScannerManager {
 		if(sb.matchQuality >= 0 && it != null){
 			it.setMinScore(sb.matchQuality);
 		}
-
+		
 		sb.target = it;
 		
 		if(sb.nestedSb != null){
@@ -281,10 +282,6 @@ public class HearthScannerManager {
 		
 		Rectangle rec = new Rectangle(boardX, boardY, gameScreenWidth, gameScreenHeight);
 		return robot.createScreenCapture(rec);		
-//		String output = String.format(HearthFilesNameManager.scannerImageCacheFile, "out-" + (counter++) + ".png");
-//		HearthHelper.bufferedImageToFile(screenShot, output);
-//		ScreenRegion region = new DesktopScreenRegion(boardX, boardY, gameScreenWidth, gameScreenHeight);
-//		region.capture();
 	}
 	
 	public void process(){
@@ -295,11 +292,19 @@ public class HearthScannerManager {
 		}
 		
 		long startBench = System.currentTimeMillis();
+		long benchDiff = 0;
 		
-		scanner.insertFrame(capture());
+		BufferedImage frame = capture();
+		benchDiff = (System.currentTimeMillis() - startBench);
+		System.out.println("Capture() time spent: " + benchDiff + " ms");
 		
-		long benchDiff = (System.currentTimeMillis() - startBench);
-		System.out.println("Process() time spent: " + benchDiff + " ms");
+		scanner.insertFrame(frame);
+		
+		startBench = System.currentTimeMillis();
+		scanner.scan();
+		benchDiff  = (System.currentTimeMillis() - startBench);
+		
+		System.out.println("Scan() time spent: " + benchDiff + " ms");
 		
 		if(reInitScannerSettings){
 			initScannerSettings();
@@ -366,7 +371,8 @@ public class HearthScannerManager {
 	}
 	
 	public void dispose(){
-		
+		String path = String.format(HearthFilesNameManager.scannerSettingFileDefault, gameLang);
+		config.save(scannerSettings, path);
 	}
 	
 	public int[] getLastScanArea(){

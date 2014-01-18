@@ -1,5 +1,6 @@
 package my.hearthtracking.app;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,9 +8,12 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.sikuli.core.search.RegionMatch;
+import org.sikuli.core.search.algorithm.TemplateMatcher;
+
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
-public class HearthScanner {
+public class HearthScanner{
 	private float scale = 1f;
 	private List<Scanbox> scanBoxes = Collections.synchronizedList(new ArrayList<Scanbox>());
 	
@@ -17,14 +21,19 @@ public class HearthScanner {
 	private ConcurrentHashMap<String, String> scanboxHashes = new ConcurrentHashMap<String, String>();
 	
 	private ImagePHash pHash = new ImagePHash();
+
+	private boolean generateBetterOffsets = true;
+
+	private static final int DISTANCE_THRESHOLD = 16;
 	
 	public HearthScanner() {
 		
 	}
 		
 	public synchronized void setScale(float s){
-		clear();
 		scale = s;
+		clearCache();
+		init();
 	}
 
 	public synchronized void init(){
@@ -59,13 +68,21 @@ public class HearthScanner {
 		scanBoxes.add(sb);
 	}
 	
-	public synchronized void clear(){
+	public synchronized void clearCache(){
 		gameScreens.clear();
 		scanboxHashes.clear();
 	}
 	
 	private int scale(int n){
-		return (int) (n * scale);
+		return (int) Math.round(n * scale);
+	}
+	
+	private int unscale(int scaledValue){
+		return (int) Math.round(scaledValue / scale);
+	}
+	
+	private int unscale(double scaledValue){
+		return (int) Math.round(scaledValue / scale);
 	}
 	
 	public synchronized void scan(){
@@ -128,11 +145,59 @@ public class HearthScanner {
 			
 			long id = System.currentTimeMillis() % 1000;
 			
-			HearthHelper.bufferedImageToFile(HearthHelper.resizeImage(sb.target.getImage(), scale), key + "-" + id +"-target");
-			HearthHelper.bufferedImageToFile(roiSnaps.get(key), key + "-" + id +"-screen");
+			String file1 = String.format(HearthFilesNameManager.scannerImageCacheFile, key + "-" + id +"-target.png");
+			String file2 = String.format(HearthFilesNameManager.scannerImageCacheFile, key + "-" + id +"-screen.png");
+			
+			BufferedImage target = sb.target.getImage();
+			BufferedImage region = roiSnaps.get(key);
+					
+			if(distance < DISTANCE_THRESHOLD){		
+				System.out.println("Possible match at " + scale(sb.xOffset) + ", " + scale(sb.yOffset));
+
+				Rectangle rec = skFind(target, region, sb.matchQuality);
+
+				if(rec == null){
+					System.out.println("Double checked, It is a mismatch");
+				} else{
+					System.out.println("Double checked, Found on " + rec.x + ", " + rec.y);
+				}
+			} else {
+				Rectangle rec = skFind(target, region, sb.matchQuality);
+				
+				if(rec == null){
+					System.out.println("Not found.");
+				} else{
+					System.out.println("Found on " + rec.x + ", " + rec.y);
+					sb.xOffset = sb.xOffset + unscale(rec.x);
+					sb.yOffset = sb.yOffset + unscale(rec.y);
+					sb.width   = unscale(rec.getWidth());
+					sb.height  = unscale(rec.getHeight());
+				}
+			}
 		}
+		
+		gameScreens.remove(0);
 	}
 	
+	private Rectangle skFind(BufferedImage target, BufferedImage screenImage, float score) {
+		score = (score == -1) ? 0.7f : score;
+		
+		if (screenImage.getWidth() < target.getWidth() || screenImage.getHeight() < target.getHeight()){
+			return null;
+		}
+		
+		List<RegionMatch> matches;
+		Rectangle rec = null;
+		matches = TemplateMatcher.findMatchesByGrayscaleAtOriginalResolution(screenImage, target, 1, score);
+		
+		if(matches.size() > 0){
+			RegionMatch r = matches.get(0);
+			rec = new Rectangle(r.x, r.y, r.width, r.height);
+		}
+	
+		return rec;
+	}
+		
 	public synchronized void pause(){
 		
 	}
@@ -140,6 +205,4 @@ public class HearthScanner {
 	public synchronized void resume(){
 		
 	}
-	
-
 }

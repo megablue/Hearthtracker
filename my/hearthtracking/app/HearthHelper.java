@@ -96,7 +96,7 @@ public class HearthHelper {
 	}
 	
 	public static BufferedImage resizeImage(BufferedImage sourceImage, float scaleFactor){
-		int resizedWidth = (int) (sourceImage.getWidth() * scaleFactor);  
+		int resizedWidth = (int) Math.round(sourceImage.getWidth() * scaleFactor);  
 		Image thumbnail = sourceImage.getScaledInstance(resizedWidth, -1, Image.SCALE_SMOOTH);
 		BufferedImage bufferedThumbnail = new BufferedImage(thumbnail.getWidth(null),
 		                                                    thumbnail.getHeight(null),
