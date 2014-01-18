@@ -38,7 +38,8 @@ public class HearthScanner{
 
 	public synchronized void init(){
 		for(Scanbox sb : scanBoxes) {
-			String key = sb.imgfile;
+			String masked = sb.mask != null ? "masked" : "";
+			String key = masked + "-" + sb.imgfile;
 			String hash = scanboxHashes.get(key);
 
 			if(hash == null){
@@ -100,14 +101,16 @@ public class HearthScanner{
 		
 		//crop corresponding parts and generate hashes from ROIs
 		for(Scanbox sb : scanBoxes){
+			String masked = sb.mask != null ? "masked" : "";
 			String key = scale(sb.xOffset) 	+ "x" + 
 						 scale(sb.yOffset)	+ "x" + 
 						 scale(sb.width) 	+ "x" + 
-						 scale(sb.height);
+						 scale(sb.height)	+ "x" +
+						 masked;
 			BufferedImage roiSnapshot = roiSnaps.get(key);
 			String hash = roiHashes.get(key);
 			
-			//if hash is not found
+			//if hash or snapshot not found
 			if(roiSnapshot == null || hash == null){
 
 				//crop the corresponding part from game screen
@@ -118,6 +121,17 @@ public class HearthScanner{
 					scale(sb.width), 
 					scale(sb.height)
 				);
+
+				//if mask is defined
+				if(sb.mask != null){
+					HearthHelper.applyMaskImage(
+						roiSnapshot, 
+						scale(sb.mask.xOffset), 
+						scale(sb.mask.yOffset), 
+						scale(sb.mask.width), 
+						scale(sb.mask.height)
+					);
+				}
 				
 				//insert into table
 				roiSnaps.put(key, roiSnapshot);
@@ -131,22 +145,25 @@ public class HearthScanner{
 		}
 		
 		for(Scanbox sb : scanBoxes){
+			String masked = sb.mask != null ? "masked" : "";
 			String key = scale(sb.xOffset) 	+ "x" + 
 						 scale(sb.yOffset)	+ "x" + 
 						 scale(sb.width) 	+ "x" + 
-						 scale(sb.height);
+						 scale(sb.height)	+ "x" +
+						 masked;
 
-			String targetHash = scanboxHashes.get(sb.imgfile);
+			String scanboxHashKey = masked + "-" + sb.imgfile;
+
+			String targetHash = scanboxHashes.get(scanboxHashKey);
 			String regionHash = roiHashes.get(key);
 			//compare differences between screen region and target
 			int distance = pHash.distance(targetHash, regionHash);
 			
 			System.out.println(sb.imgfile + "-" + key + ", distance: " + distance);
 			
-			long id = System.currentTimeMillis() % 1000;
-			
-			String file1 = String.format(HearthFilesNameManager.scannerImageCacheFile, key + "-" + id +"-target.png");
-			String file2 = String.format(HearthFilesNameManager.scannerImageCacheFile, key + "-" + id +"-screen.png");
+			// long id = System.currentTimeMillis() % 1000;
+			// String file1 = String.format(HearthFilesNameManager.scannerImageCacheFile, key + "-" + id +"-target.png");
+			// String file2 = String.format(HearthFilesNameManager.scannerImageCacheFile, key + "-" + id +"-screen.png");
 			
 			BufferedImage target = sb.target.getImage();
 			BufferedImage region = roiSnaps.get(key);
