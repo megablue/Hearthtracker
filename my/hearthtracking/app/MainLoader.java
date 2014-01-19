@@ -96,7 +96,7 @@ public class MainLoader {
 		
 		processNotification();
 		startSync();
-		startEngine();
+		startScannerManager();
 		
 		do{
 			theUI = new HearthUI(scannerManager, tracker);
@@ -125,8 +125,8 @@ public class MainLoader {
 		}
 		
 		scannerManager.dispose();
-		tracker.closeDB();
 		lang.dispose();
+		tracker.closeDB();
 		
 		System.exit(0);
 	}
@@ -185,14 +185,9 @@ public class MainLoader {
 		lang.loadLang(setting.uiLang);
 	}
 	
-	private static void startEngine(){
+	private static void startScannerManager(){
 		tracker = new HearthTracker();
 		scannerManager = new HearthScannerManager(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
-		
-		if(!setting.scannerEnabled){
-			scannerManager.pause();
-		}
-		
 		scannerManagerThread = new Thread(new ScannerManagerThread());
 		scannerManagerThread.start();
 	}
@@ -201,7 +196,13 @@ public class MainLoader {
     implements Runnable {
 	    public void run() {
 	    	HearthReaderNotification note = null;
-	    	
+
+	    	scannerManager.startup();
+
+	    	if(!setting.scannerEnabled){
+				scannerManager.pause();
+			}
+
 	    	while(!shutdown){
 	        	try {
 	        		scannerManager.process();

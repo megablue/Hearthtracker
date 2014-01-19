@@ -72,8 +72,6 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-import com.googlecode.javacv.CameraDevice.Settings;
-
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;

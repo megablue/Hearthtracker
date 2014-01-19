@@ -114,6 +114,16 @@ public class HearthHelper {
 		
 		return bufferedThumbnail;
 	}
+
+		public static BufferedImage resizeImage(BufferedImage sourceImage, int width, int height){
+		Image thumbnail = sourceImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		BufferedImage bufferedThumbnail = new BufferedImage(thumbnail.getWidth(null),
+		                                                    thumbnail.getHeight(null),
+		                                                    BufferedImage.TYPE_INT_RGB);
+		bufferedThumbnail.getGraphics().drawImage(thumbnail, 0, 0, null);
+		
+		return bufferedThumbnail;
+	}
 	
 	public static BufferedImage resizeImage(File imgFile, float scaleFactor, File outputFile){
 		BufferedImage resizedBuffer = resizeImage(imgFile, scaleFactor);

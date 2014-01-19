@@ -182,7 +182,7 @@
     </Scanbox>
     <Scanbox>
       <xOffset>347</xOffset>
-      <yOffset>235</yOffset>
+      <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
       <imgfile>0.png</imgfile>
@@ -194,7 +194,7 @@
     </Scanbox>
     <Scanbox>
       <xOffset>347</xOffset>
-      <yOffset>235</yOffset>
+      <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
       <imgfile>1.png</imgfile>
@@ -205,8 +205,8 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>348</xOffset>
-      <yOffset>235</yOffset>
+      <xOffset>347</xOffset>
+      <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
       <imgfile>2.png</imgfile>
@@ -217,7 +217,7 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>348</xOffset>
+      <xOffset>347</xOffset>
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
@@ -230,7 +230,7 @@
     </Scanbox>
     <Scanbox>
       <xOffset>347</xOffset>
-      <yOffset>235</yOffset>
+      <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
       <imgfile>4.png</imgfile>
@@ -265,8 +265,8 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>348</xOffset>
-      <yOffset>237</yOffset>
+      <xOffset>347</xOffset>
+      <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
       <imgfile>7.png</imgfile>
@@ -277,8 +277,8 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>348</xOffset>
-      <yOffset>237</yOffset>
+      <xOffset>347</xOffset>
+      <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
       <imgfile>8.png</imgfile>
@@ -289,8 +289,8 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>346</xOffset>
-      <yOffset>227</yOffset>
+      <xOffset>347</xOffset>
+      <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
       <imgfile>9.png</imgfile>
@@ -301,10 +301,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>347</xOffset>
+      <yOffset>236</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>10.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
@@ -313,10 +313,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>347</xOffset>
+      <yOffset>236</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>11.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
@@ -325,8 +325,8 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
+      <xOffset>347</xOffset>
+      <yOffset>236</yOffset>
       <width>200</width>
       <height>200</height>
       <imgfile>12.png</imgfile>
@@ -421,10 +421,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>80</xOffset>
-      <yOffset>720</yOffset>
-      <width>240</width>
-      <height>160</height>
+      <xOffset>178</xOffset>
+      <yOffset>740</yOffset>
+      <width>64</width>
+      <height>64</height>
       <imgfile>paladin.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>

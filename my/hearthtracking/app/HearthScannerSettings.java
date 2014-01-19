@@ -2,6 +2,8 @@ package my.hearthtracking.app;
 
 import java.util.ArrayList;
 
+import org.sikuli.api.ImageTarget;
+
 public class HearthScannerSettings {
 	ArrayList <Scanbox>list 	= null;
 
@@ -247,7 +249,7 @@ public class HearthScannerSettings {
 
 		Mask mask;
 		Scanbox nestedSb = null;
-		HearthImageTarget target = null;
+		ImageTarget target = null;
 
 		public Scanbox(String filename, String sce, String id, int x, int y, int w, int h){
 			imgfile = filename;

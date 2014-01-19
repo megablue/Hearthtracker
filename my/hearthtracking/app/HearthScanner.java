@@ -14,7 +14,7 @@ import org.sikuli.core.search.algorithm.TemplateMatcher;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 public class HearthScanner{
-	private static final float PHASH_MIN_SCORE = 0.8f;
+	private static final float PHASH_MIN_SCORE = 0.75f;
 	
 	//store the most current scale value
 	private float scale = 1f;
@@ -44,10 +44,17 @@ public class HearthScanner{
 	public class SceneResult{
 		String scene;
 		String result;
+		BufferedImage match = null;
 		
 		public SceneResult(String s, String r){
 			scene = s;
 			result = r;
+		}
+		
+		public SceneResult(String s, String r, BufferedImage i){
+			scene = s;
+			result = r;
+			match = i;
 		}
 	}
 	
@@ -62,6 +69,7 @@ public class HearthScanner{
 	 */
 	public synchronized void initScale(float scale){
 		this.scale = scale;
+		scanboxHashes.clear();
 		resetFrames();
 		_init();
 	}
@@ -251,8 +259,12 @@ public class HearthScanner{
 				//insert into table
 				roiSnaps.put(key, roiSnapshot);
 				
+				long startBench = System.currentTimeMillis();
 				//generate a new hash
 				hash = pHash.getHash(roiSnapshot);
+				
+				long benchDiff = (System.currentTimeMillis() - startBench);
+				System.out.println("getHash() time spent: " + benchDiff + " ms");
 				
 				//insert into table
 				roiHashes.put(key, hash);
@@ -277,50 +289,51 @@ public class HearthScanner{
 			
 			System.out.println(sb.imgfile + "-" + key + ", distance: " + distance);
 			
-			// long id = System.currentTimeMillis() % 1000;
-			// String file1 = String.format(HearthFilesNameManager.scannerImageCacheFile, key + "-" + id +"-target.png");
-			// String file2 = String.format(HearthFilesNameManager.scannerImageCacheFile, key + "-" + id +"-screen.png");
-			
 			BufferedImage target = sb.target.getImage();
 			BufferedImage region = roiSnaps.get(key);
 			float score = getPHashScore(targetHash, distance);
 			
-			//if the score greater or equals the minimum threshold
-			if(score >= PHASH_MIN_SCORE){		
-				System.out.println("Possible match at " + scale(sb.xOffset) + ", " + scale(sb.yOffset) + " with score of " + score);
-
-				Rectangle rec = skFind(target, region, sb.matchQuality);
-
-				if(rec == null){
-					System.out.println("Double checked, It is a mismatch");
-				} else{
-					found = true;
-					System.out.println("Double checked, Found on " + rec.x + ", " + rec.y);
-				}
-			} else {
-				Rectangle rec = skFind(target, region, sb.matchQuality);
-				
-				if(rec == null){
-					System.out.println("Not found.");
-				} else{
-					found = true;
-					System.out.println("Found on " + rec.x + ", " + rec.y);
-
-					//try to make the offsets as precise as possible
-					//a self-correct mechanism
-					if(generateBetterOffsets){
-						sb.xOffset = sb.xOffset + unscale(rec.x);
-						sb.yOffset = sb.yOffset + unscale(rec.y);
-						sb.width   = unscale(rec.getWidth());
-						sb.height  = unscale(rec.getHeight());
-					}
-				}
-			}
+//			//if the score greater or equals the minimum threshold
+//			if(score >= PHASH_MIN_SCORE){		
+//				System.out.println("Possible match at " + scale(sb.xOffset) + ", " + scale(sb.yOffset) + " with score of " + score);
+//
+////				long startBench = System.currentTimeMillis();
+//				
+//				Rectangle rec = skFind(target, region, sb.matchQuality);
+//				
+////				long benchDiff = (System.currentTimeMillis() - startBench);
+////				System.out.println("skFind() time spent: " + benchDiff + " ms");
+//
+//				if(rec == null){
+//					System.out.println("Double checked, It is a mismatch");
+//				} else{
+//					found = true;
+//					System.out.println("Double checked, Found on " + rec.x + ", " + rec.y);
+//				}
+//			} 
+//			else {
+//				Rectangle rec = skFind(target, region, sb.matchQuality);
+//				
+//				if(rec == null){
+//					System.out.println("Not found.");
+//				} else{
+//					found = true;
+//					System.out.println("Found on " + rec.x + ", " + rec.y + " with skFind(), score: " + score);
+//
+//					//try to make the offsets as precise as possible
+//					//a self-correct mechanism
+//					if(generateBetterOffsets){
+//						sb.xOffset = sb.xOffset + unscale(rec.x);
+//						sb.yOffset = sb.yOffset + unscale(rec.y);
+//						sb.width   = unscale(rec.getWidth());
+//						sb.height  = unscale(rec.getHeight());
+//					}
+//				}
+//			}
 			
 			if(found){
-				
 				if(queryExists(sb.scene)){
-					System.out.println("Query found: adding scene to query results");
+					System.out.println("Query found: adding scene \"" + sb.scene + "\" to query results");
 					insertSceneResult(sb.scene, sb.identifier);
 				} else {
 					System.out.println("Query not found.");
@@ -335,12 +348,19 @@ public class HearthScanner{
 			sceneResults.add(new SceneResult(scene, result));
 		}
 	}
+	
+	private void insertSceneResult(String scene, String result, BufferedImage region){
+		synchronized(sceneResults){
+			sceneResults.add(new SceneResult(scene, result, region));
+		}
+	}
 
 	private Rectangle skFind(BufferedImage target, BufferedImage screenImage, float score) {
 		score = (score == -1) ? 0.7f : score;
 		
-		if (screenImage.getWidth() < target.getWidth() || screenImage.getHeight() < target.getHeight()){
-			return null;
+		if (screenImage.getWidth() < target.getWidth() || screenImage.getHeight() < target.getHeight()){			
+			//dirty fix
+			target = HearthHelper.resizeImage(target, Math.round(screenImage.getWidth()),Math.round(screenImage.getHeight()));
 		}
 		
 		List<RegionMatch> matches;
@@ -355,6 +375,38 @@ public class HearthScanner{
 	
 		return rec;
 	}
+	
+//	private Rectangle skFind(BufferedImage target, BufferedImage screenImage, float score) {
+//		//score = (score == -1) ? 0.5f : score;
+//		Rectangle rec = null;
+//		
+////		Finder finder = new Finder(
+////				new ScreenImage(new Rectangle(0,0, screenImage.getWidth(), screenImage.getHeight()), screenImage), 
+////				new Region(0,0,	screenImage.getWidth(), screenImage.getHeight())
+////		);
+//		
+//		Finder finder = new Finder(screenImage);
+//		
+//		Pattern pattern = new Pattern(target);
+//		
+//		pattern.similar(0.1f);
+//		
+//		finder.findAll(pattern);
+//		
+//		if(finder.hasNext()){
+//			Match match = finder.next();
+//		
+//			System.out.println("finder.hasNext()");
+//			
+//			if(match != null){
+//				rec = new Rectangle(match.x, match.y, match.w, match.h);
+//				
+//				System.out.println("match finder.hasNext()");
+//			}
+//		}
+//		
+//		return rec;
+//	}
 		
 	public synchronized void pause(){
 		

@@ -5,7 +5,13 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+import org.sikuli.api.ImageTarget;
+
+import my.hearthtracking.app.HearthScanner.SceneResult;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 public class HearthScannerManager {
@@ -25,12 +31,15 @@ public class HearthScannerManager {
 	private boolean scannerSettingsInitialzed = false;
 	private volatile boolean reInitScannerSettings = false;
 	private volatile boolean alwaysScan = true;
+	private volatile boolean notify = true;
+	private volatile boolean isDirty = true;
 
 	private HearthGameLangList gameLanguages;
 	private String gameLang;
 
 	private HearthConfigurator config = new HearthConfigurator();
 	private HearthHeroesList heroesList;
+	private static HearthLanguageManager uiLang = HearthLanguageManager.getInstance();
 
 	private int gameResX = 1920, gameResY = 1080;
 	private int oldGameResX = -1, oldGameResY = -1;
@@ -44,26 +53,45 @@ public class HearthScannerManager {
 
 	private HearthScanner scanner = new HearthScanner();
 
+	private List<HearthReaderNotification> notifications =  Collections.synchronizedList(new ArrayList<HearthReaderNotification>());
+	
+	//Game status related variables
+	private int previousWins = -1;
+	private int wins = -1;
+	
+	private int previousLosses = -1;
+	private int losses = -1;
+	
+	private int myHero = -1;
+	private int oppHero = -1;
+	
+	private int selectedDeck = -1;
+	private int exSelectedDeck = -1;
+	
+	private int exMyHero = -1;
+	private int exOppHero = -1;
+	
+	private int victory = -1;
+	private int exVictory = -1;
+	private int goFirst = -1;
+	private int exGoFirst = -1;
+
+	private int gameMode = UNKNOWNMODE;
+	private int exGameMode = UNKNOWNMODE;
+	private int inGameMode = -1;
+
 	public HearthScannerManager (HearthTracker t, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
 		debugMode = HearthHelper.isDevelopmentEnvironment();
 		tracker = t;
 		gameResX = resX;
 		gameResY = resY;
 		gameLang = lang.toLowerCase();
-		alwaysScan = alwaysScanFlag; 
+		alwaysScan = alwaysScanFlag;
+	}
+
+	public void startup(){
 		init();
 		initScannerSettings();
-	}
-	
-	public class MyThread implements Runnable {
-
-		public MyThread(Object parameter) {
-			// store parameter for later user
-		}
-
-		public void run() {
-			
-		}
 	}
 
 	private synchronized void init(){
@@ -240,7 +268,7 @@ public class HearthScannerManager {
 	}
 		
 	private synchronized void prepareScanbox(HearthScannerSettings.Scanbox sb){
-		HearthImageTarget it = null;
+		ImageTarget it = null;
 		File file = null;
 		float scaling = sb.scale * getScaleFactor();
 		
@@ -271,10 +299,11 @@ public class HearthScannerManager {
 			);
 		}
 		
-		it = new HearthImageTarget(preTarget);
+		it = new ImageTarget(preTarget);
 		
 		if(sb.matchQuality >= 0 && it != null){
 			it.setMinScore(sb.matchQuality);
+			//it.similar(sb.matchQuality);
 		}
 		
 		sb.target = it;
@@ -312,6 +341,8 @@ public class HearthScannerManager {
 		
 		startBench = System.currentTimeMillis();
 		scanner.scan();
+		//scanner.addQuery("gameMode");
+		processResults();
 		benchDiff  = (System.currentTimeMillis() - startBench);
 		
 		System.out.println("Scan() time spent: " + benchDiff + " ms");
@@ -319,6 +350,96 @@ public class HearthScannerManager {
 		if(reInitScannerSettings){
 			initScannerSettings();
 		}
+	}
+
+	private void processResults(){
+		List<SceneResult> results = scanner.getQueryResults();
+		
+		if(results ==  null){
+			return;
+		}
+		
+		for(SceneResult sr : results){
+			System.out.println("SceneResult: " + sr.scene + ", result: " + sr.result);
+			
+			switch(sr.scene.toLowerCase()){
+				case "gamemode":
+					processGameMode(sr.result);
+				break;
+			}
+		}
+	}
+
+	private void processGameMode(String result){
+		boolean found = false;
+
+		System.out.println("processGameMode() result: " + result);
+		
+		switch(result.toLowerCase()){
+			case "arena":
+				if(isGameModeDiff(ARENAMODE)){
+					gameMode = ARENAMODE;
+					System.out.println("Mode: Arena Mode");
+					addNotification(
+						new HearthReaderNotification( uiLang.t("Game Mode"), uiLang.t("Arena mode detected") )
+					);
+					found = true;
+				}
+			break;
+
+			case "ranked":
+				if(isGameModeDiff(RANKEDMODE)){
+					gameMode = RANKEDMODE;
+					System.out.println("Mode: Ranked Mode");
+					addNotification(
+						new HearthReaderNotification( uiLang.t("Game Mode"), uiLang.t("Ranked mode detected") )
+					);
+					found = true;
+				}
+			break;
+
+			case "unranked":
+				if(isGameModeDiff(UNRANKEDMODE)){
+					gameMode = UNRANKEDMODE;
+					System.out.println("Mode: Unranked Mode");
+					addNotification(
+						new HearthReaderNotification( uiLang.t("Game Mode"), uiLang.t("Unranked mode detected") )
+					);
+					found = true;
+				}
+			break;
+
+			case "practice":
+				if(isGameModeDiff(PRACTICEMODE)){
+					gameMode = PRACTICEMODE;
+					System.out.println("Mode: Practice Mode");
+					addNotification(
+						new HearthReaderNotification( uiLang.t("Game Mode"), uiLang.t("Practice mode detected") )
+					);
+					found = true;
+				}
+			break;
+
+			case "challenge":
+				if(isGameModeDiff(CHALLENGEMODE)){
+					gameMode = CHALLENGEMODE;
+					System.out.println("Mode: Challenge Mode");
+					addNotification(
+						new HearthReaderNotification( uiLang.t("Game Mode"), uiLang.t("Challenge mode detected") )
+					);
+					found = true;
+				}
+			break;
+		}
+
+		if(found){
+			exGameMode = gameMode; 
+			isDirty = true;
+		}
+	}
+
+	private boolean isGameModeDiff(int newValue){
+		return (exGameMode != newValue);
 	}
 	
 	private String sanitizeGameLang(String gLang){
@@ -355,6 +476,12 @@ public class HearthScannerManager {
 		gameResY = h;
 		reInitScannerSettings = true;
 	}
+
+	public synchronized void addNotification(HearthReaderNotification note){
+		if(notify == true){
+			notifications.add(note);
+		}
+	}
 	
 	public void setAlwaysScan(boolean flag){
 		alwaysScan = flag;
@@ -365,7 +492,7 @@ public class HearthScannerManager {
 	}
 
 	public void setNotification(boolean flag){
-		
+		notify = flag;
 	}
 	
 	public void resume(){
@@ -398,6 +525,12 @@ public class HearthScannerManager {
 	}
 	
 	public boolean isDirty(){
+		if(isDirty){
+			isDirty = false;
+			
+			return true;
+		}
+		
 		return false;
 	}
 	
@@ -406,6 +539,15 @@ public class HearthScannerManager {
 	}
 	
 	public HearthReaderNotification getNotification(){
-		return null;
+		if(notifications.size() == 0){
+			return null;
+		}
+		
+		synchronized(notifications){
+			HearthReaderNotification first = notifications.get(0);
+			notifications.remove(0);
+			
+			return first;
+		}
 	}
 }
