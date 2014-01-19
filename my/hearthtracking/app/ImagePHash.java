@@ -8,8 +8,8 @@ import edu.emory.mathcs.jtransforms.dct.DoubleDCT_2D;
 
 public class ImagePHash {
 
-	private int size = 32;
-	private int smallerSize = 8;
+	private int size = 64;
+	private int smallerSize = 16;
 	private DoubleDCT_2D dct = null;
 	
 	public ImagePHash() {

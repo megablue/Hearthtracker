@@ -215,6 +215,18 @@ public class HearthScannerManager {
 		if(scannerSettings == null){
 			scannerSettings = new HearthScannerSettings();
 			config.save(scannerSettings, pathScannerSetting);
+			
+			if(HearthHelper.isDevelopmentEnvironment()){
+				String original 
+				= String.format(
+						HearthFilesNameManager.scannerSettingFileDefault, 
+						"original"
+				);
+				
+				//save an extra copy of the original values
+				//so that we can compare it with the "self-corrected" version later on
+				config.save(scannerSettings, original);
+			}
 		}
 		
 		for(Scanbox sb : scannerSettings.list){
@@ -222,9 +234,7 @@ public class HearthScannerManager {
 			scanner.addScanbox(sb);
 		}
 				
-		scanner.setScale(getScaleFactor());
-		scanner.init();
-		
+		scanner.initScale(getScaleFactor());
 		scannerSettingsInitialzed = true;
 		reInitScannerSettings = false;
 	}

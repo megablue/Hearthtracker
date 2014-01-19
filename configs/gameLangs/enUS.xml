@@ -1,479 +1,303 @@
 <HearthScannerSettings>
-  <lang>enUS</lang>
-  <baseResolutionHeight>1080</baseResolutionHeight>
-  <overwriteAutoScale>false</overwriteAutoScale>
-  <autoScaleFactor>1.0</autoScaleFactor>
-  <arenaLeafScanbox>
-    <xOffset>457</xOffset>
-    <yOffset>363</yOffset>
-    <width>57</width>
-    <height>57</height>
-    <imgfile>arena-leaf.png</imgfile>
-    <scale>1.0</scale>
-    <matchQuality>-1.0</matchQuality>
-    <scene>gameMode</scene>
-    <outer-class reference="../.."/>
-  </arenaLeafScanbox>
-  <rankedScanbox>
-    <xOffset>1088</xOffset>
-    <yOffset>140</yOffset>
-    <width>107</width>
-    <height>107</height>
-    <imgfile>ranked-mode.png</imgfile>
-    <scale>1.0</scale>
-    <matchQuality>-1.0</matchQuality>
-    <scene>gameMode</scene>
-    <outer-class reference="../.."/>
-  </rankedScanbox>
-  <unrankedScanbox>
-    <xOffset>1091</xOffset>
-    <yOffset>159</yOffset>
-    <width>57</width>
-    <height>57</height>
-    <imgfile>unranked-mode.png</imgfile>
-    <scale>1.0</scale>
-    <matchQuality>-1.0</matchQuality>
-    <scene>gameMode</scene>
-    <outer-class reference="../.."/>
-  </unrankedScanbox>
-  <practiceScanbox>
-    <xOffset>995</xOffset>
-    <yOffset>60</yOffset>
-    <width>57</width>
-    <height>57</height>
-    <imgfile>practice-mode.png</imgfile>
-    <scale>1.0</scale>
-    <matchQuality>-1.0</matchQuality>
-    <scene>gameMode</scene>
-    <outer-class reference="../.."/>
-  </practiceScanbox>
-  <challengeScanbox>
-    <xOffset>1261</xOffset>
-    <yOffset>112</yOffset>
-    <width>57</width>
-    <height>57</height>
-    <imgfile>challenge-mode.png</imgfile>
-    <scale>1.0</scale>
-    <matchQuality>-1.0</matchQuality>
-    <scene>gameMode</scene>
-    <outer-class reference="../.."/>
-  </challengeScanbox>
-  <deckScanboxses>
+  <list>
     <Scanbox>
-      <xOffset>132</xOffset>
-      <yOffset>222</yOffset>
-      <width>53</width>
-      <height>53</height>
-      <imgfile>deck-selected.png</imgfile>
+      <xOffset>460</xOffset>
+      <yOffset>366</yOffset>
+      <width>50</width>
+      <height>50</height>
+      <imgfile>arena-leaf.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.6</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameMode</scene>
+      <identifier>arena</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>368</xOffset>
-      <yOffset>222</yOffset>
-      <width>53</width>
-      <height>53</height>
-      <imgfile>deck-selected.png</imgfile>
+      <xOffset>1093</xOffset>
+      <yOffset>145</yOffset>
+      <width>100</width>
+      <height>100</height>
+      <imgfile>ranked-mode.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.6</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameMode</scene>
+      <identifier>ranked</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>611</xOffset>
-      <yOffset>222</yOffset>
-      <width>53</width>
-      <height>53</height>
-      <imgfile>deck-selected.png</imgfile>
+      <xOffset>1094</xOffset>
+      <yOffset>163</yOffset>
+      <width>51</width>
+      <height>51</height>
+      <imgfile>unranked-mode.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.6</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameMode</scene>
+      <identifier>unranked</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>132</xOffset>
-      <yOffset>446</yOffset>
-      <width>53</width>
-      <height>53</height>
-      <imgfile>deck-selected.png</imgfile>
+      <xOffset>1000</xOffset>
+      <yOffset>64</yOffset>
+      <width>51</width>
+      <height>51</height>
+      <imgfile>practice-mode.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.6</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameMode</scene>
+      <identifier>practice</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>371</xOffset>
-      <yOffset>446</yOffset>
-      <width>53</width>
-      <height>53</height>
-      <imgfile>deck-selected.png</imgfile>
+      <xOffset>1255</xOffset>
+      <yOffset>120</yOffset>
+      <width>51</width>
+      <height>51</height>
+      <imgfile>challenge-mode.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.6</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameMode</scene>
+      <identifier>challenge</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>446</yOffset>
-      <width>53</width>
-      <height>53</height>
-      <imgfile>deck-selected.png</imgfile>
+      <xOffset>1030</xOffset>
+      <yOffset>629</yOffset>
+      <width>155</width>
+      <height>31</height>
+      <imgfile>go-first.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.6</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
+      <matchQuality>-1.0</matchQuality>
+      <scene>coin</scene>
+      <identifier>first</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>132</xOffset>
-      <yOffset>669</yOffset>
-      <width>53</width>
-      <height>53</height>
-      <imgfile>deck-selected.png</imgfile>
+      <xOffset>966</xOffset>
+      <yOffset>629</yOffset>
+      <width>270</width>
+      <height>30</height>
+      <imgfile>go-second.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.6</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
+      <matchQuality>-1.0</matchQuality>
+      <scene>coin</scene>
+      <identifier>second</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>371</xOffset>
-      <yOffset>669</yOffset>
-      <width>53</width>
-      <height>53</height>
-      <imgfile>deck-selected.png</imgfile>
+      <xOffset>462</xOffset>
+      <yOffset>528</yOffset>
+      <width>50</width>
+      <height>50</height>
+      <imgfile>victory.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.6</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>victory</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>669</yOffset>
-      <width>53</width>
-      <height>53</height>
-      <imgfile>deck-selected.png</imgfile>
+      <xOffset>481</xOffset>
+      <yOffset>574</yOffset>
+      <width>50</width>
+      <height>50</height>
+      <imgfile>defeat.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.7</matchQuality>
-      <scene>deckSelection</scene>
-      <nestedSb>
-        <xOffset>-22</xOffset>
-        <yOffset>23</yOffset>
-        <width>245</width>
-        <height>108</height>
-        <imgfile>deck-selected-verify.png</imgfile>
-        <scale>1.0</scale>
-        <matchQuality>0.6</matchQuality>
-        <scene>deckSelection</scene>
-        <mask>
-          <xOffset>22</xOffset>
-          <yOffset>20</yOffset>
-          <width>204</width>
-          <height>64</height>
-          <outer-class reference="../../../../.."/>
-        </mask>
-        <outer-class reference="../../../.."/>
-      </nestedSb>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>defeat</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
-  </deckScanboxses>
-  <goFirstScanbox>
-    <xOffset>910</xOffset>
-    <yOffset>550</yOffset>
-    <width>400</width>
-    <height>150</height>
-    <imgfile>go-first.png</imgfile>
-    <scale>1.0</scale>
-    <matchQuality>-1.0</matchQuality>
-    <scene>mulligan</scene>
-    <outer-class reference="../.."/>
-  </goFirstScanbox>
-  <goSecondScanbox>
-    <xOffset>910</xOffset>
-    <yOffset>550</yOffset>
-    <width>400</width>
-    <height>150</height>
-    <imgfile>go-second.png</imgfile>
-    <scale>1.0</scale>
-    <matchQuality>-1.0</matchQuality>
-    <scene>mulligan</scene>
-    <outer-class reference="../.."/>
-  </goSecondScanbox>
-  <victoryScanbox>
-    <xOffset>440</xOffset>
-    <yOffset>500</yOffset>
-    <width>100</width>
-    <height>100</height>
-    <imgfile>victory.png</imgfile>
-    <scale>1.0</scale>
-    <matchQuality>-1.0</matchQuality>
-    <scene>mulligan</scene>
-    <outer-class reference="../.."/>
-  </victoryScanbox>
-  <defeatScanbox>
-    <xOffset>452</xOffset>
-    <yOffset>547</yOffset>
-    <width>100</width>
-    <height>100</height>
-    <imgfile>defeat.png</imgfile>
-    <scale>1.0</scale>
-    <matchQuality>-1.0</matchQuality>
-    <scene>mulligan</scene>
-    <outer-class reference="../.."/>
-  </defeatScanbox>
-  <winsScanboxes>
     <Scanbox>
-      <xOffset>343</xOffset>
-      <yOffset>232</yOffset>
-      <width>107</width>
-      <height>107</height>
+      <xOffset>425</xOffset>
+      <yOffset>532</yOffset>
+      <width>66</width>
+      <height>59</height>
+      <imgfile>lose-checkbox-checked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLose</scene>
+      <identifier>1</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>515</xOffset>
+      <yOffset>532</yOffset>
+      <width>66</width>
+      <height>59</height>
+      <imgfile>lose-checkbox-checked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLose</scene>
+      <identifier>2</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>609</xOffset>
+      <yOffset>532</yOffset>
+      <width>66</width>
+      <height>59</height>
+      <imgfile>lose-checkbox-checked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLose</scene>
+      <identifier>3</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>423</xOffset>
+      <yOffset>533</yOffset>
+      <width>68</width>
+      <height>59</height>
+      <imgfile>lose-checkbox-unchecked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLive</scene>
+      <identifier>1</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>514</xOffset>
+      <yOffset>533</yOffset>
+      <width>68</width>
+      <height>59</height>
+      <imgfile>lose-checkbox-unchecked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLive</scene>
+      <identifier>2</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>608</xOffset>
+      <yOffset>533</yOffset>
+      <width>68</width>
+      <height>59</height>
+      <imgfile>lose-checkbox-unchecked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLive</scene>
+      <identifier>3</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>347</xOffset>
+      <yOffset>235</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>0.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>0</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>347</xOffset>
+      <yOffset>235</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>1.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>1</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>348</xOffset>
+      <yOffset>235</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>2.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>2</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>348</xOffset>
+      <yOffset>236</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>3.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>3</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>347</xOffset>
+      <yOffset>235</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>4.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>4</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>347</xOffset>
+      <yOffset>236</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>5.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>5</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>347</xOffset>
+      <yOffset>236</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>6.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>6</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>348</xOffset>
+      <yOffset>237</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>7.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>7</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>348</xOffset>
+      <yOffset>237</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>8.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>8</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>300</xOffset>
-      <yOffset>190</yOffset>
-      <width>200</width>
-      <height>200</height>
+      <xOffset>346</xOffset>
+      <yOffset>227</yOffset>
+      <width>100</width>
+      <height>100</height>
       <imgfile>9.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>9</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -484,7 +308,8 @@
       <imgfile>10.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>10</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -495,7 +320,8 @@
       <imgfile>11.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>11</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -506,101 +332,32 @@
       <imgfile>12.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.9</matchQuality>
-      <scene>arenaScore</scene>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-  </winsScanboxes>
-  <lossesScanboxes>
-    <Scanbox>
-      <xOffset>400</xOffset>
-      <yOffset>507</yOffset>
-      <width>110</width>
-      <height>110</height>
-      <imgfile>lose-checkbox-checked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaWins</scene>
+      <identifier>12</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>492</xOffset>
-      <yOffset>507</yOffset>
-      <width>110</width>
-      <height>110</height>
-      <imgfile>lose-checkbox-checked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>584</xOffset>
-      <yOffset>507</yOffset>
-      <width>110</width>
-      <height>110</height>
-      <imgfile>lose-checkbox-checked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-  </lossesScanboxes>
-  <lossesUncheckedScanboxes>
-    <Scanbox>
-      <xOffset>419</xOffset>
-      <yOffset>530</yOffset>
-      <width>75</width>
-      <height>65</height>
-      <imgfile>lose-checkbox-unchecked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>492</xOffset>
-      <yOffset>507</yOffset>
-      <width>110</width>
-      <height>110</height>
-      <imgfile>lose-checkbox-unchecked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>584</xOffset>
-      <yOffset>507</yOffset>
-      <width>110</width>
-      <height>110</height>
-      <imgfile>lose-checkbox-unchecked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-  </lossesUncheckedScanboxes>
-  <arenaHeroScanboxes>
-    <Scanbox>
-      <xOffset>170</xOffset>
+      <xOffset>184</xOffset>
       <yOffset>742</yOffset>
-      <width>71</width>
-      <height>71</height>
+      <width>64</width>
+      <height>64</height>
       <imgfile>mage.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaHero</scene>
+      <identifier>mage</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>80</xOffset>
-      <yOffset>720</yOffset>
-      <width>240</width>
-      <height>160</height>
+      <xOffset>175</xOffset>
+      <yOffset>742</yOffset>
+      <width>64</width>
+      <height>64</height>
       <imgfile>hunter.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaHero</scene>
+      <identifier>hunter</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -611,7 +368,8 @@
       <imgfile>warrior.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaHero</scene>
+      <identifier>warrior</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -622,7 +380,8 @@
       <imgfile>shaman.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaHero</scene>
+      <identifier>shaman</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -633,7 +392,8 @@
       <imgfile>druid.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaHero</scene>
+      <identifier>druid</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -644,7 +404,8 @@
       <imgfile>priest.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaHero</scene>
+      <identifier>priest</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -655,7 +416,8 @@
       <imgfile>rogue.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaHero</scene>
+      <identifier>rogue</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -666,7 +428,8 @@
       <imgfile>paladin.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaHero</scene>
+      <identifier>paladin</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -677,20 +440,20 @@
       <imgfile>warlock.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>arenaScore</scene>
+      <scene>arenaHero</scene>
+      <identifier>warlock</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
-  </arenaHeroScanboxes>
-  <opponentHeroScanboxes>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>70</yOffset>
-      <width>220</width>
-      <height>200</height>
+      <xOffset>696</xOffset>
+      <yOffset>135</yOffset>
+      <width>48</width>
+      <height>48</height>
       <imgfile>mage-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>oppHero</scene>
+      <identifier>mage</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -701,18 +464,20 @@
       <imgfile>hunter-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>oppHero</scene>
+      <identifier>hunter</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>70</yOffset>
-      <width>220</width>
-      <height>200</height>
+      <xOffset>649</xOffset>
+      <yOffset>109</yOffset>
+      <width>48</width>
+      <height>48</height>
       <imgfile>warrior-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>oppHero</scene>
+      <identifier>warrior</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -723,29 +488,32 @@
       <imgfile>shaman-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>oppHero</scene>
+      <identifier>shaman</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>70</yOffset>
-      <width>220</width>
-      <height>200</height>
+      <xOffset>696</xOffset>
+      <yOffset>136</yOffset>
+      <width>48</width>
+      <height>48</height>
       <imgfile>druid-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>oppHero</scene>
+      <identifier>druid</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>70</yOffset>
-      <width>220</width>
-      <height>200</height>
+      <xOffset>696</xOffset>
+      <yOffset>136</yOffset>
+      <width>48</width>
+      <height>48</height>
       <imgfile>priest-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>oppHero</scene>
+      <identifier>priest</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -756,18 +524,20 @@
       <imgfile>rogue-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>oppHero</scene>
+      <identifier>rogue</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>70</yOffset>
-      <width>220</width>
-      <height>200</height>
+      <xOffset>696</xOffset>
+      <yOffset>136</yOffset>
+      <width>48</width>
+      <height>48</height>
       <imgfile>paladin-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>oppHero</scene>
+      <identifier>paladin</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -778,11 +548,10 @@
       <imgfile>warlock-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>oppHero</scene>
+      <identifier>warlock</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
-  </opponentHeroScanboxes>
-  <myHeroScanboxes>
     <Scanbox>
       <xOffset>610</xOffset>
       <yOffset>710</yOffset>
@@ -791,18 +560,20 @@
       <imgfile>mage-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>myHero</scene>
+      <identifier>mage</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>710</yOffset>
-      <width>220</width>
-      <height>200</height>
+      <xOffset>699</xOffset>
+      <yOffset>763</yOffset>
+      <width>48</width>
+      <height>48</height>
       <imgfile>hunter-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>myHero</scene>
+      <identifier>hunter</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -813,7 +584,8 @@
       <imgfile>warrior-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>myHero</scene>
+      <identifier>warrior</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -824,18 +596,20 @@
       <imgfile>shaman-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>myHero</scene>
+      <identifier>shaman</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>710</yOffset>
-      <width>220</width>
-      <height>200</height>
+      <xOffset>699</xOffset>
+      <yOffset>763</yOffset>
+      <width>48</width>
+      <height>48</height>
       <imgfile>druid-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>myHero</scene>
+      <identifier>druid</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -846,7 +620,8 @@
       <imgfile>priest-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>myHero</scene>
+      <identifier>priest</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -857,7 +632,8 @@
       <imgfile>rogue-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>myHero</scene>
+      <identifier>rogue</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -868,19 +644,21 @@
       <imgfile>paladin-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>myHero</scene>
+      <identifier>paladin</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>610</xOffset>
-      <yOffset>710</yOffset>
-      <width>220</width>
-      <height>200</height>
+      <xOffset>699</xOffset>
+      <yOffset>765</yOffset>
+      <width>48</width>
+      <height>48</height>
       <imgfile>warlock-s.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
-      <scene>gameStarted</scene>
+      <scene>myHero</scene>
+      <identifier>warlock</identifier>
       <outer-class reference="../../.."/>
     </Scanbox>
-  </myHeroScanboxes>
+  </list>
 </HearthScannerSettings>

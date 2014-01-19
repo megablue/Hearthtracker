@@ -14,37 +14,72 @@ import org.sikuli.core.search.algorithm.TemplateMatcher;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 public class HearthScanner{
+	private static final float PHASH_MIN_SCORE = 0.8f;
+	
+	//store the most current scale value
 	private float scale = 1f;
+	
+	//list of assigned scanboxes
 	private List<Scanbox> scanBoxes = Collections.synchronizedList(new ArrayList<Scanbox>());
 	
+	//list of frames
 	private List<BufferedImage> gameScreens = Collections.synchronizedList(new ArrayList<BufferedImage>()); 
+	
+	//scanbox target image -> phash
 	private ConcurrentHashMap<String, String> scanboxHashes = new ConcurrentHashMap<String, String>();
 	
+	//used to store recognition results
+	private List<SceneResult> sceneResults = Collections.synchronizedList(new ArrayList<SceneResult>());
+	
+	//list of queries
+	private List<String> queries = Collections.synchronizedList(new ArrayList<String>());
+
+	//pHash generator
 	private ImagePHash pHash = new ImagePHash();
 
+	//whatever to save the self-corrected offsets
 	private boolean generateBetterOffsets = true;
-
-	private static final int DISTANCE_THRESHOLD = 16;
+	
+	
+	public class SceneResult{
+		String scene;
+		String result;
+		
+		public SceneResult(String s, String r){
+			scene = s;
+			result = r;
+		}
+	}
 	
 	public HearthScanner() {
 		
 	}
-		
-	public synchronized void setScale(float s){
-		scale = s;
-		clearCache();
-		init();
+	
+	/**
+	 * Initialze or Reinistalize the scanner when scale/resolution/scanboxes are changed
+	 *
+	 * @param  scale  the scale of the game screen in relative to the base resolution height (usually 1080)
+	 */
+	public synchronized void initScale(float scale){
+		this.scale = scale;
+		resetFrames();
+		_init();
 	}
 
-	public synchronized void init(){
+	public synchronized void _init(){
 		for(Scanbox sb : scanBoxes) {
 			String masked = sb.mask != null ? "masked" : "";
 			String key = masked + "-" + sb.imgfile;
 			String hash = scanboxHashes.get(key);
 
 			if(hash == null){
-				BufferedImage resizedTarget = HearthHelper.resizeImage(sb.target.getImage(), scale);
-				hash = pHash.getHash(resizedTarget);
+//				long startBench = System.currentTimeMillis();
+				
+				hash = pHash.getHash(sb.target.getImage());
+				
+//				long benchDiff = (System.currentTimeMillis() - startBench);
+//				System.out.println("getHash() time spent: " + benchDiff + " ms");
+
 				scanboxHashes.put(key, hash);
 			}
 			
@@ -55,23 +90,93 @@ public class HearthScanner{
 		}
 	}
 	
-	public synchronized void insertFrame(BufferedImage screen){
-		gameScreens.add(screen);
+	public float getPHashScore(String hash, int distance){
+		int max = hash.length();
+		float score = 1 - ((float)distance/max);
+		return score;
 	}
 	
-	public synchronized void addScanbox(Scanbox sb){
+	public void insertFrame(BufferedImage screen){
+		synchronized(gameScreens){
+			gameScreens.add(screen);
+		}
+	}
+		
+	public void addScanbox(Scanbox sb){
 		System.out.println(
 			"Scanbox added: " + sb.imgfile + ", \t\t"
 			+ "offset: " + sb.xOffset + ", " + sb.yOffset + ", \t"
 			+ sb.width + "x" + sb.height 
 		);
 		
-		scanBoxes.add(sb);
+		synchronized(scanBoxes){
+			scanBoxes.add(sb);
+		}
 	}
 	
-	public synchronized void clearCache(){
-		gameScreens.clear();
-		scanboxHashes.clear();
+	public void addQuery(String scene){
+		
+		//make sure that we don't add the same query twice
+		boolean found = queryExists(scene);
+		
+		synchronized(queries){
+			if(!found){
+				queries.add(scene);
+			}
+		}
+	}
+		
+	private boolean queryExists(String scene){
+		boolean found = false;
+		
+		synchronized(queries){
+			for(String q : queries){
+				if(q.equals(scene)){
+					found = true;
+					break;
+				}
+			}
+		}
+		
+		return found;
+	}
+	
+	public List<SceneResult> getQueryResults(){
+		synchronized(sceneResults){
+			if(sceneResults.isEmpty()){
+				return null;
+			}
+			
+			
+			List<SceneResult> results = Collections.synchronizedList(new ArrayList<SceneResult>());
+			
+			for(SceneResult sr : sceneResults){
+				//copy the results to the new list
+				results.add(sr);
+			}
+			
+			//clear existing
+			sceneResults.clear();
+
+			return results;
+		}
+	}
+	
+	public void resetQuery(){
+		synchronized(queries){
+			queries.clear();
+		}
+	}
+	
+	public void resetFrames(){
+		
+		synchronized(gameScreens){
+			gameScreens.clear();
+		}
+		
+		synchronized(scanboxHashes){
+			scanboxHashes.clear();
+		}
 	}
 	
 	private int scale(int n){
@@ -86,13 +191,23 @@ public class HearthScanner{
 		return (int) Math.round(scaledValue / scale);
 	}
 	
-	public synchronized void scan(){
-		if(gameScreens.isEmpty()){
-			return;
+	public void scan(){
+		BufferedImage screen = null;
+		
+		//wait for sync and pop the earliest frame
+		synchronized(gameScreens){
+			if(gameScreens.isEmpty()){
+				return;
+			}
+			screen = HearthHelper.cloneImage(gameScreens.get(0));
+			gameScreens.remove(0);
+			System.out.println("Frames in queue: " + gameScreens.size());
 		}
 		
-		//grab one of the frame/screen
-		BufferedImage screen = gameScreens.get(0);
+		if(screen == null){
+			System.out.println("scan(), screen is null. something gone horribly wrong!");
+			return;
+		}
 		
 		//region -> phash
 		Hashtable<String, String> roiHashes = new Hashtable<String, String>();
@@ -145,6 +260,7 @@ public class HearthScanner{
 		}
 		
 		for(Scanbox sb : scanBoxes){
+			boolean found = false;
 			String masked = sb.mask != null ? "masked" : "";
 			String key = scale(sb.xOffset) 	+ "x" + 
 						 scale(sb.yOffset)	+ "x" + 
@@ -167,15 +283,18 @@ public class HearthScanner{
 			
 			BufferedImage target = sb.target.getImage();
 			BufferedImage region = roiSnaps.get(key);
-					
-			if(distance < DISTANCE_THRESHOLD){		
-				System.out.println("Possible match at " + scale(sb.xOffset) + ", " + scale(sb.yOffset));
+			float score = getPHashScore(targetHash, distance);
+			
+			//if the score greater or equals the minimum threshold
+			if(score >= PHASH_MIN_SCORE){		
+				System.out.println("Possible match at " + scale(sb.xOffset) + ", " + scale(sb.yOffset) + " with score of " + score);
 
 				Rectangle rec = skFind(target, region, sb.matchQuality);
 
 				if(rec == null){
 					System.out.println("Double checked, It is a mismatch");
 				} else{
+					found = true;
 					System.out.println("Double checked, Found on " + rec.x + ", " + rec.y);
 				}
 			} else {
@@ -184,18 +303,39 @@ public class HearthScanner{
 				if(rec == null){
 					System.out.println("Not found.");
 				} else{
+					found = true;
 					System.out.println("Found on " + rec.x + ", " + rec.y);
-					sb.xOffset = sb.xOffset + unscale(rec.x);
-					sb.yOffset = sb.yOffset + unscale(rec.y);
-					sb.width   = unscale(rec.getWidth());
-					sb.height  = unscale(rec.getHeight());
+
+					//try to make the offsets as precise as possible
+					//a self-correct mechanism
+					if(generateBetterOffsets){
+						sb.xOffset = sb.xOffset + unscale(rec.x);
+						sb.yOffset = sb.yOffset + unscale(rec.y);
+						sb.width   = unscale(rec.getWidth());
+						sb.height  = unscale(rec.getHeight());
+					}
 				}
 			}
+			
+			if(found){
+				
+				if(queryExists(sb.scene)){
+					System.out.println("Query found: adding scene to query results");
+					insertSceneResult(sb.scene, sb.identifier);
+				} else {
+					System.out.println("Query not found.");
+				}
+				
+			}
 		}
-		
-		gameScreens.remove(0);
 	}
 	
+	private void insertSceneResult(String scene, String result){
+		synchronized(sceneResults){
+			sceneResults.add(new SceneResult(scene, result));
+		}
+	}
+
 	private Rectangle skFind(BufferedImage target, BufferedImage screenImage, float score) {
 		score = (score == -1) ? 0.7f : score;
 		
@@ -205,7 +345,8 @@ public class HearthScanner{
 		
 		List<RegionMatch> matches;
 		Rectangle rec = null;
-		matches = TemplateMatcher.findMatchesByGrayscaleAtOriginalResolution(screenImage, target, 1, score);
+		int limit = 1;
+		matches = TemplateMatcher.findMatchesByGrayscaleAtOriginalResolution(screenImage, target, limit, score);
 		
 		if(matches.size() > 0){
 			RegionMatch r = matches.get(0);

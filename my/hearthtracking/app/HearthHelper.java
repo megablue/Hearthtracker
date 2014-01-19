@@ -2,6 +2,8 @@ package my.hearthtracking.app;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -88,6 +90,13 @@ public class HearthHelper {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	static BufferedImage cloneImage(BufferedImage bi) {
+		 ColorModel cm = bi.getColorModel();
+		 boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		 WritableRaster raster = bi.copyData(null);
+		 return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
 	}
 	
 	public static BufferedImage resizeImage(File imgFile, float scaleFactor){

@@ -249,12 +249,6 @@ public class HearthScannerSettings {
 		Scanbox nestedSb = null;
 		HearthImageTarget target = null;
 
-		public Scanbox(String filename, String sce, String id){
-			imgfile = filename;
-			scene = sce;
-			identifier = id;
-		}
-
 		public Scanbox(String filename, String sce, String id, int x, int y, int w, int h){
 			imgfile = filename;
 			xOffset = x;
