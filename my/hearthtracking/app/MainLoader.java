@@ -13,6 +13,7 @@ import java.util.List;
 public class MainLoader {
 	public static int[] version = {1, 1, 8};
 	public static int experimental = 0;
+	private final static int syncInterval =  1 * 60 * 1000;
 	
 	//static Logger logger = HearthHelper.getLogger(Level.ALL);
 	public static HearthConfigurator config = new HearthConfigurator();
@@ -30,8 +31,6 @@ public class MainLoader {
 	volatile static boolean shutdown = false;
 	volatile static boolean threadRunning = true;
 	
-	private static int syncInterval =  1 * 60 * 1000;
-	
 	public static List<HearthReaderNotification> notifications = new ArrayList<HearthReaderNotification>();
 	private static HearthLanguageManager lang;
 	
@@ -41,6 +40,7 @@ public class MainLoader {
 		startup();
 	}
 	
+	@SuppressWarnings("unused")
 	private static void debug(){
 		int timeLimit = 20;
 		long start = System.currentTimeMillis();
@@ -51,6 +51,7 @@ public class MainLoader {
 		
 		scannerManager = new HearthScannerManager(
 			tracker, 
+			setting.scanInterval,
 			setting.gameLang, 
 			setting.gameWidth, 
 			setting.gameHeight, 
@@ -187,46 +188,40 @@ public class MainLoader {
 	
 	private static void startScannerManager(){
 		tracker = new HearthTracker();
-		scannerManager = new HearthScannerManager(tracker, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
-		scannerManagerThread = new Thread(new ScannerManagerThread());
-		scannerManagerThread.start();
-	}
+		scannerManager = new HearthScannerManager(tracker, setting.scanInterval, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
 
-    private static class ScannerManagerThread
-    implements Runnable {
-	    public void run() {
-	    	HearthReaderNotification note = null;
+		Runnable runnable = new Runnable() {
+ 			public void run() {
+				HearthReaderNotification note = null;
 
-	    	scannerManager.startup();
+		    	scannerManager.startup();
 
-	    	if(!setting.scannerEnabled){
-				scannerManager.pause();
-			}
+		    	if(!setting.scannerEnabled){
+					scannerManager.pause();
+				}
 
-	    	while(!shutdown){
-	        	try {
+		    	while(!shutdown){
 	        		scannerManager.process();
-	        		
-        			Thread.sleep(setting.scanInterval);
         			
         			note = scannerManager.getNotification();
         			
         			if(note != null){
         				notifications.add(note);
         			}
-	    		} catch (InterruptedException e) {
-	    			break;
-	    		}
-	    	}
-	    	
-	    	threadRunning = false;
-	    }
-    }
-    
+		    	}
+		    	
+		    	threadRunning = false;
+		    }
+		};
+
+		scannerManagerThread = new Thread(runnable);
+		scannerManagerThread.start();
+	}
+
     private static void processNotification(){
     	Runnable runnable = new Runnable() {
 		    public void run() {
-		    	if(notifications.size() > 0){
+		    	while(notifications.size() > 0){
 			    	HearthReaderNotification note = notifications.get(0);
 			    	notifications.remove(note);
 			    	
@@ -238,6 +233,8 @@ public class MainLoader {
         						theUI.getShell().getMonitor()
         				);
 			    	}
+			    	
+			    	Display.getDefault().timerExec(200, this);
 		    	}
 		    	
 		    	Display.getDefault().timerExec(100, this);

@@ -13,6 +13,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.logging.FileHandler;  
@@ -386,5 +387,9 @@ public class HearthHelper {
 		}
 		
 		return uiLang.t("Unknown mode");
+	}
+
+	public static String formatNumber(String format, Float number){
+		return new DecimalFormat("0.00").format(number);
 	}
 }

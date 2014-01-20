@@ -13,14 +13,25 @@ import org.sikuli.core.search.algorithm.TemplateMatcher;
 
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+@SuppressWarnings("unused")
 public class HearthScanner{
+	private static final boolean DEBUGMODE = HearthHelper.isDevelopmentEnvironment();
+	
+	private static final int PHASH_SIZE = 32;
+	private static final int PHASH_MIN_SIZE = 8;
 	private static final float PHASH_MIN_SCORE = 0.75f;
+	
+	private static final int FRAMES_LIMIT = 5;
 	
 	//store the most current scale value
 	private float scale = 1f;
 	
 	//list of assigned scanboxes
-	private List<Scanbox> scanBoxes = Collections.synchronizedList(new ArrayList<Scanbox>());
+	private List<Scanbox> allScanboxes = Collections.synchronizedList(new ArrayList<Scanbox>());
 	
 	//list of frames
 	private List<BufferedImage> gameScreens = Collections.synchronizedList(new ArrayList<BufferedImage>()); 
@@ -35,12 +46,20 @@ public class HearthScanner{
 	private List<String> queries = Collections.synchronizedList(new ArrayList<String>());
 
 	//pHash generator
-	private ImagePHash pHash = new ImagePHash();
+	private ImagePHash pHash = new ImagePHash(PHASH_SIZE, PHASH_MIN_SIZE);
 
 	//whatever to save the self-corrected offsets
 	private boolean generateBetterOffsets = true;
+
+	//number of threads
+	private int MAX_THREADS = 8;
 	
+	private boolean scanStarted = false;
 	
+	private volatile static boolean shutdown = false;
+	
+	private long idleTime = 50;
+
 	public class SceneResult{
 		String scene;
 		String result;
@@ -72,10 +91,11 @@ public class HearthScanner{
 		scanboxHashes.clear();
 		resetFrames();
 		_init();
+		startScan();
 	}
 
 	public synchronized void _init(){
-		for(Scanbox sb : scanBoxes) {
+		for(Scanbox sb : allScanboxes) {
 			String masked = sb.mask != null ? "masked" : "";
 			String key = masked + "-" + sb.imgfile;
 			String hash = scanboxHashes.get(key);
@@ -106,7 +126,9 @@ public class HearthScanner{
 	
 	public void insertFrame(BufferedImage screen){
 		synchronized(gameScreens){
-			gameScreens.add(screen);
+			if(gameScreens.size() <= FRAMES_LIMIT){
+				gameScreens.add(screen);
+			}
 		}
 	}
 		
@@ -117,13 +139,12 @@ public class HearthScanner{
 			+ sb.width + "x" + sb.height 
 		);
 		
-		synchronized(scanBoxes){
-			scanBoxes.add(sb);
+		synchronized(allScanboxes){
+			allScanboxes.add(sb);
 		}
 	}
 	
 	public void addQuery(String scene){
-		
 		//make sure that we don't add the same query twice
 		boolean found = queryExists(scene);
 		
@@ -154,8 +175,7 @@ public class HearthScanner{
 			if(sceneResults.isEmpty()){
 				return null;
 			}
-			
-			
+
 			List<SceneResult> results = Collections.synchronizedList(new ArrayList<SceneResult>());
 			
 			for(SceneResult sr : sceneResults){
@@ -199,17 +219,51 @@ public class HearthScanner{
 		return (int) Math.round(scaledValue / scale);
 	}
 	
-	public void scan(){
+	 public void checkTableSizes(){
+	 	System.out.println("gameScreens: " + gameScreens.size());
+	 	System.out.println("scanboxHashes: " + scanboxHashes.size());
+	 	System.out.println("scanBoxes: " + allScanboxes.size());
+	 	System.out.println("sceneResults: " + sceneResults.size());
+	 	System.out.println("queries: " + queries.size());
+	 }
+		
+	private void startScan(){
+		if(scanStarted){
+			return;
+		}
+		
+		Runnable runnable = new Runnable() {
+ 			public void run() {
+ 				while(!shutdown){
+ 					//checkTableSizes(); 					
+ 					process();
+ 				}
+		    }
+		};
+		
+		new Thread(runnable).start();
+		scanStarted = true;
+	}
+	
+	private void process(){
 		BufferedImage screen = null;
 		
 		//wait for sync and pop the earliest frame
 		synchronized(gameScreens){
 			if(gameScreens.isEmpty()){
+				try {
+					Thread.sleep(idleTime);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				return;
 			}
 			screen = HearthHelper.cloneImage(gameScreens.get(0));
 			gameScreens.remove(0);
-			System.out.println("Frames in queue: " + gameScreens.size());
+			
+			if(gameScreens.size() > 1){
+				System.out.println("Frames in queue: " + gameScreens.size());
+			}
 		}
 		
 		if(screen == null){
@@ -217,11 +271,78 @@ public class HearthScanner{
 			return;
 		}
 		
-		//region -> phash
-		Hashtable<String, String> roiHashes = new Hashtable<String, String>();
-		//region -> BufferedImage
-		Hashtable<String, BufferedImage> roiSnaps = new Hashtable<String, BufferedImage>();
+		long startBench = System.currentTimeMillis();
+
+		//if the number of thread is less than 2
+		if(MAX_THREADS < 2){
+			int threadID = 0;
+			
+			//region -> phash
+			Hashtable<String, String> roiHashes = new Hashtable<String, String>();
+			
+			//region -> BufferedImage
+			Hashtable<String, BufferedImage> roiSnaps = new Hashtable<String, BufferedImage>();
+			
+			//prepare the scan
+			prepScan(threadID, screen, allScanboxes, roiHashes, roiSnaps);
+			
+			//we can just start the scan() process using the current thread
+			scan(threadID, screen, allScanboxes, roiHashes, roiSnaps);
+
+		} else {
+			int boxesPerThread = (int) Math.ceil( (allScanboxes.size())/ (double) MAX_THREADS);
+			
+			ScannerJob[] jobs = new ScannerJob[MAX_THREADS];
+			ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
+			
+			int threadCounter = 0;
+			int boxesCounter = 0;
+			
+			for(Scanbox sb : allScanboxes){
+				
+				if(threadCounter >= MAX_THREADS){
+					System.out.println("Something gone horibbly wrong! Attempting to create too much thread!");
+				}
+								
+				if(jobs[threadCounter] == null){
+					jobs[threadCounter] = new  ScannerJob(threadCounter, screen);
+					System.out.println("Creating scan thread #" + threadCounter + ".");
+				}
+				
+				jobs[threadCounter].addScanbox(sb);
+				
+				if(boxesCounter != 0 && boxesCounter % boxesPerThread == 0){
+					++threadCounter;
+				}
+				
+				++boxesCounter;
+			}
+			
+			for(int i = 0; i < jobs.length; i++){
+				if(jobs[i] != null){
+					executor.execute(jobs[i]);
+					System.out.println("Firing scan thread #" + i + ".");
+				}
+			}
+			
+			//signal jobs to shutdown once finished
+			executor.shutdown();
+			
+			try {
+				executor.awaitTermination(10, TimeUnit.SECONDS);
+			} catch (InterruptedException e) {
+				System.out.println("One or more of the scan thread timeout!");
+				e.printStackTrace();
+			}
+			
+			System.out.println("All scan threads finished!");
+		}
 		
+		
+		System.out.println("scanner->process() time spent: " + (System.currentTimeMillis() - startBench) + " ms");
+	}
+	
+	private void prepScan(int threadId, BufferedImage screen, List<Scanbox> scanBoxes, Hashtable<String, String> roiHashes, Hashtable<String, BufferedImage> roiSnaps){
 		//crop corresponding parts and generate hashes from ROIs
 		for(Scanbox sb : scanBoxes){
 			String masked = sb.mask != null ? "masked" : "";
@@ -259,17 +380,17 @@ public class HearthScanner{
 				//insert into table
 				roiSnaps.put(key, roiSnapshot);
 				
-				long startBench = System.currentTimeMillis();
-				//generate a new hash
+				//generate hashes for ROI
 				hash = pHash.getHash(roiSnapshot);
-				
-				long benchDiff = (System.currentTimeMillis() - startBench);
-				System.out.println("getHash() time spent: " + benchDiff + " ms");
 				
 				//insert into table
 				roiHashes.put(key, hash);
 			}
 		}
+	}
+	
+	public void scan(int threadId, BufferedImage screen, List<Scanbox> scanBoxes, Hashtable<String, String> roiHashes, Hashtable<String, BufferedImage> roiSnaps){
+		System.out.println("Scanner Thread [" + threadId + "]" + " started");
 		
 		for(Scanbox sb : scanBoxes){
 			boolean found = false;
@@ -284,41 +405,56 @@ public class HearthScanner{
 
 			String targetHash = scanboxHashes.get(scanboxHashKey);
 			String regionHash = roiHashes.get(key);
+
 			//compare differences between screen region and target
 			int distance = pHash.distance(targetHash, regionHash);
-			
-			System.out.println(sb.imgfile + "-" + key + ", distance: " + distance);
-			
+
+			//convert distance to score
+			float score = getPHashScore(targetHash, distance);
+
+			System.out.println(
+				sb.imgfile 
+				+ "-" + key 
+				+ ", score: " 
+				+ HearthHelper.formatNumber("0.00", score)
+			);
+
 			BufferedImage target = sb.target.getImage();
 			BufferedImage region = roiSnaps.get(key);
-			float score = getPHashScore(targetHash, distance);
 			
-//			//if the score greater or equals the minimum threshold
-//			if(score >= PHASH_MIN_SCORE){		
-//				System.out.println("Possible match at " + scale(sb.xOffset) + ", " + scale(sb.yOffset) + " with score of " + score);
-//
-////				long startBench = System.currentTimeMillis();
-//				
+			//if the score greater or equals the minimum threshold
+			if(score >= PHASH_MIN_SCORE){		
+				System.out.println("Thread [" + threadId + "] " + "Possible match at " + scale(sb.xOffset) 
+					+ ", " + scale(sb.yOffset) 
+					+ " with score of " + HearthHelper.formatNumber("0.00", score)
+				);
+
+//				long startBench = System.currentTimeMillis();
+				
+				Rectangle rec = skFind(target, region, sb.matchQuality);
+				
+//				long benchDiff = (System.currentTimeMillis() - startBench);
+//				System.out.println("skFind() time spent: " + benchDiff + " ms");
+
+				if(rec == null){
+					System.out.println("Thread [" + threadId + "] " +"Double checked, It is a mismatch");
+				} else{
+					found = true;
+					System.out.println("Thread [" + threadId + "] " +"Double checked, Found on " + rec.x + ", " + rec.y);
+				}
+			}
+//			else if(DEBUGMODE){
 //				Rectangle rec = skFind(target, region, sb.matchQuality);
 //				
-////				long benchDiff = (System.currentTimeMillis() - startBench);
-////				System.out.println("skFind() time spent: " + benchDiff + " ms");
-//
 //				if(rec == null){
-//					System.out.println("Double checked, It is a mismatch");
+//					System.out.println("Thread [" + threadId + "] " + "Not found.");
 //				} else{
 //					found = true;
-//					System.out.println("Double checked, Found on " + rec.x + ", " + rec.y);
-//				}
-//			} 
-//			else {
-//				Rectangle rec = skFind(target, region, sb.matchQuality);
-//				
-//				if(rec == null){
-//					System.out.println("Not found.");
-//				} else{
-//					found = true;
-//					System.out.println("Found on " + rec.x + ", " + rec.y + " with skFind(), score: " + score);
+//					System.out.println("Thread [" + threadId + "] " + "Found on " 
+//						+ rec.x + ", " 
+//						+ rec.y + " with skFind(), " 
+//						+ "score: " + HearthHelper.formatNumber("0.00", score)
+//					);
 //
 //					//try to make the offsets as precise as possible
 //					//a self-correct mechanism
@@ -333,14 +469,52 @@ public class HearthScanner{
 			
 			if(found){
 				if(queryExists(sb.scene)){
-					System.out.println("Query found: adding scene \"" + sb.scene + "\" to query results");
-					insertSceneResult(sb.scene, sb.identifier);
+					System.out.println("Thread [" + threadId + "] " + "Query found: adding scene \"" + sb.scene + "\" to query results");
+					insertSceneResult(sb.scene, sb.identifier, region);
 				} else {
-					System.out.println("Query not found.");
+					System.out.println("Thread [" + threadId + "] " + "Query not found.");
 				}
-				
 			}
 		}
+		
+		System.out.println("Scanner Thread [" + threadId + "]" + " ended");
+	}
+	
+	public class ScannerJob implements Runnable {
+		private List<Scanbox> scanBoxes = Collections.synchronizedList(new ArrayList<Scanbox>());
+		private int myThreadId = 0;
+		BufferedImage myScreen = null;
+		
+		//region -> phash
+		Hashtable<String, String> roiHashes = new Hashtable<String, String>();
+		
+		//region -> BufferedImage
+		Hashtable<String, BufferedImage> roiSnaps = new Hashtable<String, BufferedImage>();
+		
+		public ScannerJob(int threadId, BufferedImage screen){
+			myThreadId = threadId;
+			myScreen = screen;
+		}
+		
+		public void addScanbox(Scanbox sb){
+			System.out.println(
+				"Thread[" + myThreadId + "]" + " Scanbox added: " + sb.imgfile + ", \t\t"
+				+ "offset: " + sb.xOffset + ", " + sb.yOffset + ", \t"
+				+ sb.width + "x" + sb.height 
+			);
+			
+			synchronized(scanBoxes){
+				scanBoxes.add(sb);
+			}
+		}
+		
+	    public void run() {
+	    	synchronized(this){
+				prepScan(myThreadId, myScreen, scanBoxes, roiHashes, roiSnaps);
+	    		scan(myThreadId, myScreen, scanBoxes, roiHashes, roiSnaps);
+	    		notify();
+	    	}
+	    }
 	}
 	
 	private void insertSceneResult(String scene, String result){
@@ -374,6 +548,10 @@ public class HearthScanner{
 		}
 	
 		return rec;
+	}
+	
+	public void dispose(){
+		shutdown = true;
 	}
 	
 //	private Rectangle skFind(BufferedImage target, BufferedImage screenImage, float score) {

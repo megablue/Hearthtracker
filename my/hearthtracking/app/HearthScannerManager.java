@@ -24,6 +24,10 @@ public class HearthScannerManager {
 	public static final int PRACTICEMODE = 5;
 	
 	public static final float BASE_RESOLUTION_HEIGHT = 1080f;
+	private static final long FPS_LIMIT = 15;
+	private static final float FPS_RESOLUTION = 60; //keep approaximate 60 seconds of frames
+	
+	private long scannerStarted = System.currentTimeMillis();
 
 	private boolean debugMode = false;
 	private boolean autoDetectGameRes = true;
@@ -52,7 +56,9 @@ public class HearthScannerManager {
 	private Robot robot = null;
 
 	private HearthScanner scanner = new HearthScanner();
-
+	
+	private int totalFramesCounter = 0;
+	private long totalTimeSpentCapturing = 0;
 	private List<HearthReaderNotification> notifications =  Collections.synchronizedList(new ArrayList<HearthReaderNotification>());
 	
 	//Game status related variables
@@ -79,13 +85,21 @@ public class HearthScannerManager {
 	private int gameMode = UNKNOWNMODE;
 	private int exGameMode = UNKNOWNMODE;
 	private int inGameMode = -1;
+	
+	private int timeslot = 100;
 
-	public HearthScannerManager (HearthTracker t, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
+	public HearthScannerManager (HearthTracker t, int tslot, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
 		debugMode = HearthHelper.isDevelopmentEnvironment();
 		tracker = t;
 		gameResX = resX;
 		gameResY = resY;
 		gameLang = lang.toLowerCase();
+		timeslot = tslot;
+		
+		if(debugMode){
+			timeslot = 100;
+		}
+		
 		alwaysScan = alwaysScanFlag;
 	}
 
@@ -313,16 +327,53 @@ public class HearthScannerManager {
 		}
 	}
 	
-	private synchronized BufferedImage capture(){
+	//return run time in seconds
+	private int getRunTime(){
+		return (int) Math.round( (System.currentTimeMillis() - scannerStarted / 1000) ); 
+	}
+	
+	private float getAverageFPS(){
+		float timeSpentSec = (totalTimeSpentCapturing/1000) > 1 ? (totalTimeSpentCapturing/1000) : 1;
+		float average =  (float) totalFramesCounter/timeSpentSec;
+		
+		if(timeSpentSec > FPS_RESOLUTION){
+			float diffTime = timeSpentSec - FPS_RESOLUTION;
+			float diffFrames  = diffTime * average;
+			
+			totalTimeSpentCapturing -= diffTime * 1000;
+			totalFramesCounter -= (int) diffFrames;
+		}
+		
+		System.out.println("Average FPS: " + HearthHelper.formatNumber("0.00", average));
+			
+		return average;
+	}
+	
+	private void updateFPSTime(long cycleStarted){
+		totalTimeSpentCapturing += (System.currentTimeMillis() - cycleStarted);
+	}
+	
+	private BufferedImage capture(){
+		
+		if(getAverageFPS() > FPS_LIMIT){
+			return null;
+		}
+		
+		BufferedImage snapshot = null;
+		
 		int gameScreenWidth		= getBoardWidth(),
 			gameScreenHeight	= getBoardHeight(),
 			boardX 				= getBoardX() + getXOffsetOverride(),
 			boardY 				= getBoardY() + getYOffetOverride();
 		
 		Rectangle rec = new Rectangle(boardX, boardY, gameScreenWidth, gameScreenHeight);
-		return robot.createScreenCapture(rec);		
+				
+		snapshot = robot.createScreenCapture(rec);
+		totalFramesCounter++;
+		
+		return snapshot;
 	}
-	
+		
 	public void process(){
 		boolean scanAllowed = alwaysScan || (!alwaysScan && HearthHelper.isHSDetected());
 		
@@ -330,26 +381,33 @@ public class HearthScannerManager {
 			return;
 		}
 		
-		long startBench = System.currentTimeMillis();
-		long benchDiff = 0;
+		long started = System.currentTimeMillis();
+		BufferedImage snap = capture();
 		
-		BufferedImage frame = capture();
-		benchDiff = (System.currentTimeMillis() - startBench);
-		System.out.println("Capture() time spent: " + benchDiff + " ms");
+		if(snap != null){
+			scanner.insertFrame(snap);
+			scanner.addQuery("gameMode");
+		}
 		
-		scanner.insertFrame(frame);
-		
-		startBench = System.currentTimeMillis();
-		scanner.scan();
-		//scanner.addQuery("gameMode");
 		processResults();
-		benchDiff  = (System.currentTimeMillis() - startBench);
-		
-		System.out.println("Scan() time spent: " + benchDiff + " ms");
-		
+
 		if(reInitScannerSettings){
 			initScannerSettings();
 		}
+		
+		long spent = System.currentTimeMillis() - started;
+		
+		if(spent < timeslot){
+			if(spent < timeslot){
+				try {
+					Thread.sleep(timeslot - spent);
+				} catch (InterruptedException e) {
+					//e.printStackTrace();
+				}
+			}
+		}
+		
+		updateFPSTime(started);
 	}
 
 	private void processResults(){
@@ -379,10 +437,6 @@ public class HearthScannerManager {
 			case "arena":
 				if(isGameModeDiff(ARENAMODE)){
 					gameMode = ARENAMODE;
-					System.out.println("Mode: Arena Mode");
-					addNotification(
-						new HearthReaderNotification( uiLang.t("Game Mode"), uiLang.t("Arena mode detected") )
-					);
 					found = true;
 				}
 			break;
@@ -390,10 +444,6 @@ public class HearthScannerManager {
 			case "ranked":
 				if(isGameModeDiff(RANKEDMODE)){
 					gameMode = RANKEDMODE;
-					System.out.println("Mode: Ranked Mode");
-					addNotification(
-						new HearthReaderNotification( uiLang.t("Game Mode"), uiLang.t("Ranked mode detected") )
-					);
 					found = true;
 				}
 			break;
@@ -401,10 +451,6 @@ public class HearthScannerManager {
 			case "unranked":
 				if(isGameModeDiff(UNRANKEDMODE)){
 					gameMode = UNRANKEDMODE;
-					System.out.println("Mode: Unranked Mode");
-					addNotification(
-						new HearthReaderNotification( uiLang.t("Game Mode"), uiLang.t("Unranked mode detected") )
-					);
 					found = true;
 				}
 			break;
@@ -412,10 +458,6 @@ public class HearthScannerManager {
 			case "practice":
 				if(isGameModeDiff(PRACTICEMODE)){
 					gameMode = PRACTICEMODE;
-					System.out.println("Mode: Practice Mode");
-					addNotification(
-						new HearthReaderNotification( uiLang.t("Game Mode"), uiLang.t("Practice mode detected") )
-					);
 					found = true;
 				}
 			break;
@@ -423,16 +465,23 @@ public class HearthScannerManager {
 			case "challenge":
 				if(isGameModeDiff(CHALLENGEMODE)){
 					gameMode = CHALLENGEMODE;
-					System.out.println("Mode: Challenge Mode");
-					addNotification(
-						new HearthReaderNotification( uiLang.t("Game Mode"), uiLang.t("Challenge mode detected") )
-					);
 					found = true;
 				}
 			break;
 		}
 
 		if(found){
+			String oldMode = HearthHelper.gameModeToString(exGameMode);
+			String newMode = HearthHelper.gameModeToString(gameMode);
+
+			System.out.println("Mode detected: " + newMode + ", previous mode: " + oldMode);
+			addNotification(
+				new HearthReaderNotification( 
+					uiLang.t("Game Mode"), 
+					uiLang.t( newMode + " mode detected") 
+				)
+			);
+
 			exGameMode = gameMode; 
 			isDirty = true;
 		}
@@ -500,7 +549,8 @@ public class HearthScannerManager {
 	}
 	
 	public void pause(){
-		
+		totalTimeSpentCapturing = 0;
+		totalFramesCounter = 0;
 	}
 	
 	public void forcePing(){
@@ -510,6 +560,8 @@ public class HearthScannerManager {
 	public void dispose(){
 		String path = String.format(HearthFilesNameManager.scannerSettingFileDefault, gameLang);
 		config.save(scannerSettings, path);
+		System.out.println("Shutting down the scanner!");
+		scanner.dispose();
 	}
 	
 	public int[] getLastScanArea(){
