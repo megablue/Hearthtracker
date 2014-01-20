@@ -49,14 +49,16 @@ public class HearthScanner{
 	private ImagePHash pHash = new ImagePHash(PHASH_SIZE, PHASH_MIN_SIZE);
 
 	//whatever to save the self-corrected offsets
-	private boolean generateBetterOffsets = false;
+	private boolean generateBetterOffsets = true;
 
 	//number of threads
-	private int MAX_THREADS = 4;
+	private int MAX_THREADS = 1;
 	
 	private boolean scanStarted = false;
 	
 	private volatile static boolean shutdown = false;
+	
+	private volatile static boolean threadRunning = false; 
 	
 	private long idleTime = 50;
 	
@@ -95,7 +97,7 @@ public class HearthScanner{
 		_init();
 		startScan();
 	}
-
+	
 	public synchronized void _init(){
 		for(Scanbox sb : allScanboxes) {
 			String masked = sb.mask != null ? "masked" : "";
@@ -103,13 +105,7 @@ public class HearthScanner{
 			String hash = scanboxHashes.get(key);
 
 			if(hash == null){
-//				long startBench = System.currentTimeMillis();
-				
 				hash = pHash.getHash(sb.target.getImage());
-				
-//				long benchDiff = (System.currentTimeMillis() - startBench);
-//				System.out.println("getHash() time spent: " + benchDiff + " ms");
-
 				scanboxHashes.put(key, hash);
 			}
 			
@@ -236,10 +232,15 @@ public class HearthScanner{
 		
 		Runnable runnable = new Runnable() {
  			public void run() {
+ 				threadRunning = true;
+ 				
  				while(!shutdown){
- 					//checkTableSizes(); 					
+ 					//checkTableSizes();
  					process();
  				}
+ 				
+ 				threadRunning = false;
+ 				scanStarted = false;
 		    }
 		};
 		
@@ -359,6 +360,12 @@ public class HearthScanner{
 			//if hash or snapshot not found
 			if(roiSnapshot == null || hash == null){
 
+				System.out.println(
+					"X: " +  scale(sb.xOffset)
+					+ " Y: " +  scale(sb.yOffset)
+					+ " " + scale(sb.width) + "x" + scale(sb.height)
+				);
+				
 				//crop the corresponding part from game screen
 				roiSnapshot = HearthHelper.cropImage(
 					screen, 
@@ -415,7 +422,9 @@ public class HearthScanner{
 			float score = getPHashScore(targetHash, distance);
 
 			System.out.println(
-				sb.imgfile 
+				"Thread [" + threadId + "] "
+				+ sb.scene + " "
+				+ sb.imgfile 
 				+ "-" + key 
 				+ ", score: " 
 				+ HearthHelper.formatNumber("0.00", score)
@@ -424,11 +433,6 @@ public class HearthScanner{
 			BufferedImage target = sb.target.getImage();
 			BufferedImage region = roiSnaps.get(key);
 
-			if(sb.capture){
-				String out = String.format(HearthFilesNameManager.scannerImageCacheFile, (counter++) + ".png");
-				HearthHelper.bufferedImageToFile(region, out);
-			}
-			
 			//if the score greater or equals the minimum threshold
 			if(score >= PHASH_MIN_SCORE){		
 				System.out.println("Thread [" + threadId + "] " + "Possible match at " + scale(sb.xOffset) 
@@ -445,29 +449,30 @@ public class HearthScanner{
 					System.out.println("Thread [" + threadId + "] " +"Double checked, Found on " + rec.x + ", " + rec.y);
 				}
 			}
-			else if(DEBUGMODE){
-				Rectangle rec = skFind(target, region, sb.matchQuality);
-				
-				if(rec == null){
-					System.out.println("Thread [" + threadId + "] " + "Not found.");
-				} else{
-					found = true;
-					System.out.println("Thread [" + threadId + "] " + "Found on " 
-						+ rec.x + ", " 
-						+ rec.y + " with skFind(), " 
-						+ "score: " + HearthHelper.formatNumber("0.00", score)
-					);
-
-					//try to make the offsets as precise as possible
-					//a self-correct mechanism
-					if(generateBetterOffsets){
-						sb.xOffset = sb.xOffset + unscale(rec.x);
-						sb.yOffset = sb.yOffset + unscale(rec.y);
-						sb.width   = unscale(rec.getWidth());
-						sb.height  = unscale(rec.getHeight());
-					}
-				}
-			}
+			
+//			if(DEBUGMODE && !found){
+//				Rectangle rec = skFind(target, region, sb.matchQuality);
+//				
+//				if(rec == null){
+//					System.out.println("Thread [" + threadId + "] " + "Not found.");
+//				} else{
+//					found = true;
+//					System.out.println("Thread [" + threadId + "] " + "Found on " 
+//						+ rec.x + ", " 
+//						+ rec.y + " with skFind(), " 
+//						+ "score: " + HearthHelper.formatNumber("0.00", score)
+//					);
+//
+//					//try to make the offsets as precise as possible
+//					//a self-correct mechanism
+//					if(generateBetterOffsets){
+//						sb.xOffset = sb.xOffset + unscale(rec.x);
+//						sb.yOffset = sb.yOffset + unscale(rec.y);
+//						sb.width   = unscale(rec.getWidth());
+//						sb.height  = unscale(rec.getHeight());
+//					}
+//				}
+//			}
 			
 			if(found){
 				if(queryExists(sb.scene)){
@@ -587,12 +592,24 @@ public class HearthScanner{
 //		
 //		return rec;
 //	}
-		
+	
+	//pause will block until job threads ended
 	public synchronized void pause(){
+		shutdown = true;
 		
+		while(threadRunning){
+			try {
+				System.out.println("waiting...");
+				Thread.sleep(100);
+			} catch (InterruptedException e) { }
+		}
+		
+		System.out.println("paused");
+		
+		shutdown = false;
 	}
 	
 	public synchronized void resume(){
-		
+		startScan();
 	}
 }

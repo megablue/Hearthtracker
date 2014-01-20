@@ -1,8 +1,6 @@
 package my.hearthtracking.app;
 
-import java.awt.AWTException;
 import java.awt.Rectangle;
-import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -53,7 +51,7 @@ public class HearthScannerManager {
 	private int xOffetOverrideVal = 0;
 	private int yOffsetOverrideVal = 0;
 
-	private Robot robot = null;
+	//private Robot robot = null;
 
 	private HearthScanner scanner = new HearthScanner();
 	
@@ -125,12 +123,6 @@ public class HearthScannerManager {
 		if(gameLanguages == null){
 			gameLanguages = new HearthGameLangList();
 			config.save(gameLanguages, HearthFilesNameManager.gameLangsFile);
-		}
-		
-		try {
-			robot = new Robot();
-		} catch (AWTException e) {
-			e.printStackTrace();
 		}
 		
 		inited = true;
@@ -228,6 +220,8 @@ public class HearthScannerManager {
 	}
 
 	private synchronized void initScannerSettings(){
+		scanner.pause();
+		
 		int[] gameRes = getGameResolution();
 		int gameScreenWidth		= gameRes[0];
 		int gameScreenHeight	= gameRes[1];
@@ -271,12 +265,15 @@ public class HearthScannerManager {
 			}
 		}
 		
-		for(Scanbox sb : scannerSettings.list){
-			prepareScanbox(sb);
-			scanner.addScanbox(sb);
+		synchronized(scannerSettings.list){
+			for(Scanbox sb : scannerSettings.list){
+				prepareScanbox(sb);
+				scanner.addScanbox(sb);
+			}
 		}
-				
+		
 		scanner.initScale(getScaleFactor());
+		scanner.resume();
 		scannerSettingsInitialzed = true;
 		reInitScannerSettings = false;
 	}
@@ -368,7 +365,7 @@ public class HearthScannerManager {
 		
 		Rectangle rec = new Rectangle(boardX, boardY, gameScreenWidth, gameScreenHeight);
 				
-		snapshot = robot.createScreenCapture(rec);
+		snapshot = HearthRobot.capture(rec);
 		totalFramesCounter++;
 		
 		return snapshot;
@@ -388,6 +385,8 @@ public class HearthScannerManager {
 			scanner.insertFrame(snap);
 			scanner.addQuery("gameMode");
 			scanner.addQuery("arenaHero");
+			scanner.addQuery("myHero");
+			scanner.addQuery("oppHero");
 		}
 		
 		processResults();
@@ -399,12 +398,10 @@ public class HearthScannerManager {
 		long spent = System.currentTimeMillis() - started;
 		
 		if(spent < timeslot){
-			if(spent < timeslot){
-				try {
-					Thread.sleep(timeslot - spent);
-				} catch (InterruptedException e) {
-					//e.printStackTrace();
-				}
+			try {
+				Thread.sleep(timeslot - spent);
+			} catch (InterruptedException e) {
+				//e.printStackTrace();
 			}
 		}
 		
@@ -421,38 +418,65 @@ public class HearthScannerManager {
 		for(SceneResult sr : results){
 			System.out.println("SceneResult: " + sr.scene + ", result: " + sr.result);
 			
-			switch(sr.scene.toLowerCase()){
-				case "gamemode":
+			switch(sr.scene){
+				case "gameMode":
 					processGameMode(sr.result);
 				break;
 
-				case "arenahero":
-					processArenaHero(sr.result);
+				case "arenaHero":
+				case "myHero":
+				case "oppHero":
+					processHero(sr.scene, sr.result);
 				break;
 			}
 		}
 	}
 
-	private void processArenaHero(String result){
+	private void processHero(String scene, String result){
 		boolean found = false;
 
-		System.out.println("processArenaHero() result: " + result);
+		System.out.println("processHero(), scene: " + scene +", hero: " + result);
 
-		myHero = heroesList.getHeroId(result);
-
-		if(myHero != exMyHero){
-			exMyHero = myHero;
-			isDirty = true;
-			found = true;
-			System.out.println("Found arena hero: " + result);
+		int hero = heroesList.getHeroId(result);
+		
+		if(scene.equals("arenaHero") || scene.equals("myHero")){
+			myHero = hero;
+			
+			if(myHero != exMyHero){
+				exMyHero = myHero;
+				found = true;
+				System.out.println("Found my hero: " + result);
+			}
+		} else if(scene.equals("oppHero")){
+			oppHero = hero;
+			
+			if(oppHero != exOppHero){
+				exOppHero = oppHero;
+				found = true;
+				System.out.println("Found opponent hero: " + result);
+			}
 		}
 
 		if(found){
+			isDirty = true;
+			String title = "";
+			
+			switch(scene){
+				case "arenaHero":
+					title = "Arena Hero";
+				break;
+				
+				case "myHero":
+					title = "My Hero";
+				break;
+				
+				case "oppHero":
+					title = "Opponent Hero";
+				break;
+			}
+			
 			addNotification(
-				new HearthReaderNotification(
-					"Arena hero", 
-					result
-				)
+				new HearthReaderNotification(title, result)
 			);
 		}
 	}
@@ -559,6 +583,10 @@ public class HearthScannerManager {
 		if(notify == true){
 			notifications.add(note);
 		}
+	}
+	
+	public void setInterval(int interval){
+		timeslot = interval;
 	}
 	
 	public void setAlwaysScan(boolean flag){

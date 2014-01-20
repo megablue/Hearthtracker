@@ -15,63 +15,63 @@ public class HearthScannerSettings {
 		list	= new ArrayList<Scanbox>();
 		
 		list.add(
-			new Scanbox("arena-leaf.png", 		"gameMode",		"arena",		435, 340, 100, 100)
+			new Scanbox("arena-leaf.png", 		"gameMode",		"arena",		460, 366, 50, 50)
 		);
 
 		list.add(
-			new Scanbox("ranked-mode.png",		"gameMode",		"ranked",		1080, 134, 200, 200)
+			new Scanbox("ranked-mode.png",		"gameMode",		"ranked",		1093, 145, 100, 100)
 		);
 
 		list.add(
-			new Scanbox("unranked-mode.png",	"gameMode",		"unranked",		1070, 138, 100, 100)
+			new Scanbox("unranked-mode.png",	"gameMode",		"unranked",		1094, 163, 50, 50)
 		);
 
 		list.add(
-			new Scanbox("practice-mode.png",	"gameMode",		"practice",		985, 50, 80, 80)
+			new Scanbox("practice-mode.png",	"gameMode",		"practice",		1000, 64, 50, 50)
 		);
 
 		list.add(
-			new Scanbox("challenge-mode.png",	"gameMode",		"challenge",	1200, 100, 120, 120)
+			new Scanbox("challenge-mode.png",	"gameMode",		"challenge",	1255, 120, 50, 50)
 		);
 
 		list.add(
-			new Scanbox("go-first.png",			"coin", 		"first",		910, 550, 400, 150)
+			new Scanbox("go-first.png",			"coin", 		"first",		1030, 629, 155, 30)
 		);
 
 		list.add(
-			new Scanbox("go-second.png",		"coin", 		"second",		910, 550, 400, 150)
+			new Scanbox("go-second.png",		"coin", 		"second",		966, 629, 270, 30)
 		);
 
 		list.add(
-			new Scanbox("victory.png",			"gameResult",		"victory",		440, 500, 100, 100)
+			new Scanbox("victory.png",			"gameResult",		"victory",		462, 528, 50, 50)
 		);
 
 		list.add(
-			new Scanbox("defeat.png",			"gameResult",		"defeat",		452, 547, 100, 100)
+			new Scanbox("defeat.png",			"gameResult",		"defeat",		481, 574, 50, 50)
 		);
 
 		list.add(
-			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"1",	400, 507, 110, 110)
+			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"1",	425, 532, 66, 59)
 		);
 
 		list.add(
-			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"2",	492, 507, 110, 110)
+			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"2",	515, 532, 66, 59)
 		);
 
 		list.add(
-			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"3",	584, 507, 110, 110)
+			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"3",	609, 532, 66, 59)
 		);
 
 		list.add(
-			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"1",	400, 507, 110, 110)
+			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"1",	423, 533, 68, 59)
 		);
 
 		list.add(
-			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"2",	492, 507, 110, 110)
+			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"2",	514, 533, 68, 59)
 		);
 
 		list.add(
-			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"3",	584, 507, 110, 110)
+			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"3",	608, 533, 68, 59)
 		);
 		
 		list.add(
@@ -127,111 +127,111 @@ public class HearthScannerSettings {
 		);
 		
 		list.add(
-			new Scanbox("mage.png", 	"arenaHero",	"mage",	144, 752, 120, 120, true)
+			new Scanbox("mage.png", 	"arenaHero",	"mage",	144, 752, 120, 120)
 		);
 		
 		list.add(
-			new Scanbox("hunter.png", 	"arenaHero",	"hunter", 144, 752, 120, 120, true)
+			new Scanbox("hunter.png", 	"arenaHero",	"hunter", 144, 752, 120, 120)
 		);
 		
 		list.add(
-			new Scanbox("warrior.png", 	"arenaHero",	"warrior", 144, 752, 120, 120, true)
+			new Scanbox("warrior.png", 	"arenaHero",	"warrior", 144, 752, 120, 120)
 		);
 		
 		list.add(
-			new Scanbox("shaman.png", 	"arenaHero",	"shaman", 144, 752, 120, 120, true)
+			new Scanbox("shaman.png", 	"arenaHero",	"shaman", 144, 752, 120, 120)
 		);
 
 		list.add(
-			new Scanbox("druid.png", 	"arenaHero",	"druid", 144, 752, 120, 120, true)
+			new Scanbox("druid.png", 	"arenaHero",	"druid", 144, 752, 120, 120)
 		);
 		
 		list.add(
-			new Scanbox("priest.png", 	"arenaHero",	"priest", 144, 752, 120, 120, true)
+			new Scanbox("priest.png", 	"arenaHero",	"priest", 144, 752, 120, 120)
 		);
 		
 		list.add(
-			new Scanbox("rogue.png", 	"arenaHero",	"rogue", 144, 752, 120, 120, true)
+			new Scanbox("rogue.png", 	"arenaHero",	"rogue", 144, 752, 120, 120)
 		);
 		
 		list.add(
-			new Scanbox("paladin.png", 	"arenaHero",	"paladin", 144, 752, 120, 120, true)
+			new Scanbox("paladin.png", 	"arenaHero",	"paladin", 144, 752, 120, 120)
 		);
 		
 		list.add(
-			new Scanbox("warlock.png", 	"arenaHero",	"warlock", 144, 752, 120, 120, true)
+			new Scanbox("warlock.png", 	"arenaHero",	"warlock", 144, 752, 120, 120)
 		);
 		
 		list.add(
-			new Scanbox("mage-s.png", 		"oppHero",	"mage", 610, 70, 220, 200)
+			new Scanbox("mage-opphero.png", 		"oppHero",	"mage", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("hunter-s.png", 	"oppHero",	"hunter", 610, 70, 220, 200)
+			new Scanbox("hunter-opphero.png", 	"oppHero",	"hunter", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("warrior-s.png", 	"oppHero",	"warrior", 610, 70, 220, 200)
+			new Scanbox("warrior-opphero.png", 	"oppHero",	"warrior", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("shaman-s.png", 	"oppHero",	"shaman", 610, 70, 220, 200)
+			new Scanbox("shaman-opphero.png", 	"oppHero",	"shaman", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("druid-s.png", 		"oppHero",	"druid", 610, 70, 220, 200)
+			new Scanbox("druid-opphero.png", 		"oppHero",	"druid", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("priest-s.png", 	"oppHero",	"priest", 610, 70, 220, 200)
+			new Scanbox("priest-opphero.png", 	"oppHero",	"priest", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("rogue-s.png", 		"oppHero",	"rogue", 610, 70, 220, 200)
+			new Scanbox("rogue-opphero.png", 		"oppHero",	"rogue", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("paladin-s.png", 	"oppHero",	"paladin", 610, 70, 220, 200)
+			new Scanbox("paladin-opphero.png", 	"oppHero",	"paladin", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("warlock-s.png", 	"oppHero",	"warlock", 610, 70, 220, 200)
+			new Scanbox("warlock-opphero.png", 	"oppHero",	"warlock", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("mage-s.png", 		"myHero",	"mage",		610, 710, 220, 200)
+			new Scanbox("mage-s.png", 		"myHero",	"mage",		690, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("hunter-s.png", 	"myHero",	"hunter",	610, 710, 220, 200)
+			new Scanbox("hunter-s.png", 	"myHero",	"hunter",	690, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("warrior-s.png", 	"myHero",	"warrior",	610, 710, 220, 200)
+			new Scanbox("warrior-s.png", 	"myHero",	"warrior",	690, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("shaman-s.png", 	"myHero",	"shaman", 	610, 710, 220, 200)
+			new Scanbox("shaman-s.png", 	"myHero",	"shaman", 	690, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("druid-s.png", 		"myHero",	"druid", 	610, 710, 220, 200)
+			new Scanbox("druid-s.png", 		"myHero",	"druid", 	690, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("priest-s.png", 	"myHero",	"priest", 	610, 710, 220, 200)
+			new Scanbox("priest-s.png", 	"myHero",	"priest", 	690, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("rogue-s.png", 		"myHero",	"rogue", 	610, 710, 220, 200)
+			new Scanbox("rogue-s.png", 		"myHero",	"rogue", 	690, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("paladin-s.png", 	"myHero",	"paladin", 	610, 710, 220, 200)
+			new Scanbox("paladin-s.png", 	"myHero",	"paladin", 	690, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("warlock-s.png", 	"myHero",	"warlock", 	610, 710, 220, 200)
+			new Scanbox("warlock-s.png", 	"myHero",	"warlock", 	690, 757, 60, 60)
 		);
 	}
 
@@ -250,7 +250,6 @@ public class HearthScannerSettings {
 		Mask mask;
 		Scanbox nestedSb = null;
 		ImageTarget target = null;
-		boolean capture = false;
 		
 		public Scanbox(String filename, String sce, String id, int x, int y, int w, int h){
 			imgfile = filename;
@@ -260,17 +259,6 @@ public class HearthScannerSettings {
 			height = h;
 			scene = sce;
 			identifier = id;
-		}
-
-		public Scanbox(String filename, String sce, String id, int x, int y, int w, int h, boolean captureFlag){
-			imgfile = filename;
-			xOffset = x;
-			yOffset = y;
-			width = w;
-			height = h;
-			scene = sce;
-			identifier = id;
-			capture = captureFlag;
 		}
 
 		public Scanbox(String filename, String sce, String id, int x, int y, int w, int h, float scaling, float quality){

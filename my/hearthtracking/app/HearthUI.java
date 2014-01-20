@@ -2095,9 +2095,10 @@ public class HearthUI {
 					}else if(btnScanSpeed[2].getSelection()){
 						setting.scanInterval = 750;
 					}else if(btnScanSpeed[3].getSelection()){
-						setting.scanInterval = 0;
+						setting.scanInterval = 100;
 					}
 					
+					hearthScanner.setInterval(setting.scanInterval);
 					savePreferences();
 				}
 			});
