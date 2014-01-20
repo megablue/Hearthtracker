@@ -127,39 +127,39 @@ public class HearthScannerSettings {
 		);
 		
 		list.add(
-			new Scanbox("mage.png", 	"arenaHero",	"mage",	80, 720, 240, 160)
+			new Scanbox("mage.png", 	"arenaHero",	"mage",	144, 752, 120, 120, true)
 		);
 		
 		list.add(
-			new Scanbox("hunter.png", 	"arenaHero",	"hunter", 80, 720, 240, 160)
+			new Scanbox("hunter.png", 	"arenaHero",	"hunter", 144, 752, 120, 120, true)
 		);
 		
 		list.add(
-			new Scanbox("warrior.png", 	"arenaHero",	"warrior", 80, 720, 240, 160)
+			new Scanbox("warrior.png", 	"arenaHero",	"warrior", 144, 752, 120, 120, true)
 		);
 		
 		list.add(
-			new Scanbox("shaman.png", 	"arenaHero",	"shaman", 80, 720, 240, 160)
+			new Scanbox("shaman.png", 	"arenaHero",	"shaman", 144, 752, 120, 120, true)
 		);
 
 		list.add(
-			new Scanbox("druid.png", 	"arenaHero",	"druid", 80, 720, 240, 160)
+			new Scanbox("druid.png", 	"arenaHero",	"druid", 144, 752, 120, 120, true)
 		);
 		
 		list.add(
-			new Scanbox("priest.png", 	"arenaHero",	"priest", 80, 720, 240, 160)
+			new Scanbox("priest.png", 	"arenaHero",	"priest", 144, 752, 120, 120, true)
 		);
 		
 		list.add(
-			new Scanbox("rogue.png", 	"arenaHero",	"rogue", 80, 720, 240, 160)
+			new Scanbox("rogue.png", 	"arenaHero",	"rogue", 144, 752, 120, 120, true)
 		);
 		
 		list.add(
-			new Scanbox("paladin.png", 	"arenaHero",	"paladin", 80, 720, 240, 160)
+			new Scanbox("paladin.png", 	"arenaHero",	"paladin", 144, 752, 120, 120, true)
 		);
 		
 		list.add(
-			new Scanbox("warlock.png", 	"arenaHero",	"warlock", 80, 720, 240, 160)
+			new Scanbox("warlock.png", 	"arenaHero",	"warlock", 144, 752, 120, 120, true)
 		);
 		
 		list.add(
@@ -250,7 +250,8 @@ public class HearthScannerSettings {
 		Mask mask;
 		Scanbox nestedSb = null;
 		ImageTarget target = null;
-
+		boolean capture = false;
+		
 		public Scanbox(String filename, String sce, String id, int x, int y, int w, int h){
 			imgfile = filename;
 			xOffset = x;
@@ -259,6 +260,17 @@ public class HearthScannerSettings {
 			height = h;
 			scene = sce;
 			identifier = id;
+		}
+
+		public Scanbox(String filename, String sce, String id, int x, int y, int w, int h, boolean captureFlag){
+			imgfile = filename;
+			xOffset = x;
+			yOffset = y;
+			width = w;
+			height = h;
+			scene = sce;
+			identifier = id;
+			capture = captureFlag;
 		}
 
 		public Scanbox(String filename, String sce, String id, int x, int y, int w, int h, float scaling, float quality){

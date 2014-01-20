@@ -233,15 +233,13 @@ public class MainLoader {
         						theUI.getShell().getMonitor()
         				);
 			    	}
-			    	
-			    	Display.getDefault().timerExec(200, this);
 		    	}
 		    	
-		    	Display.getDefault().timerExec(100, this);
+		    	Display.getDefault().timerExec(50, this);
 		    }
 		};
     	
-		Display.getDefault().timerExec(100, runnable);
+		Display.getDefault().timerExec(50, runnable);
     }
  
     private static void startSync(){

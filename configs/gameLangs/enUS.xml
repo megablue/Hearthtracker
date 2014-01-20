@@ -10,6 +10,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
       <identifier>arena</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -22,6 +23,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
       <identifier>ranked</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -34,6 +36,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
       <identifier>unranked</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -46,6 +49,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
       <identifier>practice</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -58,6 +62,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
       <identifier>challenge</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -70,6 +75,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>coin</scene>
       <identifier>first</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -82,6 +88,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>coin</scene>
       <identifier>second</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -94,6 +101,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -106,6 +114,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -118,6 +127,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaLose</scene>
       <identifier>1</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -130,6 +140,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaLose</scene>
       <identifier>2</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -142,6 +153,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaLose</scene>
       <identifier>3</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -154,6 +166,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaLive</scene>
       <identifier>1</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -166,6 +179,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaLive</scene>
       <identifier>2</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -178,6 +192,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaLive</scene>
       <identifier>3</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -190,6 +205,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>0</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -202,6 +218,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>1</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -214,6 +231,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>2</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -226,6 +244,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>3</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -238,6 +257,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>4</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -250,6 +270,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>5</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -262,6 +283,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>6</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -274,6 +296,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>7</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -286,6 +309,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>8</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -298,6 +322,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>9</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -310,6 +335,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>10</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -322,6 +348,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>11</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -334,114 +361,124 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>12</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>184</xOffset>
-      <yOffset>742</yOffset>
-      <width>64</width>
-      <height>64</height>
+      <xOffset>144</xOffset>
+      <yOffset>752</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>mage.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>mage</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>175</xOffset>
-      <yOffset>742</yOffset>
-      <width>64</width>
-      <height>64</height>
+      <xOffset>144</xOffset>
+      <yOffset>752</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>hunter.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>hunter</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>80</xOffset>
-      <yOffset>720</yOffset>
-      <width>240</width>
-      <height>160</height>
+      <xOffset>144</xOffset>
+      <yOffset>752</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>warrior.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>warrior</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>80</xOffset>
-      <yOffset>720</yOffset>
-      <width>240</width>
-      <height>160</height>
+      <xOffset>144</xOffset>
+      <yOffset>752</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>shaman.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>shaman</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>80</xOffset>
-      <yOffset>720</yOffset>
-      <width>240</width>
-      <height>160</height>
+      <xOffset>144</xOffset>
+      <yOffset>752</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>druid.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>druid</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>80</xOffset>
-      <yOffset>720</yOffset>
-      <width>240</width>
-      <height>160</height>
+      <xOffset>144</xOffset>
+      <yOffset>752</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>priest.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>priest</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>80</xOffset>
-      <yOffset>720</yOffset>
-      <width>240</width>
-      <height>160</height>
+      <xOffset>144</xOffset>
+      <yOffset>752</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>rogue.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>rogue</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>178</xOffset>
-      <yOffset>740</yOffset>
-      <width>64</width>
-      <height>64</height>
+      <xOffset>144</xOffset>
+      <yOffset>752</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>paladin.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>paladin</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>80</xOffset>
-      <yOffset>720</yOffset>
-      <width>240</width>
-      <height>160</height>
+      <xOffset>144</xOffset>
+      <yOffset>752</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>warlock.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>warlock</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -454,6 +491,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>mage</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -466,6 +504,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>hunter</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -478,6 +517,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>warrior</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -490,6 +530,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>shaman</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -502,6 +543,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>druid</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -514,6 +556,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>priest</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -526,6 +569,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>rogue</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -538,6 +582,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>paladin</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -550,6 +595,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>warlock</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -562,6 +608,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>mage</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -574,6 +621,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>hunter</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -586,6 +634,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>warrior</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -598,6 +647,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>shaman</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -610,6 +660,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>druid</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -622,6 +673,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>priest</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -634,6 +686,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>rogue</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -646,6 +699,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>paladin</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -658,6 +712,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>warlock</identifier>
+      <capture>false</capture>
       <outer-class reference="../../.."/>
     </Scanbox>
   </list>

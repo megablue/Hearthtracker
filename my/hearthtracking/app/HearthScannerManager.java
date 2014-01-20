@@ -387,6 +387,7 @@ public class HearthScannerManager {
 		if(snap != null){
 			scanner.insertFrame(snap);
 			scanner.addQuery("gameMode");
+			scanner.addQuery("arenaHero");
 		}
 		
 		processResults();
@@ -424,7 +425,35 @@ public class HearthScannerManager {
 				case "gamemode":
 					processGameMode(sr.result);
 				break;
+
+				case "arenahero":
+					processArenaHero(sr.result);
+				break;
 			}
+		}
+	}
+
+	private void processArenaHero(String result){
+		boolean found = false;
+
+		System.out.println("processArenaHero() result: " + result);
+
+		myHero = heroesList.getHeroId(result);
+
+		if(myHero != exMyHero){
+			exMyHero = myHero;
+			isDirty = true;
+			found = true;
+			System.out.println("Found arena hero: " + result);
+		}
+
+		if(found){
+			addNotification(
+				new HearthReaderNotification(
+					"Arena hero", 
+					result
+				)
+			);
 		}
 	}
 
