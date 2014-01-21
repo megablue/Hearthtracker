@@ -12,5 +12,14 @@
 	<classpathentry kind="lib" path="lib/gson-2.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/jtransforms-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/sikuli-api.standalone-1.0.3-Pre-1.jar"/>
+	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/BoofCV_OpenKinect.jar"/>
+	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/BoofCV_V4L4J.jar"/>
+	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/BoofCV.jar"/>
+	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/BoofCVAndroid.jar"/>
+	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/BoofCVXuggler.jar"/>
+	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/DDogleg.jar"/>
+	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/EJML.jar"/>
+	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/GeoRegression.jar"/>
+	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/jcodec-0.1.5.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

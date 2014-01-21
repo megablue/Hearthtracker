@@ -47,7 +47,7 @@ public class ImagePHash {
 		 * The image is reduced to a grayscale just to further simplify 
 		 * the number of computations.
 		 */
-		img = grayscale(img);
+		//img = grayscale(img);
 		
 		double[][] vals = new double[size][size];
 		

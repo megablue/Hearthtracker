@@ -8,17 +8,17 @@ import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 public class HearthGenerator {
 
 	public static void main(String[] args) {
-//		HearthScannerSettings settings = new HearthScannerSettings();
-//		String targetScene = "coin";
-//		
-//		for(Scanbox sb : settings.list){
-//			
-//			if(targetScene.equals(sb.scene)){
-//				generateTarget(sb);
-//			}
-//		}
+		HearthScannerSettings settings = new HearthScannerSettings();
+		String targetScene = "arenaWins";
 		
-		generateLinearMotionOffsets(5, 491, 524, 519, 488);
+		for(Scanbox sb : settings.list){
+			
+			if(targetScene.equals(sb.scene)){
+				generateTarget(sb);
+			}
+		}
+		
+		//generateLinearMotionOffsets(5, 491, 524, 519, 488);
 	}
 	
 	private static void generateTarget(Scanbox sb){

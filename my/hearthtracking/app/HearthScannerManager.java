@@ -21,6 +21,9 @@ public class HearthScannerManager {
 	public static final int CHALLENGEMODE = 4;
 	public static final int PRACTICEMODE = 5;
 	
+	public static final int ARENA_MAX_WINS = 12;
+	public static final int ARENA_MAX_LOSSES = 3;
+	
 	public static final float BASE_RESOLUTION_HEIGHT = 1080f;
 	private static final long FPS_LIMIT = 15;
 	private static final float FPS_RESOLUTION = 60; //keep approaximate 60 seconds of frames
@@ -60,11 +63,12 @@ public class HearthScannerManager {
 	private List<HearthReaderNotification> notifications =  Collections.synchronizedList(new ArrayList<HearthReaderNotification>());
 	
 	//Game status related variables
-	private int previousWins = -1;
-	private int wins = -1;
+	private long lastArenaWinsReported = 0;
+	private int exArenaWins = -1;
+	private int arenaWins = -1;
 	
-	private int previousLosses = -1;
-	private int losses = -1;
+	private int previousArenaLosses = -1;
+	private int arenaLosses = -1;
 	
 	private int myHero = -1;
 	private int oppHero = -1;
@@ -326,6 +330,7 @@ public class HearthScannerManager {
 	}
 	
 	//return run time in seconds
+	@SuppressWarnings("unused")
 	private int getRunTime(){
 		return (int) Math.round( (System.currentTimeMillis() - scannerStarted / 1000) ); 
 	}
@@ -384,12 +389,13 @@ public class HearthScannerManager {
 		
 		if(snap != null){
 			scanner.insertFrame(snap);
-			scanner.addQuery("gameMode");
-			scanner.addQuery("arenaHero");
-			scanner.addQuery("coin");
-			scanner.addQuery("myHero");
-			scanner.addQuery("oppHero");
-			scanner.addQuery("gameResult");
+			scanner.subscribe("gameMode");
+			scanner.subscribe("gameResult");
+			scanner.subscribe("arenaHero");
+			scanner.subscribe("arenaWins");
+			scanner.subscribe("coin");
+			scanner.subscribe("myHero");
+			scanner.subscribe("oppHero");
 		}
 		
 		processResults();
@@ -433,6 +439,10 @@ public class HearthScannerManager {
 				case "gameResult":
 					processGameResult(sr.result);
 				break;
+				
+				case "arenaWins":
+					processArenaWins(sr.result);
+				break;
 
 				case "arenaHero":
 				case "myHero":
@@ -443,9 +453,35 @@ public class HearthScannerManager {
 		}
 	}
 
+	private void processArenaWins(String result){
+		System.out.println("processArenaWins(), result: " + result);
+
+		int wins = Integer.parseInt(result);
+
+		if(wins > ARENA_MAX_WINS){
+			System.out.println("Something went wrong! Arena wins of " 
+				+ wins + " detected. defined maximum is " + ARENA_MAX_WINS);
+		}
+		
+		if(wins != exArenaWins){
+			arenaWins = wins;
+			exArenaWins = wins;
+			String arenaHero = heroesList.getHeroLabel(myHero);
+			
+			addNotification(
+				new HearthReaderNotification(
+					uiLang.t("Arena score"), 
+					uiLang.t("%d - %d as %s", arenaWins, arenaLosses, arenaHero)
+				)
+			);
+		}
+	}
+
 	private void processGameResult(String result){
 		boolean found = false;
 		
+		System.out.println("processGameResult(), result: " + result);
+
 		switch(result){
 			case "victory":
 				victory = 1;

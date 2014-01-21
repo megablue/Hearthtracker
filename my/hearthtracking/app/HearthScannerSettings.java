@@ -119,55 +119,55 @@ public class HearthScannerSettings {
 		);
 		
 		list.add(
-			new Scanbox("0.png",	"arenaWins",	"0", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("0.png",	"arenaWins",	"0", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(
-			new Scanbox("1.png",	"arenaWins",	"1", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("1.png",	"arenaWins",	"1", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(
-			new Scanbox("2.png",	"arenaWins",	"2", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("2.png",	"arenaWins",	"2", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(
-			new Scanbox("3.png",	"arenaWins",	"3", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("3.png",	"arenaWins",	"3", 347, 236, 100, 100, 1f, 0.9f)
 		);
 
 		list.add(
-			new Scanbox("4.png",	"arenaWins",	"4", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("4.png",	"arenaWins",	"4", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(
-			new Scanbox("5.png",	"arenaWins",	"5", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("5.png",	"arenaWins",	"5", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(
-			new Scanbox("6.png",	"arenaWins",	"6", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("6.png",	"arenaWins",	"6", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(
-			new Scanbox("7.png",	"arenaWins",	"7", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("7.png",	"arenaWins",	"7", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(
-			new Scanbox("8.png",	"arenaWins",	"8", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("8.png",	"arenaWins",	"8", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(
-			new Scanbox("9.png",	"arenaWins",	"9", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("9.png",	"arenaWins",	"9", 347, 236, 100, 100, 1f, 0.9f)
 		);
 
 		list.add(
-			new Scanbox("10.png",	"arenaWins",	"10", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("10.png",	"arenaWins",	"10", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(
-			new Scanbox("11.png",	"arenaWins",	"11", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("11.png",	"arenaWins",	"11", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(
-			new Scanbox("12.png",	"arenaWins",	"12", 300, 190, 200, 200, 1f, 0.9f)
+			new Scanbox("12.png",	"arenaWins",	"12", 347, 236, 100, 100, 1f, 0.9f)
 		);
 		
 		list.add(

@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.sikuli.core.search.RegionMatch;
 import org.sikuli.core.search.algorithm.TemplateMatcher;
 
+import boofcv.struct.feature.Match;
+import my.hearthtracking.app.HearthScanner.SceneResult;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 import java.util.concurrent.ExecutorService;
@@ -20,12 +23,13 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unused")
 public class HearthScanner{
 	private static final boolean DEBUGMODE = HearthHelper.isDevelopmentEnvironment();
-	
-	private static final int PHASH_SIZE = 32;
-	private static final int PHASH_MIN_SIZE = 8;
-	private static final float PHASH_MIN_SCORE = 0.75f;
-	
 	private static final int FRAMES_LIMIT = 3;
+	private static final int PHASH_SIZE = 32;
+	private static final int PHASH_MIN_SIZE = 16;
+	private static final float PHASH_MIN_SCORE = 0.7f;
+	
+	//number of threads
+	private int MAX_THREADS = 1;
 	
 	//store the most current scale value
 	private float scale = 1f;
@@ -50,9 +54,6 @@ public class HearthScanner{
 
 	//whatever to save the self-corrected offsets
 	private boolean generateBetterOffsets = true;
-
-	//number of threads
-	private int MAX_THREADS = 1;
 	
 	private boolean scanStarted = false;
 	
@@ -67,14 +68,16 @@ public class HearthScanner{
 	public class SceneResult{
 		String scene;
 		String result;
+		float score;
 		BufferedImage match = null;
 		
-		public SceneResult(String s, String r){
+		public SceneResult(String s, String r, float scr){
 			scene = s;
 			result = r;
+			score = scr;
 		}
 		
-		public SceneResult(String s, String r, BufferedImage i){
+		public SceneResult(String s, String r, float scr, BufferedImage i){
 			scene = s;
 			result = r;
 			match = i;
@@ -142,7 +145,7 @@ public class HearthScanner{
 		}
 	}
 	
-	public void addQuery(String scene){
+	public void subscribe(String scene){
 		//make sure that we don't add the same query twice
 		boolean found = queryExists(scene);
 		
@@ -433,35 +436,39 @@ public class HearthScanner{
 			//convert distance to score
 			float score = getPHashScore(targetHash, distance);
 
-			System.out.println(
-				"Thread [" + threadId + "] "
-				+ sb.scene + " "
-				+ sb.imgfile 
-				+ "-" + key 
-				+ ", score: " 
-				+ HearthHelper.formatNumber("0.00", score)
-			);
+			if(score > 0.6){
+				System.out.println(
+						"Thread [" + threadId + "] "
+						+ sb.scene + " "
+						+ sb.imgfile 
+						+ "-" + key 
+						+ ", score: " 
+						+ HearthHelper.formatNumber("0.00", score)
+					);
+			}
+
 
 			BufferedImage target = sb.target.getImage();
 			BufferedImage region = roiSnaps.get(key);
 
 			//if the score greater or equals the minimum threshold
-			if(score >= PHASH_MIN_SCORE){		
+			if(score >= PHASH_MIN_SCORE){	
 				System.out.println("Thread [" + threadId + "] " + "Possible match at " + scale(sb.xOffset) 
 					+ ", " + scale(sb.yOffset) 
 					+ " with score of " + HearthHelper.formatNumber("0.00", score)
 				);
-
-//				Rectangle rec = skFind(target, region, sb.matchQuality);
-//
-//				if(rec == null){
-//					System.out.println("Thread [" + threadId + "] " +"Double checked, It is a mismatch");
-//				} else{
-//					found = true;
-//					System.out.println("Thread [" + threadId + "] " +"Double checked, Found on " + rec.x + ", " + rec.y);
-//				}
 				
-				found = true;
+				System.out.println("region: " + region.getWidth() + "x" + region.getHeight());
+				System.out.println("target: " + target.getWidth() + "x" + target.getHeight());
+				
+				Match match = HearthImageAnalyzer.templateMatch(target, region);
+				
+				if(match == null){
+					System.out.println("Thread [" + threadId + "] " +"Double checked, It is a mismatch");
+				} else{
+					found = true;
+					System.out.println("Thread [" + threadId + "] " +"Double checked, Found on " + match.x + ", " + match.y + ", template match score: " + match.score);
+				}				
 			}
 			
 //			if(DEBUGMODE && !found){
@@ -491,7 +498,7 @@ public class HearthScanner{
 			if(found){
 				if(queryExists(sb.scene)){
 					System.out.println("Thread [" + threadId + "] " + "Query found: adding scene \"" + sb.scene + "\" to query results");
-					insertSceneResult(sb.scene, sb.identifier, region);
+					insertSceneResult(sb.scene, sb.identifier, score, region);
 				} else {
 					System.out.println("Thread [" + threadId + "] " + "Query not found.");
 				}
@@ -538,15 +545,29 @@ public class HearthScanner{
 	    }
 	}
 	
-	private void insertSceneResult(String scene, String result){
+	private void insertSceneResult(String scene, float score, String result){
 		synchronized(sceneResults){
-			sceneResults.add(new SceneResult(scene, result));
+			//insert
+			sceneResults.add(new SceneResult(scene, result, score));
+			
+//			//some crazy hack
+//			if(scene.equals("arenaWins")){
+//				ListIterator<SceneResult> listIterator = sceneResults.listIterator();
+//				
+//				while(listIterator.hasNext()){
+//					SceneResult s = listIterator.next();
+//					
+//					if(s.scene.equals("arenaWins") && s.score < score){
+//						listIterator.remove();
+//					}
+//				}
+//			}
 		}
 	}
 	
-	private void insertSceneResult(String scene, String result, BufferedImage region){
+	private void insertSceneResult(String scene, String result, float score, BufferedImage region){
 		synchronized(sceneResults){
-			sceneResults.add(new SceneResult(scene, result, region));
+			sceneResults.add(new SceneResult(scene, result, score, region));
 		}
 	}
 
