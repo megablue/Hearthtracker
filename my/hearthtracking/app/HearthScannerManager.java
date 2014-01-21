@@ -85,6 +85,7 @@ public class HearthScannerManager {
 	private int inGameMode = -1;
 	
 	private int timeslot = 100;
+	private long gameStartedTime = System.currentTimeMillis();
 
 	public HearthScannerManager (HearthTracker t, int tslot, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
 		debugMode = HearthHelper.isDevelopmentEnvironment();
@@ -385,8 +386,10 @@ public class HearthScannerManager {
 			scanner.insertFrame(snap);
 			scanner.addQuery("gameMode");
 			scanner.addQuery("arenaHero");
+			scanner.addQuery("coin");
 			scanner.addQuery("myHero");
 			scanner.addQuery("oppHero");
+			scanner.addQuery("gameResult");
 		}
 		
 		processResults();
@@ -422,6 +425,14 @@ public class HearthScannerManager {
 				case "gameMode":
 					processGameMode(sr.result);
 				break;
+				
+				case "coin":
+					processCoin(sr.result);
+				break;
+
+				case "gameResult":
+					processGameResult(sr.result);
+				break;
 
 				case "arenaHero":
 				case "myHero":
@@ -429,6 +440,89 @@ public class HearthScannerManager {
 					processHero(sr.scene, sr.result);
 				break;
 			}
+		}
+	}
+
+	private void processGameResult(String result){
+		boolean found = false;
+		
+		switch(result){
+			case "victory":
+				victory = 1;
+				found = true;
+			break;
+
+			case "defeat":
+				victory = 0;
+				found = true;
+			break;
+		}
+
+		if(found && exVictory != victory){
+			exVictory = victory;
+			isDirty = true;
+
+			if(victory == 1){
+				System.out.println("Found Victory");
+				addNotification(
+					new HearthReaderNotification(
+							uiLang.t("Game Result"), 
+							"Victory!"
+					)
+				);
+			} else if(victory == 0) {
+				System.out.println("Found Defeat");
+				addNotification(
+					new HearthReaderNotification(
+							uiLang.t("Game Result"), 
+							"Defeat!"
+					)
+				);
+			}
+		}
+	}
+	
+	private void processCoin(String result){
+		boolean found = false;
+		System.out.println("processCoin(), result: " + result);
+		
+		switch(result){
+			case "first":
+				goFirst = 1;
+				found = true;
+			break;
+			
+			case "second":
+				goFirst = 0;
+				found = true;
+			break;
+		}
+		
+		//check are we receive the "same" scene twice
+		if(found && (exGoFirst != goFirst)){
+			
+			if(goFirst == 1){
+				System.out.println("Found coin, go first");
+				addNotification(
+					new HearthReaderNotification( 
+							uiLang.t("Coin detected"), 
+							uiLang.t("You go first!")
+					)
+				);
+			} else if( goFirst == 0){
+				System.out.println("Found coin, go second");
+				addNotification(
+					new HearthReaderNotification( 
+						uiLang.t("Coin detected"), 
+						uiLang.t("You go second!")
+					)
+				);
+			}
+			
+			isDirty = true;
+			exGoFirst = goFirst;
+			inGameMode = 1;
+			gameStartedTime = System.currentTimeMillis();
 		}
 	}
 

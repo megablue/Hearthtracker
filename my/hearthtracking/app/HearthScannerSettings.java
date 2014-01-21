@@ -15,7 +15,7 @@ public class HearthScannerSettings {
 		list	= new ArrayList<Scanbox>();
 		
 		list.add(
-			new Scanbox("arena-leaf.png", 		"gameMode",		"arena",		460, 366, 50, 50)
+			new Scanbox("arena-mode.png", 		"gameMode",		"arena",		460, 366, 50, 50)
 		);
 
 		list.add(
@@ -27,27 +27,71 @@ public class HearthScannerSettings {
 		);
 
 		list.add(
-			new Scanbox("practice-mode.png",	"gameMode",		"practice",		1000, 64, 50, 50)
+			new Scanbox("practice-mode.png",	"gameMode",		"practice",		1180, 213, 120, 120)
 		);
 
 		list.add(
-			new Scanbox("challenge-mode.png",	"gameMode",		"challenge",	1255, 120, 50, 50)
+			new Scanbox("challenge-mode.png",	"gameMode",		"challenge",	1180, 213, 120, 120)
 		);
 
 		list.add(
-			new Scanbox("go-first.png",			"coin", 		"first",		1030, 629, 155, 30)
+			new Scanbox("go-first.png",			"coin", 		"first",		1060, 485, 90, 90)
 		);
 
 		list.add(
-			new Scanbox("go-second.png",		"coin", 		"second",		966, 629, 270, 30)
+			new Scanbox("go-second.png",		"coin", 		"second",		1060, 485, 90, 90)
 		);
 
 		list.add(
-			new Scanbox("victory.png",			"gameResult",		"victory",		462, 528, 50, 50)
+			new Scanbox("victory.png",			"gameResult",		"victory",		491, 524, 60, 60)
+		);
+
+				list.add(
+					new Scanbox("victory.png",			"gameResult",		"victory",		496, 519, 60, 60)
+				);
+
+				list.add(
+					new Scanbox("victory.png",			"gameResult",		"victory",		501, 514, 60, 60)
+				);
+
+				list.add(
+					new Scanbox("victory.png",			"gameResult",		"victory",		506, 509, 60, 60)
+				);
+
+				list.add(
+					new Scanbox("victory.png",			"gameResult",		"victory",		511, 504, 60, 60)
+				);
+				
+		list.add(
+			new Scanbox("victory.png",			"gameResult",		"victory",		519, 488, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("defeat.png",			"gameResult",		"defeat",		481, 574, 50, 50)
+			new Scanbox("defeat.png",			"gameResult",		"defeat",		468, 568, 60, 60)
+		);
+		
+				list.add(
+					new Scanbox("defeat.png",			"gameResult",		"defeat",		471, 565, 60, 60)
+				);
+				
+				list.add(
+					new Scanbox("defeat.png",			"gameResult",		"defeat",		474, 562, 60, 60)
+				);
+					
+				list.add(
+					new Scanbox("defeat.png",			"gameResult",		"defeat",		477, 559, 60, 60)
+				);
+				
+				list.add(
+					new Scanbox("defeat.png",			"gameResult",		"defeat",		480, 556, 60, 60)
+				);
+				
+				list.add(
+					new Scanbox("defeat.png",			"gameResult",		"defeat",		483, 553, 60, 60)
+				);
+		
+		list.add(
+			new Scanbox("defeat.png",			"gameResult",		"defeat",		486, 550, 60, 60)
 		);
 
 		list.add(

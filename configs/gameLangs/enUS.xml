@@ -5,7 +5,7 @@
       <yOffset>366</yOffset>
       <width>50</width>
       <height>50</height>
-      <imgfile>arena-leaf.png</imgfile>
+      <imgfile>arena-mode.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
@@ -37,10 +37,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>1000</xOffset>
-      <yOffset>64</yOffset>
-      <width>50</width>
-      <height>50</height>
+      <xOffset>1180</xOffset>
+      <yOffset>213</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>practice-mode.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
@@ -49,10 +49,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>1255</xOffset>
-      <yOffset>120</yOffset>
-      <width>50</width>
-      <height>50</height>
+      <xOffset>1180</xOffset>
+      <yOffset>213</yOffset>
+      <width>120</width>
+      <height>120</height>
       <imgfile>challenge-mode.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
@@ -61,10 +61,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>1030</xOffset>
-      <yOffset>629</yOffset>
-      <width>155</width>
-      <height>30</height>
+      <xOffset>1060</xOffset>
+      <yOffset>485</yOffset>
+      <width>90</width>
+      <height>90</height>
       <imgfile>go-first.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
@@ -73,10 +73,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>966</xOffset>
-      <yOffset>629</yOffset>
-      <width>270</width>
-      <height>30</height>
+      <xOffset>1060</xOffset>
+      <yOffset>485</yOffset>
+      <width>90</width>
+      <height>90</height>
       <imgfile>go-second.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
@@ -85,10 +85,10 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>462</xOffset>
-      <yOffset>528</yOffset>
-      <width>50</width>
-      <height>50</height>
+      <xOffset>491</xOffset>
+      <yOffset>524</yOffset>
+      <width>60</width>
+      <height>60</height>
       <imgfile>victory.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
@@ -97,10 +97,142 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>481</xOffset>
-      <yOffset>574</yOffset>
-      <width>50</width>
-      <height>50</height>
+      <xOffset>496</xOffset>
+      <yOffset>519</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>victory.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>victory</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>501</xOffset>
+      <yOffset>514</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>victory.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>victory</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>506</xOffset>
+      <yOffset>509</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>victory.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>victory</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>511</xOffset>
+      <yOffset>504</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>victory.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>victory</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>519</xOffset>
+      <yOffset>488</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>victory.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>victory</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>468</xOffset>
+      <yOffset>568</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>defeat.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>defeat</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>471</xOffset>
+      <yOffset>565</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>defeat.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>defeat</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>474</xOffset>
+      <yOffset>562</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>defeat.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>defeat</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>477</xOffset>
+      <yOffset>559</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>defeat.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>defeat</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>480</xOffset>
+      <yOffset>556</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>defeat.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>defeat</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>483</xOffset>
+      <yOffset>553</yOffset>
+      <width>60</width>
+      <height>60</height>
+      <imgfile>defeat.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>gameResult</scene>
+      <identifier>defeat</identifier>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>486</xOffset>
+      <yOffset>550</yOffset>
+      <width>60</width>
+      <height>60</height>
       <imgfile>defeat.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>

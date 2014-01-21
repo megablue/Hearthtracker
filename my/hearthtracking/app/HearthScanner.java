@@ -25,7 +25,7 @@ public class HearthScanner{
 	private static final int PHASH_MIN_SIZE = 8;
 	private static final float PHASH_MIN_SCORE = 0.75f;
 	
-	private static final int FRAMES_LIMIT = 5;
+	private static final int FRAMES_LIMIT = 3;
 	
 	//store the most current scale value
 	private float scale = 1f;
@@ -360,11 +360,18 @@ public class HearthScanner{
 			//if hash or snapshot not found
 			if(roiSnapshot == null || hash == null){
 
-				System.out.println(
-					"X: " +  scale(sb.xOffset)
-					+ " Y: " +  scale(sb.yOffset)
-					+ " " + scale(sb.width) + "x" + scale(sb.height)
-				);
+				
+//				System.out.println("screen size: " + screen.getWidth() + "x" + screen.getHeight());
+//				
+//				System.out.println(
+//					"X: " +  scale(sb.xOffset)
+//					+ " Y: " +  scale(sb.yOffset)
+//					+ " " + scale(sb.width) + "x" + scale(sb.height)
+//				);
+				
+				if(( scale(sb.xOffset) + scale(sb.width)) > screen.getWidth() || ( scale(sb.yOffset) + scale(sb.height)) > screen.getHeight()){
+					System.out.println("Something went horribly wrong! Trying to crop a larger area than the source image" );
+				}
 				
 				//crop the corresponding part from game screen
 				roiSnapshot = HearthHelper.cropImage(
@@ -394,6 +401,11 @@ public class HearthScanner{
 				
 				//insert into table
 				roiHashes.put(key, hash);
+				
+//				if(sb.scene.equals("coin")){
+//					String output = "./cache/" + (counter++) + ".png";
+//					HearthHelper.bufferedImageToFile(roiSnapshot, output);
+//				}
 			}
 		}
 	}
@@ -440,14 +452,16 @@ public class HearthScanner{
 					+ " with score of " + HearthHelper.formatNumber("0.00", score)
 				);
 
-				Rectangle rec = skFind(target, region, sb.matchQuality);
-
-				if(rec == null){
-					System.out.println("Thread [" + threadId + "] " +"Double checked, It is a mismatch");
-				} else{
-					found = true;
-					System.out.println("Thread [" + threadId + "] " +"Double checked, Found on " + rec.x + ", " + rec.y);
-				}
+//				Rectangle rec = skFind(target, region, sb.matchQuality);
+//
+//				if(rec == null){
+//					System.out.println("Thread [" + threadId + "] " +"Double checked, It is a mismatch");
+//				} else{
+//					found = true;
+//					System.out.println("Thread [" + threadId + "] " +"Double checked, Found on " + rec.x + ", " + rec.y);
+//				}
+				
+				found = true;
 			}
 			
 //			if(DEBUGMODE && !found){
