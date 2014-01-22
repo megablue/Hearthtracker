@@ -9,7 +9,7 @@ public class HearthGenerator {
 
 	public static void main(String[] args) {
 		HearthScannerSettings settings = new HearthScannerSettings();
-		String targetScene = "arenaWins";
+		String targetScene = "arenaLive";
 		
 		for(Scanbox sb : settings.list){
 			
@@ -32,7 +32,7 @@ public class HearthGenerator {
 		BufferedImage gameScreen = HearthHelper.loadImage(new File("./sample-images/" + sb.scene + "/" + sb.identifier + ".png"));
 		BufferedImage viewport = HearthHelper.cropImage(gameScreen, 240, 0, 1440, 1080);
 		BufferedImage targetRegion = HearthHelper.cropImage(viewport, sb.xOffset, sb.yOffset, sb.width, sb.height);
-		HearthHelper.bufferedImageToFile(targetRegion, "./cache/" + sb.imgfile);
+		HearthHelper.bufferedImageToFile(targetRegion, "./cache/" + sb.identifier + ".png");
 	}
 	
 	private static void generateLinearMotionOffsets(int step, int startX, int startY, int endX, int endY){

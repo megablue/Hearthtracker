@@ -95,29 +95,29 @@ public class HearthScannerSettings {
 		);
 
 		list.add(
-			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"1",	425, 532, 66, 59)
-		);
-
-		list.add(
-			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"2",	515, 532, 66, 59)
-		);
-
-		list.add(
-			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"3",	609, 532, 66, 59)
-		);
-
-		list.add(
-			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"1",	423, 533, 68, 59)
-		);
-
-		list.add(
-			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"2",	514, 533, 68, 59)
-		);
-
-		list.add(
-			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"3",	608, 533, 68, 59)
+			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"3",	608, 534, 64, 56)
 		);
 		
+		list.add(
+			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"2",	514, 534, 64, 56)
+		);
+		
+		list.add(
+			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"1",	424, 534, 64, 56)
+		);
+		
+		list.add(
+			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"3",	608, 534, 64, 59)
+		);
+		
+		list.add(
+			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"2",	514, 534, 64, 59)
+		);
+		
+		list.add(
+			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"1",	424, 534, 64, 59)
+		);
+	
 		list.add(
 			new Scanbox("0.png",	"arenaWins",	"0", 347, 236, 100, 100, 1f, 0.9f)
 		);
@@ -295,6 +295,8 @@ public class HearthScannerSettings {
 		Scanbox nestedSb = null;
 		ImageTarget target = null;
 		
+		boolean resolveConflict = false;
+		
 		public Scanbox(String filename, String sce, String id, int x, int y, int w, int h){
 			imgfile = filename;
 			xOffset = x;
@@ -324,6 +326,11 @@ public class HearthScannerSettings {
 			cloned.identifier = identifier;
 			cloned.target = target;
 			return cloned;
+		}
+		
+		public Scanbox resolveConflict(){
+			resolveConflict = true;
+			return this;
 		}
 		
 		public Scanbox addNested(Scanbox nesting){

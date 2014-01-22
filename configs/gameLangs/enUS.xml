@@ -10,6 +10,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
       <identifier>arena</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -22,6 +23,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
       <identifier>ranked</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -34,6 +36,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
       <identifier>unranked</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -46,6 +49,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
       <identifier>practice</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -58,6 +62,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameMode</scene>
       <identifier>challenge</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -70,6 +75,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>coin</scene>
       <identifier>first</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -82,6 +88,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>coin</scene>
       <identifier>second</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -94,6 +101,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -106,6 +114,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -118,6 +127,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -130,6 +140,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -142,6 +153,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -154,6 +166,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -166,6 +179,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -178,6 +192,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -190,6 +205,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -202,6 +218,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -214,6 +231,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -226,6 +244,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -238,78 +257,85 @@
       <matchQuality>-1.0</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>425</xOffset>
-      <yOffset>532</yOffset>
-      <width>66</width>
-      <height>59</height>
-      <imgfile>lose-checkbox-checked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaLose</scene>
-      <identifier>1</identifier>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>515</xOffset>
-      <yOffset>532</yOffset>
-      <width>66</width>
-      <height>59</height>
-      <imgfile>lose-checkbox-checked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaLose</scene>
-      <identifier>2</identifier>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>609</xOffset>
-      <yOffset>532</yOffset>
-      <width>66</width>
-      <height>59</height>
-      <imgfile>lose-checkbox-checked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaLose</scene>
-      <identifier>3</identifier>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>423</xOffset>
-      <yOffset>533</yOffset>
-      <width>68</width>
-      <height>59</height>
-      <imgfile>lose-checkbox-unchecked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaLive</scene>
-      <identifier>1</identifier>
-      <outer-class reference="../../.."/>
-    </Scanbox>
-    <Scanbox>
-      <xOffset>514</xOffset>
-      <yOffset>533</yOffset>
-      <width>68</width>
-      <height>59</height>
-      <imgfile>lose-checkbox-unchecked.png</imgfile>
-      <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
-      <scene>arenaLive</scene>
-      <identifier>2</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
       <xOffset>608</xOffset>
-      <yOffset>533</yOffset>
-      <width>68</width>
+      <yOffset>534</yOffset>
+      <width>64</width>
+      <height>56</height>
+      <imgfile>lose-checkbox-checked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLose</scene>
+      <identifier>3</identifier>
+      <resolveConflict>false</resolveConflict>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>514</xOffset>
+      <yOffset>534</yOffset>
+      <width>64</width>
+      <height>56</height>
+      <imgfile>lose-checkbox-checked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLose</scene>
+      <identifier>2</identifier>
+      <resolveConflict>false</resolveConflict>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>424</xOffset>
+      <yOffset>534</yOffset>
+      <width>64</width>
+      <height>56</height>
+      <imgfile>lose-checkbox-checked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLose</scene>
+      <identifier>1</identifier>
+      <resolveConflict>false</resolveConflict>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>608</xOffset>
+      <yOffset>534</yOffset>
+      <width>64</width>
       <height>59</height>
       <imgfile>lose-checkbox-unchecked.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>-1.0</matchQuality>
       <scene>arenaLive</scene>
       <identifier>3</identifier>
+      <resolveConflict>false</resolveConflict>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>514</xOffset>
+      <yOffset>534</yOffset>
+      <width>64</width>
+      <height>59</height>
+      <imgfile>lose-checkbox-unchecked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLive</scene>
+      <identifier>2</identifier>
+      <resolveConflict>false</resolveConflict>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>424</xOffset>
+      <yOffset>534</yOffset>
+      <width>64</width>
+      <height>59</height>
+      <imgfile>lose-checkbox-unchecked.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>-1.0</matchQuality>
+      <scene>arenaLive</scene>
+      <identifier>1</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -322,6 +348,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>0</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -334,6 +361,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>1</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -346,6 +374,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>2</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -358,6 +387,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>3</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -370,6 +400,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>4</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -382,6 +413,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>5</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -394,6 +426,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>6</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -406,6 +439,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>7</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -418,6 +452,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>8</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -430,6 +465,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>9</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -442,6 +478,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>10</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -454,6 +491,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>11</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -466,6 +504,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>12</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -478,6 +517,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>mage</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -490,6 +530,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>hunter</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -502,6 +543,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>warrior</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -514,6 +556,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>shaman</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -526,6 +569,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>druid</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -538,6 +582,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>priest</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -550,6 +595,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>rogue</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -562,6 +608,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>paladin</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -574,6 +621,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>arenaHero</scene>
       <identifier>warlock</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -586,6 +634,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>mage</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -598,6 +647,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>hunter</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -610,6 +660,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>warrior</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -622,6 +673,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>shaman</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -634,6 +686,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>druid</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -646,6 +699,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>priest</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -658,6 +712,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>rogue</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -670,6 +725,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>paladin</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -682,6 +738,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>oppHero</scene>
       <identifier>warlock</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -694,6 +751,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>mage</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -706,6 +764,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>hunter</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -718,6 +777,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>warrior</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -730,6 +790,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>shaman</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -742,6 +803,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>druid</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -754,6 +816,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>priest</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -766,6 +829,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>rogue</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -778,6 +842,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>paladin</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -790,6 +855,7 @@
       <matchQuality>-1.0</matchQuality>
       <scene>myHero</scene>
       <identifier>warlock</identifier>
+      <resolveConflict>false</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
   </list>

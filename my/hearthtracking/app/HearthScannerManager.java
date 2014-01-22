@@ -63,11 +63,10 @@ public class HearthScannerManager {
 	private List<HearthReaderNotification> notifications =  Collections.synchronizedList(new ArrayList<HearthReaderNotification>());
 	
 	//Game status related variables
-	private long lastArenaWinsReported = 0;
 	private int exArenaWins = -1;
 	private int arenaWins = -1;
 	
-	private int previousArenaLosses = -1;
+	private int exArenaLosses = -1;
 	private int arenaLosses = -1;
 	
 	private int myHero = -1;
@@ -392,7 +391,8 @@ public class HearthScannerManager {
 			scanner.subscribe("gameMode");
 			scanner.subscribe("gameResult");
 			scanner.subscribe("arenaHero");
-			scanner.subscribe("arenaWins");
+			//scanner.subscribe("arenaWins");
+			scanner.subscribe("arenaLose");
 			scanner.subscribe("coin");
 			scanner.subscribe("myHero");
 			scanner.subscribe("oppHero");
@@ -443,6 +443,10 @@ public class HearthScannerManager {
 				case "arenaWins":
 					processArenaWins(sr.result);
 				break;
+				
+				case "arenaLose":
+					processArenaLose(sr.result);
+				break;
 
 				case "arenaHero":
 				case "myHero":
@@ -466,6 +470,30 @@ public class HearthScannerManager {
 		if(wins != exArenaWins){
 			arenaWins = wins;
 			exArenaWins = wins;
+			String arenaHero = heroesList.getHeroLabel(myHero);
+			
+			addNotification(
+				new HearthReaderNotification(
+					uiLang.t("Arena score"), 
+					uiLang.t("%d - %d as %s", arenaWins, arenaLosses, arenaHero)
+				)
+			);
+		}
+	}
+	
+	private void processArenaLose(String result){
+		System.out.println("processArenaLose(), result: " + result);
+
+		int losses = Integer.parseInt(result);
+
+		if(losses > ARENA_MAX_LOSSES){
+			System.out.println("Something went wrong! Arena losses of " 
+				+ losses + " detected. defined maximum is " + ARENA_MAX_LOSSES);
+		}
+		
+		if(losses != exArenaLosses && losses > exArenaLosses){
+			arenaLosses = losses;
+			exArenaLosses = losses;
 			String arenaHero = heroesList.getHeroLabel(myHero);
 			
 			addNotification(

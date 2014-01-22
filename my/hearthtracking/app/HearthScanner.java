@@ -12,7 +12,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.sikuli.core.search.RegionMatch;
 import org.sikuli.core.search.algorithm.TemplateMatcher;
 
+import boofcv.abst.feature.detdesc.DetectDescribePoint;
 import boofcv.struct.feature.Match;
+import boofcv.struct.feature.SurfFeature;
+import boofcv.struct.image.ImageFloat32;
 import my.hearthtracking.app.HearthScanner.SceneResult;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
@@ -26,7 +29,7 @@ public class HearthScanner{
 	private static final int FRAMES_LIMIT = 3;
 	private static final int PHASH_SIZE = 32;
 	private static final int PHASH_MIN_SIZE = 16;
-	private static final float PHASH_MIN_SCORE = 0.7f;
+	private static final float PHASH_MIN_SCORE = 0.75f;
 	
 	//number of threads
 	private int MAX_THREADS = 1;
@@ -43,6 +46,9 @@ public class HearthScanner{
 	//scanbox target image -> phash
 	private ConcurrentHashMap<String, String> scanboxHashes = new ConcurrentHashMap<String, String>();
 	
+	//to cache SURF's Describer
+	private ConcurrentHashMap<String, DetectDescribePoint<ImageFloat32,SurfFeature>> surfCaches = new ConcurrentHashMap<String, DetectDescribePoint<ImageFloat32,SurfFeature>>();
+	
 	//used to store recognition results
 	private List<SceneResult> sceneResults = Collections.synchronizedList(new ArrayList<SceneResult>());
 	
@@ -50,7 +56,10 @@ public class HearthScanner{
 	private List<String> queries = Collections.synchronizedList(new ArrayList<String>());
 
 	//pHash generator
-	private ImagePHash pHash = new ImagePHash(PHASH_SIZE, PHASH_MIN_SIZE);
+	private HearthImagePHash pHash = new HearthImagePHash(PHASH_SIZE, PHASH_MIN_SIZE);
+	
+	//Surf 
+	private HearthImageSurf surf = new HearthImageSurf();
 
 	//whatever to save the self-corrected offsets
 	private boolean generateBetterOffsets = true;
@@ -118,13 +127,7 @@ public class HearthScanner{
 			);
 		}
 	}
-	
-	public float getPHashScore(String hash, int distance){
-		int max = hash.length();
-		float score = 1 - ((float)distance/max);
-		return score;
-	}
-	
+		
 	public void insertFrame(BufferedImage screen){
 		synchronized(gameScreens){
 			if(gameScreens.size() <= FRAMES_LIMIT){
@@ -362,15 +365,6 @@ public class HearthScanner{
 			
 			//if hash or snapshot not found
 			if(roiSnapshot == null || hash == null){
-
-				
-//				System.out.println("screen size: " + screen.getWidth() + "x" + screen.getHeight());
-//				
-//				System.out.println(
-//					"X: " +  scale(sb.xOffset)
-//					+ " Y: " +  scale(sb.yOffset)
-//					+ " " + scale(sb.width) + "x" + scale(sb.height)
-//				);
 				
 				if(( scale(sb.xOffset) + scale(sb.width)) > screen.getWidth() || ( scale(sb.yOffset) + scale(sb.height)) > screen.getHeight()){
 					System.out.println("Something went horribly wrong! Trying to crop a larger area than the source image" );
@@ -414,7 +408,10 @@ public class HearthScanner{
 	}
 	
 	public void scan(int threadId, BufferedImage screen, List<Scanbox> scanBoxes, Hashtable<String, String> roiHashes, Hashtable<String, BufferedImage> roiSnaps){
-		System.out.println("Scanner Thread [" + threadId + "]" + " started");
+		
+		if(MAX_THREADS > 1){
+			System.out.println("Scanner Thread [" + threadId + "]" + " started");
+		}	
 		
 		for(Scanbox sb : scanBoxes){
 			boolean found = false;
@@ -434,17 +431,17 @@ public class HearthScanner{
 			int distance = pHash.distance(targetHash, regionHash);
 
 			//convert distance to score
-			float score = getPHashScore(targetHash, distance);
+			float score = pHash.getPHashScore(targetHash, distance);
 
-			if(score > 0.6){
+			if(score >= 0.7){
 				System.out.println(
-						"Thread [" + threadId + "] "
-						+ sb.scene + " "
-						+ sb.imgfile 
-						+ "-" + key 
-						+ ", score: " 
-						+ HearthHelper.formatNumber("0.00", score)
-					);
+					"Thread [" + threadId + "] "
+					+ sb.scene + " "
+					+ sb.imgfile 
+					+ "-" + key 
+					+ ", score: " 
+					+ HearthHelper.formatNumber("0.00", score)
+				);
 			}
 
 
@@ -458,17 +455,7 @@ public class HearthScanner{
 					+ " with score of " + HearthHelper.formatNumber("0.00", score)
 				);
 				
-				System.out.println("region: " + region.getWidth() + "x" + region.getHeight());
-				System.out.println("target: " + target.getWidth() + "x" + target.getHeight());
-				
-				Match match = HearthImageAnalyzer.templateMatch(target, region);
-				
-				if(match == null){
-					System.out.println("Thread [" + threadId + "] " +"Double checked, It is a mismatch");
-				} else{
-					found = true;
-					System.out.println("Thread [" + threadId + "] " +"Double checked, Found on " + match.x + ", " + match.y + ", template match score: " + match.score);
-				}				
+				found = true;
 			}
 			
 //			if(DEBUGMODE && !found){
@@ -505,7 +492,9 @@ public class HearthScanner{
 			}
 		}
 		
-		System.out.println("Scanner Thread [" + threadId + "]" + " ended");
+		if(MAX_THREADS > 1){
+			System.out.println("Scanner Thread [" + threadId + "]" + " ended");
+		}
 	}
 	
 	public class ScannerJob implements Runnable {
@@ -549,19 +538,6 @@ public class HearthScanner{
 		synchronized(sceneResults){
 			//insert
 			sceneResults.add(new SceneResult(scene, result, score));
-			
-//			//some crazy hack
-//			if(scene.equals("arenaWins")){
-//				ListIterator<SceneResult> listIterator = sceneResults.listIterator();
-//				
-//				while(listIterator.hasNext()){
-//					SceneResult s = listIterator.next();
-//					
-//					if(s.scene.equals("arenaWins") && s.score < score){
-//						listIterator.remove();
-//					}
-//				}
-//			}
 		}
 	}
 	
@@ -570,31 +546,51 @@ public class HearthScanner{
 			sceneResults.add(new SceneResult(scene, result, score, region));
 		}
 	}
-
-	private Rectangle skFind(BufferedImage target, BufferedImage screenImage, float score) {
-		score = (score == -1) ? 0.7f : score;
-		
-		if (screenImage.getWidth() < target.getWidth() || screenImage.getHeight() < target.getHeight()){			
-			//dirty fix
-			target = HearthHelper.resizeImage(target, Math.round(screenImage.getWidth()),Math.round(screenImage.getHeight()));
-		}
-		
-		List<RegionMatch> matches;
-		Rectangle rec = null;
-		int limit = 1;
-		matches = TemplateMatcher.findMatchesByGrayscaleAtOriginalResolution(screenImage, target, limit, score);
-		
-		if(matches.size() > 0){
-			RegionMatch r = matches.get(0);
-			rec = new Rectangle(r.x, r.y, r.width, r.height);
-		}
-	
-		return rec;
-	}
 	
 	public void dispose(){
 		shutdown = true;
 	}
+	
+	//pause will block until job threads ended
+	public synchronized void pause(){
+		shutdown = true;
+		
+		while(threadRunning){
+			try {
+				System.out.println("waiting...");
+				Thread.sleep(100);
+			} catch (InterruptedException e) { }
+		}
+		
+		System.out.println("paused");
+		
+		shutdown = false;
+	}
+	
+	public synchronized void resume(){
+		startScan();
+	}
+	
+//	private Rectangle skFind(BufferedImage target, BufferedImage screenImage, float score) {
+//		score = (score == -1) ? 0.7f : score;
+//		
+//		if (screenImage.getWidth() < target.getWidth() || screenImage.getHeight() < target.getHeight()){			
+//			//dirty fix
+//			target = HearthHelper.resizeImage(target, Math.round(screenImage.getWidth()),Math.round(screenImage.getHeight()));
+//		}
+//		
+//		List<RegionMatch> matches;
+//		Rectangle rec = null;
+//		int limit = 1;
+//		matches = TemplateMatcher.findMatchesByGrayscaleAtOriginalResolution(screenImage, target, limit, score);
+//		
+//		if(matches.size() > 0){
+//			RegionMatch r = matches.get(0);
+//			rec = new Rectangle(r.x, r.y, r.width, r.height);
+//		}
+//	
+//		return rec;
+//	}
 	
 //	private Rectangle skFind(BufferedImage target, BufferedImage screenImage, float score) {
 //		//score = (score == -1) ? 0.5f : score;
@@ -627,24 +623,4 @@ public class HearthScanner{
 //		
 //		return rec;
 //	}
-	
-	//pause will block until job threads ended
-	public synchronized void pause(){
-		shutdown = true;
-		
-		while(threadRunning){
-			try {
-				System.out.println("waiting...");
-				Thread.sleep(100);
-			} catch (InterruptedException e) { }
-		}
-		
-		System.out.println("paused");
-		
-		shutdown = false;
-	}
-	
-	public synchronized void resume(){
-		startScan();
-	}
 }

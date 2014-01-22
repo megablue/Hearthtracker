@@ -4,19 +4,16 @@ import java.awt.Graphics2D;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
+
 import edu.emory.mathcs.jtransforms.dct.DoubleDCT_2D;
 
-public class ImagePHash {
+public class HearthImagePHash {
 
-	private int size = 64;
-	private int smallerSize = 16;
+	private final int size;
+	private final int smallerSize;
 	private DoubleDCT_2D dct = null;
-	
-	public ImagePHash() {
-		dct = new DoubleDCT_2D(size, size);
-	}
-	
-	public ImagePHash(int size, int smallerSize) {
+
+	public HearthImagePHash(int size, int smallerSize) {
 		this.size = size;
 		this.smallerSize = smallerSize;
 		dct = new DoubleDCT_2D(size, size);
@@ -30,6 +27,12 @@ public class ImagePHash {
 			}
 		}
 		return counter;
+	}
+	
+	public float getPHashScore(String hash, int distance){
+		int max = hash.length();
+		float score = 1 - ((float)distance/max);
+		return score;
 	}
 	
 	// Returns a 'binary string' (like. 001010111011100010) which is easy to do a hamming distance on. 
@@ -101,7 +104,7 @@ public class ImagePHash {
 		for (int x = 0; x < smallerSize; x++) {
 			for (int y = 0; y < smallerSize; y++) {
 				if (x != 0 && y != 0) {
-					hash += (vals[x][y] > avg?"1":"0");
+					hash += (vals[x][y] > avg ? "1":"0");
 				}
 			}
 		}
