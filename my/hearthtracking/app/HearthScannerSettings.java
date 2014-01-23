@@ -1,8 +1,7 @@
 package my.hearthtracking.app;
 
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
-import org.sikuli.api.ImageTarget;
 
 public class HearthScannerSettings {
 	ArrayList <Scanbox>list 	= null;
@@ -119,15 +118,15 @@ public class HearthScannerSettings {
 		);
 	
 		list.add(
-			new Scanbox("0.png",	"arenaWins",	"0", 347, 236, 100, 100, 1f, 0.9f)
+			new Scanbox("0.png",	"arenaWins",	"0", 347, 236, 100, 100, 1f, 0.9f).resolveConflict()
 		);
 		
 		list.add(
-			new Scanbox("1.png",	"arenaWins",	"1", 347, 236, 100, 100, 1f, 0.9f)
+			new Scanbox("1.png",	"arenaWins",	"1", 347, 236, 100, 100, 1f, 0.9f).resolveConflict()
 		);
 		
 		list.add(
-			new Scanbox("2.png",	"arenaWins",	"2", 347, 236, 100, 100, 1f, 0.9f)
+			new Scanbox("2.png",	"arenaWins",	"2", 347, 236, 100, 100, 1f, 0.9f).resolveConflict()
 		);
 		
 		list.add(
@@ -207,7 +206,7 @@ public class HearthScannerSettings {
 		);
 		
 		list.add(
-			new Scanbox("mage-opphero.png", 		"oppHero",	"mage", 690, 130, 60, 60)
+			new Scanbox("mage-opphero.png", 	"oppHero",	"mage", 690, 130, 60, 60)
 		);
 
 		list.add(
@@ -223,7 +222,7 @@ public class HearthScannerSettings {
 		);
 
 		list.add(
-			new Scanbox("druid-opphero.png", 		"oppHero",	"druid", 690, 130, 60, 60)
+			new Scanbox("druid-opphero.png", 	"oppHero",	"druid", 690, 130, 60, 60)
 		);
 
 		list.add(
@@ -231,7 +230,7 @@ public class HearthScannerSettings {
 		);
 
 		list.add(
-			new Scanbox("rogue-opphero.png", 		"oppHero",	"rogue", 690, 130, 60, 60)
+			new Scanbox("rogue-opphero.png", 	"oppHero",	"rogue", 690, 130, 60, 60)
 		);
 
 		list.add(
@@ -293,7 +292,8 @@ public class HearthScannerSettings {
 
 		Mask mask;
 		Scanbox nestedSb = null;
-		ImageTarget target = null;
+		
+		BufferedImage target = null;
 		
 		boolean resolveConflict = false;
 		

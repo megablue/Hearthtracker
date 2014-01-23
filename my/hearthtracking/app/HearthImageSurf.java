@@ -1,6 +1,10 @@
 package my.hearthtracking.app;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import boofcv.abst.feature.associate.AssociateDescription;
 import boofcv.abst.feature.associate.ScoreAssociation;
 import boofcv.abst.feature.detdesc.DetectDescribePoint;
@@ -12,6 +16,7 @@ import boofcv.factory.feature.detdesc.FactoryDetectDescribe;
 import boofcv.struct.feature.AssociatedIndex;
 import boofcv.struct.feature.SurfFeature;
 import boofcv.struct.image.ImageFloat32;
+import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 import org.ddogleg.struct.FastQueue;
 
@@ -60,7 +65,7 @@ public class HearthImageSurf {
         
         return surf;
 	}
-		
+			
     private void describeImage(DetectDescribePoint<ImageFloat32,SurfFeature> detDesc, FastQueue<SurfFeature> descs )
     {
     	for( int i = 0; i < detDesc.getNumberOfFeatures(); i++ ) {

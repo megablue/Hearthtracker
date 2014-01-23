@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.sikuli.api.ImageTarget;
-
 import my.hearthtracking.app.HearthScanner.SceneResult;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
@@ -99,7 +97,7 @@ public class HearthScannerManager {
 		timeslot = tslot;
 		
 		if(debugMode){
-			timeslot = 100;
+			timeslot = 10;
 		}
 		
 		alwaysScan = alwaysScanFlag;
@@ -270,6 +268,8 @@ public class HearthScannerManager {
 		}
 		
 		synchronized(scannerSettings.list){
+			scanner.clearScanboxes();
+			
 			for(Scanbox sb : scannerSettings.list){
 				prepareScanbox(sb);
 				scanner.addScanbox(sb);
@@ -283,7 +283,6 @@ public class HearthScannerManager {
 	}
 		
 	private synchronized void prepareScanbox(HearthScannerSettings.Scanbox sb){
-		ImageTarget it = null;
 		File file = null;
 		float scaling = sb.scale * getScaleFactor();
 		
@@ -313,15 +312,8 @@ public class HearthScannerManager {
 				(int) Math.round(sb.mask.height 	* scaling)
 			);
 		}
-		
-		it = new ImageTarget(preTarget);
-		
-		if(sb.matchQuality >= 0 && it != null){
-			it.setMinScore(sb.matchQuality);
-			//it.similar(sb.matchQuality);
-		}
-		
-		sb.target = it;
+				
+		sb.target = preTarget;
 		
 		if(sb.nestedSb != null){
 			prepareScanbox(sb.nestedSb);
@@ -380,6 +372,9 @@ public class HearthScannerManager {
 		boolean scanAllowed = alwaysScan || (!alwaysScan && HearthHelper.isHSDetected());
 		
 		if(!scanAllowed){
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) { }
 			return;
 		}
 		
@@ -391,7 +386,7 @@ public class HearthScannerManager {
 			scanner.subscribe("gameMode");
 			scanner.subscribe("gameResult");
 			scanner.subscribe("arenaHero");
-			//scanner.subscribe("arenaWins");
+			scanner.subscribe("arenaWins");
 			scanner.subscribe("arenaLose");
 			scanner.subscribe("coin");
 			scanner.subscribe("myHero");

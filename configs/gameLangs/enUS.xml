@@ -348,7 +348,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>0</identifier>
-      <resolveConflict>false</resolveConflict>
+      <resolveConflict>true</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -361,7 +361,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>1</identifier>
-      <resolveConflict>false</resolveConflict>
+      <resolveConflict>true</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -374,7 +374,7 @@
       <matchQuality>0.9</matchQuality>
       <scene>arenaWins</scene>
       <identifier>2</identifier>
-      <resolveConflict>false</resolveConflict>
+      <resolveConflict>true</resolveConflict>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>

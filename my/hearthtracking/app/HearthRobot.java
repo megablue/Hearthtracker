@@ -77,6 +77,7 @@ public class HearthRobot {
             }
         } finally {
             GDI.DeleteObject(outputBitmap);
+            GDI.DeleteObject(windowDC);
         }
     }
 

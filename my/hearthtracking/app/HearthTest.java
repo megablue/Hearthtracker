@@ -6,6 +6,10 @@ import java.io.File;
 public class HearthTest{
 
 	public static void main( String args[] ) {
+		testArenaWins();
+    }
+	
+	public static void testArenaWins(){
 		HearthImageSurf surf = new HearthImageSurf();
 		HearthImagePHash pHash = new HearthImagePHash(32, 16);
 		BufferedImage[] arenaWins = new BufferedImage[13];
@@ -14,7 +18,6 @@ public class HearthTest{
 		for(int i = 0; i < arenaWins.length; i++){
 			arenaWins[i] = HearthHelper.loadImage(new File("./images/" + i + ".png"));
 		}
-		
 
 		System.out.println("Generating SURF scores for arena wins...");
 		
@@ -45,7 +48,7 @@ public class HearthTest{
         System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
         System.out.println("Average: " + (System.currentTimeMillis() - start)/counter + " ms");
 
-		System.out.println("Generating DCT scores for arena wins...");
+		System.out.println("Generating Pecpectual scores for arena wins...");
 		
 		start = System.currentTimeMillis();
 		init = 0;
@@ -76,6 +79,8 @@ public class HearthTest{
 
         System.out.println("Init: " + init + " ms");
         System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
-        System.out.println("Average: " + (System.currentTimeMillis() - start)/counter + " ms");
-    }
+        
+        float avg = (System.currentTimeMillis() - start)/(float)counter;
+        System.out.println("Average: " +  avg + " ms");
+	}
 }

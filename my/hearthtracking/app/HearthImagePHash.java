@@ -119,14 +119,7 @@ public class HearthImagePHash {
 		g.dispose();
 		return resizedImage;
 	}
-	
-	private ColorConvertOp colorConvert = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
-
-	private BufferedImage grayscale(BufferedImage img) {
-        colorConvert.filter(img, img);
-        return img;
-    }
-	
+		
 	private static int getBlue(BufferedImage img, int x, int y) {
 		return (img.getRGB(x, y)) & 0xff;
 	}

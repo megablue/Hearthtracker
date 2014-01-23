@@ -1,7 +1,9 @@
 package my.hearthtracking.app;
 
 import java.awt.Image;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
@@ -136,6 +138,13 @@ public class HearthHelper {
 		}
 		return null;
 	}
+	
+	private static ColorConvertOp colorConvert = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+
+	public static BufferedImage imageToGrayscale(BufferedImage img) {
+        colorConvert.filter(img, img);
+        return img;
+    }
 	
 	public static String getArchFilename(String prefix) 
 	{ 

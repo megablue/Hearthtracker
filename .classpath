@@ -11,7 +11,6 @@
 	<classpathentry kind="lib" path="lib/resty-0.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/jtransforms-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/sikuli-api.standalone-1.0.3-Pre-1.jar"/>
 	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/BoofCV_OpenKinect.jar"/>
 	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/BoofCV_V4L4J.jar"/>
 	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/BoofCV.jar"/>

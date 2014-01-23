@@ -9,9 +9,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.sikuli.core.search.RegionMatch;
-import org.sikuli.core.search.algorithm.TemplateMatcher;
-
 import boofcv.abst.feature.detdesc.DetectDescribePoint;
 import boofcv.struct.feature.Match;
 import boofcv.struct.feature.SurfFeature;
@@ -117,7 +114,7 @@ public class HearthScanner{
 			String hash = scanboxHashes.get(key);
 
 			if(hash == null){
-				hash = pHash.getHash(sb.target.getImage());
+				hash = pHash.getHash(sb.target);
 				scanboxHashes.put(key, hash);
 			}
 			
@@ -145,6 +142,12 @@ public class HearthScanner{
 		
 		synchronized(allScanboxes){
 			allScanboxes.add(sb);
+		}
+	}
+	
+	public void clearScanboxes(){
+		synchronized(allScanboxes){
+			allScanboxes.clear();
 		}
 	}
 	
@@ -223,13 +226,13 @@ public class HearthScanner{
 		return (int) Math.round(scaledValue / scale);
 	}
 	
-	 public void checkTableSizes(){
-	 	System.out.println("gameScreens: " + gameScreens.size());
-	 	System.out.println("scanboxHashes: " + scanboxHashes.size());
-	 	System.out.println("scanBoxes: " + allScanboxes.size());
-	 	System.out.println("sceneResults: " + sceneResults.size());
-	 	System.out.println("queries: " + queries.size());
-	 }
+	public void checkTableSizes(){
+		System.out.println("gameScreens: " + gameScreens.size());
+		System.out.println("scanboxHashes: " + scanboxHashes.size());
+		System.out.println("scanBoxes: " + allScanboxes.size());
+		System.out.println("sceneResults: " + sceneResults.size());
+		System.out.println("queries: " + queries.size());
+	}
 		
 	private void startScan(){
 		if(scanStarted){
@@ -241,7 +244,7 @@ public class HearthScanner{
  				threadRunning = true;
  				
  				while(!shutdown){
- 					//checkTableSizes();
+ 					checkTableSizes();
  					process();
  				}
  				
@@ -444,8 +447,7 @@ public class HearthScanner{
 				);
 			}
 
-
-			BufferedImage target = sb.target.getImage();
+			BufferedImage target = sb.target;
 			BufferedImage region = roiSnaps.get(key);
 
 			//if the score greater or equals the minimum threshold
@@ -454,8 +456,17 @@ public class HearthScanner{
 					+ ", " + scale(sb.yOffset) 
 					+ " with score of " + HearthHelper.formatNumber("0.00", score)
 				);
-				
-				found = true;
+
+				if(sb.resolveConflict){
+					float surfScore = surf.compare(target, region);
+
+					if(surfScore >= sb.matchQuality){
+						found = true;
+					}
+
+				} else {
+					found = true;
+				}
 			}
 			
 //			if(DEBUGMODE && !found){
