@@ -1,10 +1,6 @@
 package my.hearthtracking.app;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import boofcv.abst.feature.associate.AssociateDescription;
 import boofcv.abst.feature.associate.ScoreAssociation;
 import boofcv.abst.feature.detdesc.DetectDescribePoint;
@@ -16,7 +12,6 @@ import boofcv.factory.feature.detdesc.FactoryDetectDescribe;
 import boofcv.struct.feature.AssociatedIndex;
 import boofcv.struct.feature.SurfFeature;
 import boofcv.struct.image.ImageFloat32;
-import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 import org.ddogleg.struct.FastQueue;
 
@@ -37,19 +32,23 @@ public class HearthImageSurf {
         
         associate.setSource(descTemplate);
         associate.setDestination(descRegion);
-        associate.setThreshold(0.9);
         associate.associate();
 
         FastQueue<AssociatedIndex> matches = associate.getMatches();
         float sumScore = 0;
-        float average = 0;
-                
+        float average = Float.MAX_VALUE;
+         
         for(int i = 0; i < matches.size(); i++){
         	sumScore += matches.get(i).fitScore;
         }
+           
+//        System.out.println("sumScore: " + sumScore);
+//        System.out.println("matches: " + matches.size());
+
+        if(matches.size() > 0){
+        	average = (sumScore/matches.size());
+        }
         
-        average = 1 - (sumScore/matches.size());
-          
         return average;
 	}
 

@@ -1,17 +1,90 @@
 package my.hearthtracking.app;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
+
+import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 public class HearthTest{
 
 	public static void main( String args[] ) {
-		testArenaWins();
+		testCaputreDWM();
     }
+	
+	public static void testCaputreDWM(){
+		HearthRobot robot = new HearthRobot();
+		BufferedImage cap = robot.getScreenshot(robot.FindWindow("Hearthstone", "UnityWndClass"));
+		HearthHelper.bufferedImageToFile(cap, "./cache/capture.png");
+	}
+	
+	public static void testGameModes(){
+		HearthScannerSettings setting = new HearthScannerSettings();
+		HearthImagePHash pHash = new HearthImagePHash(16, 8);
+		
+		for(Scanbox sb : setting.list){
+			if(sb.scene.equals("gameMode")){
+				sb.target = HearthHelper.loadImage(new File("./images/" + sb.imgfile));
+			}
+		}
+		
+		long start = System.currentTimeMillis();
+		long init = 0;
+		int counter = 0;
+		float average = 0;
+		
+		for(Scanbox sbA : setting.list){
+			if(sbA.scene.equals("gameMode")){
+    			String a = pHash.getHash(sbA.target);
+    			int[] rgbA = pHash.getRGB(a);
+    			
+    			for(Scanbox sbB : setting.list){
+    				if(!sbB.scene.equals("gameMode")){
+    					continue;
+    				}
+    				
+    				String b = pHash.getHash(sbB.target);
+    				int distance = pHash.distance(a, b);
+    				int[] rgbB = pHash.getRGB(b);
+        			float score = pHash.getPHashScore(a, distance);
+        			
+    				if(init == 0){
+    					init = System.currentTimeMillis() - start;
+    				}
+    				
+    				if(score >= 0.8){
+    					
+    					if(score < 0.9){
+    						System.out.println(sbA.identifier + " vs " + sbB.identifier + ", score: " + score + " (close match)");
+    					} else {
+    						System.out.println(sbA.identifier + " vs " + sbB.identifier + ", score: " + score);
+    					}
+    					
+    					if(score != 1){
+        					System.out.println(sbA.identifier + "'s rgb: " + rgbA[0] + "," + rgbA[1] + "," + rgbA[2]);
+        					System.out.println(sbB.identifier + "'s rgb: " + rgbB[0] + "," + rgbB[1] + "," + rgbB[2]);
+        					System.out.println("rgb score: " + pHash.getRGBScore(rgbA, rgbB));
+    					}
+    				}
+    				  				
+    				++counter;
+    			}
+    			
+    			++counter;
+			}
+		}
+		
+        System.out.println("Init: " + init + " ms");
+        System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
+        
+        average = (System.currentTimeMillis() - start)/(float)counter;
+        System.out.println("Total scan: " + counter);
+        System.out.println("Average: " +  average + " ms");
+	}
 	
 	public static void testArenaWins(){
 		HearthImageSurf surf = new HearthImageSurf();
-		HearthImagePHash pHash = new HearthImagePHash(32, 16);
+		HearthImagePHash pHash = new HearthImagePHash(16, 8);
 		BufferedImage[] arenaWins = new BufferedImage[13];
 		int counter = 0;
 		
@@ -32,11 +105,11 @@ public class HearthTest{
 					init = System.currentTimeMillis() - start;
 				}
 				
-				if(score >= 0.9){
+				if(score <= 0.1f){
 					System.out.println(x + " vs " + y + ", score: " + score);
 				}
 				
-				if(score >= 0.8 && score < 0.9){
+				if(score >= 0.1f && score < 0.2f){
 					System.out.println(x + " vs " + y + ", score: " + score + " (close match)");
 				}
 				
@@ -44,9 +117,11 @@ public class HearthTest{
     		}
 		}
 
+		float average = (System.currentTimeMillis() - start)/counter;
+		
         System.out.println("Init: " + init + " ms");
         System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
-        System.out.println("Average: " + (System.currentTimeMillis() - start)/counter + " ms");
+        System.out.println("Average: " + average + " ms");
 
 		System.out.println("Generating Pecpectual scores for arena wins...");
 		
@@ -80,7 +155,155 @@ public class HearthTest{
         System.out.println("Init: " + init + " ms");
         System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
         
-        float avg = (System.currentTimeMillis() - start)/(float)counter;
-        System.out.println("Average: " +  avg + " ms");
+        average = (System.currentTimeMillis() - start)/(float)counter;
+        System.out.println("Total scan: " + counter);
+        System.out.println("Average: " +  average + " ms");
+	}
+	
+	public static void testHeroes(){
+		HearthScannerSettings setting = new HearthScannerSettings();
+		HearthImagePHash pHash = new HearthImagePHash(16, 8);
+		
+		for(Scanbox sb : setting.list){
+			if(sb.scene.equals("arenaHero")){
+				sb.target = HearthHelper.loadImage(new File("./images/" + sb.imgfile));
+			}
+		}
+		
+		long start = System.currentTimeMillis();
+		long init = 0;
+		int counter = 0;
+		float average = 0;
+		
+		for(Scanbox sbA : setting.list){
+			if(sbA.scene.equals("arenaHero")){
+    			String a = pHash.getHash(sbA.target);
+    			
+    			for(Scanbox sbB : setting.list){
+    				if(!sbB.scene.equals("arenaHero")){
+    					continue;
+    				}
+    				
+    				String b = pHash.getHash(sbB.target);
+    				int distance = pHash.distance(a, b);
+        			float score = pHash.getPHashScore(a, distance);
+        			
+    				if(init == 0){
+    					init = System.currentTimeMillis() - start;
+    				}
+    				
+    				if(score >= 0.9){
+    					System.out.println(sbA.identifier + " vs " + sbB.identifier + ", score: " + score);
+    				}
+    				
+    				if(score >= 0.8 && score < 0.9){
+    					System.out.println(sbA.identifier + " vs " + sbB.identifier + ", score: " + score + " (close match)");
+    				}
+    				
+    				++counter;
+    			}
+    			
+    			++counter;
+			}
+		}
+		
+        System.out.println("Init: " + init + " ms");
+        System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
+        
+        average = (System.currentTimeMillis() - start)/(float)counter;
+        System.out.println("Total scan: " + counter);
+        System.out.println("Average: " +  average + " ms");
+
+		start = System.currentTimeMillis();
+		init = 0;
+		counter = 0;
+		average = 0;
+        
+		for(Scanbox sbA : setting.list){
+			if(!sbA.scene.equals("oppHero")){
+				continue;
+			}
+			
+			String a = pHash.getHash(sbA.target);
+			
+			for(Scanbox sbB : setting.list){
+				if(!sbB.scene.equals("oppHero")){
+					continue;
+				}
+				
+				String b = pHash.getHash(sbB.target);
+				int distance = pHash.distance(a, b);
+    			float score = pHash.getPHashScore(a, distance);
+    			
+				if(init == 0){
+					init = System.currentTimeMillis() - start;
+				}
+				
+				if(score >= 0.9){
+					System.out.println(sbA.identifier + " vs " + sbB.identifier + ", score: " + score);
+				}
+				
+				if(score >= 0.8 && score < 0.9){
+					System.out.println(sbA.identifier + " vs " + sbB.identifier + ", score: " + score + " (close match)");
+				}
+				
+				++counter;
+			}
+			
+			++counter;
+		}
+		
+        System.out.println("Init: " + init + " ms");
+        System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
+        
+        average = (System.currentTimeMillis() - start)/(float)counter;
+        System.out.println("Total scan: " + counter);
+        System.out.println("Average: " +  average + " ms");
+        
+		start = System.currentTimeMillis();
+		init = 0;
+		counter = 0;
+		average = 0;
+        
+		for(Scanbox sbA : setting.list){
+			if(!sbA.scene.equals("myHero")){
+				continue;
+			}
+			
+			String a = pHash.getHash(sbA.target);
+			
+			for(Scanbox sbB : setting.list){
+				if(!sbB.scene.equals("myHero")){
+					continue;
+				}
+				
+				String b = pHash.getHash(sbB.target);
+				int distance = pHash.distance(a, b);
+    			float score = pHash.getPHashScore(a, distance);
+    			
+				if(init == 0){
+					init = System.currentTimeMillis() - start;
+				}
+				
+				if(score >= 0.9){
+					System.out.println(sbA.identifier + " vs " + sbB.identifier + ", score: " + score);
+				}
+				
+				if(score >= 0.8 && score < 0.9){
+					System.out.println(sbA.identifier + " vs " + sbB.identifier + ", score: " + score + " (close match)");
+				}
+				
+				++counter;
+			}
+			
+			++counter;
+		}
+		
+        System.out.println("Init: " + init + " ms");
+        System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
+        
+        average = (System.currentTimeMillis() - start)/(float)counter;
+        System.out.println("Total scan: " + counter);
+        System.out.println("Average: " +  average + " ms");
 	}
 }

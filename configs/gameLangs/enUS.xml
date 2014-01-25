@@ -7,36 +7,48 @@
       <height>50</height>
       <imgfile>arena-mode.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameMode</scene>
       <identifier>arena</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>1093</xOffset>
-      <yOffset>145</yOffset>
-      <width>100</width>
-      <height>100</height>
+      <xOffset>1283</xOffset>
+      <yOffset>219</yOffset>
+      <width>64</width>
+      <height>64</height>
       <imgfile>ranked-mode.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameMode</scene>
       <identifier>ranked</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>1094</xOffset>
-      <yOffset>163</yOffset>
-      <width>50</width>
-      <height>50</height>
+      <xOffset>974</xOffset>
+      <yOffset>222</yOffset>
+      <width>64</width>
+      <height>64</height>
       <imgfile>unranked-mode.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameMode</scene>
       <identifier>unranked</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -46,10 +58,14 @@
       <height>120</height>
       <imgfile>practice-mode.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameMode</scene>
       <identifier>practice</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>true</matchColor>
+      <red>93</red>
+      <green>88</green>
+      <blue>58</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -59,10 +75,14 @@
       <height>120</height>
       <imgfile>challenge-mode.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameMode</scene>
       <identifier>challenge</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>true</matchColor>
+      <red>79</red>
+      <green>79</green>
+      <blue>72</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -72,10 +92,14 @@
       <height>90</height>
       <imgfile>go-first.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>coin</scene>
       <identifier>first</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -85,10 +109,14 @@
       <height>90</height>
       <imgfile>go-second.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>coin</scene>
       <identifier>second</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -98,10 +126,14 @@
       <height>60</height>
       <imgfile>victory.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -111,10 +143,14 @@
       <height>60</height>
       <imgfile>victory.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -124,10 +160,14 @@
       <height>60</height>
       <imgfile>victory.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -137,10 +177,14 @@
       <height>60</height>
       <imgfile>victory.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -150,10 +194,14 @@
       <height>60</height>
       <imgfile>victory.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -163,10 +211,14 @@
       <height>60</height>
       <imgfile>victory.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>victory</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -176,10 +228,14 @@
       <height>60</height>
       <imgfile>defeat.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -189,10 +245,14 @@
       <height>60</height>
       <imgfile>defeat.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -202,10 +262,14 @@
       <height>60</height>
       <imgfile>defeat.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -215,10 +279,14 @@
       <height>60</height>
       <imgfile>defeat.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -228,10 +296,14 @@
       <height>60</height>
       <imgfile>defeat.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -241,10 +313,14 @@
       <height>60</height>
       <imgfile>defeat.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -254,10 +330,14 @@
       <height>60</height>
       <imgfile>defeat.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>gameResult</scene>
       <identifier>defeat</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -267,10 +347,14 @@
       <height>56</height>
       <imgfile>lose-checkbox-checked.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaLose</scene>
       <identifier>3</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -280,10 +364,14 @@
       <height>56</height>
       <imgfile>lose-checkbox-checked.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaLose</scene>
       <identifier>2</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -293,10 +381,14 @@
       <height>56</height>
       <imgfile>lose-checkbox-checked.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaLose</scene>
       <identifier>1</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -306,10 +398,14 @@
       <height>59</height>
       <imgfile>lose-checkbox-unchecked.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaLive</scene>
       <identifier>3</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -319,10 +415,14 @@
       <height>59</height>
       <imgfile>lose-checkbox-unchecked.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaLive</scene>
       <identifier>2</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -332,10 +432,14 @@
       <height>59</height>
       <imgfile>lose-checkbox-unchecked.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaLive</scene>
       <identifier>1</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -349,6 +453,10 @@
       <scene>arenaWins</scene>
       <identifier>0</identifier>
       <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -362,6 +470,10 @@
       <scene>arenaWins</scene>
       <identifier>1</identifier>
       <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -375,6 +487,10 @@
       <scene>arenaWins</scene>
       <identifier>2</identifier>
       <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -388,6 +504,10 @@
       <scene>arenaWins</scene>
       <identifier>3</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -401,6 +521,10 @@
       <scene>arenaWins</scene>
       <identifier>4</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -414,6 +538,10 @@
       <scene>arenaWins</scene>
       <identifier>5</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -427,6 +555,10 @@
       <scene>arenaWins</scene>
       <identifier>6</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -440,6 +572,10 @@
       <scene>arenaWins</scene>
       <identifier>7</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -453,6 +589,10 @@
       <scene>arenaWins</scene>
       <identifier>8</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -466,6 +606,10 @@
       <scene>arenaWins</scene>
       <identifier>9</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -479,6 +623,10 @@
       <scene>arenaWins</scene>
       <identifier>10</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -492,6 +640,10 @@
       <scene>arenaWins</scene>
       <identifier>11</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -505,6 +657,10 @@
       <scene>arenaWins</scene>
       <identifier>12</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -514,10 +670,14 @@
       <height>120</height>
       <imgfile>mage.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaHero</scene>
       <identifier>mage</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -527,10 +687,14 @@
       <height>120</height>
       <imgfile>hunter.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaHero</scene>
       <identifier>hunter</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -540,10 +704,14 @@
       <height>120</height>
       <imgfile>warrior.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaHero</scene>
       <identifier>warrior</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -553,10 +721,14 @@
       <height>120</height>
       <imgfile>shaman.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaHero</scene>
       <identifier>shaman</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -566,10 +738,14 @@
       <height>120</height>
       <imgfile>druid.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaHero</scene>
       <identifier>druid</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -579,10 +755,14 @@
       <height>120</height>
       <imgfile>priest.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaHero</scene>
       <identifier>priest</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -592,10 +772,14 @@
       <height>120</height>
       <imgfile>rogue.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaHero</scene>
       <identifier>rogue</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -605,10 +789,14 @@
       <height>120</height>
       <imgfile>paladin.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaHero</scene>
       <identifier>paladin</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -618,10 +806,14 @@
       <height>120</height>
       <imgfile>warlock.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaHero</scene>
       <identifier>warlock</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -631,10 +823,14 @@
       <height>60</height>
       <imgfile>mage-opphero.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>oppHero</scene>
       <identifier>mage</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -644,10 +840,14 @@
       <height>60</height>
       <imgfile>hunter-opphero.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>oppHero</scene>
       <identifier>hunter</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -657,10 +857,14 @@
       <height>60</height>
       <imgfile>warrior-opphero.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>oppHero</scene>
       <identifier>warrior</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -670,10 +874,14 @@
       <height>60</height>
       <imgfile>shaman-opphero.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>oppHero</scene>
       <identifier>shaman</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -683,10 +891,14 @@
       <height>60</height>
       <imgfile>druid-opphero.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>oppHero</scene>
       <identifier>druid</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -696,10 +908,14 @@
       <height>60</height>
       <imgfile>priest-opphero.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>oppHero</scene>
       <identifier>priest</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -709,10 +925,14 @@
       <height>60</height>
       <imgfile>rogue-opphero.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>oppHero</scene>
       <identifier>rogue</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -722,10 +942,14 @@
       <height>60</height>
       <imgfile>paladin-opphero.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>oppHero</scene>
       <identifier>paladin</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -735,10 +959,14 @@
       <height>60</height>
       <imgfile>warlock-opphero.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>oppHero</scene>
       <identifier>warlock</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -748,10 +976,14 @@
       <height>60</height>
       <imgfile>mage-s.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>myHero</scene>
       <identifier>mage</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -761,10 +993,14 @@
       <height>60</height>
       <imgfile>hunter-s.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>myHero</scene>
       <identifier>hunter</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -774,10 +1010,14 @@
       <height>60</height>
       <imgfile>warrior-s.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>myHero</scene>
       <identifier>warrior</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -787,10 +1027,14 @@
       <height>60</height>
       <imgfile>shaman-s.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>myHero</scene>
       <identifier>shaman</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -800,10 +1044,14 @@
       <height>60</height>
       <imgfile>druid-s.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>myHero</scene>
       <identifier>druid</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -813,10 +1061,14 @@
       <height>60</height>
       <imgfile>priest-s.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>myHero</scene>
       <identifier>priest</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -826,10 +1078,14 @@
       <height>60</height>
       <imgfile>rogue-s.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>myHero</scene>
       <identifier>rogue</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -839,10 +1095,14 @@
       <height>60</height>
       <imgfile>paladin-s.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>myHero</scene>
       <identifier>paladin</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -852,10 +1112,167 @@
       <height>60</height>
       <imgfile>warlock-s.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>-1.0</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>myHero</scene>
       <identifier>warlock</identifier>
       <resolveConflict>false</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>127</xOffset>
+      <yOffset>332</yOffset>
+      <width>80</width>
+      <height>100</height>
+      <imgfile>deck-selection-1.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.1</matchQuality>
+      <scene>deckSelection</scene>
+      <identifier>1</identifier>
+      <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>368</xOffset>
+      <yOffset>332</yOffset>
+      <width>80</width>
+      <height>100</height>
+      <imgfile>deck-selection-2.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.1</matchQuality>
+      <scene>deckSelection</scene>
+      <identifier>2</identifier>
+      <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>608</xOffset>
+      <yOffset>332</yOffset>
+      <width>80</width>
+      <height>100</height>
+      <imgfile>deck-selection-3.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.1</matchQuality>
+      <scene>deckSelection</scene>
+      <identifier>3</identifier>
+      <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>127</xOffset>
+      <yOffset>555</yOffset>
+      <width>80</width>
+      <height>100</height>
+      <imgfile>deck-selection-4.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.1</matchQuality>
+      <scene>deckSelection</scene>
+      <identifier>4</identifier>
+      <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>368</xOffset>
+      <yOffset>555</yOffset>
+      <width>80</width>
+      <height>100</height>
+      <imgfile>deck-selection-5.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.1</matchQuality>
+      <scene>deckSelection</scene>
+      <identifier>5</identifier>
+      <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>608</xOffset>
+      <yOffset>555</yOffset>
+      <width>80</width>
+      <height>100</height>
+      <imgfile>deck-selection-6.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.1</matchQuality>
+      <scene>deckSelection</scene>
+      <identifier>6</identifier>
+      <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>127</xOffset>
+      <yOffset>779</yOffset>
+      <width>80</width>
+      <height>100</height>
+      <imgfile>deck-selection-7.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.1</matchQuality>
+      <scene>deckSelection</scene>
+      <identifier>7</identifier>
+      <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>368</xOffset>
+      <yOffset>779</yOffset>
+      <width>80</width>
+      <height>100</height>
+      <imgfile>deck-selection-8.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.1</matchQuality>
+      <scene>deckSelection</scene>
+      <identifier>8</identifier>
+      <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
+      <outer-class reference="../../.."/>
+    </Scanbox>
+    <Scanbox>
+      <xOffset>608</xOffset>
+      <yOffset>779</yOffset>
+      <width>80</width>
+      <height>100</height>
+      <imgfile>deck-selection-9.png</imgfile>
+      <scale>1.0</scale>
+      <matchQuality>0.1</matchQuality>
+      <scene>deckSelection</scene>
+      <identifier>9</identifier>
+      <resolveConflict>true</resolveConflict>
+      <matchColor>false</matchColor>
+      <red>0</red>
+      <green>0</green>
+      <blue>0</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
   </list>

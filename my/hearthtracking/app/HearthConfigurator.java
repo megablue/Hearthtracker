@@ -31,6 +31,7 @@ public class HearthConfigurator {
 		xstream.alias("HearthULangsList", 				HearthULangsList.class);
 		
 		xstream.omitField(HearthScannerSettings.Scanbox.class, "target");
+		xstream.omitField(HearthScannerSettings.Scanbox.class, "unScaledTarget");
 	}
 	
 	public <t> Object load(String path){

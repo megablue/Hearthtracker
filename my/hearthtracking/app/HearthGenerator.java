@@ -6,10 +6,11 @@ import java.io.File;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 public class HearthGenerator {
+	HearthImagePHash pHash = new HearthImagePHash(16, 8);
 
 	public static void main(String[] args) {
 		HearthScannerSettings settings = new HearthScannerSettings();
-		String targetScene = "arenaLive";
+		String targetScene = "deckSelection";
 		
 		for(Scanbox sb : settings.list){
 			
@@ -20,7 +21,7 @@ public class HearthGenerator {
 		
 		//generateLinearMotionOffsets(5, 491, 524, 519, 488);
 	}
-	
+		
 	private static void generateTarget(Scanbox sb){
 		System.out.println("Generating target image: " 
 				+ sb.imgfile 
@@ -29,12 +30,17 @@ public class HearthGenerator {
 				+ ", size: " + sb.width + "x" + sb.height 
 		);
 		
-		BufferedImage gameScreen = HearthHelper.loadImage(new File("./sample-images/" + sb.scene + "/" + sb.identifier + ".png"));
+		String file = "./sample-images/" + sb.scene + "/" + sb.identifier + ".png";
+		
+		System.out.println("File: " + file);
+		
+		BufferedImage gameScreen = HearthHelper.loadImage(new File(file));
 		BufferedImage viewport = HearthHelper.cropImage(gameScreen, 240, 0, 1440, 1080);
 		BufferedImage targetRegion = HearthHelper.cropImage(viewport, sb.xOffset, sb.yOffset, sb.width, sb.height);
-		HearthHelper.bufferedImageToFile(targetRegion, "./cache/" + sb.identifier + ".png");
+		HearthHelper.bufferedImageToFile(targetRegion, "./cache/" + sb.imgfile);
 	}
 	
+	@SuppressWarnings("unused")
 	private static void generateLinearMotionOffsets(int step, int startX, int startY, int endX, int endY){
 		double m = (endY - startY)/(endX - startX);
 		double y = startY;

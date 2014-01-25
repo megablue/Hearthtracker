@@ -24,7 +24,7 @@ public class HearthScannerManager {
 	
 	public static final float BASE_RESOLUTION_HEIGHT = 1080f;
 	private static final long FPS_LIMIT = 15;
-	private static final float FPS_RESOLUTION = 60; //keep approaximate 60 seconds of frames
+	private static final float FPS_RESOLUTION = 60; //keep approximately 60 seconds of frames
 	
 	private long scannerStarted = System.currentTimeMillis();
 
@@ -51,8 +51,6 @@ public class HearthScannerManager {
 	private HearthScannerSettings scannerSettings = null;
 	private int xOffetOverrideVal = 0;
 	private int yOffsetOverrideVal = 0;
-
-	//private Robot robot = null;
 
 	private HearthScanner scanner = new HearthScanner();
 	
@@ -297,10 +295,16 @@ public class HearthScannerManager {
 		
 		BufferedImage preTarget;
 		
-		if(scaling != 1){
-			preTarget = HearthHelper.resizeImage(file, scaling);	
-		} else {
+		if(sb.unScaledTarget == null){
 			preTarget = HearthHelper.loadImage(file);
+			sb.unScaledTarget = preTarget;
+		}else{
+			preTarget = sb.unScaledTarget;
+		}
+		
+		//if scaling required
+		if(scaling != 1){
+			preTarget = HearthHelper.resizeImage(preTarget, scaling);
 		}
 		
 		if(sb.mask != null){
@@ -384,6 +388,7 @@ public class HearthScannerManager {
 		if(snap != null){
 			scanner.insertFrame(snap);
 			scanner.subscribe("gameMode");
+			scanner.subscribe("deckSelection");
 			scanner.subscribe("gameResult");
 			scanner.subscribe("arenaHero");
 			scanner.subscribe("arenaWins");
@@ -427,6 +432,10 @@ public class HearthScannerManager {
 					processGameMode(sr.result);
 				break;
 				
+				case "deckSelection":
+					processDeckSelection(sr.result);
+				break;
+				
 				case "coin":
 					processCoin(sr.result);
 				break;
@@ -449,6 +458,21 @@ public class HearthScannerManager {
 					processHero(sr.scene, sr.result);
 				break;
 			}
+		}
+	}
+	
+	private void processDeckSelection(String result){
+		System.out.println("processDeckSelection(), result: " + result);
+
+		int selected = Integer.parseInt(result);
+		
+		if(selected != this.exSelectedDeck){
+			this.selectedDeck = selected;
+			this.exSelectedDeck = selected;
+
+			addNotification(
+				new HearthReaderNotification( uiLang.t("Deck #%d", selected), "")
+			);
 		}
 	}
 

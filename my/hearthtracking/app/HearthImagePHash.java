@@ -1,9 +1,7 @@
 package my.hearthtracking.app;
 
 import java.awt.Graphics2D;
-import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorConvertOp;
 
 import edu.emory.mathcs.jtransforms.dct.DoubleDCT_2D;
 
@@ -20,6 +18,9 @@ public class HearthImagePHash {
 	}
 	
 	public int distance(String s1, String s2) {
+		s1 = extractHash(s1);
+		s2 = extractHash(s2);
+		
 		int counter = 0;
 		for (int k = 0; k < s1.length();k++) {
 			if(s1.charAt(k) != s2.charAt(k)) {
@@ -27,6 +28,31 @@ public class HearthImagePHash {
 			}
 		}
 		return counter;
+	}
+	
+	public static float getRGBScore(String t1, String t2){
+		return getRGBScore(getRGB(t1), getRGB(t2));
+	}
+	
+	public static float getRGBScore(int[] rgb1, int[] rgb2){
+		
+		int diff = Math.abs(rgb1[0] - rgb2[0]) + Math.abs(rgb1[1] - rgb2[1]) + Math.abs(rgb1[2] - rgb2[2]);
+		
+		return  (255f - diff)/255f;
+	}
+	
+	public static int[] getRGB(String hash){
+		String[] parts = hash.split("-");
+		int[] rgb = {0, 0, 0};
+		rgb[0] = Integer.parseInt(parts[0]);
+		rgb[1] = Integer.parseInt(parts[1]);
+		rgb[2] = Integer.parseInt(parts[2]);
+		return rgb;
+	}
+	
+	public static String extractHash(String hash){
+		String[] parts = hash.split("-");
+		return parts.length > 3 ? parts[3] : "";
 	}
 	
 	public float getPHashScore(String hash, int distance){
@@ -38,33 +64,34 @@ public class HearthImagePHash {
 	// Returns a 'binary string' (like. 001010111011100010) which is easy to do a hamming distance on. 
 	public String getHash(BufferedImage img){
 
-		/* 1. Reduce size. 
-		 * Like Average Hash, pHash starts with a small image. 
-		 * However, the image is larger than 8x8; 32x32 is a good size. 
-		 * This is really done to simplify the DCT computation and not 
-		 * because it is needed to reduce the high frequencies.
-		 */
-		img = resize(img, size, size);
+		//well usually it will always end up resizing
+		if(img.getWidth() != size || img.getHeight() != size){
+			//resize the image
+			img = resize(img, size, size);
+		}
 		
-		/* 2. Reduce color. 
-		 * The image is reduced to a grayscale just to further simplify 
-		 * the number of computations.
-		 */
+		//reducing the colors doesn't seems to help at all
+		//it is even slower with and result seems to be the identical
 		//img = grayscale(img);
 		
 		double[][] vals = new double[size][size];
+		int rgb = 0;
+		int red = 0;
+		int green = 0;
+		int blue = 0;
 		
-		for (int x = 0; x < img.getWidth(); x++) {
-			for (int y = 0; y < img.getHeight(); y++) {
-				vals[x][y] = getBlue(img, x, y);
+		//convert pixels to double double array
+		for (int x = 0; x < size; x++) {
+			for (int y = 0; y < size; y++) {
+				rgb = (img.getRGB(x, y));
+				red 	+= (rgb >> 16) & 0xFF;
+				green	+= (rgb >> 8) & 0xFF; 
+				blue	+= rgb & 0xFF; 
+				vals[x][y] = rgb;
 			}
 		}
 		
-		/* 3. Compute the DCT. 
-		 * The DCT separates the image into a collection of frequencies 
-		 * and scalars. While JPEG uses an 8x8 DCT, this algorithm uses 
-		 * a 32x32 DCT.
-		 */
+		//compute DCT
 		dct.forward(vals, true);
 		
 		/* 4. Reduce the DCT. 
@@ -109,18 +136,18 @@ public class HearthImagePHash {
 			}
 		}
 		
-		return hash;
+		red 	= red	/(size * size);
+		green 	= green	/(size * size);
+		blue 	= blue	/(size * size);
+		
+		return red + "-" + green + "-" + blue + "-" + hash;
 	}
 	
-	private BufferedImage resize(BufferedImage image, int width,	int height) {
+	private BufferedImage resize(BufferedImage image, int width, int height) {
 		BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = resizedImage.createGraphics();
 		g.drawImage(image, 0, 0, width, height, null);
 		g.dispose();
 		return resizedImage;
-	}
-		
-	private static int getBlue(BufferedImage img, int x, int y) {
-		return (img.getRGB(x, y)) & 0xff;
 	}
 }

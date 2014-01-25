@@ -401,15 +401,11 @@ public class HearthScanner{
 				
 				//insert into table
 				roiHashes.put(key, hash);
-				
-//				if(sb.scene.equals("coin")){
-//					String output = "./cache/" + (counter++) + ".png";
-//					HearthHelper.bufferedImageToFile(roiSnapshot, output);
-//				}
 			}
 		}
 	}
 	
+	@SuppressWarnings("static-access")
 	public void scan(int threadId, BufferedImage screen, List<Scanbox> scanBoxes, Hashtable<String, String> roiHashes, Hashtable<String, BufferedImage> roiSnaps){
 		
 		if(MAX_THREADS > 1){
@@ -418,7 +414,7 @@ public class HearthScanner{
 		
 		for(Scanbox sb : scanBoxes){
 			boolean found = false;
-			String masked = sb.mask != null ? "masked" : "";
+			String masked = sb.mask != null ? "xmasked" : "";
 			String key = scale(sb.xOffset) 	+ "x" + 
 						 scale(sb.yOffset)	+ "x" + 
 						 scale(sb.width) 	+ "x" + 
@@ -447,9 +443,6 @@ public class HearthScanner{
 				);
 			}
 
-			BufferedImage target = sb.target;
-			BufferedImage region = roiSnaps.get(key);
-
 			//if the score greater or equals the minimum threshold
 			if(score >= PHASH_MIN_SCORE){	
 				System.out.println("Thread [" + threadId + "] " + "Possible match at " + scale(sb.xOffset) 
@@ -458,45 +451,45 @@ public class HearthScanner{
 				);
 
 				if(sb.resolveConflict){
-					float surfScore = surf.compare(target, region);
+					BufferedImage target = sb.unScaledTarget;
+					BufferedImage region = roiSnaps.get(key);
+					
+					//if the viewport ratio is diff
+					if(this.scale != 1f){
+						//scale region to match the original target ratio
+						region = HearthHelper.resizeImage(region, 1f/this.scale);
+					}
 
-					if(surfScore >= sb.matchQuality){
+					float surfScore = surf.compare(target, region);
+					
+					System.out.println("Thread [" + threadId + "] " + "Surf score: " + HearthHelper.formatNumber("0.00", surfScore));
+
+					if(surfScore < sb.matchQuality){
 						found = true;
 					}
 
 				} else {
 					found = true;
 				}
+				
+				//if found we will compare colors as well
+				if(found && sb.matchColor){
+					float colorScore = pHash.getRGBScore(targetHash, regionHash);
+					
+					System.out.println("Thread [" + threadId + "] " + "Color score: " + HearthHelper.formatNumber("0.00", colorScore));
+					
+					if(colorScore > 0.95){
+						found = true;
+					} else{
+						found = false;
+					}
+				}
 			}
-			
-//			if(DEBUGMODE && !found){
-//				Rectangle rec = skFind(target, region, sb.matchQuality);
-//				
-//				if(rec == null){
-//					System.out.println("Thread [" + threadId + "] " + "Not found.");
-//				} else{
-//					found = true;
-//					System.out.println("Thread [" + threadId + "] " + "Found on " 
-//						+ rec.x + ", " 
-//						+ rec.y + " with skFind(), " 
-//						+ "score: " + HearthHelper.formatNumber("0.00", score)
-//					);
-//
-//					//try to make the offsets as precise as possible
-//					//a self-correct mechanism
-//					if(generateBetterOffsets){
-//						sb.xOffset = sb.xOffset + unscale(rec.x);
-//						sb.yOffset = sb.yOffset + unscale(rec.y);
-//						sb.width   = unscale(rec.getWidth());
-//						sb.height  = unscale(rec.getHeight());
-//					}
-//				}
-//			}
 			
 			if(found){
 				if(queryExists(sb.scene)){
 					System.out.println("Thread [" + threadId + "] " + "Query found: adding scene \"" + sb.scene + "\" to query results");
-					insertSceneResult(sb.scene, sb.identifier, score, region);
+					insertSceneResult(sb.scene, sb.identifier, score);
 				} else {
 					System.out.println("Thread [" + threadId + "] " + "Query not found.");
 				}
@@ -545,7 +538,7 @@ public class HearthScanner{
 	    }
 	}
 	
-	private void insertSceneResult(String scene, float score, String result){
+	private void insertSceneResult(String scene, String result, float score){
 		synchronized(sceneResults){
 			//insert
 			sceneResults.add(new SceneResult(scene, result, score));
