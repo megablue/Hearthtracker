@@ -18,11 +18,11 @@ public class HearthScannerSettings {
 		);
 
 		list.add(
-			new Scanbox("ranked-mode.png",		"gameMode",		"ranked",		1283, 219, 64, 64)
+			new Scanbox("ranked-mode.png",		"gameMode",		"ranked",		1283, 219, 64, 64).matchColor(123,132,131)
 		);
 
 		list.add(
-			new Scanbox("unranked-mode.png",	"gameMode",		"unranked",		974, 222, 64, 64)
+			new Scanbox("unranked-mode.png",	"gameMode",		"unranked",		974, 222, 64, 64).matchColor(154,156,149)
 		);
 
 		list.add(

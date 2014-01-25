@@ -175,18 +175,28 @@ public class HearthScannerManager {
 		return gameRes[1];
 	}
 		
-	private int getBoardX(){
+	private int getAbsoluteBoardXoffset(){
 		int[] winPos = HearthHelper.getHearthstonePosition();
 		int xOffset = winPos[0];
-		int[] gameRes = getGameResolution();
-		int absoluteX = xOffset + (gameRes[0] - getBoardWidth()) / 2;
-		return absoluteX;
+		int ret = xOffset + getRelativeBoardXoffset();
+		return ret;
 	}
 	
-	private int getBoardY(){
+	private int getAbsoluteBoardYoffset(){
 		int[] winPos = HearthHelper.getHearthstonePosition();
-		int yOffset = winPos[1];		
-		return yOffset;
+		int ret = winPos[1] + getRelativeBoardYoffset();		
+		return ret;
+	}
+	
+	private int getRelativeBoardXoffset(){
+		int[] gameRes = getGameResolution();
+		int ret = (gameRes[0] - getBoardWidth()) / 2;
+		return ret;
+	}
+	
+	private int getRelativeBoardYoffset(){
+		int ret = 0;		
+		return ret;
 	}
 	
 	private float getScaleFactor(){
@@ -359,14 +369,31 @@ public class HearthScannerManager {
 		
 		BufferedImage snapshot = null;
 		
-		int gameScreenWidth		= getBoardWidth(),
-			gameScreenHeight	= getBoardHeight(),
-			boardX 				= getBoardX() + getXOffsetOverride(),
-			boardY 				= getBoardY() + getYOffetOverride();
+		if(HearthHelper.isHSDetected() && HearthHelper.getArchName().equals("win")){
+			int gameScreenWidth		= getBoardWidth(),
+				gameScreenHeight	= getBoardHeight(),
+				boardX 				= getRelativeBoardXoffset(),
+				boardY 				= getRelativeBoardYoffset();
+					
+			Rectangle rec = new Rectangle(boardX, boardY, gameScreenWidth, gameScreenHeight);
+							
+			snapshot = HearthRobot.capture(
+							HearthRobot.FindWindow("Hearthstone", "UnityWndClass"), 
+							rec
+						);
+		} else {
+			int gameScreenWidth		= getBoardWidth(),
+					gameScreenHeight	= getBoardHeight(),
+					boardX 				= getAbsoluteBoardXoffset() + getXOffsetOverride(),
+					boardY 				= getAbsoluteBoardYoffset() + getYOffetOverride();
+
+			Rectangle rec = new Rectangle(boardX, boardY, gameScreenWidth, gameScreenHeight);
+						
+			snapshot = HearthRobot.capture(null, rec);
+		}
 		
-		Rectangle rec = new Rectangle(boardX, boardY, gameScreenWidth, gameScreenHeight);
-				
-		snapshot = HearthRobot.capture(rec);
+
+
 		totalFramesCounter++;
 		
 		return snapshot;

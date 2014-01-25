@@ -28,10 +28,10 @@
       <scene>gameMode</scene>
       <identifier>ranked</identifier>
       <resolveConflict>false</resolveConflict>
-      <matchColor>false</matchColor>
-      <red>0</red>
-      <green>0</green>
-      <blue>0</blue>
+      <matchColor>true</matchColor>
+      <red>123</red>
+      <green>132</green>
+      <blue>131</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -45,10 +45,10 @@
       <scene>gameMode</scene>
       <identifier>unranked</identifier>
       <resolveConflict>false</resolveConflict>
-      <matchColor>false</matchColor>
-      <red>0</red>
-      <green>0</green>
-      <blue>0</blue>
+      <matchColor>true</matchColor>
+      <red>154</red>
+      <green>156</green>
+      <blue>149</blue>
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
@@ -449,7 +449,7 @@
       <height>100</height>
       <imgfile>0.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>0</identifier>
       <resolveConflict>true</resolveConflict>
@@ -466,7 +466,7 @@
       <height>100</height>
       <imgfile>1.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>1</identifier>
       <resolveConflict>true</resolveConflict>
@@ -483,7 +483,7 @@
       <height>100</height>
       <imgfile>2.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>2</identifier>
       <resolveConflict>true</resolveConflict>
@@ -500,7 +500,7 @@
       <height>100</height>
       <imgfile>3.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>3</identifier>
       <resolveConflict>false</resolveConflict>
@@ -517,7 +517,7 @@
       <height>100</height>
       <imgfile>4.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>4</identifier>
       <resolveConflict>false</resolveConflict>
@@ -534,7 +534,7 @@
       <height>100</height>
       <imgfile>5.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>5</identifier>
       <resolveConflict>false</resolveConflict>
@@ -551,7 +551,7 @@
       <height>100</height>
       <imgfile>6.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>6</identifier>
       <resolveConflict>false</resolveConflict>
@@ -568,7 +568,7 @@
       <height>100</height>
       <imgfile>7.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>7</identifier>
       <resolveConflict>false</resolveConflict>
@@ -585,7 +585,7 @@
       <height>100</height>
       <imgfile>8.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>8</identifier>
       <resolveConflict>false</resolveConflict>
@@ -602,7 +602,7 @@
       <height>100</height>
       <imgfile>9.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>9</identifier>
       <resolveConflict>false</resolveConflict>
@@ -619,7 +619,7 @@
       <height>100</height>
       <imgfile>10.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>10</identifier>
       <resolveConflict>false</resolveConflict>
@@ -636,7 +636,7 @@
       <height>100</height>
       <imgfile>11.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>11</identifier>
       <resolveConflict>false</resolveConflict>
@@ -653,7 +653,7 @@
       <height>100</height>
       <imgfile>12.png</imgfile>
       <scale>1.0</scale>
-      <matchQuality>0.9</matchQuality>
+      <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
       <identifier>12</identifier>
       <resolveConflict>false</resolveConflict>
@@ -1132,7 +1132,7 @@
       <matchQuality>0.1</matchQuality>
       <scene>deckSelection</scene>
       <identifier>1</identifier>
-      <resolveConflict>true</resolveConflict>
+      <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
       <red>0</red>
       <green>0</green>
@@ -1149,7 +1149,7 @@
       <matchQuality>0.1</matchQuality>
       <scene>deckSelection</scene>
       <identifier>2</identifier>
-      <resolveConflict>true</resolveConflict>
+      <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
       <red>0</red>
       <green>0</green>
@@ -1166,7 +1166,7 @@
       <matchQuality>0.1</matchQuality>
       <scene>deckSelection</scene>
       <identifier>3</identifier>
-      <resolveConflict>true</resolveConflict>
+      <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
       <red>0</red>
       <green>0</green>
@@ -1183,7 +1183,7 @@
       <matchQuality>0.1</matchQuality>
       <scene>deckSelection</scene>
       <identifier>4</identifier>
-      <resolveConflict>true</resolveConflict>
+      <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
       <red>0</red>
       <green>0</green>
@@ -1200,7 +1200,7 @@
       <matchQuality>0.1</matchQuality>
       <scene>deckSelection</scene>
       <identifier>5</identifier>
-      <resolveConflict>true</resolveConflict>
+      <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
       <red>0</red>
       <green>0</green>
@@ -1217,7 +1217,7 @@
       <matchQuality>0.1</matchQuality>
       <scene>deckSelection</scene>
       <identifier>6</identifier>
-      <resolveConflict>true</resolveConflict>
+      <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
       <red>0</red>
       <green>0</green>
@@ -1234,7 +1234,7 @@
       <matchQuality>0.1</matchQuality>
       <scene>deckSelection</scene>
       <identifier>7</identifier>
-      <resolveConflict>true</resolveConflict>
+      <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
       <red>0</red>
       <green>0</green>
@@ -1251,7 +1251,7 @@
       <matchQuality>0.1</matchQuality>
       <scene>deckSelection</scene>
       <identifier>8</identifier>
-      <resolveConflict>true</resolveConflict>
+      <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
       <red>0</red>
       <green>0</green>
@@ -1268,7 +1268,7 @@
       <matchQuality>0.1</matchQuality>
       <scene>deckSelection</scene>
       <identifier>9</identifier>
-      <resolveConflict>true</resolveConflict>
+      <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
       <red>0</red>
       <green>0</green>

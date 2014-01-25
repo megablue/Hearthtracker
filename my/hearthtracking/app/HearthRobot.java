@@ -35,9 +35,9 @@ public class HearthRobot {
     private static final GDI32 GDI = GDI32.INSTANCE;
     private static NativeLibrary DWM = null;
 
-	public static BufferedImage capture(Rectangle bounds) {
+	public static BufferedImage capture(HWND hwnd, Rectangle bounds) {
 		if(HearthHelper.getOSName().equals("win")){
-			return _capture(bounds);
+			return _capture(hwnd, bounds);
 		}
 		
 		if(robot == null){
@@ -96,7 +96,7 @@ public class HearthRobot {
 	          boolean success = USER.PrintWindow(hwnd, blitDC, 1);
 	          if (!success)
 	          {
-	           	System.out.println("Screen capture Failed");
+	           	System.out.println("Screen capture Failed: " + Kernel32.INSTANCE.GetLastError());
 	          }
 	        }
 	        finally
@@ -132,7 +132,7 @@ public class HearthRobot {
 	  }
 	
 	public static HWND FindWindow(String title, String classname){
-		return User32.INSTANCE.FindWindow(title, classname);
+		return USER.FindWindow(title, classname);
 	}
 	
 	public static BufferedImage _capture2(Rectangle bounds) {
@@ -184,13 +184,20 @@ public class HearthRobot {
 		return null;
 	}
 
-    public static BufferedImage _capture(Rectangle bounds) {
-        HDC windowDC = GDI.GetDC(USER.GetDesktopWindow());
+    public static BufferedImage _capture(HWND hwnd, Rectangle bounds) {
+        HDC windowDC = null;
+        
+        if(hwnd == null){
+        	windowDC = GDI.GetDC(USER.GetDesktopWindow());
+        } else {
+        	windowDC = GDI.GetDC(hwnd);
+        }
+        
         HBITMAP outputBitmap =
                 GDI.CreateCompatibleBitmap(windowDC,
                 bounds.width, bounds.height);
        
-        boolean dwmEnabled = isAeroEnabled();
+        //boolean dwmEnabled = isAeroEnabled();
 
         try {
             WinDef.HDC blitDC = GDI.CreateCompatibleDC(windowDC);
@@ -326,3 +333,9 @@ interface User32 extends com.sun.jna.platform.win32.User32 {
     HWND FindWindow(String lpClassName, String lpWindowName);
 }
 
+interface Kernel32 extends com.sun.jna.platform.win32.Kernel32 {
+
+	Kernel32 INSTANCE = (Kernel32) Native.loadLibrary(Kernel32.class);
+
+	int GetLastError();
+}

@@ -478,7 +478,7 @@ public class HearthScanner{
 					
 					System.out.println("Thread [" + threadId + "] " + "Color score: " + HearthHelper.formatNumber("0.00", colorScore));
 					
-					if(colorScore > 0.95){
+					if(colorScore > 0.9){
 						found = true;
 					} else{
 						found = false;
