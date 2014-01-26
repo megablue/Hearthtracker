@@ -14,12 +14,10 @@ public class HearthTest{
 	public static void testCaputreDWM(){
 		System.out.println("HearthHelper.getHearthstoneHandle(): " + HearthHelper.getHearthstoneHandle());
 
-		HearthRobot robot = new HearthRobot();
-		
 		long start = System.currentTimeMillis();
 		
 		for(int i = 0; i < 1000; i++){
-			BufferedImage cap = robot.capture(HearthHelper.getHearthstoneHandle(), new Rectangle(0,0,1024,768));
+			HearthRobot.capture(HearthHelper.getHearthstoneHandle(), new Rectangle(0,0,1024,768));
 		}
 		
         System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
@@ -49,7 +47,7 @@ public class HearthTest{
 		for(Scanbox sbA : setting.list){
 			if(sbA.scene.equals("deckSelection")){
     			String a = pHash.getHash(sbA.target);
-    			int[] rgbA = pHash.getRGB(a);
+    			int[] rgbA = HearthImagePHash.getRGB(a);
     			
     			rgbAll[0] += rgbA[0];
     			rgbAll[1] += rgbA[1];
@@ -91,7 +89,7 @@ public class HearthTest{
 		for(Scanbox sbA : setting.list){
 			if(sbA.scene.equals("gameMode")){
     			String a = pHash.getHash(sbA.target);
-    			int[] rgbA = pHash.getRGB(a);
+    			int[] rgbA = HearthImagePHash.getRGB(a);
     			
     			for(Scanbox sbB : setting.list){
     				if(!sbB.scene.equals("gameMode")){
@@ -100,7 +98,7 @@ public class HearthTest{
     				
     				String b = pHash.getHash(sbB.target);
     				int distance = pHash.distance(a, b);
-    				int[] rgbB = pHash.getRGB(b);
+    				int[] rgbB = HearthImagePHash.getRGB(b);
         			float score = pHash.getPHashScore(a, distance);
         			
     				if(init == 0){
@@ -117,7 +115,7 @@ public class HearthTest{
     					
     					System.out.println(sbA.identifier + "'s rgb: " + rgbA[0] + "," + rgbA[1] + "," + rgbA[2]);
     					System.out.println(sbB.identifier + "'s rgb: " + rgbB[0] + "," + rgbB[1] + "," + rgbB[2]);
-    					System.out.println("rgb score: " + pHash.getRGBScore(rgbA, rgbB));
+    					System.out.println("rgb score: " + HearthImagePHash.getRGBScore(rgbA, rgbB));
     				}
     				  				
     				++counter;

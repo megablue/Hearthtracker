@@ -22,7 +22,7 @@ public class HearthDecks {
 	}
 
 	public void setInstance(HearthDecks instance){
-		this.instance = instance;
+		HearthDecks.instance = instance;
 	}
 
 	public static HearthDecks getInstance() {

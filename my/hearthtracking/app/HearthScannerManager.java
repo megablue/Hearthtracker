@@ -775,21 +775,6 @@ public class HearthScannerManager {
 
 		if(found){
 			isDirty = true;
-			String title = "";
-			
-			switch(scene){
-				case "arenaHero":
-					title = "Arena Hero";
-				break;
-				
-				case "myHero":
-					title = "My Hero";
-				break;
-				
-				case "oppHero":
-					title = "Opponent Hero";
-				break;
-			}
 			
 			if(scene.equals("myHero")){
 				addNotification(

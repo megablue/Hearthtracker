@@ -25,9 +25,6 @@ import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
-import my.hearthtracking.app.HearthWin32Helper.GetWindowRectException;
-import my.hearthtracking.app.HearthWin32Helper.WindowNotFoundException;
-
 public class HearthHelper {
 
 	public static boolean isDevelopmentEnvironment() {
