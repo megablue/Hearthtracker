@@ -92,7 +92,6 @@ import org.eclipse.swt.widgets.ExpandItem;
 @SuppressWarnings({ "unused", "deprecation" })
 public class HearthUI {	
 	protected Shell shlHearthtracker;
-	private CCombo cmbGameLang;
 	private Button btnEnableScanner;
 	private Button[] btnScanSpeed = new Button[4];
 	private CCombo cmbGameRes;
@@ -741,33 +740,18 @@ public class HearthUI {
 		Composite composite_7 = new Composite(expandBar, SWT.NONE);
 		xpndtmGeneral.setControl(composite_7);
 		xpndtmGeneral.setHeight(150);
-		composite_7.setLayout(new GridLayout(4, false));
-		
-		Label lblNewLabel_1 = new Label(composite_7, SWT.NONE);
-		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-		lblNewLabel_1.setSize(92, 15);
-		lblNewLabel_1.setText(lang.t("Game Language"));
-		new Label(composite_7, SWT.NONE);
-		new Label(composite_7, SWT.NONE);
-		
-		cmbGameLang = new CCombo(composite_7, SWT.BORDER | SWT.READ_ONLY);
-		GridData gd_cmbGameLang = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_cmbGameLang.widthHint = 372;
-		cmbGameLang.setLayoutData(gd_cmbGameLang);
-		cmbGameLang.setSize(150, 21);
-		cmbGameLang.setEditable(false);
-		cmbGameLang.setItems(new String[] {});
-		cmbGameLang.setVisibleItemCount(13);
+		composite_7.setLayout(new GridLayout(3, false));
 		
 		Label lblNewLabel_14 = new Label(composite_7, SWT.NONE);
 		lblNewLabel_14.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_14.setBounds(144, 53, 81, 15);
 		lblNewLabel_14.setText(lang.t("Batte.net server"));
 		new Label(composite_7, SWT.NONE);
-		new Label(composite_7, SWT.NONE);
 		
 		cbServer = new CCombo(composite_7, SWT.BORDER | SWT.READ_ONLY);
-		cbServer.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridData gd_cbServer = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_cbServer.widthHint = 340;
+		cbServer.setLayoutData(gd_cbServer);
 		cbServer.setVisibleItemCount(4);
 		cbServer.setEditable(false);
 		cbServer.setBounds(231, 49, 150, 21);
@@ -787,7 +771,6 @@ public class HearthUI {
 		link.setBounds(95, 80, 136, 15);
 		link.setText(lang.t("%sHearthTracker Web Sync Key%s", "<a>", "</a>"));
 		new Label(composite_7, SWT.NONE);
-		new Label(composite_7, SWT.NONE);
 		
 		txtWebSyncKey = new Text(composite_7, SWT.BORDER);
 		txtWebSyncKey.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
@@ -796,7 +779,6 @@ public class HearthUI {
 		Label lblNewLabel_4 = new Label(composite_7, SWT.NONE);
 		lblNewLabel_4.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_4.setText(lang.t("User Interface Language"));
-		new Label(composite_7, SWT.NONE);
 		new Label(composite_7, SWT.NONE);
 		scrolledComposite.setContent(expandBar);
 		scrolledComposite.setMinSize(expandBar.computeSize(SWT.DEFAULT, SWT.DEFAULT));
@@ -813,7 +795,6 @@ public class HearthUI {
 		lblNewLabel_21.setText(
 			lang.t("Notification Popup")
 		);
-		new Label(composite_7, SWT.NONE);
 		new Label(composite_7, SWT.NONE);
 		
 		btnPopup = new Button(composite_7, SWT.CHECK);
@@ -2108,51 +2089,6 @@ public class HearthUI {
 	}
 	
 	private void poppulateGeneralPerferences(){
-		cmbGameLang.removeAll();
-		int selected = 0;
-		
-		for(int i = 0; i < gameLanguages.langs.length; i++){
-			cmbGameLang.add(gameLanguages.langs[i].label);
-			cmbGameLang.setData(gameLanguages.langs[i].label, gameLanguages.langs[i].code);
-			
-			if(setting.gameLang.toLowerCase().equals(gameLanguages.langs[i].code.toLowerCase())){
-				selected = i;
-			}
-		}
-		
-		cmbGameLang.select(selected);
-		
-		cmbGameLang.addSelectionListener(new SelectionAdapter() {
-			
-			int previousSelection = -1;
-			
-			private void selected(SelectionEvent e){
-				int i = cmbGameLang.getSelectionIndex();
-				
-				if(i != -1){
-					String langCode = (String) cmbGameLang.getData(cmbGameLang.getItem(i));
-					System.out.println("preferences game lang selected: " + langCode);
-					setting.gameLang = langCode;
-					
-					if(previousSelection != i){
-						hearthScanner.setGameLang(langCode);
-						previousSelection = i; 
-						savePreferences();
-					}
-				}
-			}
-			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				this.selected(e);
-			}
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				this.selected(e);
-			}
-		});
-		
-		
 		cbUILangs.removeAll();
 		
 		int index = 0;
