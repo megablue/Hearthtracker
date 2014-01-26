@@ -58,6 +58,9 @@ public class HearthScannerManager {
 	private long totalTimeSpentCapturing = 0;
 	private List<HearthReaderNotification> notifications =  Collections.synchronizedList(new ArrayList<HearthReaderNotification>());
 	
+	private boolean exMinimized = false;
+	private int exAeroStatus = -1;
+	
 	//Game status related variables
 	private int exArenaWins = -1;
 	private int arenaWins = -1;
@@ -83,7 +86,7 @@ public class HearthScannerManager {
 	private int exGameMode = UNKNOWNMODE;
 	private int inGameMode = -1;
 	
-	private int timeslot = 100;
+	private int timeslot = 1000;
 	private long gameStartedTime = System.currentTimeMillis();
 
 	public HearthScannerManager (HearthTracker t, int tslot, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
@@ -95,7 +98,7 @@ public class HearthScannerManager {
 		timeslot = tslot;
 		
 		if(debugMode){
-			timeslot = 10;
+			timeslot = 1000;
 		}
 		
 		alwaysScan = alwaysScanFlag;
@@ -368,31 +371,32 @@ public class HearthScannerManager {
 		}
 		
 		BufferedImage snapshot = null;
-		
-		if(HearthHelper.isHSDetected() && HearthHelper.getArchName().equals("win")){
-			int gameScreenWidth		= getBoardWidth(),
-				gameScreenHeight	= getBoardHeight(),
-				boardX 				= getRelativeBoardXoffset(),
-				boardY 				= getRelativeBoardYoffset();
-					
-			Rectangle rec = new Rectangle(boardX, boardY, gameScreenWidth, gameScreenHeight);
-							
-			snapshot = HearthRobot.capture(
-							HearthRobot.FindWindow("Hearthstone", "UnityWndClass"), 
-							rec
-						);
-		} else {
-			int gameScreenWidth		= getBoardWidth(),
-					gameScreenHeight	= getBoardHeight(),
-					boardX 				= getAbsoluteBoardXoffset() + getXOffsetOverride(),
-					boardY 				= getAbsoluteBoardYoffset() + getYOffetOverride();
+		int gameScreenWidth		= getBoardWidth(),
+			gameScreenHeight	= getBoardHeight(),
+			
+			//always use absolute screen offsets unless specified otherwise
+			boardX 				= getAbsoluteBoardXoffset() + getXOffsetOverride(),
+			boardY 				= getAbsoluteBoardYoffset() + getYOffetOverride(),
+			
+			//Heartstone handle
+			handle = HearthHelper.getHearthstoneHandle();
+			
+				  //capture area
+		Rectangle rec = null;
 
-			Rectangle rec = new Rectangle(boardX, boardY, gameScreenWidth, gameScreenHeight);
-						
-			snapshot = HearthRobot.capture(null, rec);
+		//if Hearthstone handle is obtainable and we're on Windows
+		if(handle!=0 && HearthHelper.getOSName().equals("win")){
+			//since we're using a window handle, we do not need absolute screen offsets
+			//getting relative offsets for client area
+			boardX 				= getRelativeBoardXoffset();
+			boardY 				= getRelativeBoardYoffset();
 		}
-		
 
+		rec = new Rectangle(boardX, boardY, gameScreenWidth, gameScreenHeight);
+		
+		snapshot = HearthRobot.capture(handle, rec);
+
+		//HearthHelper.bufferedImageToFile(snapshot, "./cache/capture-" + totalFramesCounter + ".png");
 
 		totalFramesCounter++;
 		
@@ -400,7 +404,29 @@ public class HearthScannerManager {
 	}
 		
 	public void process(){
-		boolean scanAllowed = alwaysScan || (!alwaysScan && HearthHelper.isHSDetected());
+		boolean isMinimized = HearthHelper.isHearthstoneMinimized();
+		boolean scanAllowed = false;
+				
+		if(alwaysScan){
+			scanAllowed = true;
+		} else if(HearthHelper.isHSDetected() && !isMinimized){
+			//allow the scan to process if hearthstone is detected and not minimized
+			scanAllowed = true;
+		}
+
+		if(isMinimized != exMinimized){
+			exMinimized = isMinimized;
+			
+			if(isMinimized){
+				addNotification(
+					new HearthReaderNotification( uiLang.t("HS minimized"), uiLang.t("Stopped scanning!"))
+				);
+			} else {
+				addNotification(
+					new HearthReaderNotification( uiLang.t("HS restored"), uiLang.t("Scanning again!"))
+				);
+			}
+		}
 		
 		if(!scanAllowed){
 			try {

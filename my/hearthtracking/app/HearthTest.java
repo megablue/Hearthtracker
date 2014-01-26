@@ -13,8 +13,10 @@ public class HearthTest{
     }
 	
 	public static void testCaputreDWM(){
+		System.out.println("HearthHelper.getHearthstoneHandle(): " + HearthHelper.getHearthstoneHandle());
+
 		HearthRobot robot = new HearthRobot();
-		BufferedImage cap = robot.getScreenshot(robot.FindWindow("Hearthstone", "UnityWndClass"));
+		BufferedImage cap = robot.capture(HearthHelper.getHearthstoneHandle(), new Rectangle(0,0,1024,768));
 		HearthHelper.bufferedImageToFile(cap, "./cache/capture.png");
 	}
 	
@@ -60,11 +62,9 @@ public class HearthTest{
     						System.out.println(sbA.identifier + " vs " + sbB.identifier + ", score: " + score);
     					}
     					
-    					if(score != 1){
-        					System.out.println(sbA.identifier + "'s rgb: " + rgbA[0] + "," + rgbA[1] + "," + rgbA[2]);
-        					System.out.println(sbB.identifier + "'s rgb: " + rgbB[0] + "," + rgbB[1] + "," + rgbB[2]);
-        					System.out.println("rgb score: " + pHash.getRGBScore(rgbA, rgbB));
-    					}
+    					System.out.println(sbA.identifier + "'s rgb: " + rgbA[0] + "," + rgbA[1] + "," + rgbA[2]);
+    					System.out.println(sbB.identifier + "'s rgb: " + rgbB[0] + "," + rgbB[1] + "," + rgbB[2]);
+    					System.out.println("rgb score: " + pHash.getRGBScore(rgbA, rgbB));
     				}
     				  				
     				++counter;

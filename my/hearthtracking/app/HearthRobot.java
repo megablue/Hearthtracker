@@ -12,18 +12,15 @@ import java.awt.image.DataBuffer;
 import java.awt.image.DataBufferUShort;
 import java.awt.image.WritableRaster;
 
-import org.eclipse.swt.internal.win32.BITMAPINFOHEADER;
-
 import com.sun.jna.Function;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
+import com.sun.jna.Pointer;
 import com.sun.jna.win32.W32APIOptions;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinDef.HBITMAP;
 import com.sun.jna.platform.win32.WinDef.HDC;
 import com.sun.jna.platform.win32.WinDef.HWND;
-import com.sun.jna.platform.win32.WinDef.RECT;
-import com.sun.jna.platform.win32.WinGDI.BITMAPINFO;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.platform.win32.WinGDI;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
@@ -35,9 +32,15 @@ public class HearthRobot {
     private static final GDI32 GDI = GDI32.INSTANCE;
     private static NativeLibrary DWM = null;
 
-	public static BufferedImage capture(HWND hwnd, Rectangle bounds) {
+	public static BufferedImage capture(int hwnd, Rectangle bounds) {		
 		if(HearthHelper.getOSName().equals("win")){
-			return _capture(hwnd, bounds);
+			HWND handle = hwnd != 0 ? new HWND(new Pointer(hwnd)) : null;
+			
+			if( handle!= null && isAeroEnabled() ){
+				return _captureAero(handle, bounds);
+			}
+			
+			return _capture(handle, bounds);
 		}
 		
 		if(robot == null){
@@ -77,69 +80,11 @@ public class HearthRobot {
 	    return dwmEnabled;
 	}
 	
-	public BufferedImage getScreenshot(HWND hwnd)
-	  {
-	    RECT winRect = new RECT();
-	    USER.GetWindowRect(hwnd, winRect);
-	    HDC windowDC = GDI.GetDC(hwnd);
-	    Rectangle bounds = winRect.toRectangle();
-	    HBITMAP outputBitmap = GDI.CreateCompatibleBitmap(windowDC, bounds.width, bounds.height);
-	    try
-	    {
-	      HDC blitDC = GDI.CreateCompatibleDC(windowDC);
-	      try
-	      {
-	        HANDLE oldBitmap = GDI.SelectObject(blitDC, outputBitmap);
-	        try
-	        {
-	          USER.RedrawWindow(hwnd, null, null, 0x0400 | 0x0001 | 0x0004 | 0x0100 | 0x0080);
-	          boolean success = USER.PrintWindow(hwnd, blitDC, 1);
-	          if (!success)
-	          {
-	           	System.out.println("Screen capture Failed: " + Kernel32.INSTANCE.GetLastError());
-	          }
-	        }
-	        finally
-	        {
-	        	GDI.SelectObject(blitDC, oldBitmap);
-	        }
-	        BITMAPINFO bi = new BITMAPINFO(40);
-	        bi.bmiHeader.biSize = 40;
-	        boolean ok = GDI.GetDIBits(blitDC, outputBitmap, 0, bounds.height, (byte[]) null, bi,
-	        		WinGDI.DIB_RGB_COLORS);
-	        if (ok)
-	        {
-	        	   WinGDI.BITMAPINFOHEADER bih = bi.bmiHeader;
-                   bih.biHeight = -Math.abs(bih.biHeight);
-                   bi.bmiHeader.biCompression = 0;
-                   return bufferedImageFromBitmap(blitDC, outputBitmap, bi);
-	        }
-	        else
-	        {
-	          return null;
-	        }
-	      }
-	      finally
-	      {
-	        GDI.DeleteObject(blitDC);
-	      }
-	    }
-	    finally
-	    {
-            GDI.DeleteObject(outputBitmap);
-            GDI.DeleteObject(windowDC);
-	    }
-	  }
-	
-	public static HWND FindWindow(String title, String classname){
-		return USER.FindWindow(title, classname);
-	}
-	
-	public static BufferedImage _capture2(Rectangle bounds) {
+	public static BufferedImage _captureAero(HWND hwnd, Rectangle bounds) {
 		//RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_UPDATENOW | RDW_ALLCHILDREN 
 		int flags = 0x0400 | 0x0001 | 0x0004 | 0x0100 | 0x0080;
 		
-		HWND tagetHwnd = User32.INSTANCE.FindWindow("Hearthstone", "UnityWndClass");
+		HWND tagetHwnd = hwnd;
 		
 		HDC windowDC = GDI.GetDC(tagetHwnd);
         HBITMAP outputBitmap = GDI.CreateCompatibleBitmap(windowDC, bounds.width, bounds.height);
@@ -150,14 +95,9 @@ public class HearthRobot {
                 HANDLE oldBitmap =
                         GDI.SelectObject(blitDC, outputBitmap);
                 
-                //boolean success1 = USER.RedrawWindow(tagetHwnd, null, null, flags);
-                //System.out.println("RedrawWindow: " + success1);
-                
-                boolean success2 = USER.PrintWindow(tagetHwnd, blitDC, 0);
-                
-                System.out.println("PrintWindow: " + success2);
-                
-                if(success2){
+                USER.RedrawWindow(tagetHwnd, null, null, flags);
+   
+                if(USER.PrintWindow(tagetHwnd, blitDC, 1)){
                 	GDI.SelectObject(blitDC, oldBitmap);
                 	
                 	WinGDI.BITMAPINFO bi = new WinGDI.BITMAPINFO(40);
@@ -330,12 +270,4 @@ interface User32 extends com.sun.jna.platform.win32.User32 {
     HWND GetDesktopWindow();
     boolean PrintWindow(HWND hwnd, HDC hdcBlt, int nFlags);
     boolean RedrawWindow(HWND hwnd, RECT lprcUpdate, HRGN hrgnUpdate, int flags);
-    HWND FindWindow(String lpClassName, String lpWindowName);
-}
-
-interface Kernel32 extends com.sun.jna.platform.win32.Kernel32 {
-
-	Kernel32 INSTANCE = (Kernel32) Native.loadLibrary(Kernel32.class);
-
-	int GetLastError();
 }

@@ -238,6 +238,14 @@ public class HearthHelper {
 		
 		return false;
 	}
+	
+	public static int getHearthstoneHandle(){
+		if(!getOSName().equals("win")){
+			return 0;
+		}
+		
+		return HearthWin32Helper.findWindow("UnityWndClass", "Hearthstone");
+	}
 
 	public static int[] getHearthstonePosition(){
 		int[] pos = {0,0,0,0};
@@ -247,7 +255,7 @@ public class HearthHelper {
 		}
 		
 		try {			
-			int[] rect = HearthWin32Helper.getRect("Hearthstone", "UnityWndClass");
+			int[] rect = HearthWin32Helper.getRect("UnityWndClass", "Hearthstone");
 			
 			pos[0] = rect[0];
 			pos[1] = rect[1];
@@ -259,23 +267,35 @@ public class HearthHelper {
 		
 		return pos;
 	}
-	
+		
 	public static boolean isHSDetected(){
 		if(!getOSName().equals("win")){
 			return true;
 		}
 		
-		try {
-			try {
-				HearthWin32Helper.getRect("Hearthstone", "UnityWndClass");
-			} catch (GetWindowRectException e) {
-				System.out.println(e.getMessage());
-			}
-		} catch (WindowNotFoundException e) {
+		if(getHearthstoneHandle() != 0){
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public static boolean isHearthstoneMinimized(){
+		if(!getOSName().equals("win")){
 			return false;
 		}
-
-		return true;
+		
+		int handle = getHearthstoneHandle();
+		boolean result = HearthWin32Helper.isWindowMinimized(handle);
+		
+		//always return false if handle not found
+		//this is to make sure we don't need additional check
+		//when we do "forced" scanning
+		if(handle == 0){
+			return false;
+		}
+		
+		return result;
 	}
 	
 	public static Logger getLogger(Level loglevel){
