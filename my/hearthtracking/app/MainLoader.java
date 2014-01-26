@@ -61,7 +61,7 @@ public class MainLoader {
 		
 		start = System.currentTimeMillis();
 
-		while( (int) Math.round( (System.currentTimeMillis() - start) / 1000) < timeLimit ){
+		while( (int) Math.round( (System.currentTimeMillis() - start) / 1000f) < timeLimit ){
 			scannerManager.process();
 		}
 		
@@ -132,7 +132,7 @@ public class MainLoader {
 		System.exit(0);
 	}
 	
-	private static void init(){
+	private synchronized static void init(){
 		HearthUpdaterLog updateLog = (HearthUpdaterLog) config.load(HearthFilesNameManager.updaterLog);
 		
 		if(updateLog == null){
@@ -157,7 +157,7 @@ public class MainLoader {
 			config.save(decks, HearthFilesNameManager.decksFile);
 		} else {
 			//register the unserialized instance
-			decks.setInstance(decks);
+			HearthDecks.setInstance(decks);
 		}
 		
 		if(heroesList == null){

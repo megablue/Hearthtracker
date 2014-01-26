@@ -64,9 +64,9 @@ public class HearthScanner{
 	
 	private boolean scanStarted = false;
 	
-	private volatile static boolean shutdown = false;
+	private volatile boolean shutdown = false;
 	
-	private volatile static boolean threadRunning = false; 
+	private volatile boolean threadRunning = false; 
 	
 	private long idleTime = 50;
 	
@@ -112,7 +112,7 @@ public class HearthScanner{
 
 			if(hash == null){
 				hash = pHash.getHash(sb.target);
-				scanboxHashes.put(key, hash);
+				scanboxHashes.putIfAbsent(key, hash);
 			}
 			
 			System.out.println(
@@ -220,9 +220,7 @@ public class HearthScanner{
 			gameScreens.clear();
 		}
 		
-		synchronized(scanboxHashes){
-			scanboxHashes.clear();
-		}
+		scanboxHashes.clear();
 	}
 	
 	private int scale(int n){
@@ -271,16 +269,17 @@ public class HearthScanner{
 	private void process(){
 		BufferedImage screen = null;
 		
+		if(gameScreens.isEmpty()){
+			try {
+				Thread.sleep(idleTime);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+		
 		//wait for sync and pop the earliest frame
 		synchronized(gameScreens){
-			if(gameScreens.isEmpty()){
-				try {
-					Thread.sleep(idleTime);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				return;
-			}
 			screen = HearthHelper.cloneImage(gameScreens.get(0));
 			gameScreens.remove(0);
 			
@@ -576,7 +575,7 @@ public class HearthScanner{
 	}
 	
 	//pause will block until job threads ended
-	public synchronized void pause(){
+	public void pause(){
 		shutdown = true;
 		
 		while(threadRunning){

@@ -131,7 +131,7 @@ public class HearthUI {
 	private TabItem tbtmMatchesNew;
 	private TabItem tbtmArenaEdit;
 	private TabItem tbtmArenaNew;
-	private static Image[] heroImgs;
+	private Image[] heroImgs;
 	private Composite composite_9;
 	
 	private Text txtWebSyncKey;

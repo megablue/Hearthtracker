@@ -347,7 +347,7 @@ public class HearthScannerManager {
 	//return run time in seconds
 	@SuppressWarnings("unused")
 	private int getRunTime(){
-		return (int) Math.round( (System.currentTimeMillis() - scannerStarted / 1000) ); 
+		return (int) Math.round( (System.currentTimeMillis() - scannerStarted / 1000f) ); 
 	}
 
 	private void resetFPS(){

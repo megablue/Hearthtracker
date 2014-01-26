@@ -21,7 +21,7 @@ public class HearthDecks {
 		}
 	}
 
-	public void setInstance(HearthDecks instance){
+	public static void setInstance(HearthDecks instance){
 		HearthDecks.instance = instance;
 	}
 
