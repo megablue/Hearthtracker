@@ -86,7 +86,7 @@ public class HearthScannerManager {
 	private int exGameMode = UNKNOWNMODE;
 	private int inGameMode = -1;
 	
-	private int timeslot = 1000;
+	private int timeslot = 250;
 	private long gameStartedTime = System.currentTimeMillis();
 
 	public HearthScannerManager (HearthTracker t, int tslot, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){

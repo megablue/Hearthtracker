@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,11 +23,11 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class HearthScanner{
-	private static final boolean DEBUGMODE = HearthHelper.isDevelopmentEnvironment();
-	private static final int FRAMES_LIMIT = 3;
-	private static final int PHASH_SIZE = 32;
-	private static final int PHASH_MIN_SIZE = 16;
-	private static final float PHASH_MIN_SCORE = 0.75f;
+	private static final boolean 	DEBUGMODE = HearthHelper.isDevelopmentEnvironment();
+	private static final int		FRAMES_LIMIT = 3;
+	private static final int		PHASH_SIZE = 32;
+	private static final int		PHASH_MIN_SIZE = 16;
+	private static final float		PHASH_MIN_SCORE = 0.75f;
 	
 	//number of threads
 	private int MAX_THREADS = 1;
@@ -89,11 +90,7 @@ public class HearthScanner{
 			match = i;
 		}
 	}
-	
-	public HearthScanner() {
 		
-	}
-	
 	/**
 	 * Initialze or Reinistalize the scanner when scale/resolution/scanboxes are changed
 	 *
@@ -158,6 +155,20 @@ public class HearthScanner{
 		synchronized(queries){
 			if(!found){
 				queries.add(scene);
+			}
+		}
+	}
+	
+	public void unsubscribe(String target){
+		synchronized(queries){
+			Iterator<String> it = queries.iterator();
+			
+			while(it.hasNext()){
+				String scene = it.next();
+				if(scene.equals(target)){
+					it.remove();
+					break;
+				}
 			}
 		}
 	}
@@ -357,6 +368,12 @@ public class HearthScanner{
 	private void prepScan(int threadId, BufferedImage screen, List<Scanbox> scanBoxes, Hashtable<String, String> roiHashes, Hashtable<String, BufferedImage> roiSnaps){
 		//crop corresponding parts and generate hashes from ROIs
 		for(Scanbox sb : scanBoxes){
+			
+			//skips if query doesn't exists
+			if(!queryExists(sb.scene)){
+				continue;
+			}
+			
 			String masked = sb.mask != null ? "masked" : "";
 			String key = scale(sb.xOffset) 	+ "x" + 
 						 scale(sb.yOffset)	+ "x" + 
@@ -413,6 +430,12 @@ public class HearthScanner{
 		}	
 		
 		for(Scanbox sb : scanBoxes){
+			
+			//skips if query doesn't exists
+			if(!queryExists(sb.scene)){
+				continue;
+			}
+			
 			boolean found = false;
 			String masked = sb.mask != null ? "xmasked" : "";
 			String key = scale(sb.xOffset) 	+ "x" + 
@@ -487,12 +510,8 @@ public class HearthScanner{
 			}
 			
 			if(found){
-				if(queryExists(sb.scene)){
-					System.out.println("Thread [" + threadId + "] " + "Query found: adding scene \"" + sb.scene + "\" to query results");
-					insertSceneResult(sb.scene, sb.identifier, score);
-				} else {
-					System.out.println("Thread [" + threadId + "] " + "Query not found.");
-				}
+				System.out.println("Thread [" + threadId + "] " + "Query found: scene \"" + sb.scene + "\" added to query results");
+				insertSceneResult(sb.scene, sb.identifier, score);
 			}
 		}
 		

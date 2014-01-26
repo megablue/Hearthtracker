@@ -7,7 +7,6 @@ import java.io.File;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 public class HearthTest{
-
 	public static void main( String args[] ) {
 		testCaputreDWM();
     }
@@ -16,8 +15,62 @@ public class HearthTest{
 		System.out.println("HearthHelper.getHearthstoneHandle(): " + HearthHelper.getHearthstoneHandle());
 
 		HearthRobot robot = new HearthRobot();
-		BufferedImage cap = robot.capture(HearthHelper.getHearthstoneHandle(), new Rectangle(0,0,1024,768));
-		HearthHelper.bufferedImageToFile(cap, "./cache/capture.png");
+		
+		long start = System.currentTimeMillis();
+		
+		for(int i = 0; i < 1000; i++){
+			BufferedImage cap = robot.capture(HearthHelper.getHearthstoneHandle(), new Rectangle(0,0,1024,768));
+		}
+		
+        System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
+        float average = (System.currentTimeMillis() - start)/1000f;
+        System.out.println("Total scan: " + 1000);
+        System.out.println("Average: " +  average + " ms");
+		
+		//HearthHelper.bufferedImageToFile(cap, "./cache/capture.png");
+	}
+	
+	public static void testDeckSelectionRGB(){
+		HearthScannerSettings setting = new HearthScannerSettings();
+		HearthImagePHash pHash = new HearthImagePHash(16, 8);
+		
+		for(Scanbox sb : setting.list){
+			if(sb.scene.equals("deckSelection")){
+				sb.target = HearthHelper.loadImage(new File("./images/" + sb.imgfile));
+			}
+		}
+		
+		long start = System.currentTimeMillis();
+		long init = 0;
+		int counter = 0;
+		float average = 0;
+		int rgbAll[] = {0, 0, 0};
+		
+		for(Scanbox sbA : setting.list){
+			if(sbA.scene.equals("deckSelection")){
+    			String a = pHash.getHash(sbA.target);
+    			int[] rgbA = pHash.getRGB(a);
+    			
+    			rgbAll[0] += rgbA[0];
+    			rgbAll[1] += rgbA[1];
+    			rgbAll[2] += rgbA[2];
+
+    			++counter;    			
+			}
+		}
+
+		rgbAll[0] = rgbAll[0]/counter;
+		rgbAll[1] = rgbAll[1]/counter;
+		rgbAll[2] = rgbAll[2]/counter;
+
+		System.out.println("Average RGB: " + rgbAll[0] + "," + rgbAll[1] + "," +  rgbAll[2]);
+		
+        System.out.println("Init: " + init + " ms");
+        System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
+        
+        average = (System.currentTimeMillis() - start)/(float)counter;
+        System.out.println("Total scan: " + counter);
+        System.out.println("Average: " +  average + " ms");
 	}
 	
 	public static void testGameModes(){

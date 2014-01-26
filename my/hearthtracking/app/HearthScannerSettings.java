@@ -278,39 +278,39 @@ public class HearthScannerSettings {
 		);
 		
 		list.add(
-			new Scanbox("deck-selection-1.png", 	"deckSelection",	"1", 	127, 332, 80, 100)
+			new Scanbox("deck-selection-1.png", 	"deckSelection",	"1", 	127, 332, 80, 23).matchColor(83,104,118)
 		);
 		
 		list.add(
-			new Scanbox("deck-selection-2.png", 	"deckSelection",	"2", 	368, 332, 80, 100)
+			new Scanbox("deck-selection-2.png", 	"deckSelection",	"2", 	368, 332, 80, 23).matchColor(83,104,118)
 		);
 		
 		list.add(
-			new Scanbox("deck-selection-3.png", 	"deckSelection",	"3", 	608, 332, 80, 100)
+			new Scanbox("deck-selection-3.png", 	"deckSelection",	"3", 	608, 332, 80, 23).matchColor(83,104,118)
 		);
 		
 		list.add(
-			new Scanbox("deck-selection-4.png", 	"deckSelection",	"4", 	127, 555, 80, 100)
+			new Scanbox("deck-selection-4.png", 	"deckSelection",	"4", 	127, 555, 80, 23).matchColor(83,104,118)
 		);
 			
 		list.add(
-			new Scanbox("deck-selection-5.png", 	"deckSelection",	"5", 	368, 555, 80, 100)
+			new Scanbox("deck-selection-5.png", 	"deckSelection",	"5", 	368, 555, 80, 23).matchColor(83,104,118)
 		);
 			
 		list.add(
-			new Scanbox("deck-selection-6.png", 	"deckSelection",	"6", 	608, 555, 80, 100)
+			new Scanbox("deck-selection-6.png", 	"deckSelection",	"6", 	608, 555, 80, 23).matchColor(83,104,118)
 		);
 		
 		list.add(
-			new Scanbox("deck-selection-7.png", 	"deckSelection",	"7", 	127, 779, 80, 100)
+			new Scanbox("deck-selection-7.png", 	"deckSelection",	"7", 	127, 779, 80, 23).matchColor(83,104,118)
 		);
 			
 		list.add(
-			new Scanbox("deck-selection-8.png", 	"deckSelection",	"8", 	368, 779, 80, 100)
+			new Scanbox("deck-selection-8.png", 	"deckSelection",	"8", 	368, 779, 80, 23).matchColor(83,104,118)
 		);
 			
 		list.add(
-			new Scanbox("deck-selection-9.png", 	"deckSelection",	"9", 	608, 779, 80, 100)
+			new Scanbox("deck-selection-9.png", 	"deckSelection",	"9", 	608, 779, 80, 23).matchColor(83,104,118)
 		);
 	}
 
