@@ -118,7 +118,7 @@ public class HearthUI {
 	private HearthSetting setting = MainLoader.setting;
 	private HearthGameLangList gameLanguages = MainLoader.gameLanguages;
 	private HearthResolutionsList gameResolutions = MainLoader.gameResolutions;
-	private HearthDecks decks = MainLoader.decks;
+	private HearthDecks decks = HearthDecks.getInstance();
 	private HearthHeroesList heroesList = MainLoader.heroesList;
 	private HearthULangsList uiLangsList = MainLoader.uiLangsList;
 	
@@ -2066,7 +2066,7 @@ public class HearthUI {
 		});
 		
 		switch(setting.scanInterval){
-			case 0:
+			case 100:
 			btnScanSpeed[3].setSelection(true);
 			break;
 		
@@ -2076,9 +2076,10 @@ public class HearthUI {
 			case 750:
 				btnScanSpeed[2].setSelection(true);
 				break;
+	
 			case 500:
 			default:
-				btnScanSpeed[1].setSelection(true);
+				btnScanSpeed[0].setSelection(true);
 				break;
 		}
 		

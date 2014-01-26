@@ -255,7 +255,7 @@ public class HearthScanner{
  				threadRunning = true;
  				
  				while(!shutdown){
- 					checkTableSizes();
+ 					//checkTableSizes();
  					process();
  				}
  				
@@ -388,6 +388,7 @@ public class HearthScanner{
 				
 				if(( scale(sb.xOffset) + scale(sb.width)) > screen.getWidth() || ( scale(sb.yOffset) + scale(sb.height)) > screen.getHeight()){
 					System.out.println("Something went horribly wrong! Trying to crop a larger area than the source image" );
+					continue;
 				}
 				
 				//crop the corresponding part from game screen

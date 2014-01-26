@@ -34,65 +34,21 @@ public class HearthScannerSettings {
 		);
 
 		list.add(
-			new Scanbox("go-first.png",			"coin", 		"first",		1060, 485, 90, 90)
+			new Scanbox("coin-0.png",			"coin", 		"first",		1060, 485, 90, 90)
 		);
 
 		list.add(
-			new Scanbox("go-second.png",		"coin", 		"second",		1060, 485, 90, 90)
+			new Scanbox("coin-1.png",			"coin", 		"second",		1060, 485, 90, 90)
 		);
 
 		list.add(
-			new Scanbox("victory.png",			"gameResult",		"victory",		491, 524, 60, 60)
-		);
-
-				list.add(
-					new Scanbox("victory.png",			"gameResult",		"victory",		496, 519, 60, 60)
-				);
-
-				list.add(
-					new Scanbox("victory.png",			"gameResult",		"victory",		501, 514, 60, 60)
-				);
-
-				list.add(
-					new Scanbox("victory.png",			"gameResult",		"victory",		506, 509, 60, 60)
-				);
-
-				list.add(
-					new Scanbox("victory.png",			"gameResult",		"victory",		511, 504, 60, 60)
-				);
-				
-		list.add(
-			new Scanbox("victory.png",			"gameResult",		"victory",		519, 488, 60, 60)
+			new Scanbox("coin-2.png",			"coin", 		"second",		880, 1000, 50, 50)
 		);
 
 		list.add(
-			new Scanbox("defeat.png",			"gameResult",		"defeat",		468, 568, 60, 60)
+			new Scanbox("coin-3.png",			"coin", 		"second",		794, 967, 50, 50)
 		);
 		
-				list.add(
-					new Scanbox("defeat.png",			"gameResult",		"defeat",		471, 565, 60, 60)
-				);
-				
-				list.add(
-					new Scanbox("defeat.png",			"gameResult",		"defeat",		474, 562, 60, 60)
-				);
-					
-				list.add(
-					new Scanbox("defeat.png",			"gameResult",		"defeat",		477, 559, 60, 60)
-				);
-				
-				list.add(
-					new Scanbox("defeat.png",			"gameResult",		"defeat",		480, 556, 60, 60)
-				);
-				
-				list.add(
-					new Scanbox("defeat.png",			"gameResult",		"defeat",		483, 553, 60, 60)
-				);
-		
-		list.add(
-			new Scanbox("defeat.png",			"gameResult",		"defeat",		486, 550, 60, 60)
-		);
-
 		list.add(
 			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"3",	608, 534, 64, 56)
 		);
@@ -105,17 +61,17 @@ public class HearthScannerSettings {
 			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"1",	424, 534, 64, 56)
 		);
 		
-		list.add(
-			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"3",	608, 534, 64, 59)
-		);
+		// list.add(
+		// 	new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"3",	608, 534, 64, 59)
+		// );
 		
-		list.add(
-			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"2",	514, 534, 64, 59)
-		);
+		// list.add(
+		// 	new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"2",	514, 534, 64, 59)
+		// );
 		
-		list.add(
-			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"1",	424, 534, 64, 59)
-		);
+		// list.add(
+		// 	new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"1",	424, 534, 64, 59)
+		// );
 	
 		list.add(
 			new Scanbox("0.png",	"arenaWins",	"0", 347, 236, 100, 100).setScore(0.1f).resolveConflict()
@@ -278,39 +234,47 @@ public class HearthScannerSettings {
 		);
 		
 		list.add(
-			new Scanbox("deck-selection-1.png", 	"deckSelection",	"1", 	127, 332, 80, 23).matchColor(83,104,118)
+			new Scanbox("deck-selection-0.png", 	"deckSelection",	"0", 	127, 332, 80, 23).matchColor(83,104,118)
 		);
 		
 		list.add(
-			new Scanbox("deck-selection-2.png", 	"deckSelection",	"2", 	368, 332, 80, 23).matchColor(83,104,118)
+			new Scanbox("deck-selection-1.png", 	"deckSelection",	"1", 	368, 332, 80, 23).matchColor(83,104,118)
 		);
 		
 		list.add(
-			new Scanbox("deck-selection-3.png", 	"deckSelection",	"3", 	608, 332, 80, 23).matchColor(83,104,118)
+			new Scanbox("deck-selection-2.png", 	"deckSelection",	"2", 	608, 332, 80, 23).matchColor(83,104,118)
 		);
 		
 		list.add(
-			new Scanbox("deck-selection-4.png", 	"deckSelection",	"4", 	127, 555, 80, 23).matchColor(83,104,118)
+			new Scanbox("deck-selection-3.png", 	"deckSelection",	"3", 	127, 555, 80, 23).matchColor(83,104,118)
 		);
 			
 		list.add(
-			new Scanbox("deck-selection-5.png", 	"deckSelection",	"5", 	368, 555, 80, 23).matchColor(83,104,118)
+			new Scanbox("deck-selection-4.png", 	"deckSelection",	"4", 	368, 555, 80, 23).matchColor(83,104,118)
 		);
 			
 		list.add(
-			new Scanbox("deck-selection-6.png", 	"deckSelection",	"6", 	608, 555, 80, 23).matchColor(83,104,118)
+			new Scanbox("deck-selection-5.png", 	"deckSelection",	"5", 	608, 555, 80, 23).matchColor(83,104,118)
 		);
 		
 		list.add(
-			new Scanbox("deck-selection-7.png", 	"deckSelection",	"7", 	127, 779, 80, 23).matchColor(83,104,118)
+			new Scanbox("deck-selection-6.png", 	"deckSelection",	"6", 	127, 779, 80, 23).matchColor(83,104,118)
 		);
 			
 		list.add(
-			new Scanbox("deck-selection-8.png", 	"deckSelection",	"8", 	368, 779, 80, 23).matchColor(83,104,118)
+			new Scanbox("deck-selection-7.png", 	"deckSelection",	"7", 	368, 779, 80, 23).matchColor(83,104,118)
 		);
 			
 		list.add(
-			new Scanbox("deck-selection-9.png", 	"deckSelection",	"9", 	608, 779, 80, 23).matchColor(83,104,118)
+			new Scanbox("deck-selection-8.png", 	"deckSelection",	"8", 	608, 779, 80, 23).matchColor(83,104,118)
+		);
+
+		list.add(
+			new Scanbox("defeat-me.png",		"gameResult",	"defeat",		549, 782, 120, 120)
+		);
+
+		list.add(
+			new Scanbox("defeat-opp.png",		"gameResult",	"victory",		558, 155, 120, 120)
 		);
 	}
 

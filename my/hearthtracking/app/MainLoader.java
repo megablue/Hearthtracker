@@ -155,6 +155,9 @@ public class MainLoader {
 		if(decks == null){
 			decks = new HearthDecks();
 			config.save(decks, HearthFilesNameManager.decksFile);
+		} else {
+			//register the unserialized instance
+			decks.setInstance(decks);
 		}
 		
 		if(heroesList == null){

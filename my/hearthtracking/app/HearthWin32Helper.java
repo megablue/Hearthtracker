@@ -38,10 +38,13 @@ public class HearthWin32Helper {
 	}
 
 	public static int[] getRect(String className, String windowName) throws WindowNotFoundException, GetWindowRectException {
-		HWND hwnd = new HWND(new Pointer(User32.INSTANCE.FindWindow(className, windowName)));
-		if (hwnd == null) {
+		int handle = User32.INSTANCE.FindWindow(className, windowName);
+		
+		if (handle == 0) {
 			throw new WindowNotFoundException("", windowName);
 		}
+		
+		HWND hwnd = new HWND(new Pointer(handle));
 
 		int[] cRect = {0, 0, 0, 0};
 		int[] point1 = {0, 0}; 
@@ -59,13 +62,8 @@ public class HearthWin32Helper {
 		point2[1] = cRect[3];
       
 		//calculate the absolute position of the client area (exclude the window borders and title bar)
-		if(User32.INSTANCE.ClientToScreen(hwnd, point1)){
-	  
-		}
-      
-		if(User32.INSTANCE.ClientToScreen(hwnd, point2)){
-			
-		}
+		User32.INSTANCE.ClientToScreen(hwnd, point1);
+		User32.INSTANCE.ClientToScreen(hwnd, point2);
 
 		cRect[0] = point1[0]; 
 		cRect[1] = point1[1];

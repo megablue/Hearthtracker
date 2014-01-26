@@ -32,6 +32,7 @@ public class HearthConfigurator {
 		
 		xstream.omitField(HearthScannerSettings.Scanbox.class, "target");
 		xstream.omitField(HearthScannerSettings.Scanbox.class, "unScaledTarget");
+		xstream.omitField(HearthDecks.class, "instance");
 	}
 	
 	public <t> Object load(String path){

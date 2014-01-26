@@ -10,7 +10,7 @@ public class HearthGenerator {
 
 	public static void main(String[] args) {
 		HearthScannerSettings settings = new HearthScannerSettings();
-		String targetScene = "deckSelection";
+		String targetScene = "gameResult";
 		
 		for(Scanbox sb : settings.list){
 			
@@ -30,7 +30,7 @@ public class HearthGenerator {
 				+ ", size: " + sb.width + "x" + sb.height 
 		);
 		
-		String file = "./sample-images/" + sb.scene + "/" + sb.identifier + ".png";
+		String file = "./sample-images/" + sb.scene + "/" + sb.imgfile;
 		
 		System.out.println("File: " + file);
 		
