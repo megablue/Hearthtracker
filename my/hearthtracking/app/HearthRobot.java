@@ -36,9 +36,9 @@ public class HearthRobot {
 		if(HearthHelper.getOSName().equals("win")){
 			HWND handle = hwnd != 0 ? new HWND(new Pointer(hwnd)) : null;
 			
-			if( handle!= null && isAeroEnabled() ){
-				return _captureAero(handle, bounds);
-			}
+//			if( handle!= null && isAeroEnabled() ){
+//				return _captureAero(handle, bounds);
+//			}
 			
 			return _capture(handle, bounds);
 		}
@@ -56,7 +56,7 @@ public class HearthRobot {
 		return null;
 	}
 	
-	public static boolean isAeroEnabled(){
+	public static boolean isAeroEnabled(){		
 	    if( HearthHelper.getOSName().equals("win") && DWM == null){
 	    	try{
 	    		DWM = NativeLibrary.getInstance("dwmapi");
