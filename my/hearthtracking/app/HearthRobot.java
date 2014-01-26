@@ -35,12 +35,15 @@ public class HearthRobot {
 	public static BufferedImage capture(int hwnd, Rectangle bounds) {		
 		if(HearthHelper.getOSName().equals("win")){
 			HWND handle = hwnd != 0 ? new HWND(new Pointer(hwnd)) : null;
+			BufferedImage viewport = _capture(handle, bounds);
 			
-//			if( handle!= null && isAeroEnabled() ){
-//				return _captureAero(handle, bounds);
-//			}
+			//if failed with bitblt
+			if(viewport == null){
+				//try Aero
+				viewport = _captureAero(handle, bounds);
+			}
 			
-			return _capture(handle, bounds);
+			return viewport;
 		}
 		
 		if(robot == null){
@@ -137,8 +140,6 @@ public class HearthRobot {
                 GDI.CreateCompatibleBitmap(windowDC,
                 bounds.width, bounds.height);
        
-        //boolean dwmEnabled = isAeroEnabled();
-
         try {
             WinDef.HDC blitDC = GDI.CreateCompatibleDC(windowDC);
             try {
