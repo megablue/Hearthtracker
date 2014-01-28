@@ -35,7 +35,6 @@ public class HearthScannerManager {
 	public static final float BASE_RESOLUTION_HEIGHT = 1080f;
 	private static final long FPS_LIMIT = 24;
 	private static final float FPS_RESOLUTION = 60; //keep approximately 60 seconds of frames
-	private static final long GAME_SCAN_INTERVAL = 10000;
 
 	private static final long DELAY_ARENA_SCORE = 3000;
 	private static final long DELAY_GAME_RESULT = 1000;
@@ -80,8 +79,9 @@ public class HearthScannerManager {
 	private int arenaWins = -1;
 	private int arenaLosses = -1;
 	
-	private int myHero = -1;
-	private int oppHero = -1;
+	private int arenaHero	= -1;
+	private int myHero 		= -1;
+	private int oppHero		= -1;
 	
 	private int selectedDeck = -1;
 
@@ -750,12 +750,12 @@ public class HearthScannerManager {
 		if( winsUpdated || lossesUpdated || (annoucementExpired && arenaWins != -1 && arenaLosses != -1)  ){
 						
 			if(confirmedWins > -1 && confirmedLosses > -1){
-				String arenaHero = heroesList.getHeroLabel(myHero);
+				String hero = heroesList.getHeroLabel(arenaHero);
 				
 				addNotification(
 					new HearthReaderNotification(
 						uiLang.t("Arena score"), 
-						uiLang.t("%d - %d as %s", confirmedWins, confirmedLosses, arenaHero)
+						uiLang.t("%d - %d as %s", confirmedWins, confirmedLosses, hero)
 					)
 				);
 			}
@@ -912,6 +912,7 @@ public class HearthScannerManager {
 		
 		if(sr.scene.equals("arenaHero") && myHero != detectedHero){
 			myHero = detectedHero;
+			arenaHero = detectedHero;
 			isDirty = true;
 			System.out.println("Found my hero: " + sr.result);
 		} else if(sr.scene.equals("bottomHero") || sr.scene.equals("topHero")){
@@ -968,6 +969,11 @@ public class HearthScannerManager {
 		if(found){
 			String oldMode = HearthHelper.gameModeToString(gameMode);
 			String newMode = HearthHelper.gameModeToString(detectedMode);
+			
+			if(gameMode == ARENAMODE && detectedMode != ARENAMODE){
+				flushScanResults("arenaWins");
+				flushScanResults("arenaLose");
+			}
 			
 			isDirty = true;
 			inGameMode = 0;
@@ -1072,11 +1078,18 @@ public class HearthScannerManager {
 	private void concludeArena(){
 		System.out.println("Saving arena result...");
 		try {
-			tracker.saveArenaResult(myHero, arenaWins, arenaLosses, System.currentTimeMillis(), false);
+			tracker.saveArenaResult(arenaHero, arenaWins, arenaLosses, System.currentTimeMillis(), false);
 		} catch (SQLException e) { e.printStackTrace(); }
 		System.out.println("Done saving arena result...");
 		isDirty = true;
 		this.resetArenaStatus();
+	}
+
+	private void resetArenaStatus(){
+		this.arenaWins		= -1;
+		this.arenaLosses 	= -1;
+		this.arenaHero 		= -1;
+		this.gameMode 		= UNKNOWNMODE;
 	}
 	
 	private void flushScanResults(String scene){
@@ -1089,12 +1102,6 @@ public class HearthScannerManager {
 				it.remove();
 			}
 		}
-	}
-
-	private void resetArenaStatus(){
-		this.arenaLosses = -1;
-		this.myHero = -1;
-		this.gameMode = UNKNOWNMODE;
 	}
 	
 	private String sanitizeGameLang(String gLang){
