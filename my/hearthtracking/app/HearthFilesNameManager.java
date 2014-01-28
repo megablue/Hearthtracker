@@ -23,7 +23,7 @@ public class HearthFilesNameManager {
 	static String updateLog 		= workingDir 	+ configsPath 	+ "update.xml";
 	
 	//log
-	static String logFile 			= workingDir 	+ logsPath 		+ "%s.log";
+	static String logFile 			= workingDir 	+ logsPath 		+ "%s.html";
 
 	//db
 	static String dbFile 			= workingDir	+ dataPath		+ "database.xml";

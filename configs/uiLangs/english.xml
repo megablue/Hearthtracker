@@ -85,16 +85,20 @@
       <string>Result</string>
     </entry>
     <entry>
+      <string>Paladin</string>
+      <string>Paladin</string>
+    </entry>
+    <entry>
+      <string>Experimental build %s</string>
+      <string>Experimental build %s</string>
+    </entry>
+    <entry>
       <string>Scanning again!</string>
       <string>Scanning again!</string>
     </entry>
     <entry>
       <string>&amp;Confirm</string>
       <string>&amp;Confirm</string>
-    </entry>
-    <entry>
-      <string>Paladin</string>
-      <string>Paladin</string>
     </entry>
     <entry>
       <string>EU</string>
@@ -227,6 +231,10 @@
     <entry>
       <string>moments ago</string>
       <string>moments ago</string>
+    </entry>
+    <entry>
+      <string>%s vs %s</string>
+      <string>%s vs %s</string>
     </entry>
     <entry>
       <string>Vs</string>
@@ -539,6 +547,10 @@
     <entry>
       <string>Slot #5</string>
       <string>Slot #5</string>
+    </entry>
+    <entry>
+      <string>Match detected</string>
+      <string>Match detected</string>
     </entry>
     <entry>
       <string>HearthTracker Upgrade Confirmation</string>

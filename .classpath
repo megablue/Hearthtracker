@@ -20,5 +20,6 @@
 	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/EJML.jar"/>
 	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/GeoRegression.jar"/>
 	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/jcodec-0.1.5.jar"/>
+	<classpathentry kind="lib" path="lib/concurrentlinkedhashmap-lru-1.4.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

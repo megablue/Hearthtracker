@@ -50,7 +50,11 @@ public class HearthScannerSettings {
 		);
 		
 		list.add(
-			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"3",	608, 534, 64, 56)
+			new Scanbox("lose-checkbox-unchecked.png", 	"arenaLose", 	"0",	424, 534, 64, 59).matchColor(193,162,108)
+		);
+		
+		list.add(
+			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"1",	424, 534, 64, 56)
 		);
 		
 		list.add(
@@ -58,71 +62,59 @@ public class HearthScannerSettings {
 		);
 		
 		list.add(
-			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"1",	424, 534, 64, 56)
+			new Scanbox("lose-checkbox-checked.png", 	"arenaLose", 	"3",	608, 534, 64, 56)
 		);
-		
-		// list.add(
-		// 	new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"3",	608, 534, 64, 59)
-		// );
-		
-		// list.add(
-		// 	new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"2",	514, 534, 64, 59)
-		// );
-		
-		// list.add(
-		// 	new Scanbox("lose-checkbox-unchecked.png", 	"arenaLive", 	"1",	424, 534, 64, 59)
-		// );
 	
 		list.add(
-			new Scanbox("0.png",	"arenaWins",	"0", 347, 236, 100, 100).setScore(0.1f).resolveConflict()
+			new Scanbox("0.png",	"arenaWins",	"0", 347, 236, 100, 100).setScore(0.15f).matchColor(143, 96, 67).resolveConflict()
 		);
 		
 		list.add(
-			new Scanbox("1.png",	"arenaWins",	"1", 347, 236, 100, 100).setScore(0.1f).resolveConflict()
+			new Scanbox("1.png",	"arenaWins",	"1", 347, 236, 100, 100).setScore(0.1f).matchColor(123, 88, 69).setColorScore(0.92f).resolveConflict()
 		);
 		
 		list.add(
-			new Scanbox("2.png",	"arenaWins",	"2", 347, 236, 100, 100).setScore(0.1f).resolveConflict()
+			new Scanbox("2.png",	"arenaWins",	"2", 347, 236, 100, 100).setScore(0.1f).matchColor(117, 84, 48).setColorScore(0.91f).resolveConflict()
 		);
 		
 		list.add(
-			new Scanbox("3.png",	"arenaWins",	"3", 347, 236, 100, 100).setScore(0.1f)
+			new Scanbox("3.png",	"arenaWins",	"3", 347, 236, 100, 100).setScore(0.1f).matchColor(99, 72, 58)
 		);
 
 		list.add(
-			new Scanbox("4.png",	"arenaWins",	"4", 347, 236, 100, 100).setScore(0.1f)
+			new Scanbox("4.png",	"arenaWins",	"4", 347, 236, 100, 100).setScore(0.1f).matchColor(127, 136, 141)
 		);
 		
 		list.add(
-			new Scanbox("5.png",	"arenaWins",	"5", 347, 236, 100, 100).setScore(0.1f)
+			new Scanbox("5.png",	"arenaWins",	"5", 347, 236, 100, 100).setScore(0.1f).matchColor(161, 137, 67)
 		);
 		
 		list.add(
-			new Scanbox("6.png",	"arenaWins",	"6", 347, 236, 100, 100).setScore(0.1f)
+			new Scanbox("6.png",	"arenaWins",	"6", 347, 236, 100, 100).setScore(0.1f).matchColor(119, 119, 126)
 		);
 		
 		list.add(
-			new Scanbox("7.png",	"arenaWins",	"7", 347, 236, 100, 100).setScore(0.1f)
+			new Scanbox("7.png",	"arenaWins",	"7", 347, 236, 100, 100).setScore(0.1f).matchColor(95, 109, 115)
 		);
 		
 		list.add(
-			new Scanbox("8.png",	"arenaWins",	"8", 347, 236, 100, 100).setScore(0.1f)
+			new Scanbox("8.png",	"arenaWins",	"8", 347, 236, 100, 100).setScore(0.1f).matchColor(149, 124, 75)
 		);
 		
 		list.add(
-			new Scanbox("9.png",	"arenaWins",	"9", 347, 236, 100, 100).setScore(0.1f)
+			new Scanbox("9.png",	"arenaWins",	"9", 347, 236, 100, 100).setScore(0.1f).matchColor(155, 127, 80)
 		);
 
 		list.add(
-			new Scanbox("10.png",	"arenaWins",	"10", 347, 236, 100, 100).setScore(0.1f)
+			new Scanbox("10.png",	"arenaWins",	"10", 347, 236, 100, 100).setScore(0.1f).matchColor(61, 84, 92)
 		);
 		
 		list.add(
-			new Scanbox("11.png",	"arenaWins",	"11", 347, 236, 100, 100).setScore(0.1f)
+			new Scanbox("11.png",	"arenaWins",	"11", 347, 236, 100, 100).setScore(0.1f).matchColor(163, 109, 66)
 		);
 		
 		list.add(
-			new Scanbox("12.png",	"arenaWins",	"12", 347, 236, 100, 100).setScore(0.1f)
+			new Scanbox("12.png",	"arenaWins",	"12", 347, 236, 100, 100).setScore(0.1f).matchColor(177, 169, 147)
 		);
 		
 		list.add(
@@ -270,11 +262,11 @@ public class HearthScannerSettings {
 		);
 
 		list.add(
-			new Scanbox("defeat-me.png",		"gameResult",	"defeat",		549, 782, 120, 120)
+			new Scanbox("defeat-bottom.png",		"gameResult",	"bottomDefeated",	549, 782, 120, 120)
 		);
 
 		list.add(
-			new Scanbox("defeat-opp.png",		"gameResult",	"victory",		558, 155, 120, 120)
+			new Scanbox("defeat-top.png",			"gameResult",	"topDefeated",		558, 155, 120, 120)
 		);
 	}
 
@@ -299,6 +291,8 @@ public class HearthScannerSettings {
 		boolean resolveConflict = false;
 		
 		boolean matchColor = false;
+
+		float colorScore = 0.9f;
 		
 		int red = 0;
 		int green = 0;
@@ -335,6 +329,11 @@ public class HearthScannerSettings {
 			this.red = r;
 			this.green = g;
 			this.blue = b;
+			return this;
+		}
+
+		public Scanbox setColorScore(float s){
+			this.colorScore = s;
 			return this;
 		}
 

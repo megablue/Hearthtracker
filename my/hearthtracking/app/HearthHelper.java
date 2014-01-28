@@ -17,15 +17,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.Calendar;
-import java.util.logging.FileHandler;  
-import java.util.logging.Logger;  
-import java.util.logging.SimpleFormatter;
-import java.util.logging.Level;
-
 import javax.imageio.ImageIO;
 
 public class HearthHelper {
+	private static HearthLogger logger = HearthLogger.getInstance();
 
 	public static boolean isDevelopmentEnvironment() {
 	    boolean isEclipse = true;
@@ -216,13 +211,17 @@ public class HearthHelper {
 
 		// if the directory does not exist, create it
 		if (!theDir.exists()) {
-			System.out.println("creating directory: " + folder);
 			boolean result = theDir.mkdir();  
 		
-			if(result) {    
-				System.out.println("DIR created");  
+			if(!result) {    
+				logger.severe("Failed to create folder: " + folder);
 			}
 		}
+	}
+	
+	public static String extractFolderPath(String path)
+	{
+		return path.substring(0,path.lastIndexOf(File.separator));
 	}
 	
 	public static boolean fileExists(String file)
@@ -293,32 +292,6 @@ public class HearthHelper {
 		}
 		
 		return result;
-	}
-	
-	public static Logger getLogger(Level loglevel){
-        Logger logger = Logger.getLogger("HearthTrackerLog");  
-        FileHandler fh;
-        int limit = 1000000; 
-        int rotate = 10;
-        Calendar cal = Calendar.getInstance();
-        
-        String fileName = cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DATE) + "-" + cal.get(Calendar.YEAR);
-        String logfile = String.format(HearthFilesNameManager.logFile, fileName);
-        
-        try {
-            // This block configure the logger with handler and formatter  
-            fh = new FileHandler(logfile, limit, rotate, true);
-            logger.addHandler(fh);  
-            logger.setLevel(loglevel);  
-            SimpleFormatter formatter = new SimpleFormatter();  
-            fh.setFormatter(formatter);     
-        } catch (SecurityException e) {  
-            e.printStackTrace();  
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }
-        
-        return logger;
 	}
 	
 	public static void openLink(String link){

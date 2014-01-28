@@ -12,10 +12,11 @@ import java.util.List;
 
 public class MainLoader {
 	public static int[] version = {1, 1, 8};
-	public static int experimental = 0;
+	public static int experimental = 1;
 	private final static int syncInterval =  1 * 60 * 1000;
+
+	private static HearthLogger logger = HearthLogger.getInstance();
 	
-	//static Logger logger = HearthHelper.getLogger(Level.ALL);
 	public static HearthConfigurator config = new HearthConfigurator();
 	public static HearthSetting setting;
 	public static HearthDecks decks;
@@ -23,6 +24,7 @@ public class MainLoader {
 	public static HearthGameLangList gameLanguages;
 	public static HearthResolutionsList gameResolutions;
 	public static HearthULangsList uiLangsList;
+	public static HearthDatabase dbSetting;
 	
 	public static HearthTracker tracker;
 	public static HearthScannerManager scannerManager;
@@ -69,32 +71,17 @@ public class MainLoader {
 	}
 	
 	private static void startup(){
+		logger.info("Starting up.");
+		
 		File swtJar = new File(HearthHelper.getArchFilename("lib/swt"));
 		HearthHelper.addJarToClasspath(swtJar);
 		
+		logger.info("SWT dependcies loaded!");
+		
 		init();
-		
-		HearthUpdater updater = new HearthUpdater();
+		updaterUI();
+		dbUpdaterUI();
 
-		if(updater.lastCheckExpired()){
-			updater.check();
-						
-			if(updater.hasUpdate()){
-				new HearthUpdateUI().open();
-			}		
-		}
-		
-		HearthDatabase dbSetting = (HearthDatabase) config.load(HearthFilesNameManager.dbFile);
-		
-		if(dbSetting == null){
-			dbSetting = new HearthDatabase();
-			config.save(dbSetting, HearthFilesNameManager.dbFile);
-		}
-		
-		if(dbSetting.serverSelected == 0){
-			new HearthTrackerUpgradeUI().open();
-		}
-		
 		processNotification();
 		startSync();
 		startScannerManager();
@@ -107,12 +94,36 @@ public class MainLoader {
 		exit();
 	}
 	
+	private static void updaterUI(){
+		HearthUpdater updater = new HearthUpdater();
+
+		if(updater.lastCheckExpired()){
+			updater.check();
+						
+			if(updater.hasUpdate()){
+				logger.info("Update detected! version: " + updater.getUpdateVersionString());
+				new HearthUpdateUI().open();
+			}		
+		}
+	}
+	
+	private static void dbUpdaterUI(){
+		if(dbSetting.serverSelected == 0){
+			logger.info("Game server not selected, launching UI for that!");
+			new HearthTrackerUpgradeUI().open();
+		}
+	}
+	
 	private static void exit(){
+		logger.info("Shutting down...");
+		
 		HearthSync sync = new HearthSync();
 		
 		if(sync.isValidKeyFormat() && sync.checkAccessKey()){
+			logger.info("Syncronizing records with server.");
 			sync.syncArenaBatch();
 			sync.syncMatchBatch();
+			logger.info("Done sync with server.");
 		}
 		
 		shutdown = true;
@@ -120,6 +131,7 @@ public class MainLoader {
 		while(threadRunning){
 			try {
 				Thread.sleep(100);
+				logger.finest("Waiting for running threads to shutdown...");
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -129,10 +141,13 @@ public class MainLoader {
 		lang.dispose();
 		tracker.closeDB();
 		
+		logger.info("Bye Bye!");
 		System.exit(0);
 	}
 	
 	private synchronized static void init(){
+		logger.info("Loading xml files...");
+		
 		HearthUpdaterLog updateLog = (HearthUpdaterLog) config.load(HearthFilesNameManager.updaterLog);
 		
 		if(updateLog == null){
@@ -146,15 +161,18 @@ public class MainLoader {
 		gameLanguages = 	(HearthGameLangList) 	config.load(HearthFilesNameManager.gameLangsFile);
 		gameResolutions = 	(HearthResolutionsList) config.load(HearthFilesNameManager.gameResFile);
 		uiLangsList = 		(HearthULangsList) 		config.load(HearthFilesNameManager.uiLangsListFile);
+		dbSetting = (HearthDatabase) config.load(HearthFilesNameManager.dbFile);
 		
 		if(setting == null){
 			setting = new HearthSetting();
 			config.save(setting, HearthFilesNameManager.settingFile);
+			logger.fine("Failed to load setting.xml, created a new one.");
 		}
 		
 		if(decks == null){
 			decks = new HearthDecks();
 			config.save(decks, HearthFilesNameManager.decksFile);
+			logger.fine("Failed to load decks.xml, created a new one.");
 		} else {
 			//register the unserialized instance
 			HearthDecks.setInstance(decks);
@@ -163,30 +181,41 @@ public class MainLoader {
 		if(heroesList == null){
 			heroesList = new HearthHeroesList();
 			config.save(heroesList, HearthFilesNameManager.heroesFile);
+			logger.fine("Failed to load heroes.xml, created a new one.");
 		}
 		
 		if(gameLanguages == null){
 			gameLanguages = new HearthGameLangList();
 			config.save(gameLanguages, HearthFilesNameManager.gameLangsFile);
+			logger.fine("Failed to load gameLangs.xml, created a new one.");
 		}
 		
 		if(gameResolutions == null){
 			gameResolutions = new HearthResolutionsList();
 			config.save(gameResolutions, HearthFilesNameManager.gameResFile);
+			logger.fine("Failed to load gameResolutions.xml, created a new one.");
 		}
 		
 		if(uiLangsList == null){
 			uiLangsList = new HearthULangsList();
 			config.save(uiLangsList, HearthFilesNameManager.uiLangsListFile);
+			logger.fine("Failed to load uiLangs.xml, created a new one.");
 		}
 
 		if(setting.upgrade()){
 			config.save(setting, HearthFilesNameManager.settingFile);
+			logger.fine("Settings upgraded!");
 		}
 		
+		if(dbSetting == null){
+			dbSetting = new HearthDatabase();
+			config.save(dbSetting, HearthFilesNameManager.dbFile);
+		}
+	
 		lang = HearthLanguageManager.getInstance();
-		
 		lang.loadLang(setting.uiLang);
+		
+		logger.info("Done loading xml files.");
 	}
 	
 	private static void startScannerManager(){

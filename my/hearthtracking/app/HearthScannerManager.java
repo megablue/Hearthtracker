@@ -8,12 +8,14 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-import my.hearthtracking.app.HearthScanner.SceneResult;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 public class HearthScannerManager {
+	private HearthLogger logger = HearthLogger.getInstance();
+	
 	public static final int UNKNOWNMODE = -1;
 	public static final int MENUMODE = 0;
 	public static final int ARENAMODE = 1;
@@ -29,7 +31,16 @@ public class HearthScannerManager {
 	private static final long FPS_LIMIT = 24;
 	private static final float FPS_RESOLUTION = 60; //keep approximately 60 seconds of frames
 	private static final long GAME_SCAN_INTERVAL = 10000;
-	
+
+	private static final long DELAY_ARENA_SCORE = 3000;
+	private static final long DELAY_GAME_RESULT = 1000;
+	private static final long DELAY_GAME_HEROES = 1000;
+
+	private static final int GAME_RESULT_UNKNOWN 	= -1;
+	private static final int GAME_RESULT_DEFEAT 	= 0;
+	private static final int GAME_RESULT_VICTORY 	= 1;
+	private static final int GAME_RESULT_DRAW 		= 2;
+
 	private long scannerStarted = System.currentTimeMillis();
 
 	private boolean debugMode = false;
@@ -66,38 +77,31 @@ public class HearthScannerManager {
 	
 	//Game status related variables
 	private long lastArenaScoreReport = System.currentTimeMillis() - 60000;
-	private long lastArenaWin = System.currentTimeMillis();
-	private int exArenaWins = -1;
 	private int arenaWins = -1;
-	
-	private int exArenaLosses = -1;
 	private int arenaLosses = -1;
 	
 	private int myHero = -1;
 	private int oppHero = -1;
 	
 	private int selectedDeck = -1;
-	private int exSelectedDeck = -1;
-	
-	private int exMyHero = -1;
-	private int exOppHero = -1;
-	
-	private int victory = -1;
-	private int exVictory = -1;
+
+	private int gameResult = -1;
 	private int goFirst = -1;
-	private int exGoFirst = -1;
 
 	private int gameMode = UNKNOWNMODE;
-	private int exGameMode = UNKNOWNMODE;
+
+	private boolean gameJustEnded = false;
 	private int inGameMode = -1;
 	
 	private int timeslot = 250;
 	private long gameStartedTime = System.currentTimeMillis();
 	private long lastSaveAttempt = System.currentTimeMillis() - 60000;
-
+	
+	private List<HearthScanResult> scanResults = Collections.synchronizedList(new ArrayList<HearthScanResult>());
+	
 	public HearthScannerManager (HearthTracker t, int tslot, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
 		debugMode = HearthHelper.isDevelopmentEnvironment();
-		tracker = t;
+		tracker  = t;
 		gameResX = resX;
 		gameResY = resY;
 		gameLang = lang.toLowerCase();
@@ -367,7 +371,7 @@ public class HearthScannerManager {
 			totalFramesCounter -= (int) diffFrames;
 		}
 		
-		System.out.println("Average FPS: " + HearthHelper.formatNumber("0.00", average));
+		logger.finest("Average FPS: " + HearthHelper.formatNumber("0.00", average));
 			
 		return average;
 	}
@@ -466,9 +470,7 @@ public class HearthScannerManager {
 				scanner.subscribe("deckSelection");
 			}
 
-			//give the scanner 15 seconds 
-			//delay before trying to scan for game again
-			if(System.currentTimeMillis() - lastSaveAttempt > GAME_SCAN_INTERVAL){
+			if(!gameJustEnded){
 				scanner.subscribe("coin");
 				scanner.subscribe("myHero");
 				scanner.subscribe("oppHero");
@@ -503,58 +505,60 @@ public class HearthScannerManager {
 	}
 
 	private void processResults(){
-		List<SceneResult> results = scanner.getQueryResults();
+		List<HearthScanResult> results = scanner.getQueryResults();
 		
 		if(results ==  null){
 			return;
 		}
 		
-		for(SceneResult sr : results){
+		for(HearthScanResult sr : results){
 			System.out.println("SceneResult: " + sr.scene + ", result: " + sr.result);
 			
 			switch(sr.scene){
 				case "gameMode":
-					processGameMode(sr.result);
+					processGameMode(sr);
 				break;
 				
 				case "deckSelection":
-					processDeckSelection(sr.result);
+					processDeckSelection(sr);
 				break;
 				
 				case "coin":
-					processCoin(sr.result);
+					processCoin(sr);
 				break;
 
 				case "gameResult":
-					processGameResult(sr.result);
+					processGameResult(sr);
 				break;
 				
 				case "arenaWins":
-					processArenaWins(sr.result);
+					processArenaWins(sr);
 				break;
 				
 				case "arenaLose":
-					processArenaLose(sr.result);
+					processArenaLose(sr);
 				break;
 
 				case "arenaHero":
 				case "myHero":
 				case "oppHero":
-					processHero(sr.scene, sr.result);
+					processHero(sr);
 				break;
 			}
 		}
+		
+		processArenaScore();
+		processHeroBoxes();
 	}
 	
-	private void processDeckSelection(String result){
-		System.out.println("processDeckSelection(), result: " + result);
+	private void processDeckSelection(HearthScanResult sr){
+		System.out.println("processDeckSelection(), result: " + sr.result);
 
-		int selected = Integer.parseInt(result);
+		int selected = Integer.parseInt(sr.result);
 		
-		if(selected != this.exSelectedDeck){
+		if(selected != this.selectedDeck){
 			isDirty = true;
 			this.selectedDeck = selected;
-			this.exSelectedDeck = selected;
 
 			HearthDecks decks = HearthDecks.getInstance();
 			String deckName = decks.list[selectedDeck];
@@ -582,138 +586,294 @@ public class HearthScannerManager {
 			}
 		}
 	}
+	
+	private void processArenaWins(HearthScanResult sr){
+		System.out.println("processArenaWins(), result: " + sr.result);
 
-	private void processArenaWins(String result){
-		System.out.println("processArenaWins(), result: " + result);
-
-		int wins = Integer.parseInt(result);
-		boolean expired = false;
-		inGameMode = 0;
-
+		int wins = Integer.parseInt(sr.result);
+	
 		if(wins > ARENA_MAX_WINS){
-			System.out.println("Something went wrong! Arena wins of " 
+			logger.severe("Something went wrong! Arena wins of " 
 				+ wins + " detected. defined maximum is " + ARENA_MAX_WINS);
 		}
+		
+		sr.setExpiry(DELAY_ARENA_SCORE);
+		
+		synchronized(scanResults){
+			scanResults.add(sr);
+		}
+	}
+	
+	private void processArenaLose(HearthScanResult sr){
+		System.out.println("processArenaLose(), result: " + sr.result);
 
-		if(System.currentTimeMillis() - lastArenaWin > 500){
-			lastArenaWin = System.currentTimeMillis();
-			expired = true;
+		int losses = Integer.parseInt(sr.result);
+		inGameMode = 0;
+
+		if(losses > ARENA_MAX_LOSSES){
+			logger.severe("Something went wrong! Arena losses of " 
+				+ losses + " detected. defined maximum is " + ARENA_MAX_LOSSES);
 		}
 		
-		if( (expired && wins != exArenaWins) || (System.currentTimeMillis() - lastArenaScoreReport > 60000) ){
-			isDirty = true;
-			arenaWins = wins;
-			exArenaWins = wins;
-			String arenaHero = heroesList.getHeroLabel(myHero);
+		sr.setExpiry(DELAY_ARENA_SCORE);
+		
+		synchronized(scanResults){
+			scanResults.add(sr);
+		}
+	}
+	
+	private void processGameResult(HearthScanResult sr){
+		System.out.println("processGameResult(), result: " + sr.result);
 
-			if(arenaLosses > -1 && myHero > -1){
+		synchronized(scanResults){
+			sr.setExpiry(DELAY_GAME_RESULT);
+			scanResults.add(sr);
+		}
+	}
+	
+	private void processHeroBoxes(){
+		long currentTime 		= System.currentTimeMillis();
+		
+		boolean topHeroDetected = false;
+		boolean bottomHeroDetected = false;
+		
+		int topHero = -1;
+		int bottomHero = -1;
+		
+		boolean gameResultDetected = false;
+		boolean topDefeated 	= false;
+		boolean bottomDefeated 	= false;
+		
+		int detectedGameResult = GAME_RESULT_UNKNOWN;
+		
+		synchronized(scanResults){
+			Iterator <HearthScanResult>it = scanResults.iterator();
+			
+			while(it.hasNext()){
+				HearthScanResult sr = it.next();
+				
+				if(sr.scene.equals("gameResult") && sr.isExpired(currentTime)){
+					if(sr.result.equals("topDefeated")){
+						topDefeated = true;
+						gameResultDetected = true;
+					} else if(sr.result.equals("bottomDefeated")){
+						bottomDefeated = true;
+						gameResultDetected = true;
+					}
+					
+					//remove the expired
+					it.remove();
+				}
+				else
+				if(sr.scene.equals("myHero") && sr.isExpired(currentTime)){
+					bottomHero = heroesList.getHeroId(sr.result);
+					bottomHeroDetected = true;
+					//remove the expired
+					it.remove();
+				}
+				else
+				if(sr.scene.equals("oppHero") && sr.isExpired(currentTime)){
+					topHero = heroesList.getHeroId(sr.result);
+					topHeroDetected = true;
+					//remove the expired
+					it.remove();
+				}
+			}
+		}
+	
+		//if match heroes are detected
+		if(topHeroDetected && bottomHeroDetected && !gameJustEnded){	
+			if(bottomHero != myHero || topHero != oppHero){
 				addNotification(
-					new HearthReaderNotification(
-						uiLang.t("Arena score"), 
-						uiLang.t("%d - %d as %s", arenaWins, arenaLosses, arenaHero)
+					new HearthReaderNotification( 
+						uiLang.t("Match detected"), 
+						uiLang.t("%s vs %s",  heroesList.getHeroLabel(topHero), heroesList.getHeroLabel(bottomHero) )
 					)
 				);
-				
-				lastArenaScoreReport = System.currentTimeMillis();
+			}
+			
+			//update the game started time
+			gameStartedTime = System.currentTimeMillis();
+			myHero = bottomHero;
+			oppHero = topHero;
+			inGameMode = 1;
+		}
+		
+		//if game result is detected
+		else if(gameResultDetected && !gameJustEnded){
+			
+			if(topDefeated && bottomDefeated){
+				detectedGameResult = GAME_RESULT_DRAW;
+			} else if(topDefeated){
+				detectedGameResult = GAME_RESULT_VICTORY;
+			} else if(bottomDefeated){
+				detectedGameResult = GAME_RESULT_DEFEAT;
+			}
 
-				if(wins == ARENA_MAX_WINS || arenaLosses == ARENA_MAX_LOSSES){
-					concludeArena();
-				}
+			if(detectedGameResult != gameResult){
+				gameResult = detectedGameResult;
+				isDirty = true;
+				concludeGame();
+				gameJustEnded = true;
+				lastSaveAttempt = System.currentTimeMillis();
+				scanner.unsubscribe("coin");
+				scanner.unsubscribe("myHero");
+				scanner.unsubscribe("oppHero");
+				scanner.unsubscribe("gameResult");
 			}
 		}
 	}
 	
-	private void processArenaLose(String result){
-		System.out.println("processArenaLose(), result: " + result);
+	private void processArenaScore(){
+		long currentTime = System.currentTimeMillis();
 
-		int losses = Integer.parseInt(result);
-		inGameMode = 0;
-
-		if(losses > ARENA_MAX_LOSSES){
-			System.out.println("Something went wrong! Arena losses of " 
-				+ losses + " detected. defined maximum is " + ARENA_MAX_LOSSES);
-		}
+		//try to make sure both results are confirmed before we continues
+		int confirmedWins = processDelayedArenaScore("arenaWins", currentTime);
+		int confirmedLosses = processDelayedArenaScore("arenaLose", currentTime);
 		
-		if(losses != exArenaLosses && losses > exArenaLosses){
-			isDirty = true;
-			arenaLosses = losses;
-			exArenaLosses = losses;
-			String arenaHero = heroesList.getHeroLabel(myHero);
-			
-			if( (arenaWins > -1 && myHero > -1) ){
+		boolean winsUpdated = (confirmedWins > -1 && confirmedWins != arenaWins);
+		boolean lossesUpdated = (confirmedLosses > -1 && confirmedLosses != arenaLosses);
+		boolean annoucementExpired = System.currentTimeMillis() - lastArenaScoreReport > 60000;
+
+		//if the latest wins is different or last announcement time expired
+		if( winsUpdated || lossesUpdated || (annoucementExpired && arenaWins != -1 && arenaLosses != -1)  ){
+						
+			if(confirmedWins > -1 && confirmedLosses > -1){
+				String arenaHero = heroesList.getHeroLabel(myHero);
+				
 				addNotification(
 					new HearthReaderNotification(
 						uiLang.t("Arena score"), 
-						uiLang.t("%d - %d as %s", arenaWins, arenaLosses, arenaHero)
+						uiLang.t("%d - %d as %s", confirmedWins, confirmedLosses, arenaHero)
 					)
 				);
-				
-				lastArenaScoreReport = System.currentTimeMillis();
+			}
 
+			lastArenaScoreReport = System.currentTimeMillis();
+			
+			if(winsUpdated || lossesUpdated){
+				isDirty = true;
+				
+				arenaWins = confirmedWins;
+				arenaLosses = confirmedLosses;
+				
+				//if we reached the end of an arena session
 				if(arenaWins == ARENA_MAX_WINS || arenaLosses == ARENA_MAX_LOSSES){
 					concludeArena();
 				}
 			}
 		}
 	}
-
-	private void processGameResult(String result){
-		boolean found = false;
-		System.out.println("processGameResult(), result: " + result);
-
-		switch(result){
-			case "victory":
-				victory = 1;
-				found = true;
-			break;
-
-			case "defeat":
-				victory = 0;
-				found = true;
-			break;
-		}
-
-		if(found && exVictory != victory){
-			exVictory = victory;
-			isDirty = true;
-
-			if(!isGameTooShort()){
-				concludeGame();
+	
+	//the idea is to look into N seconds ago
+	//and compare it with latest result
+	//so that we can get a more accurate picture of
+	//what is going on
+	private int processDelayedArenaScore(String currentScene, long currentTime){
+		int latestResult = -1;
+		int lastestExpiredResult = -1;
+		int confirmedResult = -1;
+		
+		synchronized(scanResults){
+			Iterator <HearthScanResult>it = scanResults.iterator();
+			
+			while(it.hasNext()){
+				HearthScanResult sr = it.next();
+				
+				if(sr.scene.equals(currentScene) && sr.isExpired(currentTime)){
+					
+					//make sure we get the largest value within the time frame
+					if(Integer.parseInt(sr.result) >= lastestExpiredResult){
+						//make sure this is the most recent expired result
+						lastestExpiredResult = Integer.parseInt(sr.result);
+					}
+					
+					//remove the expired
+					it.remove();
+				}
 			}
 			
-			lastSaveAttempt = System.currentTimeMillis();
-			scanner.unsubscribe("coin");
-			scanner.unsubscribe("myHero");
-			scanner.unsubscribe("oppHero");
-			scanner.unsubscribe("gameResult");
+			if(lastestExpiredResult > -1){
+				System.out.println( "[" + currentScene + "]" + "Expired result found: " + lastestExpiredResult);
+				
+				//get a new iterator;
+				it = scanResults.iterator();
+				
+				while(it.hasNext()){
+					HearthScanResult sr = it.next();	
+					
+					if(sr.scene.equals(currentScene) && !sr.isExpired(currentTime)){
+
+						//make sure we get the largest value from within the time frame
+						if(Integer.parseInt(sr.result) >= latestResult){
+							latestResult = Integer.parseInt(sr.result);
+						}
+					}
+				}
+				
+				if(latestResult > -1){
+					System.out.println("[" + currentScene + "]" + "Latest result found: " + latestResult);
+				}
+			}
 		}
+		
+		//the most recent expired result take precedent 
+		//if we cant find any non-expiry result
+		if(lastestExpiredResult > -1 && latestResult == -1){
+			confirmedResult = lastestExpiredResult;
+			System.out.println("[" + currentScene + "]" +"(lastestExpiredResult > -1 && latestResult == -1)");
+		}
+		
+		//if both latest and expired result are found
+		if(latestResult > -1 && lastestExpiredResult > -1){
+			System.out.println("[" + currentScene + "]" + "(latestResult > -1 && lastestExpiredResult > -1)");
+			
+			//if latest is greater than the expired
+			//since we're comparing them in relatively short time frame
+			//we can safely assume it is the same session
+			if(latestResult >= lastestExpiredResult){
+				
+				//we will use the latest result
+				confirmedResult = latestResult;
+				
+				System.out.println("[" + currentScene + "]" + "(latestResult >= lastestExpiredResult)");
+			}
+		}
+		
+		if(confirmedResult > - 1){
+			System.out.println("[" + currentScene + "]" + "confirmedResult: " + confirmedResult);
+		}
+
+		
+		return confirmedResult;
 	}
 	
-	private void processCoin(String result){
+	private void processCoin(HearthScanResult sr){
 		if(System.currentTimeMillis() - lastSaveAttempt < GAME_SCAN_INTERVAL ){
 			return;
 		}
 
 		boolean found = false;
-		System.out.println("processCoin(), result: " + result);
+		System.out.println("processCoin(), result: " + sr.result);
 		inGameMode = 1;
+		int coin = -1;
 
-		switch(result){
+		switch(sr.result){
 			case "first":
-				goFirst = 1;
+				coin = 1;
 				found = true;
 			break;
 			
 			case "second":
-				goFirst = 0;
+				coin = 0;
 				found = true;
 			break;
 		}
 		
 		//check are we receive the "same" scene twice
-		if(found && (exGoFirst != goFirst)){
+		if(found && (coin != goFirst)){
 			
-			if(goFirst == 1){
+			if(coin == 1){
 				System.out.println("Found coin, go first");
 				addNotification(
 					new HearthReaderNotification( 
@@ -721,7 +881,7 @@ public class HearthScannerManager {
 							uiLang.t("You go first!")
 					)
 				);
-			} else if( goFirst == 0){
+			} else if( coin == 0){
 				System.out.println("Found coin, go second");
 				addNotification(
 					new HearthReaderNotification( 
@@ -732,115 +892,85 @@ public class HearthScannerManager {
 			}
 			
 			isDirty = true;
-			exGoFirst = goFirst;
+			goFirst = coin;
 			inGameMode = 1;
 			gameStartedTime = System.currentTimeMillis();
 		}
 	}
 
-	private void processHero(String scene, String result){
-		//make sure we don't process at the wrong timing
-		if(System.currentTimeMillis() - lastSaveAttempt < GAME_SCAN_INTERVAL && !scene.equals("arenaHero")){
-			return;
-		}
+	private void processHero(HearthScanResult sr){
+//		//make sure we don't process at the wrong timing
+//		if(System.currentTimeMillis() - lastSaveAttempt < GAME_SCAN_INTERVAL && !sr.equals("arenaHero")){
+//			return;
+//		}
 
-		boolean found = false;
+		System.out.println("processHero(), scene: " + sr.scene +", hero: " + sr.result);
 
-		System.out.println("processHero(), scene: " + scene +", hero: " + result);
-
-		int hero = heroesList.getHeroId(result);
+		int detectedHero = heroesList.getHeroId(sr.result);
 		
-		if(scene.equals("arenaHero") || scene.equals("myHero")){
-			myHero = hero;
-			
-			if(myHero != exMyHero){
-				exMyHero = myHero;
-				found = true;
-				System.out.println("Found my hero: " + result);
-			}
-		} else if(scene.equals("oppHero")){
-			oppHero = hero;
-			
-			if(oppHero != exOppHero){
-				exOppHero = oppHero;
-				found = true;
-				System.out.println("Found opponent hero: " + result);
-			}
-		}
-
-		if(!scene.equals("arenaHero")){
-			inGameMode = 1;
-			gameStartedTime = System.currentTimeMillis();
-		}
-
-		if(found){
+		if(sr.scene.equals("arenaHero") && myHero != detectedHero){
+			myHero = detectedHero;
 			isDirty = true;
-			
-			if(scene.equals("myHero")){
-				addNotification(
-					new HearthReaderNotification( 
-						uiLang.t("Hero Detected"), 
-						uiLang.t("Your hero is %s",  heroesList.getHeroLabel(hero))
-					)
-				);
-			}
-
-			if(scene.equals("oppHero")){
-				addNotification(
-					new HearthReaderNotification( 
-						uiLang.t("Hero Detected"), 
-						uiLang.t("Opponent hero is %s",  heroesList.getHeroLabel(hero))
-					)
-				);
+			System.out.println("Found my hero: " + sr.result);
+		} else if(sr.scene.equals("myHero") || sr.scene.equals("oppHero")){
+			synchronized(scanResults){
+				sr.setExpiry(DELAY_GAME_HEROES);
+				scanResults.add(sr);
 			}
 		}
 	}
 
-	private void processGameMode(String result){
+	private void processGameMode(HearthScanResult sr){
 		boolean found = false;
+		int detectedMode = -1;
 
-		System.out.println("processGameMode() result: " + result);
+		System.out.println("processGameMode() result: " + sr.result);
 		
-		switch(result.toLowerCase()){
+		switch(sr.result.toLowerCase()){
 			case "arena":
 				if(isGameModeDiff(ARENAMODE)){
-					gameMode = ARENAMODE;
+					detectedMode = ARENAMODE;
 					found = true;
 				}
 			break;
 
 			case "ranked":
 				if(isGameModeDiff(RANKEDMODE)){
-					gameMode = RANKEDMODE;
+					detectedMode = RANKEDMODE;
 					found = true;
 				}
 			break;
 
 			case "unranked":
 				if(isGameModeDiff(UNRANKEDMODE)){
-					gameMode = UNRANKEDMODE;
+					detectedMode = UNRANKEDMODE;
 					found = true;
 				}
 			break;
 
 			case "practice":
 				if(isGameModeDiff(PRACTICEMODE)){
-					gameMode = PRACTICEMODE;
+					detectedMode = PRACTICEMODE;
 					found = true;
 				}
 			break;
 
 			case "challenge":
 				if(isGameModeDiff(CHALLENGEMODE)){
-					gameMode = CHALLENGEMODE;
+					detectedMode = CHALLENGEMODE;
 					found = true;
 				}
 			break;
 		}
 
 		if(found){
-			String oldMode = HearthHelper.gameModeToString(exGameMode);
-			String newMode = HearthHelper.gameModeToString(gameMode);
+			String oldMode = HearthHelper.gameModeToString(gameMode);
+			String newMode = HearthHelper.gameModeToString(detectedMode);
+			
+			isDirty = true;
+			inGameMode = 0;
+			gameMode = detectedMode;
+			gameJustEnded = false;
 
 			System.out.println("Mode detected: " + newMode + ", previous mode: " + oldMode);
 			
@@ -853,44 +983,18 @@ public class HearthScannerManager {
 
 			//we missed the victory/defeat screen
 			if( isInGame() ){
-				//try to save the game
-				if(!isGameTooShort()){
-					concludeGame();
-				}
-				
 				lastSaveAttempt = System.currentTimeMillis();
-				resetGameStatus();
+				concludeGame();
 			}
-
-			isDirty = true;
-			inGameMode = 0;
-			exGameMode = gameMode;
 		}
 	}
 
 	private boolean isGameModeDiff(int newValue){
-		return (exGameMode != newValue);
-	}
-	
-	private boolean isGameTooShort(){
-		boolean isTooShort    = (System.currentTimeMillis() - gameStartedTime) < 60000;
-		boolean isFalseRecord = (myHero == -1 || oppHero == -1);
-
-		System.out.println("isTooShort: " + isTooShort);
-		System.out.println("isFalseRecord: " + isFalseRecord);
-		
-		//take our best guess to rule out false record
-		if( isTooShort && isFalseRecord){
-			System.out.println("Possible false record. Reseting game status");
-			resetGameStatus();
-			return true;
-		}
-		
-		return false;
+		return (gameMode != newValue);
 	}
 	
 	private void concludeGame(){		
-		int totalTime = (int) (System.currentTimeMillis() - gameStartedTime)/1000;
+		int totalTime = (int) Math.round((System.currentTimeMillis() - gameStartedTime)/1000f);
 		HearthDecks decks = HearthDecks.getInstance();
 		String deckName = "";
 		
@@ -899,7 +1003,7 @@ public class HearthScannerManager {
 			//we don't need to save the decks.xml here because the main UI will handle it if it is missing.
 		}
 		
-		if(victory == 1){
+		if(gameResult == 1){
 			System.out.println("Found Victory");
 			addNotification(
 				new HearthReaderNotification(
@@ -907,7 +1011,7 @@ public class HearthScannerManager {
 						uiLang.t( "%s vs %s, Victory!", getMyHero(), getOppHero())
 				)
 			);
-		} else if(victory == 0) {
+		} else if(gameResult == 0) {
 			System.out.println("Found Defeat");
 			addNotification(
 				new HearthReaderNotification(
@@ -930,7 +1034,7 @@ public class HearthScannerManager {
 			if(selectedDeck > -1 && selectedDeck < decks.list.length){
 				deckName = decks.list[selectedDeck];
 			}
-			tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, victory, gameStartedTime, totalTime, false, deckName);
+			tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, gameResult, gameStartedTime, totalTime, false, deckName);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -942,21 +1046,10 @@ public class HearthScannerManager {
 
 	private void resetGameStatus(){
 		inGameMode = 0;
-
-		exVictory = -1;
-		victory = -1;
-
+		gameResult = -1;
 		myHero = -1;
-
 		oppHero = -1;
-		exOppHero = -1;
-
 		goFirst = -1;
-		exGoFirst = -1;
-
-		gameMode = -1;
-		exGameMode = -1;
-		
 		gameStartedTime = System.currentTimeMillis();
 	}
 
@@ -1075,7 +1168,7 @@ public class HearthScannerManager {
 		return false;
 	}
 	
-public String getOverview(){
+	public String getOverview(){
 		String goes = uiLang.t("Unknown");
 		int arenaWins = -1;
 		int arenaLosses = -1;
@@ -1218,11 +1311,11 @@ public String getOverview(){
 	}
 
 	public int getArenaWins(){
-		return exArenaWins;
+		return arenaWins;
 	}
 	
 	public int getArenaLosses(){
-		return exArenaLosses;
+		return arenaLosses;
 	}
 
 	public String getGameMode(){

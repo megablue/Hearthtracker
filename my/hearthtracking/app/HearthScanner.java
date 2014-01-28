@@ -14,7 +14,6 @@ import boofcv.abst.feature.detdesc.DetectDescribePoint;
 import boofcv.struct.feature.Match;
 import boofcv.struct.feature.SurfFeature;
 import boofcv.struct.image.ImageFloat32;
-import my.hearthtracking.app.HearthScanner.SceneResult;
 import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 import java.util.concurrent.ExecutorService;
@@ -23,6 +22,8 @@ import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class HearthScanner{
+	private HearthLogger logger = HearthLogger.getInstance();
+	
 	private static final boolean 	DEBUGMODE = HearthHelper.isDevelopmentEnvironment();
 	private static final int		FRAMES_LIMIT = 3;
 	private static final int		PHASH_SIZE = 32;
@@ -48,7 +49,7 @@ public class HearthScanner{
 	private ConcurrentHashMap<String, DetectDescribePoint<ImageFloat32,SurfFeature>> surfCaches = new ConcurrentHashMap<String, DetectDescribePoint<ImageFloat32,SurfFeature>>();
 	
 	//used to store recognition results
-	private List<SceneResult> sceneResults = Collections.synchronizedList(new ArrayList<SceneResult>());
+	private List<HearthScanResult> sceneResults = Collections.synchronizedList(new ArrayList<HearthScanResult>());
 	
 	//list of queries
 	private List<String> queries = Collections.synchronizedList(new ArrayList<String>());
@@ -71,25 +72,8 @@ public class HearthScanner{
 	private long idleTime = 50;
 	
 	private long counter = 0;
-
-	public class SceneResult{
-		String scene;
-		String result;
-		float score;
-		BufferedImage match = null;
-		
-		public SceneResult(String s, String r, float scr){
-			scene = s;
-			result = r;
-			score = scr;
-		}
-		
-		public SceneResult(String s, String r, float scr, BufferedImage i){
-			scene = s;
-			result = r;
-			match = i;
-		}
-	}
+	
+	private long frameCount = 0;
 		
 	/**
 	 * Initialze or Reinistalize the scanner when scale/resolution/scanboxes are changed
@@ -115,10 +99,7 @@ public class HearthScanner{
 				scanboxHashes.putIfAbsent(key, hash);
 			}
 			
-			System.out.println(
-				sb.imgfile + ", "
-				+ "hash: " + hash
-			);
+			logger.finest(sb.imgfile + ", " + "hash: " + hash);
 		}
 	}
 		
@@ -126,12 +107,13 @@ public class HearthScanner{
 		synchronized(gameScreens){
 			if(gameScreens.size() <= FRAMES_LIMIT){
 				gameScreens.add(screen);
+				frameCount++;
 			}
 		}
 	}
 		
 	public void addScanbox(Scanbox sb){
-		System.out.println(
+		logger.finest(
 			"Scanbox added: " + sb.imgfile + ", \t\t"
 			+ "offset: " + sb.xOffset + ", " + sb.yOffset + ", \t"
 			+ sb.width + "x" + sb.height 
@@ -188,15 +170,15 @@ public class HearthScanner{
 		return found;
 	}
 	
-	public List<SceneResult> getQueryResults(){
+	public List<HearthScanResult> getQueryResults(){
 		synchronized(sceneResults){
 			if(sceneResults.isEmpty()){
 				return null;
 			}
 
-			List<SceneResult> results = Collections.synchronizedList(new ArrayList<SceneResult>());
+			List<HearthScanResult> results = Collections.synchronizedList(new ArrayList<HearthScanResult>());
 			
-			for(SceneResult sr : sceneResults){
+			for(HearthScanResult sr : sceneResults){
 				//copy the results to the new list
 				results.add(sr);
 			}
@@ -360,8 +342,7 @@ public class HearthScanner{
 			System.out.println("All scan threads finished!");
 		}
 		
-		
-		System.out.println("scanner->process() time spent: " + (System.currentTimeMillis() - startBench) + " ms");
+		logger.finest("scanner->process() time spent: " + (System.currentTimeMillis() - startBench) + " ms");
 	}
 	
 	private void prepScan(int threadId, BufferedImage screen, List<Scanbox> scanBoxes, Hashtable<String, String> roiHashes, Hashtable<String, BufferedImage> roiSnaps){
@@ -501,7 +482,7 @@ public class HearthScanner{
 					
 					System.out.println("Thread [" + threadId + "] " + "Color score: " + HearthHelper.formatNumber("0.00", colorScore));
 					
-					if(colorScore > 0.9){
+					if(colorScore > sb.colorScore){
 						found = true;
 					} else{
 						found = false;
@@ -510,7 +491,7 @@ public class HearthScanner{
 			}
 			
 			if(found){
-				System.out.println("Thread [" + threadId + "] " + "Query found: scene \"" + sb.scene + "\" added to query results");
+				System.out.println("Thread [" + threadId + "] " + "Result added: scene \"" + sb.scene + "\", identifier: " + sb.identifier);
 				insertSceneResult(sb.scene, sb.identifier, score);
 			}
 		}
@@ -559,17 +540,10 @@ public class HearthScanner{
 	
 	private void insertSceneResult(String scene, String result, float score){
 		synchronized(sceneResults){
-			//insert
-			sceneResults.add(new SceneResult(scene, result, score));
+			sceneResults.add(new HearthScanResult(scene, result, score, frameCount));
 		}
 	}
-	
-	private void insertSceneResult(String scene, String result, float score, BufferedImage region){
-		synchronized(sceneResults){
-			sceneResults.add(new SceneResult(scene, result, score, region));
-		}
-	}
-	
+
 	public void dispose(){
 		shutdown = true;
 	}

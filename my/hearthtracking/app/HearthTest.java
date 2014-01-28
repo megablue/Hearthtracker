@@ -8,7 +8,7 @@ import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 
 public class HearthTest{
 	public static void main( String args[] ) {
-		testCaputreDWM();
+		testArenaLosses();
     }
 	
 	public static void testCaputreDWM(){
@@ -26,6 +26,50 @@ public class HearthTest{
         System.out.println("Average: " +  average + " ms");
 		
 		//HearthHelper.bufferedImageToFile(cap, "./cache/capture.png");
+	}
+	
+	public static void testArenaLosses(){
+		HearthScannerSettings setting = new HearthScannerSettings();
+		HearthImagePHash pHash = new HearthImagePHash(16, 8);
+		String scene = "arenaLose";
+		
+		
+		for(Scanbox sb : setting.list){
+			if(sb.scene.equals(scene)){
+				sb.target = HearthHelper.loadImage(new File("./images/" + sb.imgfile));
+			}
+		}
+		
+		long start = System.currentTimeMillis();
+		long init = 0;
+		int counter = 0;
+		float average = 0;
+
+		for(Scanbox sbA : setting.list){
+			if(sbA.scene.equals(scene)){
+    			String a = pHash.getHash(sbA.target);
+    			int[] rgbA = HearthImagePHash.getRGB(a);
+    			
+    			System.out.println(sbA.imgfile);
+    			System.out.println("Average RGB: " + rgbA[0] + "," + rgbA[1] + "," +  rgbA[2]);
+    			
+    			++counter;    			
+			}
+		}
+
+//		rgbAll[0] = rgbAll[0]/counter;
+//		rgbAll[1] = rgbAll[1]/counter;
+//		rgbAll[2] = rgbAll[2]/counter;
+//
+//		System.out.println("Average RGB: " + rgbAll[0] + "," + rgbAll[1] + "," +  rgbAll[2]);
+		
+        System.out.println("Init: " + init + " ms");
+        System.out.println("Total: " + (System.currentTimeMillis() - start) + " ms");
+        
+        average = (System.currentTimeMillis() - start)/(float)counter;
+        System.out.println("Total scan: " + counter);
+        System.out.println("Average: " +  average + " ms");
+		
 	}
 	
 	public static void testDeckSelectionRGB(){
@@ -198,6 +242,10 @@ public class HearthTest{
 				if(score >= 0.8 && score < 0.9){
 					System.out.println(x + " vs " + y + ", score: " + score + " (close match)");
 				}
+				
+				
+				int[] rgbAll = HearthImagePHash.getRGB(b);
+				System.out.println(y + " RGB: " + rgbAll[0] + "," + rgbAll[1] + "," +  rgbAll[2]);
 				
 				++counter;
     		}
