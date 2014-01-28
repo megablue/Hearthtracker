@@ -90,7 +90,7 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 
 @SuppressWarnings({ "unused", "deprecation" })
-public class HearthUI {	
+public class HearthUI {
 	protected Shell shlHearthtracker;
 	private Button btnEnableScanner;
 	private Button[] btnScanSpeed = new Button[4];
@@ -111,7 +111,7 @@ public class HearthUI {
 	static boolean debugMode = HearthHelper.isDevelopmentEnvironment();
 	
 	private HearthScannerManager hearthScanner;
-	private HearthTracker tracker;
+	private HearthDB tracker;
 	private HearthConfigurator config = new HearthConfigurator();
 	
 	private HearthSetting setting = MainLoader.setting;
@@ -161,7 +161,7 @@ public class HearthUI {
 	
 	private boolean restart = false;
 
-	public HearthUI(HearthScannerManager s, HearthTracker t){
+	public HearthUI(HearthScannerManager s, HearthDB t){
 		hearthScanner = s;
 		tracker = t;
 		init();
@@ -327,6 +327,22 @@ public class HearthUI {
 				}
 			}
 		});
+		
+		MenuItem mntmNewItem_3 = new MenuItem(menu_2, SWT.NONE);
+		mntmNewItem_3.setText(lang.t("Last Match -> Draw"));
+		
+		mntmNewItem_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				try {
+					tracker.setLastMatchDraw();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		new MenuItem(menu_2, SWT.SEPARATOR);
 		
 		MenuItem mntmLastMatch_1 = new MenuItem(menu_2, SWT.NONE);
 		mntmLastMatch_1.setText(lang.t("Last Match -> went first"));
@@ -917,64 +933,66 @@ public class HearthUI {
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
 
-		TabItem tbtmDiagnostics = new TabItem(tabFolder, SWT.NONE);
-		tbtmDiagnostics.setText(lang.t("&Tools"));
-		
-		Composite composite_4 = new Composite(tabFolder, SWT.NONE);
-		tbtmDiagnostics.setControl(composite_4);
-		composite_4.setLayout(new GridLayout(1, false));
-		
-		Group grpDiagnostics = new Group(composite_4, SWT.NONE);
-		GridData gd_grpDiagnostics = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_grpDiagnostics.heightHint = 353;
-		gd_grpDiagnostics.widthHint = 589;
-		grpDiagnostics.setLayoutData(gd_grpDiagnostics);
-		grpDiagnostics.setText(lang.t("Diagnostics"));
-		grpDiagnostics.setLayout(null);
-		
-		Label lblLastSeenLabel = new Label(grpDiagnostics, SWT.NONE);
-		lblLastSeenLabel.setBounds(206, 21, 48, 15);
-		lblLastSeenLabel.setText(lang.t("Last seen"));
-		
-		lblLastSeen = new Label(grpDiagnostics, SWT.NONE);
-		lblLastSeen.setBounds(260, 21, 300, 15);
-		lblLastSeen.setText("..........");
-		
-		Label lblLastScanCoordinate = new Label(grpDiagnostics, SWT.NONE);
-		lblLastScanCoordinate.setBounds(181, 41, 73, 15);
-		lblLastScanCoordinate.setText(lang.t("Last scanned area"));
-		
-		lblLastscreencoordinate = new Label(grpDiagnostics, SWT.NONE);
-		lblLastscreencoordinate.setBounds(260, 41, 300, 15);
-		lblLastscreencoordinate.setText("..........");
-		
-		Label lblNewLabel_5 = new Label(grpDiagnostics, SWT.NONE);
-		lblNewLabel_5.setBounds(157, 61, 97, 15);
-		lblNewLabel_5.setText(lang.t("Last scanned sub-area"));
-		
-		lblLastScanSubArea = new Label(grpDiagnostics, SWT.NONE);
-		lblLastScanSubArea.setBounds(260, 61, 300, 15);
-		lblLastScanSubArea.setText("..........");
-		
-		Label lblAutoPingLabel = new Label(grpDiagnostics, SWT.NONE);
-		lblAutoPingLabel.setBounds(132, 113, 117, 15);
-		lblAutoPingLabel.setText(lang.t("Visualize scanned area"));
-		
-		btnAutoPing = new Button(grpDiagnostics, SWT.CHECK);
-		btnAutoPing.setBounds(255, 112, 56, 16);
-		btnAutoPing.setToolTipText(lang.t("Visualize scanned areas after Hearthstone being out of sight for more than 1 min."));
-		btnAutoPing.setText(lang.t("Enable"));
-		
-		Label lblNewLabel_6 = new Label(grpDiagnostics, SWT.NONE);
-		lblNewLabel_6.setBounds(171, 138, 78, 15);
-		lblNewLabel_6.setText(lang.t("Diagnotic Tool"));
-		
-		btnVisualizeNow = new Button(grpDiagnostics, SWT.NONE);
-		btnVisualizeNow.setBounds(255, 133, 83, 25);
-		btnVisualizeNow.setText(lang.t("Visualize now"));
-		
-		Label label_2 = new Label(grpDiagnostics, SWT.SEPARATOR | SWT.HORIZONTAL);
-		label_2.setBounds(10, 93, 575, 2);
+//		TabItem tbtmDiagnostics = new TabItem(tabFolder, SWT.NONE);
+//		tbtmDiagnostics.setText(lang.t("&Tools"));
+//		
+//		Composite composite_4 = new Composite(tabFolder, SWT.NONE);
+//		tbtmDiagnostics.setControl(composite_4);
+//		composite_4.setLayout(new GridLayout(1, false));
+//
+//		Group grpDiagnostics = new Group(composite_4, SWT.NONE);
+//		GridData gd_grpDiagnostics = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+//		gd_grpDiagnostics.heightHint = 353;
+//		gd_grpDiagnostics.widthHint = 589;
+//		grpDiagnostics.setLayoutData(gd_grpDiagnostics);
+//		grpDiagnostics.setText(lang.t("Diagnostics"));
+//		grpDiagnostics.setLayout(null);
+//		grpDiagnostics.setVisible(false);
+//		
+//		
+//		Label lblLastSeenLabel = new Label(grpDiagnostics, SWT.NONE);
+//		lblLastSeenLabel.setBounds(206, 21, 48, 15);
+//		lblLastSeenLabel.setText(lang.t("Last seen"));
+//		
+//		lblLastSeen = new Label(grpDiagnostics, SWT.NONE);
+//		lblLastSeen.setBounds(260, 21, 300, 15);
+//		lblLastSeen.setText("..........");
+//		
+//		Label lblLastScanCoordinate = new Label(grpDiagnostics, SWT.NONE);
+//		lblLastScanCoordinate.setBounds(181, 41, 73, 15);
+//		lblLastScanCoordinate.setText(lang.t("Last scanned area"));
+//		
+//		lblLastscreencoordinate = new Label(grpDiagnostics, SWT.NONE);
+//		lblLastscreencoordinate.setBounds(260, 41, 300, 15);
+//		lblLastscreencoordinate.setText("..........");
+//		
+//		Label lblNewLabel_5 = new Label(grpDiagnostics, SWT.NONE);
+//		lblNewLabel_5.setBounds(157, 61, 97, 15);
+//		lblNewLabel_5.setText(lang.t("Last scanned sub-area"));
+//		
+//		lblLastScanSubArea = new Label(grpDiagnostics, SWT.NONE);
+//		lblLastScanSubArea.setBounds(260, 61, 300, 15);
+//		lblLastScanSubArea.setText("..........");
+//		
+//		Label lblAutoPingLabel = new Label(grpDiagnostics, SWT.NONE);
+//		lblAutoPingLabel.setBounds(132, 113, 117, 15);
+//		lblAutoPingLabel.setText(lang.t("Visualize scanned area"));
+//		
+//		btnAutoPing = new Button(grpDiagnostics, SWT.CHECK);
+//		btnAutoPing.setBounds(255, 112, 56, 16);
+//		btnAutoPing.setToolTipText(lang.t("Visualize scanned areas after Hearthstone being out of sight for more than 1 min."));
+//		btnAutoPing.setText(lang.t("Enable"));
+//		
+//		Label lblNewLabel_6 = new Label(grpDiagnostics, SWT.NONE);
+//		lblNewLabel_6.setBounds(171, 138, 78, 15);
+//		lblNewLabel_6.setText(lang.t("Diagnotic Tool"));
+//		
+//		btnVisualizeNow = new Button(grpDiagnostics, SWT.NONE);
+//		btnVisualizeNow.setBounds(255, 133, 83, 25);
+//		btnVisualizeNow.setText(lang.t("Visualize now"));
+//		
+//		Label label_2 = new Label(grpDiagnostics, SWT.SEPARATOR | SWT.HORIZONTAL);
+//		label_2.setBounds(10, 93, 575, 2);
 		
 		TabItem tbtmAbout = new TabItem(tabFolder, SWT.NONE);
 		tbtmAbout.setText(lang.t("A&bout"));
@@ -1345,7 +1363,8 @@ public class HearthUI {
 		cbMatchesEditResult.setBounds(134, 136, 49, 23);
 		cbMatchesEditResult.setItems(new String[] {
 				lang.t("Win"), 
-				lang.t("Lose"), 
+				lang.t("Lose"),
+				lang.t("Draw"),
 				lang.t("Unknown")
 		});
 		
@@ -1459,12 +1478,14 @@ public class HearthUI {
 								cbMatchesEditGameMode.select(0);
 							}
 							
-							if(win == 1){
+							if(win == HearthScannerManager.GAME_RESULT_VICTORY){
 								cbMatchesEditResult.select(0);
-							}else if (win == 0){
+							}else if (win == HearthScannerManager.GAME_RESULT_DEFEAT){
 								cbMatchesEditResult.select(1);
-							}else {
+							}else if (win == HearthScannerManager.GAME_RESULT_DRAW){
 								cbMatchesEditResult.select(2);
+							} else if (win == HearthScannerManager.GAME_RESULT_UNKNOWN){
+								cbMatchesEditResult.select(3);
 							}
 							
 							cbMatchesEditDeck.setText(deck);
@@ -1499,7 +1520,7 @@ public class HearthUI {
 				int myheroid = cbMatchesEditAs.getSelectionIndex() - 1;
 				int oppheroid = cbMatchesEditVs.getSelectionIndex() - 1;
 				int goes = -1;
-				int result = -1;
+				int result = HearthScannerManager.GAME_RESULT_UNKNOWN;
 				int totaltime = spMatchesEditMinute.getSelection() * 60;
 				String deckName = cbMatchesEditDeck.getText();
 				
@@ -1508,11 +1529,13 @@ public class HearthUI {
 				}
 				
 				if(cbMatchesEditResult.getSelectionIndex() == 0){
-					result = 1;
+					result = HearthScannerManager.GAME_RESULT_VICTORY;
 				} else if(cbMatchesEditResult.getSelectionIndex() == 1){
-					result = 0;
+					result = HearthScannerManager.GAME_RESULT_DEFEAT;
+				} else if(cbMatchesEditResult.getSelectionIndex() == 2){
+					result = HearthScannerManager.GAME_RESULT_DRAW;
 				} else {
-					result = -1;
+					result = HearthScannerManager.GAME_RESULT_UNKNOWN;
 				}
 				
 				if(cbMatchesEditGoes.getSelectionIndex() == 0){
@@ -1605,6 +1628,7 @@ public class HearthUI {
 		cbMatchesEditResult.setItems(new String[] {
 				lang.t("Win"), 
 				lang.t("Lose"), 
+				lang.t("Draw"), 
 				lang.t("Unknown")
 			});
 		
@@ -1640,9 +1664,13 @@ public class HearthUI {
 				int totaltime = spMatchesEditMinute.getSelection() * 60;
 				
 				if(cbMatchesEditResult.getSelectionIndex() == 0){
-					result = 1;
+					result = HearthScannerManager.GAME_RESULT_VICTORY;
 				} else if(cbMatchesEditResult.getSelectionIndex() == 1){
-					result = 0;
+					result = HearthScannerManager.GAME_RESULT_VICTORY;
+				} else if(cbMatchesEditResult.getSelectionIndex() == 2){
+					result = HearthScannerManager.GAME_RESULT_DRAW;
+				} else if(cbMatchesEditResult.getSelectionIndex() == 3){
+					result = HearthScannerManager.GAME_RESULT_UNKNOWN;
 				}
 
 				Calendar cal = Calendar.getInstance();
@@ -1907,39 +1935,39 @@ public class HearthUI {
 	}
 	
 	private void poppulateDiagnoticsStatus(){
-		Date lastSeen = new Date(hearthScanner.getLastseen());
-		int[] area = hearthScanner.getLastScanArea();
-		int[] subArea = hearthScanner.getLastScanSubArea();
-		String last = lastSeen == null || lastSeen.getTime() == 0 ? lang.t("Never") : HearthHelper.getPrettyText(lastSeen); 
-
-		if(lastSeen == null){
-			lblLastSeen.setText(lang.t("N|A"));
-		} else {
-			lblLastSeen.setText(last);
-		}
-		
-		lblLastscreencoordinate.setText(area[0] + ", " + area[1] + ", w: " + area[2] + ", h: " + area[3]);
-		lblLastScanSubArea.setText(subArea[0] + ", " + subArea[1] + ", w: " + subArea[2] + ", h: " + subArea[3]);
+//		Date lastSeen = new Date(hearthScanner.getLastseen());
+//		int[] area = hearthScanner.getLastScanArea();
+//		int[] subArea = hearthScanner.getLastScanSubArea();
+//		String last = lastSeen == null || lastSeen.getTime() == 0 ? lang.t("Never") : HearthHelper.getPrettyText(lastSeen); 
+//
+//		if(lastSeen == null){
+//			lblLastSeen.setText(lang.t("N|A"));
+//		} else {
+//			lblLastSeen.setText(last);
+//		}
+//		
+//		lblLastscreencoordinate.setText(area[0] + ", " + area[1] + ", w: " + area[2] + ", h: " + area[3]);
+//		lblLastScanSubArea.setText(subArea[0] + ", " + subArea[1] + ", w: " + subArea[2] + ", h: " + subArea[3]);
 	}
 	
 	private void poppulateDiagnoticsControls(){
-		btnAutoPing.setSelection(setting.autoPing);
-		
-		btnAutoPing.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				setting.autoPing = btnAutoPing.getSelection();
-				hearthScanner.setAutoPing(setting.autoPing);
-				savePreferences();
-			}
-		});
-		
-		btnVisualizeNow.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				hearthScanner.forcePing();
-			}
-		});
+//		btnAutoPing.setSelection(setting.autoPing);
+//		
+//		btnAutoPing.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent arg0) {
+//				setting.autoPing = btnAutoPing.getSelection();
+//				hearthScanner.setAutoPing(setting.autoPing);
+//				savePreferences();
+//			}
+//		});
+//		
+//		btnVisualizeNow.addSelectionListener(new SelectionAdapter() {
+//			@Override
+//			public void widgetSelected(SelectionEvent arg0) {
+//				hearthScanner.forcePing();
+//			}
+//		});
 	}
 	
 	private void poppulateResolutions(){
@@ -2262,9 +2290,12 @@ public class HearthUI {
 		GC gc = new GC(scaled);
 		gc.setAntialias(SWT.ON);
 		gc.setInterpolation(SWT.HIGH);
-		gc.drawImage(image, 0, 0, 
-		image.getBounds().width, image.getBounds().height, 
-		0, 0, width, height);
+		gc.drawImage(
+			image, 0, 0, 
+			image.getBounds().width, 
+			image.getBounds().height, 
+			0, 0, width, height
+		);
 		gc.dispose();
 		image.dispose(); // don't forget about me!
 		return scaled;

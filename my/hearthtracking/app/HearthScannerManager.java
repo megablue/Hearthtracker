@@ -24,6 +24,11 @@ public class HearthScannerManager {
 	public static final int CHALLENGEMODE = 4;
 	public static final int PRACTICEMODE = 5;
 	
+	public static final int GAME_RESULT_DRAW 	= -2;
+	public static final int GAME_RESULT_UNKNOWN = -1;
+	public static final int GAME_RESULT_DEFEAT 	= 0;
+	public static final int GAME_RESULT_VICTORY = 1;
+
 	public static final int ARENA_MAX_WINS = 12;
 	public static final int ARENA_MAX_LOSSES = 3;
 	
@@ -35,11 +40,6 @@ public class HearthScannerManager {
 	private static final long DELAY_ARENA_SCORE = 3000;
 	private static final long DELAY_GAME_RESULT = 1000;
 	private static final long DELAY_GAME_HEROES = 1000;
-
-	private static final int GAME_RESULT_UNKNOWN 	= -1;
-	private static final int GAME_RESULT_DEFEAT 	= 0;
-	private static final int GAME_RESULT_VICTORY 	= 1;
-	private static final int GAME_RESULT_DRAW 		= 2;
 
 	private long scannerStarted = System.currentTimeMillis();
 
@@ -62,7 +62,7 @@ public class HearthScannerManager {
 	private int gameResX = 1920, gameResY = 1080;
 	private int oldGameResX = -1, oldGameResY = -1;
 
-	private HearthTracker tracker;
+	private HearthDB tracker;
 	private HearthScannerSettings scannerSettings = null;
 	private int xOffetOverrideVal = 0;
 	private int yOffsetOverrideVal = 0;
@@ -99,7 +99,7 @@ public class HearthScannerManager {
 	
 	private List<HearthScanResult> scanResults = Collections.synchronizedList(new ArrayList<HearthScanResult>());
 	
-	public HearthScannerManager (HearthTracker t, int tslot, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
+	public HearthScannerManager (HearthDB t, int tslot, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
 		debugMode = HearthHelper.isDevelopmentEnvironment();
 		tracker  = t;
 		gameResX = resX;

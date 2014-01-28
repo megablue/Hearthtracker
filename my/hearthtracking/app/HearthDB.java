@@ -12,7 +12,7 @@ import java.util.Date;
 
 import org.h2.jdbcx.JdbcDataSource;
 
-public class HearthTracker {	
+public class HearthDB {
 	Connection conn;
 	private boolean isDirty = true;
 	private boolean isWorking = false;
@@ -22,8 +22,7 @@ public class HearthTracker {
 	private static HearthConfigurator config = new HearthConfigurator();
 	private Statement stat;
 	
-	public HearthTracker(){
-		
+	public HearthDB(){
 		try {
 			this.initDB();
 			if(testMode){
@@ -478,14 +477,14 @@ public class HearthTracker {
 		
 		if(rs.next()){
 			saveModifiedMatchResult(
-					rs.getInt("id"),
-					rs.getInt("mode"),
-					rs.getInt("myHeroId"),
-					rs.getInt("oppHeroId"),
-					rs.getInt("goesFirst"),
-					win,
-					rs.getInt("totalTime"),
-					rs.getString("deck")
+				rs.getInt("id"),
+				rs.getInt("mode"),
+				rs.getInt("myHeroId"),
+				rs.getInt("oppHeroId"),
+				rs.getInt("goesFirst"),
+				win,
+				rs.getInt("totalTime"),
+				rs.getString("deck")
 			);
 		}
 	}
@@ -496,14 +495,32 @@ public class HearthTracker {
 		
 		if(rs.next()){
 			saveModifiedMatchResult(
-					rs.getInt("id"),
-					rs.getInt("mode"),
-					rs.getInt("myHeroId"),
-					rs.getInt("oppHeroId"),
-					rs.getInt("goesFirst"),
-					win,
-					rs.getInt("totalTime"),
-					rs.getString("deck")
+				rs.getInt("id"),
+				rs.getInt("mode"),
+				rs.getInt("myHeroId"),
+				rs.getInt("oppHeroId"),
+				rs.getInt("goesFirst"),
+				win,
+				rs.getInt("totalTime"),
+				rs.getString("deck")
+			);
+		}
+	}
+
+	public void setLastMatchDraw() throws SQLException{
+		ResultSet rs = getMatches();
+		int win = -2;
+		
+		if(rs.next()){
+			saveModifiedMatchResult(
+				rs.getInt("id"),
+				rs.getInt("mode"),
+				rs.getInt("myHeroId"),
+				rs.getInt("oppHeroId"),
+				rs.getInt("goesFirst"),
+				win,
+				rs.getInt("totalTime"),
+				rs.getString("deck")
 			);
 		}
 	}

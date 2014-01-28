@@ -11,7 +11,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 
 public class HearthTrackerUpgradeUI {
-	HearthTracker tracker = new HearthTracker();
+	HearthDB tracker = new HearthDB();
 	HearthLanguageManager lang = HearthLanguageManager.getInstance();
 	
 	/**

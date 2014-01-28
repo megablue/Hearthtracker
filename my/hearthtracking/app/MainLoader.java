@@ -26,7 +26,7 @@ public class MainLoader {
 	public static HearthULangsList uiLangsList;
 	public static HearthDatabase dbSetting;
 	
-	public static HearthTracker tracker;
+	public static HearthDB tracker;
 	public static HearthScannerManager scannerManager;
 	private static Thread scannerManagerThread;
 	
@@ -49,7 +49,7 @@ public class MainLoader {
 
 		init();
 		
-		tracker = new HearthTracker();
+		tracker = new HearthDB();
 		
 		scannerManager = new HearthScannerManager(
 			tracker, 
@@ -219,7 +219,7 @@ public class MainLoader {
 	}
 	
 	private static void startScannerManager(){
-		tracker = new HearthTracker();
+		tracker = new HearthDB();
 		scannerManager = new HearthScannerManager(tracker, setting.scanInterval, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
 
 		Runnable runnable = new Runnable() {

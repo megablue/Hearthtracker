@@ -18,7 +18,7 @@ public class HearthSync {
 	private static final int BATCH_SIZE = 50;
 	private static HearthConfigurator config = new HearthConfigurator();
 	private String secretKey = "";
-	private HearthTracker tracker;
+	private HearthDB tracker;
 	private static String API_VERSION = "v0";
 	private String baseURL = HearthHelper.isDevelopmentEnvironment() 
 			? "http://192.168.0.104:3000/api/" + API_VERSION + "/" 
@@ -62,7 +62,7 @@ public class HearthSync {
 	}
 	
 	public HearthSync() {
-		tracker = new HearthTracker();
+		tracker = new HearthDB();
 		nonce = generateNonce();
 
 		syncLog = (HearthSyncLog) config.load(HearthFilesNameManager.syncFile);
