@@ -11,8 +11,8 @@ import java.util.Date;
 import java.util.List;
 
 public class MainLoader {
-	public static int[] version = {1, 1, 8};
-	public static int experimental = 1;
+	public static int[] version = {1, 1, 9};
+	public static int experimental = 2;
 	private final static int syncInterval =  1 * 60 * 1000;
 
 	private static HearthLogger logger = HearthLogger.getInstance();
@@ -313,7 +313,7 @@ public class MainLoader {
 				    			MainLoader.notifications.add(note);
 				    		} else if(hasEffected) {
 				    			HearthReaderNotification note = new HearthReaderNotification(
-				    					"Web Sync", 
+				    					lang.t("Web Sync"), 
 				    					lang.t("Error with %d records", matchRecordsCount + arenaRecordsCount)
 				    			);
 				    			MainLoader.notifications.add(note);

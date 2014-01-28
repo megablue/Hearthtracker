@@ -239,7 +239,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>0.png</imgfile>
+      <imgfile>arena-key-0.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.15</matchQuality>
       <scene>arenaWins</scene>
@@ -257,7 +257,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>1.png</imgfile>
+      <imgfile>arena-key-1.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -275,7 +275,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>2.png</imgfile>
+      <imgfile>arena-key-2.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -293,7 +293,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>3.png</imgfile>
+      <imgfile>arena-key-3.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -311,7 +311,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>4.png</imgfile>
+      <imgfile>arena-key-4.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -329,7 +329,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>5.png</imgfile>
+      <imgfile>arena-key-5.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -347,7 +347,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>6.png</imgfile>
+      <imgfile>arena-key-6.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -365,7 +365,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>7.png</imgfile>
+      <imgfile>arena-key-7.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -383,7 +383,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>8.png</imgfile>
+      <imgfile>arena-key-8.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -401,7 +401,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>9.png</imgfile>
+      <imgfile>arena-key-9.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -419,7 +419,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>10.png</imgfile>
+      <imgfile>arena-key-10.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -437,7 +437,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>11.png</imgfile>
+      <imgfile>arena-key-11.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -455,7 +455,7 @@
       <yOffset>236</yOffset>
       <width>100</width>
       <height>100</height>
-      <imgfile>12.png</imgfile>
+      <imgfile>arena-key-12.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
       <scene>arenaWins</scene>
@@ -635,10 +635,10 @@
       <yOffset>130</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>mage-opphero.png</imgfile>
+      <imgfile>mage-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>oppHero</scene>
+      <scene>topHero</scene>
       <identifier>mage</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -653,10 +653,10 @@
       <yOffset>130</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>hunter-opphero.png</imgfile>
+      <imgfile>hunter-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>oppHero</scene>
+      <scene>topHero</scene>
       <identifier>hunter</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -671,10 +671,10 @@
       <yOffset>130</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>warrior-opphero.png</imgfile>
+      <imgfile>warrior-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>oppHero</scene>
+      <scene>topHero</scene>
       <identifier>warrior</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -689,10 +689,10 @@
       <yOffset>130</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>shaman-opphero.png</imgfile>
+      <imgfile>shaman-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>oppHero</scene>
+      <scene>topHero</scene>
       <identifier>shaman</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -707,10 +707,10 @@
       <yOffset>130</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>druid-opphero.png</imgfile>
+      <imgfile>druid-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>oppHero</scene>
+      <scene>topHero</scene>
       <identifier>druid</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -725,10 +725,10 @@
       <yOffset>130</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>priest-opphero.png</imgfile>
+      <imgfile>priest-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>oppHero</scene>
+      <scene>topHero</scene>
       <identifier>priest</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -743,10 +743,10 @@
       <yOffset>130</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>rogue-opphero.png</imgfile>
+      <imgfile>rogue-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>oppHero</scene>
+      <scene>topHero</scene>
       <identifier>rogue</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -761,10 +761,10 @@
       <yOffset>130</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>paladin-opphero.png</imgfile>
+      <imgfile>paladin-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>oppHero</scene>
+      <scene>topHero</scene>
       <identifier>paladin</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -779,10 +779,10 @@
       <yOffset>130</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>warlock-opphero.png</imgfile>
+      <imgfile>warlock-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>oppHero</scene>
+      <scene>topHero</scene>
       <identifier>warlock</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -793,14 +793,14 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>690</xOffset>
+      <xOffset>693</xOffset>
       <yOffset>757</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>mage-s.png</imgfile>
+      <imgfile>mage-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>myHero</scene>
+      <scene>bottomHero</scene>
       <identifier>mage</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -811,14 +811,14 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>690</xOffset>
+      <xOffset>693</xOffset>
       <yOffset>757</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>hunter-s.png</imgfile>
+      <imgfile>hunter-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>myHero</scene>
+      <scene>bottomHero</scene>
       <identifier>hunter</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -829,14 +829,14 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>690</xOffset>
+      <xOffset>693</xOffset>
       <yOffset>757</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>warrior-s.png</imgfile>
+      <imgfile>warrior-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>myHero</scene>
+      <scene>bottomHero</scene>
       <identifier>warrior</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -847,14 +847,14 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>690</xOffset>
+      <xOffset>693</xOffset>
       <yOffset>757</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>shaman-s.png</imgfile>
+      <imgfile>shaman-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>myHero</scene>
+      <scene>bottomHero</scene>
       <identifier>shaman</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -865,14 +865,14 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>690</xOffset>
+      <xOffset>693</xOffset>
       <yOffset>757</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>druid-s.png</imgfile>
+      <imgfile>druid-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>myHero</scene>
+      <scene>bottomHero</scene>
       <identifier>druid</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -883,14 +883,14 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>690</xOffset>
+      <xOffset>693</xOffset>
       <yOffset>757</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>priest-s.png</imgfile>
+      <imgfile>priest-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>myHero</scene>
+      <scene>bottomHero</scene>
       <identifier>priest</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -901,14 +901,14 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>690</xOffset>
+      <xOffset>693</xOffset>
       <yOffset>757</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>rogue-s.png</imgfile>
+      <imgfile>rogue-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>myHero</scene>
+      <scene>bottomHero</scene>
       <identifier>rogue</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -919,14 +919,14 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>690</xOffset>
+      <xOffset>693</xOffset>
       <yOffset>757</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>paladin-s.png</imgfile>
+      <imgfile>paladin-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>myHero</scene>
+      <scene>bottomHero</scene>
       <identifier>paladin</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>
@@ -937,14 +937,14 @@
       <outer-class reference="../../.."/>
     </Scanbox>
     <Scanbox>
-      <xOffset>690</xOffset>
+      <xOffset>693</xOffset>
       <yOffset>757</yOffset>
       <width>60</width>
       <height>60</height>
-      <imgfile>warlock-s.png</imgfile>
+      <imgfile>warlock-ingame-bottom.png</imgfile>
       <scale>1.0</scale>
       <matchQuality>0.1</matchQuality>
-      <scene>myHero</scene>
+      <scene>bottomHero</scene>
       <identifier>warlock</identifier>
       <resolveConflict>false</resolveConflict>
       <matchColor>false</matchColor>

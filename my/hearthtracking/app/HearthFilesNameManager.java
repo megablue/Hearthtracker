@@ -30,7 +30,7 @@ public class HearthFilesNameManager {
 
 	
 	//UI related files
-	static String miniHeroImage		= workingDir 	+ imagesPath 	+ "%s-s.png";
+	static String miniHeroImage		= workingDir 	+ imagesPath 	+ "%s-ingame-bottom.png";
 	static String logo				= workingDir 	+ imagesPath 	+ "etc" + File.separator + "logo.png";
 	static String logo32			= workingDir 	+ imagesPath 	+ "etc" + File.separator + "logo-32.png";
 	static String logo128			= workingDir 	+ imagesPath 	+ "etc" + File.separator + "logo-128.png";

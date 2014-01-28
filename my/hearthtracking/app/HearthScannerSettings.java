@@ -66,55 +66,55 @@ public class HearthScannerSettings {
 		);
 	
 		list.add(
-			new Scanbox("0.png",	"arenaWins",	"0", 347, 236, 100, 100).setScore(0.15f).matchColor(143, 96, 67).resolveConflict()
+			new Scanbox("arena-key-0.png",	"arenaWins",	"0", 347, 236, 100, 100).setScore(0.15f).matchColor(143, 96, 67).resolveConflict()
 		);
 		
 		list.add(
-			new Scanbox("1.png",	"arenaWins",	"1", 347, 236, 100, 100).setScore(0.1f).matchColor(123, 88, 69).setColorScore(0.92f).resolveConflict()
+			new Scanbox("arena-key-1.png",	"arenaWins",	"1", 347, 236, 100, 100).setScore(0.1f).matchColor(123, 88, 69).setColorScore(0.92f).resolveConflict()
 		);
 		
 		list.add(
-			new Scanbox("2.png",	"arenaWins",	"2", 347, 236, 100, 100).setScore(0.1f).matchColor(117, 84, 48).setColorScore(0.91f).resolveConflict()
+			new Scanbox("arena-key-2.png",	"arenaWins",	"2", 347, 236, 100, 100).setScore(0.1f).matchColor(117, 84, 48).setColorScore(0.91f).resolveConflict()
 		);
 		
 		list.add(
-			new Scanbox("3.png",	"arenaWins",	"3", 347, 236, 100, 100).setScore(0.1f).matchColor(99, 72, 58)
+			new Scanbox("arena-key-3.png",	"arenaWins",	"3", 347, 236, 100, 100).setScore(0.1f).matchColor(99, 72, 58)
 		);
 
 		list.add(
-			new Scanbox("4.png",	"arenaWins",	"4", 347, 236, 100, 100).setScore(0.1f).matchColor(127, 136, 141)
+			new Scanbox("arena-key-4.png",	"arenaWins",	"4", 347, 236, 100, 100).setScore(0.1f).matchColor(127, 136, 141)
 		);
 		
 		list.add(
-			new Scanbox("5.png",	"arenaWins",	"5", 347, 236, 100, 100).setScore(0.1f).matchColor(161, 137, 67)
+			new Scanbox("arena-key-5.png",	"arenaWins",	"5", 347, 236, 100, 100).setScore(0.1f).matchColor(161, 137, 67)
 		);
 		
 		list.add(
-			new Scanbox("6.png",	"arenaWins",	"6", 347, 236, 100, 100).setScore(0.1f).matchColor(119, 119, 126)
+			new Scanbox("arena-key-6.png",	"arenaWins",	"6", 347, 236, 100, 100).setScore(0.1f).matchColor(119, 119, 126)
 		);
 		
 		list.add(
-			new Scanbox("7.png",	"arenaWins",	"7", 347, 236, 100, 100).setScore(0.1f).matchColor(95, 109, 115)
+			new Scanbox("arena-key-7.png",	"arenaWins",	"7", 347, 236, 100, 100).setScore(0.1f).matchColor(95, 109, 115)
 		);
 		
 		list.add(
-			new Scanbox("8.png",	"arenaWins",	"8", 347, 236, 100, 100).setScore(0.1f).matchColor(149, 124, 75)
+			new Scanbox("arena-key-8.png",	"arenaWins",	"8", 347, 236, 100, 100).setScore(0.1f).matchColor(149, 124, 75)
 		);
 		
 		list.add(
-			new Scanbox("9.png",	"arenaWins",	"9", 347, 236, 100, 100).setScore(0.1f).matchColor(155, 127, 80)
+			new Scanbox("arena-key-9.png",	"arenaWins",	"9", 347, 236, 100, 100).setScore(0.1f).matchColor(155, 127, 80)
 		);
 
 		list.add(
-			new Scanbox("10.png",	"arenaWins",	"10", 347, 236, 100, 100).setScore(0.1f).matchColor(61, 84, 92)
+			new Scanbox("arena-key-10.png",	"arenaWins",	"10", 347, 236, 100, 100).setScore(0.1f).matchColor(61, 84, 92)
 		);
 		
 		list.add(
-			new Scanbox("11.png",	"arenaWins",	"11", 347, 236, 100, 100).setScore(0.1f).matchColor(163, 109, 66)
+			new Scanbox("arena-key-11.png",	"arenaWins",	"11", 347, 236, 100, 100).setScore(0.1f).matchColor(163, 109, 66)
 		);
 		
 		list.add(
-			new Scanbox("12.png",	"arenaWins",	"12", 347, 236, 100, 100).setScore(0.1f).matchColor(177, 169, 147)
+			new Scanbox("arena-key-12.png",	"arenaWins",	"12", 347, 236, 100, 100).setScore(0.1f).matchColor(177, 169, 147)
 		);
 		
 		list.add(
@@ -154,75 +154,75 @@ public class HearthScannerSettings {
 		);
 		
 		list.add(
-			new Scanbox("mage-opphero.png", 	"oppHero",	"mage", 690, 130, 60, 60)
+			new Scanbox("mage-ingame-bottom.png", 	"topHero",	"mage", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("hunter-opphero.png", 	"oppHero",	"hunter", 690, 130, 60, 60)
+			new Scanbox("hunter-ingame-bottom.png", 	"topHero",	"hunter", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("warrior-opphero.png", 	"oppHero",	"warrior", 690, 130, 60, 60)
+			new Scanbox("warrior-ingame-bottom.png", 	"topHero",	"warrior", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("shaman-opphero.png", 	"oppHero",	"shaman", 690, 130, 60, 60)
+			new Scanbox("shaman-ingame-bottom.png", 	"topHero",	"shaman", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("druid-opphero.png", 	"oppHero",	"druid", 690, 130, 60, 60)
+			new Scanbox("druid-ingame-bottom.png", 	"topHero",	"druid", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("priest-opphero.png", 	"oppHero",	"priest", 690, 130, 60, 60)
+			new Scanbox("priest-ingame-bottom.png", 	"topHero",	"priest", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("rogue-opphero.png", 	"oppHero",	"rogue", 690, 130, 60, 60)
+			new Scanbox("rogue-ingame-bottom.png", 	"topHero",	"rogue", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("paladin-opphero.png", 	"oppHero",	"paladin", 690, 130, 60, 60)
+			new Scanbox("paladin-ingame-bottom.png", 	"topHero",	"paladin", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("warlock-opphero.png", 	"oppHero",	"warlock", 690, 130, 60, 60)
+			new Scanbox("warlock-ingame-bottom.png", 	"topHero",	"warlock", 690, 130, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("mage-s.png", 		"myHero",	"mage",		690, 757, 60, 60)
+			new Scanbox("mage-ingame-bottom.png", 		"bottomHero",	"mage",		693, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("hunter-s.png", 	"myHero",	"hunter",	690, 757, 60, 60)
+			new Scanbox("hunter-ingame-bottom.png", 	"bottomHero",	"hunter",	693, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("warrior-s.png", 	"myHero",	"warrior",	690, 757, 60, 60)
+			new Scanbox("warrior-ingame-bottom.png", 	"bottomHero",	"warrior",	693, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("shaman-s.png", 	"myHero",	"shaman", 	690, 757, 60, 60)
+			new Scanbox("shaman-ingame-bottom.png", 	"bottomHero",	"shaman", 	693, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("druid-s.png", 		"myHero",	"druid", 	690, 757, 60, 60)
+			new Scanbox("druid-ingame-bottom.png", 		"bottomHero",	"druid", 	693, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("priest-s.png", 	"myHero",	"priest", 	690, 757, 60, 60)
+			new Scanbox("priest-ingame-bottom.png", 	"bottomHero",	"priest", 	693, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("rogue-s.png", 		"myHero",	"rogue", 	690, 757, 60, 60)
+			new Scanbox("rogue-ingame-bottom.png", 		"bottomHero",	"rogue", 	693, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("paladin-s.png", 	"myHero",	"paladin", 	690, 757, 60, 60)
+			new Scanbox("paladin-ingame-bottom.png", 	"bottomHero",	"paladin", 	693, 757, 60, 60)
 		);
 
 		list.add(
-			new Scanbox("warlock-s.png", 	"myHero",	"warlock", 	690, 757, 60, 60)
+			new Scanbox("warlock-ingame-bottom.png", 	"bottomHero",	"warlock", 	693, 757, 60, 60)
 		);
 		
 		list.add(
