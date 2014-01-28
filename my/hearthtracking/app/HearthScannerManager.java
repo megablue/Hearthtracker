@@ -668,6 +668,7 @@ public class HearthScannerManager {
 				if(sr.scene.equals("myHero") && sr.isExpired(currentTime)){
 					bottomHero = heroesList.getHeroId(sr.result);
 					bottomHeroDetected = true;
+					
 					//remove the expired
 					it.remove();
 				}
@@ -675,6 +676,7 @@ public class HearthScannerManager {
 				if(sr.scene.equals("oppHero") && sr.isExpired(currentTime)){
 					topHero = heroesList.getHeroId(sr.result);
 					topHeroDetected = true;
+					
 					//remove the expired
 					it.remove();
 				}
@@ -682,8 +684,9 @@ public class HearthScannerManager {
 		}
 	
 		//if match heroes are detected
-		if(topHeroDetected && bottomHeroDetected && !gameJustEnded){	
-			if(bottomHero != myHero || topHero != oppHero){
+		if(!gameJustEnded && !gameResultDetected && (topHeroDetected || bottomHeroDetected) ){
+			
+			if( (bottomHero!= -1 && bottomHero != myHero) && (topHero!= -1 && topHero != oppHero) ){
 				addNotification(
 					new HearthReaderNotification( 
 						uiLang.t("Match detected"), 
@@ -691,16 +694,24 @@ public class HearthScannerManager {
 					)
 				);
 			}
+
+			if(bottomHeroDetected && myHero!=bottomHero){				
+				myHero = bottomHero;
+				//update the game started time
+				gameStartedTime = System.currentTimeMillis();
+			}
 			
-			//update the game started time
-			gameStartedTime = System.currentTimeMillis();
-			myHero = bottomHero;
-			oppHero = topHero;
+			if(topHeroDetected && oppHero != topHero){
+				oppHero = topHero;
+				//update the game started time
+				gameStartedTime = System.currentTimeMillis();
+			}
+			
 			inGameMode = 1;
 		}
 		
 		//if game result is detected
-		else if(gameResultDetected && !gameJustEnded){
+		else if(!gameJustEnded && gameResultDetected){
 			
 			if(topDefeated && bottomDefeated){
 				detectedGameResult = GAME_RESULT_DRAW;
@@ -899,11 +910,6 @@ public class HearthScannerManager {
 	}
 
 	private void processHero(HearthScanResult sr){
-//		//make sure we don't process at the wrong timing
-//		if(System.currentTimeMillis() - lastSaveAttempt < GAME_SCAN_INTERVAL && !sr.equals("arenaHero")){
-//			return;
-//		}
-
 		System.out.println("processHero(), scene: " + sr.scene +", hero: " + sr.result);
 
 		int detectedHero = heroesList.getHeroId(sr.result);
@@ -983,7 +989,6 @@ public class HearthScannerManager {
 
 			//we missed the victory/defeat screen
 			if( isInGame() ){
-				lastSaveAttempt = System.currentTimeMillis();
 				concludeGame();
 			}
 		}
@@ -993,7 +998,11 @@ public class HearthScannerManager {
 		return (gameMode != newValue);
 	}
 	
-	private void concludeGame(){		
+	private void concludeGame(){
+		
+		System.out.println("System.currentTimeMillis() - gameStartedTime = " + (System.currentTimeMillis() - gameStartedTime) );
+		System.out.println("...." + ((int) Math.round((System.currentTimeMillis() - gameStartedTime)/1000f)));
+		
 		int totalTime = (int) Math.round((System.currentTimeMillis() - gameStartedTime)/1000f);
 		HearthDecks decks = HearthDecks.getInstance();
 		String deckName = "";
