@@ -17,6 +17,9 @@ public class HearthSetting {
 	boolean popup = true;
 	String uiLang = "english";
 	
+	boolean lastKnown = false;
+	int lastKnownX = 0, lastKnownY = 0, lastKnownWidth = 0, lastKnownHeight = 0;
+	
 	public boolean upgrade(){
 		int before = settingVer;
 		boolean upgraded = upgrade1() && upgrade2() && upgrade3() && upgrade4() && upgrade5();

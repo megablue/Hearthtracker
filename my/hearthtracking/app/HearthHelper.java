@@ -1,6 +1,8 @@
 package my.hearthtracking.app;
 
 import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorConvertOp;
@@ -17,7 +19,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Date;
+
 import javax.imageio.ImageIO;
+
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Monitor;
 
 public class HearthHelper {
 	private static HearthLogger logger = HearthLogger.getInstance();
@@ -28,6 +34,35 @@ public class HearthHelper {
 	        isEclipse = false;
 	    }
 	    return isEclipse;
+	}
+	
+	public static org.eclipse.swt.graphics.Rectangle getMonitorBounds(Display display, int x, int y){
+		Monitor[] monitors = display.getMonitors();
+		org.eclipse.swt.graphics.Rectangle screeenBounds = null;
+		
+		for(Monitor mon : monitors){
+			screeenBounds = mon.getBounds();
+			if(x >= screeenBounds.x && x <= screeenBounds.x+screeenBounds.width
+				&& y >= screeenBounds.y && y <= screeenBounds.y+screeenBounds.height ){
+				break;
+			}
+		}
+		
+		return screeenBounds;
+	}
+	
+	public static Point getCenter(Display display, org.eclipse.swt.graphics.Rectangle shellBounds){
+		Point mousePoints = MouseInfo.getPointerInfo().getLocation();
+		org.eclipse.swt.graphics.Rectangle screeenBounds = getMonitorBounds(display, mousePoints.x, mousePoints.y);
+		Point ret = null;
+
+		if(screeenBounds != null){
+			int x = screeenBounds.x + (screeenBounds.width - shellBounds.width) / 2;
+			int y = screeenBounds.y + (screeenBounds.height - shellBounds.height) / 2;
+			ret = new Point(x, y);
+		}
+		
+		return ret;
 	}
 	
 	static String readFile(String path)  throws IOException {
@@ -318,17 +353,17 @@ public class HearthHelper {
 	    } else if (diff < 120) {
 	      return uiLang.t("one minute ago");
 	    } else if (diff < 3600) {
-	      return uiLang.t("%d minutes ago", diff / 60);
+	      return uiLang.t("%d minutes ago", (int)(diff / 60));
 	    } else if (diff < 7200) {
 	      return uiLang.t("one hour ago");
 	    } else if (diff < 86400) {
-	      return uiLang.t("%d hours ago", diff / 3600);
+	      return uiLang.t("%.1f hours ago", diff / 3600);
 	    } else if (dayDiff == 1) {
 	      return uiLang.t("yesterday");
 	    } else if (dayDiff < 7) {
-	      return uiLang.t("%d days ago", dayDiff);
+	      return uiLang.t("%.2f days ago", dayDiff);
 	    } else {
-	      return uiLang.t("%d weeks ago", Math.ceil(dayDiff / 7));
+	      return uiLang.t("%.2f weeks ago", Math.ceil(dayDiff / 7));
 	    }
 	 }
 	

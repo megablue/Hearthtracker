@@ -1,5 +1,7 @@
 package my.hearthtracking.app;
 
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -26,6 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Control;
@@ -63,6 +66,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.FocusAdapter;
@@ -71,7 +75,6 @@ import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
@@ -167,6 +170,46 @@ public class HearthUI {
 		init();
 	}
 	
+	public boolean setCenter(){
+		Rectangle shellBounds = shlHearthtracker.getBounds();	
+		Point centerPoint = HearthHelper.getCenter(display, shellBounds);
+		
+		if(centerPoint!=null){
+			shlHearthtracker.setLocation (centerPoint.x, centerPoint.y);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean setLastKnown(){
+		
+		if(setting.lastKnown){
+			shlHearthtracker.setLocation (setting.lastKnownX, setting.lastKnownY);
+			shlHearthtracker.setSize(setting.lastKnownWidth, setting.lastKnownHeight);
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean saveLastKnown(){
+		org.eclipse.swt.graphics.Point offsets = shlHearthtracker.getLocation();
+		Rectangle shellBounds = shlHearthtracker.getBounds();
+		
+		setting.lastKnown = true;
+		setting.lastKnownX = offsets.x;
+		setting.lastKnownY = offsets.y;
+		setting.lastKnownWidth = shellBounds.width;
+		setting.lastKnownHeight = shellBounds.height;
+		
+		savePreferences();
+		
+		return false;
+	}
+	
+
+	
 	public boolean isRestart(){
 		return restart;
 	}
@@ -213,7 +256,11 @@ public class HearthUI {
 	public void open() {
 		display = Display.getDefault();
 		createContents();
-		shlHearthtracker.setImage(new Image( display, HearthFilesNameManager.logo128));
+		
+		if(!setLastKnown()){
+			setCenter();
+		}
+		
 		shlHearthtracker.open();
 		shlHearthtracker.layout();
 		Date lastUpdate = new Date(); 
@@ -245,6 +292,7 @@ public class HearthUI {
 	}
 	
 	private void shutdown(){
+		saveLastKnown();
 		shlHearthtracker.getShell().dispose();
 	}
 
@@ -264,6 +312,9 @@ public class HearthUI {
 				arg0.doit = false;
 			}
 		});
+		
+		shlHearthtracker.setImage(new Image( display, HearthFilesNameManager.logo128));
+		
 		shlHearthtracker.setSize(620, 456);
 		shlHearthtracker.setText(
 				"HearthTracker - " + lang.t("Automated Stats Tracking for Hearthstone enthusiasts!")

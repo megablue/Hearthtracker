@@ -17,8 +17,16 @@
       <string>It really means a lot to me. Your support is greatly appreciated!</string>
     </entry>
     <entry>
+      <string>Your version:</string>
+      <string>Your version:</string>
+    </entry>
+    <entry>
       <string>Arena score</string>
       <string>Arena score</string>
+    </entry>
+    <entry>
+      <string>Released on:</string>
+      <string>Released on:</string>
     </entry>
     <entry>
       <string>Ranked mode (played as)</string>
@@ -89,12 +97,12 @@
       <string>Result</string>
     </entry>
     <entry>
-      <string>&amp;Confirm</string>
-      <string>&amp;Confirm</string>
+      <string>Paladin</string>
+      <string>Paladin</string>
     </entry>
     <entry>
-      <string>Paladin</string>
-      <string>Paladin</string>
+      <string>&amp;Confirm</string>
+      <string>&amp;Confirm</string>
     </entry>
     <entry>
       <string>Experimental build %s</string>
@@ -221,8 +229,16 @@
       <string>No, I refuse to help!</string>
     </entry>
     <entry>
+      <string>%f weeks ago</string>
+      <string>%f weeks ago</string>
+    </entry>
+    <entry>
       <string>X offset</string>
       <string>X offset</string>
+    </entry>
+    <entry>
+      <string>Latest version:</string>
+      <string>Latest version:</string>
     </entry>
     <entry>
       <string>&amp;Preferences</string>
@@ -369,16 +385,20 @@
       <string>&amp;Tools</string>
     </entry>
     <entry>
+      <string>%.2f weeks ago</string>
+      <string>%.2f weeks ago</string>
+    </entry>
+    <entry>
       <string>Unranked mode detected</string>
       <string>Unranked mode detected</string>
     </entry>
     <entry>
-      <string>Last Match -&gt; Won</string>
-      <string>Last Match -&gt; Won</string>
+      <string>Lose</string>
+      <string>Lose</string>
     </entry>
     <entry>
-      <string>Lose</string>
-      <string>Lose</string>
+      <string>Last Match -&gt; Won</string>
+      <string>Last Match -&gt; Won</string>
     </entry>
     <entry>
       <string>General</string>
@@ -425,6 +445,10 @@
       <string>Please select the server you played on for your existing arena and matches records. The server field for existing records can not be altered after this.</string>
     </entry>
     <entry>
+      <string>%sGet update%s</string>
+      <string>%sGet update%s</string>
+    </entry>
+    <entry>
       <string>Mage</string>
       <string>Mage</string>
     </entry>
@@ -467,6 +491,10 @@
     <entry>
       <string>Visualize scanned area</string>
       <string>Visualize scanned area</string>
+    </entry>
+    <entry>
+      <string>HearthTracker Update Notification!</string>
+      <string>HearthTracker Update Notification!</string>
     </entry>
     <entry>
       <string>Game Language</string>

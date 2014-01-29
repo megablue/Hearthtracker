@@ -8,6 +8,7 @@ public class HearthULangsList {
 	
 	public HearthULangsList(){
 		if(map.size() == 0){
+			map.put("Русский", "russian");
 			map.put("繁體中文", "traditional-chinese");
 			map.put("简体中文", "simplified-chinese");
 			map.put("English", "english");

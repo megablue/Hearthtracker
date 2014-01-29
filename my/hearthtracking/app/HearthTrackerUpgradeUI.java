@@ -25,6 +25,7 @@ public class HearthTrackerUpgradeUI {
 			lang.t("HearthTracker Upgrade Confirmation")
 		);
 		ui.setSize(388, 200);
+		setCenter(display, ui);
 		ui.setImage(new Image( display, HearthFilesNameManager.logo128));
 		
 		Label lblPleaseSelectA = new Label(ui, SWT.WRAP);
@@ -83,5 +84,17 @@ public class HearthTrackerUpgradeUI {
 				}
 			}
 		}		
+	}
+	
+	public boolean setCenter(Display display, Shell shell){
+		org.eclipse.swt.graphics.Rectangle shellBounds = shell.getBounds();	
+		java.awt.Point centerPoint = HearthHelper.getCenter(display, shellBounds);
+		
+		if(centerPoint!=null){
+			shell.setLocation (centerPoint.x, centerPoint.y);
+			return true;
+		}
+		
+		return false;
 	}
 }
