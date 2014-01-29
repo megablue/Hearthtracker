@@ -165,6 +165,7 @@ public class HearthUI {
 	private boolean restart = false;
 	private Combo cmbStatsMode;
 	private Combo cmbStatsCoin;
+	private Combo cmbStatsLimit;
 
 	public HearthUI(HearthScannerManager s, HearthDB t){
 		hearthScanner = s;
@@ -486,13 +487,13 @@ public class HearthUI {
 					}
 		);
 		FormData fd_cmbStatsGameMode = new FormData();
-		fd_cmbStatsGameMode.width = 45;
-		fd_cmbStatsGameMode.top = new FormAttachment(0, 10);
 		fd_cmbStatsGameMode.left = new FormAttachment(0, 10);
+		fd_cmbStatsGameMode.top = new FormAttachment(0, 10);
 		cmbStatsGameMode.setLayoutData(fd_cmbStatsGameMode);
 		cmbStatsGameMode.select(0);
 		
 		cmbStatsMode = new Combo(grpStats, SWT.READ_ONLY);
+		fd_cmbStatsGameMode.right = new FormAttachment(100, -266);
 		cmbStatsMode.setItems(
 			new String[] { 
 					lang.t("As"),
@@ -500,12 +501,13 @@ public class HearthUI {
 					}
 		);
 		FormData fd_cmbStatsMode = new FormData();
-		fd_cmbStatsMode.top = new FormAttachment(cmbStatsGameMode, 0, SWT.TOP);
 		fd_cmbStatsMode.left = new FormAttachment(cmbStatsGameMode, 6);
+		fd_cmbStatsMode.top = new FormAttachment(cmbStatsGameMode, 0, SWT.TOP);
 		cmbStatsMode.setLayoutData(fd_cmbStatsMode);
 		cmbStatsMode.select(0);
 		
 		cmbStatsCoin = new Combo(grpStats, SWT.READ_ONLY);
+		fd_cmbStatsMode.right = new FormAttachment(100, -217);
 		cmbStatsCoin.setItems(
 			new String[] {
 				"",
@@ -516,8 +518,17 @@ public class HearthUI {
 		FormData fd_cmbStatsCoin = new FormData();
 		fd_cmbStatsCoin.top = new FormAttachment(cmbStatsGameMode, 0, SWT.TOP);
 		fd_cmbStatsCoin.left = new FormAttachment(cmbStatsMode, 6);
+		fd_cmbStatsCoin.right = new FormAttachment(100, -136);
 		cmbStatsCoin.setLayoutData(fd_cmbStatsCoin);
 		cmbStatsCoin.select(0);
+		
+		cmbStatsLimit = new Combo(grpStats, SWT.READ_ONLY);
+		cmbStatsLimit.setItems(new String[] {"", "10", "50", "100", "200", "300", "400", "500", "750", "1000"});
+		FormData fd_cmbStatsLimit = new FormData();
+		fd_cmbStatsLimit.top = new FormAttachment(cmbStatsGameMode, 0, SWT.TOP);
+		fd_cmbStatsLimit.left = new FormAttachment(cmbStatsCoin, 6);
+		cmbStatsLimit.setLayoutData(fd_cmbStatsLimit);
+		cmbStatsLimit.select(0);
 		
 		grpCurrentStats = new Group(sashForm, SWT.NONE);
 		grpCurrentStats.setText(
@@ -2370,6 +2381,7 @@ public class HearthUI {
 		cmbStatsGameMode.addSelectionListener(adapter);
 		cmbStatsMode.addSelectionListener(adapter);
 		cmbStatsCoin.addSelectionListener(adapter);
+		cmbStatsLimit.addSelectionListener(adapter);
 	}
 	
 	private static Image resize(Image image, int width, int height) {
@@ -2419,15 +2431,25 @@ public class HearthUI {
 	
 	private int getStatCoinModeFromUI(){		
 		switch(cmbStatsCoin.getSelectionIndex()){			
-		case 1:
-			return HearthMatch.GAME_NO_COIN;
-		
-		case 2:
-			return HearthMatch.GAME_WITH_COIN;
+			case 1:
+				return HearthMatch.GAME_NO_COIN;
 			
-		default:
-			return HearthMatch.GAME_BOTH_COIN;
+			case 2:
+				return HearthMatch.GAME_WITH_COIN;
+				
+			default:
+				return HearthMatch.GAME_BOTH_COIN;
 		}
+	}
+	
+	private int getStatsLimitFromUI(){
+		String limit = cmbStatsLimit.getText();
+		
+		if(limit.equals("")){
+			return -1;
+		}
+		
+		return Integer.parseInt(limit);
 	}
 	
 	private void fillOverviewTable(){
@@ -2436,6 +2458,7 @@ public class HearthUI {
 		int mode = getGameModeFromUI();
 		int statsMode = getStatModeFromUI();
 		int coinMode = getStatCoinModeFromUI();
+		int limit = getStatsLimitFromUI();
 		
 //		System.out.println(
 //				"mode: " + getGameModeFromUI() + ", " +
@@ -2452,11 +2475,11 @@ public class HearthUI {
 			int heroId = i < heroesList.getTotal() ? i : -1;
 			
 			try {
-				wins = tracker.getTotalWinsByHero(mode, statsMode, coinMode, heroId);
-				losses = tracker.getTotalLossesByHero(mode, statsMode, coinMode, heroId);
-				overall = tracker.getWinRateByHero(mode, statsMode, coinMode, heroId);
-				sevenplus = tracker.getWinRateByHeroSpecial(mode, statsMode, coinMode, heroId);
-				totalrun = tracker.getTotalRunsByHero(mode, statsMode, coinMode, heroId);
+				wins = tracker.getTotalWinsByHero(mode, statsMode, coinMode, heroId, limit);
+				losses = tracker.getTotalLossesByHero(mode, statsMode, coinMode, heroId, limit);
+				overall = tracker.getWinRateByHero(mode, statsMode, coinMode, heroId, limit);
+				sevenplus = tracker.getWinRateByHeroSpecial(mode, statsMode, coinMode, heroId, limit);
+				totalrun = tracker.getTotalRunsByHero(mode, statsMode, coinMode, heroId, limit);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
