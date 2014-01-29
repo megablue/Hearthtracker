@@ -215,6 +215,8 @@ public class MainLoader {
 		lang = HearthLanguageManager.getInstance();
 		lang.loadLang(setting.uiLang);
 		
+		logger.setLogLevel(setting.logLevel);
+		
 		logger.info("Done loading xml files.");
 	}
 	

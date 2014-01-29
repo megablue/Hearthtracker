@@ -1,5 +1,7 @@
 package my.hearthtracking.app;
 
+import java.util.logging.Level;
+
 public class HearthSetting {
 	int scanInterval = 250;
 	int gameWidth = 1920;
@@ -19,6 +21,8 @@ public class HearthSetting {
 	
 	boolean lastKnown = false;
 	int lastKnownX = 0, lastKnownY = 0, lastKnownWidth = 0, lastKnownHeight = 0;
+	
+	String logLevel = Level.INFO.getName();
 	
 	public boolean upgrade(){
 		int before = settingVer;
@@ -86,7 +90,8 @@ public class HearthSetting {
 		boolean upgraded = false;
 		
 		if(settingVer == 4){
-			scanInterval = 250;
+			scanInterval = 100;
+			logLevel = Level.INFO.getName();
 			settingVer = 5;
 			upgraded = true;
 			System.out.println("upgraded!");

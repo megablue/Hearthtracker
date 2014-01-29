@@ -57,6 +57,15 @@ public class HearthLogger {
 	public void setLogLevel(Level loglevel){
 		logger.setLevel(loglevel);
 	}
+	
+	public void setLogLevel(String loglevel){
+		if(loglevel != null){
+			Level level = Level.parse(loglevel);
+			logger.setLevel(level);
+		} else {
+			logger.setLevel(Level.INFO);
+		}	
+	}
 
 	public void severe(String line){
 		logger.severe(line);

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import notifier.NotifierDialog;
@@ -94,6 +95,7 @@ import org.eclipse.swt.widgets.ExpandItem;
 
 @SuppressWarnings({ "unused", "deprecation" })
 public class HearthUI {
+	private HearthLogger logger = HearthLogger.getInstance();
 	protected Shell shlHearthtracker;
 	private Button btnEnableScanner;
 	private Button[] btnScanSpeed = new Button[4];
@@ -847,7 +849,7 @@ public class HearthUI {
 		
 		Composite composite_7 = new Composite(expandBar, SWT.NONE);
 		xpndtmGeneral.setControl(composite_7);
-		xpndtmGeneral.setHeight(150);
+		xpndtmGeneral.setHeight(120);
 		composite_7.setLayout(new GridLayout(3, false));
 		
 		Label lblNewLabel_14 = new Label(composite_7, SWT.NONE);
@@ -916,7 +918,7 @@ public class HearthUI {
 		
 		Composite composite_10 = new Composite(expandBar, SWT.NONE);
 		xpndtmAdvanced.setControl(composite_10);
-		xpndtmAdvanced.setHeight(160);
+		xpndtmAdvanced.setHeight(180);
 		composite_10.setLayout(new GridLayout(9, false));
 		
 		Label lblDetect = new Label(composite_10, SWT.NONE);
@@ -1019,6 +1021,55 @@ public class HearthUI {
 		btnAlwaysScan = new Button(composite_10, SWT.CHECK);
 		btnAlwaysScan.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3, 1));
 		btnAlwaysScan.setText(lang.t("Enable"));
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		
+		Label lblNewLabel_1 = new Label(composite_10, SWT.NONE);
+		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblNewLabel_1.setText(lang.t("Log Level"));
+		
+		CCombo cmbLogLevel = new CCombo(composite_10, SWT.BORDER | SWT.READ_ONLY);
+		cmbLogLevel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int index = ((CCombo) arg0.widget).getSelectionIndex();
+				
+				switch(index){
+					case 0:
+						setting.logLevel = Level.INFO.getName();
+						logger.setLogLevel(Level.INFO);
+					break;
+					
+					case 1:
+						setting.logLevel = Level.FINE.getName();
+						logger.setLogLevel(Level.FINE);
+					break;
+					
+					case 2:
+						setting.logLevel = Level.FINEST.getName();
+						logger.setLogLevel(Level.FINEST);
+					break;
+				}
+				
+				savePreferences();
+			}
+		});
+		GridData gd_cmbLogLevel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 5, 1);
+		gd_cmbLogLevel.widthHint = 357;
+		cmbLogLevel.setLayoutData(gd_cmbLogLevel);
+		cmbLogLevel.setVisibleItemCount(13);
+		cmbLogLevel.setItems(new String[] {"Info", "Extended", "Debug"});
+		cmbLogLevel.setEditable(false);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
+		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
