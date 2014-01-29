@@ -106,7 +106,7 @@ public class HearthUI {
 	private Button btnAutoDetectGameRes;
 	private Group grpCurrentStats;
 	private StyledText styledTextStatus; 
-	private Combo cmbStatsMode;
+	private Combo cmbStatsGameMode;
 	
 	private Group grpStats;
 	
@@ -163,6 +163,8 @@ public class HearthUI {
 	private CCombo cbUILangs;
 	
 	private boolean restart = false;
+	private Combo cmbStatsMode;
+	private Combo cmbStatsCoin;
 
 	public HearthUI(HearthScannerManager s, HearthDB t){
 		hearthScanner = s;
@@ -473,21 +475,49 @@ public class HearthUI {
 		tblclmnNewColumn_4.setWidth(72);
 		tblclmnNewColumn_4.setText(lang.t("Total Runs"));
 		
+		cmbStatsGameMode = new Combo(grpStats, SWT.READ_ONLY);
+		cmbStatsGameMode.setItems(
+				new String[] {
+						HearthGameMode.gameModeToStringLabel(HearthGameMode.ARENAMODE), 
+						HearthGameMode.gameModeToStringLabel(HearthGameMode.RANKEDMODE), 
+						HearthGameMode.gameModeToStringLabel(HearthGameMode.UNRANKEDMODE), 
+						HearthGameMode.gameModeToStringLabel(HearthGameMode.CHALLENGEMODE), 
+						HearthGameMode.gameModeToStringLabel(HearthGameMode.PRACTICEMODE)
+					}
+		);
+		FormData fd_cmbStatsGameMode = new FormData();
+		fd_cmbStatsGameMode.width = 45;
+		fd_cmbStatsGameMode.top = new FormAttachment(0, 10);
+		fd_cmbStatsGameMode.left = new FormAttachment(0, 10);
+		cmbStatsGameMode.setLayoutData(fd_cmbStatsGameMode);
+		cmbStatsGameMode.select(0);
+		
 		cmbStatsMode = new Combo(grpStats, SWT.READ_ONLY);
 		cmbStatsMode.setItems(
-				new String[] {
-						lang.t("Arena mode (played as)"), 
-						lang.t("Ranked mode (played as)"), 
-						lang.t("Unranked mode (played as)"), 
-						lang.t("Challenge mode (played as)"), 
-						lang.t("Practice mode (played as)")
+			new String[] { 
+					lang.t("As"),
+					lang.t("Vs")
 					}
 		);
 		FormData fd_cmbStatsMode = new FormData();
-		fd_cmbStatsMode.top = new FormAttachment(0, 10);
-		fd_cmbStatsMode.left = new FormAttachment(0, 10);
+		fd_cmbStatsMode.top = new FormAttachment(cmbStatsGameMode, 0, SWT.TOP);
+		fd_cmbStatsMode.left = new FormAttachment(cmbStatsGameMode, 6);
 		cmbStatsMode.setLayoutData(fd_cmbStatsMode);
 		cmbStatsMode.select(0);
+		
+		cmbStatsCoin = new Combo(grpStats, SWT.READ_ONLY);
+		cmbStatsCoin.setItems(
+			new String[] {
+				"",
+				lang.t("Coin"),
+				lang.t("No Coin")
+			}
+		);
+		FormData fd_cmbStatsCoin = new FormData();
+		fd_cmbStatsCoin.top = new FormAttachment(cmbStatsGameMode, 0, SWT.TOP);
+		fd_cmbStatsCoin.left = new FormAttachment(cmbStatsMode, 6);
+		cmbStatsCoin.setLayoutData(fd_cmbStatsCoin);
+		cmbStatsCoin.select(0);
 		
 		grpCurrentStats = new Group(sashForm, SWT.NONE);
 		grpCurrentStats.setText(
@@ -1318,10 +1348,12 @@ public class HearthUI {
 				String result = lang.t("Unknown");
 				cal.setTime(new Date(rs.getLong("STARTTIME")));
 				
-				if(rs.getInt("WIN") == 1){
+				if(rs.getInt("WIN") == HearthMatch.GAME_RESULT_VICTORY){
 					result = lang.t("Win");
-				} else if(rs.getInt("WIN") == 0){
+				} else if(rs.getInt("WIN") == HearthMatch.GAME_RESULT_DEFEAT){
 					result = lang.t("Lose");
+				}if(rs.getInt("WIN") == HearthMatch.GAME_RESULT_DRAW){
+					result = lang.t("Draw");
 				}
 				
 				tableItem.setData("id", rs.getInt("ID"));
@@ -2328,12 +2360,16 @@ public class HearthUI {
 	}
 	
 	private void setupModeSelection(){
-		cmbStatsMode.addSelectionListener(new SelectionAdapter() {
+		SelectionAdapter adapter = new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				fillOverviewTable();
 			}
-		});
+		};
+		
+		cmbStatsGameMode.addSelectionListener(adapter);
+		cmbStatsMode.addSelectionListener(adapter);
+		cmbStatsCoin.addSelectionListener(adapter);
 	}
 	
 	private static Image resize(Image image, int width, int height) {
@@ -2353,9 +2389,7 @@ public class HearthUI {
 	}
 	
 	private int getGameModeFromUI(){
-		int mode = cmbStatsMode.getSelectionIndex();
-		
-		switch(mode){
+		switch(cmbStatsGameMode.getSelectionIndex()){
 			case 0:
 				return HearthGameMode.ARENAMODE;
 			case 1:
@@ -2371,10 +2405,43 @@ public class HearthUI {
 		return HearthGameMode.UNKNOWNMODE;
 	}
 	
+	private int getStatModeFromUI(){		
+		switch(cmbStatsMode.getSelectionIndex()){			
+			case 1:
+			return HearthDB.STATS_PLAYED_AGAINST;
+			
+			default:
+			case 0:
+			return HearthDB.STATS_PLAYED_AS;
+		}
+	}
+	
+	
+	private int getStatCoinModeFromUI(){		
+		switch(cmbStatsCoin.getSelectionIndex()){			
+		case 1:
+			return HearthMatch.GAME_NO_COIN;
+		
+		case 2:
+			return HearthMatch.GAME_WITH_COIN;
+			
+		default:
+			return HearthMatch.GAME_BOTH_COIN;
+		}
+	}
+	
 	private void fillOverviewTable(){
 		int selected = table.getSelectionIndex();
 		table.removeAll();
-		int mode = this.getGameModeFromUI();
+		int mode = getGameModeFromUI();
+		int statsMode = getStatModeFromUI();
+		int coinMode = getStatCoinModeFromUI();
+		
+//		System.out.println(
+//				"mode: " + getGameModeFromUI() + ", " +
+//				"statsMode: " + getStatModeFromUI() + ", " +
+//				"coinMode: " + getStatCoinModeFromUI()
+//		);
 		
 		for(int i = 0; i < heroesList.getTotal() + 1; i++){
 			float sevenplus = 0, overall = 0;
@@ -2385,11 +2452,11 @@ public class HearthUI {
 			int heroId = i < heroesList.getTotal() ? i : -1;
 			
 			try {
-				wins = tracker.getTotalWinsByHero(mode, heroId);
-				losses = tracker.getTotalLossesByHero(mode, heroId);
-				sevenplus = tracker.getWinRateByHeroSpecial(mode, heroId);
-				overall = tracker.getWinRateByHero(mode, heroId);
-				totalrun = tracker.getTotalRunsByHero(mode, heroId);
+				wins = tracker.getTotalWinsByHero(mode, statsMode, coinMode, heroId);
+				losses = tracker.getTotalLossesByHero(mode, statsMode, coinMode, heroId);
+				overall = tracker.getWinRateByHero(mode, statsMode, coinMode, heroId);
+				sevenplus = tracker.getWinRateByHeroSpecial(mode, statsMode, coinMode, heroId);
+				totalrun = tracker.getTotalRunsByHero(mode, statsMode, coinMode, heroId);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -2402,19 +2469,19 @@ public class HearthUI {
 			
 			tableItem_1.setImage(0, heroImgs[heroId+1]);
 			
-			if( !(overall > -1) ){
-				continue;
-			}
-			
 			tableItem_1.setText(1,   wins + "");
 			tableItem_1.setText(2,   losses + "");
 			
 			if(overall > -1){
 				tableItem_1.setText(3,  new DecimalFormat("0.00").format(overall*100));
+			} else {
+				tableItem_1.setText(3,  "-");
 			}
 			
 			if(sevenplus > -1){
 				tableItem_1.setText(4,  new DecimalFormat("0.00").format(sevenplus*100));
+			} else {
+				tableItem_1.setText(4,  "-");
 			}
 			
 			tableItem_1.setText(5,  totalrun + "");

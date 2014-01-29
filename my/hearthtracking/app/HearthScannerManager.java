@@ -48,7 +48,7 @@ public class HearthScannerManager {
 	private int gameResX = 1920, gameResY = 1080;
 	private int oldGameResX = -1, oldGameResY = -1;
 
-	private HearthDB tracker;
+	private HearthDB db;
 	private HearthScannerSettings scannerSettings = null;
 	private int xOffetOverrideVal = 0;
 	private int yOffsetOverrideVal = 0;
@@ -87,7 +87,7 @@ public class HearthScannerManager {
 	
 	public HearthScannerManager (HearthDB t, int tslot, String lang, int resX, int resY, boolean autoping, boolean alwaysScanFlag){
 		debugMode = HearthHelper.isDevelopmentEnvironment();
-		tracker  = t;
+		db  = t;
 		gameResX = resX;
 		gameResY = resY;
 		gameLang = lang.toLowerCase();
@@ -570,9 +570,9 @@ public class HearthScannerManager {
 
 			if(deckName.length() > 0){
 				try {
-					int deckWins = tracker.getWinsByDeck(gameMode, deckName);
-					int deckLosses = tracker.getLossesByDeck(gameMode, deckName);
-					float winRate = tracker.getWinRateByDeck(gameMode, deckName);
+					int deckWins = db.getWinsByDeck(gameMode, deckName);
+					int deckLosses = db.getLossesByDeck(gameMode, deckName);
+					float winRate = db.getWinRateByDeck(gameMode, deckName);
 					String winRateS = winRate > -1 ? new DecimalFormat("0.00").format(winRate) + "%" : "N|A";
 					
 					if(winRate > -1 ){
@@ -1054,7 +1054,7 @@ public class HearthScannerManager {
 			if(selectedDeck > -1 && selectedDeck < decks.list.length){
 				deckName = decks.list[selectedDeck];
 			}
-			tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, gameResult, gameStartedTime, totalTime, false, deckName);
+			db.saveMatchResult(gameMode, myHero, oppHero, goFirst, gameResult, gameStartedTime, totalTime, false, deckName);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			logger.severe(e.getMessage());
@@ -1084,7 +1084,7 @@ public class HearthScannerManager {
 	private void concludeArena(){
 		logger.info("Saving arena result...");
 		try {
-			tracker.saveArenaResult(arenaHero, arenaWins, arenaLosses, System.currentTimeMillis(), false);
+			db.saveArenaResult(arenaHero, arenaWins, arenaLosses, System.currentTimeMillis(), false);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			logger.severe(e.getMessage());
@@ -1241,14 +1241,14 @@ public class HearthScannerManager {
 		String output = "";
 
 		try {
-			arenaWins = 	tracker.getTotalWins(HearthGameMode.ARENAMODE);
-			arenaLosses = 	tracker.getTotalLosses(HearthGameMode.ARENAMODE);
+			arenaWins = 	db.getTotalWins(HearthGameMode.ARENAMODE);
+			arenaLosses = 	db.getTotalLosses(HearthGameMode.ARENAMODE);
 			arenaWinrate =  (arenaWins + arenaLosses) > 0 ? (float) arenaWins /  (arenaWins + arenaLosses) * 100: -1;
-			rankedWins = 	tracker.getTotalWins(HearthGameMode.RANKEDMODE);
-			rankedLosses = 	tracker.getTotalLosses(HearthGameMode.RANKEDMODE);
+			rankedWins = 	db.getTotalWins(HearthGameMode.RANKEDMODE);
+			rankedLosses = 	db.getTotalLosses(HearthGameMode.RANKEDMODE);
 			rankedWinrate =  (rankedWins + rankedLosses) > 0 ? (float) rankedWins / (rankedWins + rankedLosses) * 100 : -1;
-			unrankedWins = 	tracker.getTotalWins(HearthGameMode.UNRANKEDMODE);
-			unrankedLosses = 	tracker.getTotalLosses(HearthGameMode.UNRANKEDMODE);
+			unrankedWins = 	db.getTotalWins(HearthGameMode.UNRANKEDMODE);
+			unrankedLosses = 	db.getTotalLosses(HearthGameMode.UNRANKEDMODE);
 			unrankedWinrate =  (unrankedWins + unrankedLosses) > 0 ? (float) unrankedWins / (unrankedWins + unrankedLosses) * 100 : -1;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1298,7 +1298,7 @@ public class HearthScannerManager {
 		}
 		
 		try {
-			ResultSet rs = tracker.getLastMatches(5);
+			ResultSet rs = db.getLastMatches(5);
 			output += "\r\n" + uiLang.t("Latest match(es): ") + "\r\n";
 			while(rs.next()){
 				
@@ -1318,7 +1318,7 @@ public class HearthScannerManager {
 				output += uiLang.t("%s vs %s, %s, %s", as, vs, first, result)+ "\r\n";
 			}
 			
-			rs = tracker.getLastArenaResults(5);
+			rs = db.getLastArenaResults(5);
 
 			output +="\r\n" + uiLang.t("Latest Arena: ") + "\r\n";
 			

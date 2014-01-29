@@ -26,7 +26,7 @@ public class MainLoader {
 	public static HearthULangsList uiLangsList;
 	public static HearthDatabase dbSetting;
 	
-	public static HearthDB tracker;
+	public static HearthDB db;
 	public static HearthScannerManager scannerManager;
 	private static Thread scannerManagerThread;
 	
@@ -49,10 +49,10 @@ public class MainLoader {
 
 		init();
 		
-		tracker = new HearthDB();
+		db = new HearthDB();
 		
 		scannerManager = new HearthScannerManager(
-			tracker, 
+			db, 
 			setting.scanInterval,
 			setting.gameLang, 
 			setting.gameWidth, 
@@ -87,7 +87,7 @@ public class MainLoader {
 		startScannerManager();
 		
 		do{
-			theUI = new HearthUI(scannerManager, tracker);
+			theUI = new HearthUI(scannerManager, db);
 			theUI.open();
 		}while(theUI.isRestart());
 		
@@ -139,7 +139,7 @@ public class MainLoader {
 		
 		scannerManager.dispose();
 		lang.dispose();
-		tracker.closeDB();
+		db.closeDB();
 		
 		logger.info("Bye Bye!");
 		System.exit(0);
@@ -219,8 +219,8 @@ public class MainLoader {
 	}
 	
 	private static void startScannerManager(){
-		tracker = new HearthDB();
-		scannerManager = new HearthScannerManager(tracker, setting.scanInterval, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
+		db = new HearthDB();
+		scannerManager = new HearthScannerManager(db, setting.scanInterval, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
 
 		Runnable runnable = new Runnable() {
  			public void run() {

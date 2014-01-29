@@ -433,6 +433,10 @@
       <string>Game Resolution (if auto detect failed)</string>
     </entry>
     <entry>
+      <string>Arena mode (against)</string>
+      <string>Arena mode (against)</string>
+    </entry>
+    <entry>
       <string>Opponent hero is %s</string>
       <string>Opponent hero is %s</string>
     </entry>
@@ -473,6 +477,10 @@
       <string>Unknown mode</string>
     </entry>
     <entry>
+      <string>Challenge mode (against)</string>
+      <string>Challenge mode (against)</string>
+    </entry>
+    <entry>
       <string>Last seen</string>
       <string>Last seen</string>
     </entry>
@@ -487,6 +495,10 @@
     <entry>
       <string>Played</string>
       <string>Played</string>
+    </entry>
+    <entry>
+      <string>No Coin</string>
+      <string>No Coin</string>
     </entry>
     <entry>
       <string>Visualize scanned area</string>
@@ -507,6 +519,10 @@
     <entry>
       <string>go first</string>
       <string>go first</string>
+    </entry>
+    <entry>
+      <string>Ranked mode (against)</string>
+      <string>Ranked mode (against)</string>
     </entry>
     <entry>
       <string>Arena: %s</string>
@@ -657,8 +673,20 @@
       <string>minutes</string>
     </entry>
     <entry>
+      <string>No coin</string>
+      <string>No coin</string>
+    </entry>
+    <entry>
       <string>%s vs %s, %s, %s</string>
       <string>%s vs %s, %s, %s</string>
+    </entry>
+    <entry>
+      <string>Unranked mode (against)</string>
+      <string>Unranked mode (against)</string>
+    </entry>
+    <entry>
+      <string>as</string>
+      <string>as</string>
     </entry>
     <entry>
       <string>Ranked: %s</string>
@@ -713,12 +741,20 @@
       <string>Latest Arena: </string>
     </entry>
     <entry>
+      <string>Coin</string>
+      <string>Coin</string>
+    </entry>
+    <entry>
       <string>CN</string>
       <string>CN</string>
     </entry>
     <entry>
       <string>Sideboard</string>
       <string>Sideboard</string>
+    </entry>
+    <entry>
+      <string>Practice mode (against)</string>
+      <string>Practice mode (against)</string>
     </entry>
     <entry>
       <string>Last Match -&gt; went first</string>

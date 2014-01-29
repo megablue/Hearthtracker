@@ -365,7 +365,7 @@ public class HearthSync {
 				ar[index].cid 			= rs.getInt("id");
 				ar[index].myhero 		= heroesList.getHeroName(rs.getInt("myheroid"));
 				ar[index].opphero		= heroesList.getHeroName(rs.getInt("oppheroid"));
-				ar[index].goes			= HearthHelper.goesFirstToString(rs.getInt("goesfirst"));
+				ar[index].goes			= HearthMatch.coinToString(rs.getInt("goesfirst"));
 				ar[index].win			= rs.getInt("win");
 				ar[index].starttime		= rs.getLong("starttime");
 				ar[index].totaltime		= rs.getInt("totaltime");

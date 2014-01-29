@@ -13,7 +13,10 @@ import java.util.Date;
 import org.h2.jdbcx.JdbcDataSource;
 
 public class HearthDB {
-	Connection conn;
+	public static final int STATS_PLAYED_AS = 0;
+	public static final int STATS_PLAYED_AGAINST = 1;
+	
+	private Connection conn;
 	private boolean isDirty = true;
 	private boolean isWorking = false;
 	private boolean testMode = false;
@@ -561,20 +564,36 @@ public class HearthDB {
 		}
 	}
 	
-	public int getTotalRunsByHero(int mode, int heroid) throws SQLException{
+	public int getTotalRunsByHero(int gameMode, int statsMode, int coinMode, int heroId) throws SQLException{
 		ResultSet rs;
 		int total = 0;
+		
+		String coinSql = "";
+		
+		if(coinMode == HearthMatch.GAME_WITH_COIN){
+			coinSql = " AND goesFirst=" + HearthMatch.GAME_WITH_COIN;
+		} else if(coinMode == HearthMatch.GAME_NO_COIN){
+			coinSql = " AND goesFirst=" + HearthMatch.GAME_NO_COIN;
+		}
 
-		if(mode == HearthGameMode.ARENAMODE){
-			rs = stat.executeQuery("select count(*) as TOTAL from ARENARESULTS WHERE heroid = " + heroid + " AND DELETED=0");
+		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
+			rs = stat.executeQuery("select count(*) as TOTAL from ARENARESULTS WHERE heroid = " + heroId + " AND DELETED=0");
 			
 			if(rs.next()){
 				total += rs.getInt("TOTAL");
 			}
-		} else {
+		} else if(gameMode != HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS) {
 			
-			rs = stat.executeQuery("select count(*) as TOTAL from MATCHES WHERE myheroid = " + heroid 
-					+ " AND (MODE=" + mode + ") AND DELETED=0");
+			rs = stat.executeQuery("select count(*) as TOTAL from MATCHES WHERE myheroid = " + heroId 
+					+ " AND (MODE=" + gameMode + ") AND DELETED=0 " + coinSql);
+			
+			if(rs.next()){
+				total += rs.getInt("TOTAL");
+			}
+		}else if(statsMode == STATS_PLAYED_AGAINST) {
+			
+			rs = stat.executeQuery("select count(*) as TOTAL from MATCHES WHERE oppHeroId = " + heroId 
+					+ " AND (MODE=" + gameMode + ") AND DELETED=0 " + coinSql);
 			
 			if(rs.next()){
 				total += rs.getInt("TOTAL");
@@ -584,14 +603,22 @@ public class HearthDB {
 		return total;
 	}
 	
-	public float getWinRateByHero(int mode, int heroId) throws SQLException{
+	public float getWinRateByHero(int gameMode, int statsMode, int coinMode, int heroId) throws SQLException{
 		ResultSet rs;
 		int wins = 0;
 		int losses = 0;
 		float winrate = -1;
 		boolean found = false;
 		
-		if(mode == HearthGameMode.ARENAMODE){
+		String coinSql = "";
+		
+		if(coinMode == HearthMatch.GAME_WITH_COIN){
+			coinSql = " AND goesFirst=" + HearthMatch.GAME_WITH_COIN;
+		} else if(coinMode == HearthMatch.GAME_NO_COIN){
+			coinSql = " AND goesFirst=" + HearthMatch.GAME_NO_COIN;
+		}
+		
+		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS where heroId = " + heroId + " AND DELETED=0");
 			
 			while(rs.next()){
@@ -599,18 +626,31 @@ public class HearthDB {
 				wins += rs.getInt("WINS");
 				losses += rs.getInt("LOSSES");
 			}
-		} else {
+		} else if(gameMode != HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS) {
 			
-			rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + heroId + " AND MODE=" + mode + " AND DELETED=0");
+			rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + heroId + " AND MODE=" + gameMode + " AND DELETED=0 " + coinSql);
 			
 			while(rs.next()){
 				found = true;
-				if(rs.getInt("WIN") > -1){
-					if(rs.getInt("WIN") == 1){
-						wins += 1;
-					} else {
-						losses += 1;
-					}
+				if(rs.getInt("WIN") == HearthMatch.GAME_RESULT_VICTORY){
+					wins += 1;
+				} else if(rs.getInt("WIN") == HearthMatch.GAME_RESULT_DEFEAT 
+						|| rs.getInt("WIN") == HearthMatch.GAME_RESULT_DRAW){
+					losses += 1;
+				}
+			}
+		}else if(statsMode == STATS_PLAYED_AGAINST) {
+			
+			rs = stat.executeQuery("select win FROM MATCHES where oppheroid = " + heroId + " AND MODE=" + gameMode + " AND DELETED=0 " + coinSql);
+			
+			while(rs.next()){
+				found = true;
+				
+				if(rs.getInt("WIN") == HearthMatch.GAME_RESULT_VICTORY){
+					wins += 1;
+				} else if(rs.getInt("WIN") == HearthMatch.GAME_RESULT_DEFEAT 
+						|| rs.getInt("WIN") == HearthMatch.GAME_RESULT_DRAW){
+					losses += 1;
 				}
 			}
 		}
@@ -622,14 +662,14 @@ public class HearthDB {
 		return winrate;
 	}
 	
-	public float getWinRateByHeroSpecial(int mode, int heroId) throws SQLException{
+	public float getWinRateByHeroSpecial(int mode, int statMode, int coinMode, int heroId) throws SQLException{
 		ResultSet rs;
 		int sevenplus = 0;
 		int arenacount = 0;
 		float winrate = -1;
 		boolean found = false;
-		
-		if(mode == HearthGameMode.ARENAMODE){
+				
+		if(mode == HearthGameMode.ARENAMODE && statMode == STATS_PLAYED_AS){
 			rs = stat.executeQuery("select wins from ARENARESULTS where heroId = " + heroId + " AND DELETED=0");
 			
 			while(rs.next()){
@@ -730,21 +770,75 @@ public class HearthDB {
 		return total;
 	}
 	
-	public int getTotalWinsByHero(int mode, int heroId) throws SQLException{
+	public int getTotalWinsByHero(int gameMode, int statsMode, int coinMode, int heroId) throws SQLException{
 		ResultSet rs;
 		int total = 0;
-
-		if(mode == HearthGameMode.ARENAMODE){
+		
+		String coinSql = "";
+		
+		if(coinMode == HearthMatch.GAME_WITH_COIN){
+			coinSql = " AND goesFirst=" + HearthMatch.GAME_WITH_COIN;
+		} else if(coinMode == HearthMatch.GAME_NO_COIN){
+			coinSql = " AND goesFirst=" + HearthMatch.GAME_NO_COIN;
+		}
+		
+		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
 			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED = 0");
 			while(rs.next()){
 				total += rs.getInt("WINS");
 			}
-		} else {
+		} else if(gameMode != HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS) {
 			
-			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode + " AND DELETED = 0");
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + gameMode + " AND DELETED = 0" + coinSql);
 			
 			while(rs.next()){
-				total += rs.getInt("WIN") > -1 ? rs.getInt("WIN") : 0;
+				total += rs.getInt("WIN") == HearthMatch.GAME_RESULT_VICTORY ? rs.getInt("WIN") : 0;
+			}
+
+		} else if(statsMode == STATS_PLAYED_AGAINST) {
+			
+			rs = stat.executeQuery("select WIN from MATCHES WHERE oppheroid=" + heroId + " AND mode=" + gameMode + " AND DELETED = 0" + coinSql);
+			
+			while(rs.next()){
+				total += rs.getInt("WIN") == HearthMatch.GAME_RESULT_VICTORY ? rs.getInt("WIN") : 0;
+			}
+		}
+
+		return total;
+	}
+	
+	public int getTotalLossesByHero(int gameMode, int statsMode, int coinMode, int heroId) throws SQLException{
+		ResultSet rs;
+		int total = 0;
+		
+		String coinSql = "";
+		
+		if(coinMode == HearthMatch.GAME_WITH_COIN){
+			coinSql = " AND goesFirst=" + HearthMatch.GAME_WITH_COIN;
+		} else if(coinMode == HearthMatch.GAME_NO_COIN){
+			coinSql = " AND goesFirst=" + HearthMatch.GAME_NO_COIN;
+		}
+
+		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
+			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED=0" );
+			
+			while(rs.next()){
+				total += rs.getInt("LOSSES");
+			}
+		} else if(gameMode != HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS) {
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + gameMode + " AND DELETED=0 " + coinSql);
+			int result = HearthMatch.GAME_RESULT_UNKNOWN;
+			while(rs.next()){
+				result = rs.getInt("WIN");
+				total += (result == HearthMatch.GAME_RESULT_DRAW || result == HearthMatch.GAME_RESULT_DEFEAT) ? 1 : 0;
+			}
+		} else if(statsMode == STATS_PLAYED_AGAINST) {
+			rs = stat.executeQuery("select WIN from MATCHES WHERE oppheroid=" + heroId + " AND mode=" + gameMode + " AND DELETED=0 " + coinSql);
+			int result = HearthMatch.GAME_RESULT_UNKNOWN;
+			
+			while(rs.next()){
+				result = rs.getInt("WIN");
+				total += (result == HearthMatch.GAME_RESULT_DRAW || result == HearthMatch.GAME_RESULT_DEFEAT) ? 1 : 0;
 			}
 		}
 
@@ -766,30 +860,6 @@ public class HearthDB {
 			
 			while(rs.next()){
 				total += rs.getInt("WIN") > -1 && rs.getInt("WIN") == 0 ? 1 : 0;
-			}
-		}
-
-		return total;
-	}
-	
-	public int getTotalLossesByHero(int mode, int heroId) throws SQLException{
-		ResultSet rs;
-		int total = 0;
-
-		if(mode == HearthGameMode.ARENAMODE){
-			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED=0" );
-			while(rs.next()){
-				total += rs.getInt("LOSSES");
-			}
-		} else {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + mode + " AND DELETED=0");
-			
-			while(rs.next()){
-				
-				if(rs.getInt("WIN") > -1){
-					total += rs.getInt("WIN") == 0 ? 1 : 0;
-				}
-				
 			}
 		}
 

@@ -366,19 +366,7 @@ public class HearthHelper {
 	      return uiLang.t("%.2f weeks ago", Math.ceil(dayDiff / 7));
 	    }
 	 }
-	
-	public static String goesFirstToString(int goesFirst){
-		switch(goesFirst){
-			case 1:
-				return "First";
-	
-			case 0:
-				return "Second";
-		}
 		
-		return "Unknown";
-	}
-	
 	public static String formatNumber(String format, Float number){
 		return new DecimalFormat("0.00").format(number);
 	}
