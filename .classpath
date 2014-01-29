@@ -19,7 +19,6 @@
 	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/GeoRegression.jar"/>
 	<classpathentry kind="lib" path="lib/boofcv-v0.16-libs/jcodec-0.1.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_40"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFX"/>
 	<classpathentry kind="lib" path="lib/swt-win-64.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>

@@ -218,11 +218,11 @@ public class HearthScanner{
 	}
 	
 	public void checkTableSizes(){
-		System.out.println("gameScreens: " + gameScreens.size());
-		System.out.println("scanboxHashes: " + scanboxHashes.size());
-		System.out.println("scanBoxes: " + allScanboxes.size());
-		System.out.println("sceneResults: " + sceneResults.size());
-		System.out.println("queries: " + queries.size());
+		logger.finest("gameScreens: " + gameScreens.size());
+		logger.finest("scanboxHashes: " + scanboxHashes.size());
+		logger.finest("scanBoxes: " + allScanboxes.size());
+		logger.finest("sceneResults: " + sceneResults.size());
+		logger.finest("queries: " + queries.size());
 	}
 		
 	private void startScan(){
@@ -234,16 +234,20 @@ public class HearthScanner{
  			public void run() {
  				threadRunning = true;
  				
+ 				logger.fine("startScan() started.");
+ 				
  				while(!shutdown){
- 					//checkTableSizes();
+ 					checkTableSizes();
  					process();
  				}
+ 				
+ 				logger.fine("startScan() ended.");
  				
  				threadRunning = false;
  				scanStarted = false;
 		    }
 		};
-		
+	
 		new Thread(runnable).start();
 		scanStarted = true;
 	}
@@ -266,12 +270,12 @@ public class HearthScanner{
 			gameScreens.remove(0);
 			
 			if(gameScreens.size() > 1){
-				System.out.println("Frames in queue: " + gameScreens.size());
+				logger.finest("Frames in queue: " + gameScreens.size());
 			}
 		}
 		
 		if(screen == null){
-			System.out.println("scan(), screen is null. something gone horribly wrong!");
+			logger.severe("scan(), screen is null. something gone horribly wrong!");
 			return;
 		}
 		
@@ -305,12 +309,12 @@ public class HearthScanner{
 			for(Scanbox sb : allScanboxes){
 				
 				if(threadCounter >= MAX_THREADS){
-					System.out.println("Something gone horibbly wrong! Attempting to create too much thread!");
+					logger.severe("Something gone horibbly wrong! Attempting to create too much thread!");
 				}
 								
 				if(jobs[threadCounter] == null){
 					jobs[threadCounter] = new  ScannerJob(threadCounter, screen);
-					System.out.println("Creating scan thread #" + threadCounter + ".");
+					logger.finest("Creating scan thread #" + threadCounter + ".");
 				}
 				
 				jobs[threadCounter].addScanbox(sb);
@@ -325,7 +329,7 @@ public class HearthScanner{
 			for(int i = 0; i < jobs.length; i++){
 				if(jobs[i] != null){
 					executor.execute(jobs[i]);
-					System.out.println("Firing scan thread #" + i + ".");
+					logger.finest("Firing scan thread #" + i + ".");
 				}
 			}
 			
@@ -335,11 +339,11 @@ public class HearthScanner{
 			try {
 				executor.awaitTermination(10, TimeUnit.SECONDS);
 			} catch (InterruptedException e) {
-				System.out.println("One or more of the scan thread timeout!");
+				logger.severe("One or more of the scan thread timeout!");
 				e.printStackTrace();
 			}
 			
-			System.out.println("All scan threads finished!");
+			logger.finest("All scan threads finished!");
 		}
 		
 		logger.finest("scanner->process() time spent: " + (System.currentTimeMillis() - startBench) + " ms");
@@ -367,7 +371,7 @@ public class HearthScanner{
 			if(roiSnapshot == null || hash == null){
 				
 				if(( scale(sb.xOffset) + scale(sb.width)) > screen.getWidth() || ( scale(sb.yOffset) + scale(sb.height)) > screen.getHeight()){
-					System.out.println("Something went horribly wrong! Trying to crop a larger area than the source image" );
+					logger.severe("Something went horribly wrong! Trying to crop a larger area than the source image" );
 					continue;
 				}
 				
@@ -407,7 +411,7 @@ public class HearthScanner{
 	public void scan(int threadId, BufferedImage screen, List<Scanbox> scanBoxes, Hashtable<String, String> roiHashes, Hashtable<String, BufferedImage> roiSnaps){
 		
 		if(MAX_THREADS > 1){
-			System.out.println("Scanner Thread [" + threadId + "]" + " started");
+			logger.finest("Scanner Thread [" + threadId + "]" + " started");
 		}	
 		
 		for(Scanbox sb : scanBoxes){
@@ -437,7 +441,7 @@ public class HearthScanner{
 			float score = pHash.getPHashScore(targetHash, distance);
 
 			if(score >= 0.7){
-				System.out.println(
+				logger.info(
 					"Thread [" + threadId + "] "
 					+ sb.scene + " "
 					+ sb.imgfile 
@@ -449,7 +453,7 @@ public class HearthScanner{
 
 			//if the score greater or equals the minimum threshold
 			if(score >= PHASH_MIN_SCORE){	
-				System.out.println("Thread [" + threadId + "] " + "Possible match at " + scale(sb.xOffset) 
+				logger.fine("Thread [" + threadId + "] " + "Possible match at " + scale(sb.xOffset) 
 					+ ", " + scale(sb.yOffset) 
 					+ " with score of " + HearthHelper.formatNumber("0.00", score)
 				);
@@ -466,7 +470,7 @@ public class HearthScanner{
 
 					float surfScore = surf.compare(target, region);
 					
-					System.out.println("Thread [" + threadId + "] " + "Surf score: " + HearthHelper.formatNumber("0.00", surfScore));
+					logger.fine("Thread [" + threadId + "] " + "Surf score: " + HearthHelper.formatNumber("0.00", surfScore));
 
 					if(surfScore < sb.matchQuality){
 						found = true;
@@ -480,7 +484,7 @@ public class HearthScanner{
 				if(found && sb.matchColor){
 					float colorScore = pHash.getRGBScore(targetHash, regionHash);
 					
-					System.out.println("Thread [" + threadId + "] " + "Color score: " + HearthHelper.formatNumber("0.00", colorScore));
+					logger.fine("Thread [" + threadId + "] " + "Color score: " + HearthHelper.formatNumber("0.00", colorScore));
 					
 					if(colorScore > sb.colorScore){
 						found = true;
@@ -491,13 +495,13 @@ public class HearthScanner{
 			}
 			
 			if(found){
-				System.out.println("Thread [" + threadId + "] " + "Result added: scene \"" + sb.scene + "\", identifier: " + sb.identifier);
+				logger.fine("Thread [" + threadId + "] " + "Result added: scene \"" + sb.scene + "\", identifier: " + sb.identifier);
 				insertSceneResult(sb.scene, sb.identifier, score);
 			}
 		}
 		
 		if(MAX_THREADS > 1){
-			System.out.println("Scanner Thread [" + threadId + "]" + " ended");
+			logger.finest("Scanner Thread [" + threadId + "]" + " ended");
 		}
 	}
 	
@@ -518,7 +522,7 @@ public class HearthScanner{
 		}
 		
 		public void addScanbox(Scanbox sb){
-			System.out.println(
+			logger.finest(
 				"Thread[" + myThreadId + "]" + " Scanbox added: " + sb.imgfile + ", \t\t"
 				+ "offset: " + sb.xOffset + ", " + sb.yOffset + ", \t"
 				+ sb.width + "x" + sb.height 
@@ -552,72 +556,20 @@ public class HearthScanner{
 	public void pause(){
 		shutdown = true;
 		
+		logger.fine("HearthScanner() paused.");
+		
 		while(threadRunning){
 			try {
-				System.out.println("waiting...");
+				logger.fine("HearthScanner() waiting...");
 				Thread.sleep(100);
 			} catch (InterruptedException e) { }
 		}
-		
-		System.out.println("paused");
 		
 		shutdown = false;
 	}
 	
 	public synchronized void resume(){
+		logger.info("HearthScanner() resumed.");
 		startScan();
 	}
-	
-//	private Rectangle skFind(BufferedImage target, BufferedImage screenImage, float score) {
-//		score = (score == -1) ? 0.7f : score;
-//		
-//		if (screenImage.getWidth() < target.getWidth() || screenImage.getHeight() < target.getHeight()){			
-//			//dirty fix
-//			target = HearthHelper.resizeImage(target, Math.round(screenImage.getWidth()),Math.round(screenImage.getHeight()));
-//		}
-//		
-//		List<RegionMatch> matches;
-//		Rectangle rec = null;
-//		int limit = 1;
-//		matches = TemplateMatcher.findMatchesByGrayscaleAtOriginalResolution(screenImage, target, limit, score);
-//		
-//		if(matches.size() > 0){
-//			RegionMatch r = matches.get(0);
-//			rec = new Rectangle(r.x, r.y, r.width, r.height);
-//		}
-//	
-//		return rec;
-//	}
-	
-//	private Rectangle skFind(BufferedImage target, BufferedImage screenImage, float score) {
-//		//score = (score == -1) ? 0.5f : score;
-//		Rectangle rec = null;
-//		
-////		Finder finder = new Finder(
-////				new ScreenImage(new Rectangle(0,0, screenImage.getWidth(), screenImage.getHeight()), screenImage), 
-////				new Region(0,0,	screenImage.getWidth(), screenImage.getHeight())
-////		);
-//		
-//		Finder finder = new Finder(screenImage);
-//		
-//		Pattern pattern = new Pattern(target);
-//		
-//		pattern.similar(0.1f);
-//		
-//		finder.findAll(pattern);
-//		
-//		if(finder.hasNext()){
-//			Match match = finder.next();
-//		
-//			System.out.println("finder.hasNext()");
-//			
-//			if(match != null){
-//				rec = new Rectangle(match.x, match.y, match.w, match.h);
-//				
-//				System.out.println("match finder.hasNext()");
-//			}
-//		}
-//		
-//		return rec;
-//	}
 }

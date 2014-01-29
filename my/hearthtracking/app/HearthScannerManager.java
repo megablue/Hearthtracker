@@ -111,6 +111,16 @@ public class HearthScannerManager {
 		}
 		
 		alwaysScan = alwaysScanFlag;
+
+		logger.info("HearthScannerManager() started");
+		logger.finer(
+			"debugMode: " + debugMode + ", " + 
+			"gameResX: " + gameResX + ", " + 
+			"gameResY: " + gameResY + ", " + 
+			"gameLang: " + lang.toLowerCase() + ", " + 
+			"timeslot: " + tslot  + ", " + 
+			"alwaysScan" + alwaysScan
+		);
 	}
 
 	public void startup(){
@@ -154,18 +164,22 @@ public class HearthScannerManager {
 		
 		//use default resolution if failed to detect
 		if(resolution[0] == 0 || resolution[1] == 0){
+			logger.severe("Failed to detect HS resolution: " + resolution[0] + ", " + resolution[1]);
 			resolution[0] = gameResX;
 			resolution[1] = gameResY;
+			logger.severe("Resort to " + resolution[0] + ", " + resolution[1]);
 		}
 
 		//workaround
 		if(resolution[0] < 1024 && resolution[1] < 768){
-			System.out.println("Weird resolution change detected.");
-			System.out.println("Old resolution: " + oldGameResX + "x" + oldGameResY);
-			System.out.println("New resolution: " + resolution[0] + "x" + resolution[1]);
+			logger.severe("Weird resolution change detected.");
+			logger.severe("Old resolution: " + oldGameResX + "x" + oldGameResY);
+			logger.severe("New resolution: " + resolution[0] + "x" + resolution[1]);
 
 			resolution[0] = oldGameResX;
 			resolution[1] = oldGameResY;
+
+			logger.severe("Resort to " + resolution[0] + ", " + resolution[1]);
 
 			return resolution;
 		}
@@ -173,9 +187,9 @@ public class HearthScannerManager {
 		//if resolution is different from previous scan
 		if(resolution[0] != oldGameResX || resolution[1] != oldGameResY){
 			if(scannerSettingsInitialzed){
-				System.out.println("Resolution change detected.");
-				System.out.println("Old resolution: " + oldGameResX + "x" + oldGameResY);
-				System.out.println("New resolution: " + resolution[0] + "x" + resolution[1]);
+				logger.info("Resolution change detected.");
+				logger.info("Old resolution: " + oldGameResX + "x" + oldGameResY);
+				logger.info("New resolution: " + resolution[0] + "x" + resolution[1]);
 			}
 			
 			oldGameResX = resolution[0];
@@ -229,8 +243,7 @@ public class HearthScannerManager {
 		
 		//do not scale if the height is 0 or 1080
 		//zero usually means the game is running full screen
-		if(gameScreenHeight == 0 || 
-		   gameScreenHeight == BASE_RESOLUTION_HEIGHT){
+		if(gameScreenHeight == 0 || gameScreenHeight == BASE_RESOLUTION_HEIGHT){
 			return 1;
 		}
 		
@@ -319,9 +332,10 @@ public class HearthScannerManager {
 		BufferedImage preTarget;
 		
 		if(sb.unScaledTarget == null){
+			logger.finest("Loading scanbox image file: " + file);
 			preTarget = HearthHelper.loadImage(file);
 			sb.unScaledTarget = preTarget;
-		}else{
+		} else {
 			preTarget = sb.unScaledTarget;
 		}
 		
@@ -512,8 +526,8 @@ public class HearthScannerManager {
 		}
 		
 		for(HearthScanResult sr : results){
-			System.out.println("SceneResult: " + sr.scene + ", result: " + sr.result);
-			
+			logger.finest("SceneResult: " + sr.scene + ", result: " + sr.result);
+
 			switch(sr.scene){
 				case "gameMode":
 					processGameMode(sr);
@@ -552,7 +566,7 @@ public class HearthScannerManager {
 	}
 	
 	private void processDeckSelection(HearthScanResult sr){
-		System.out.println("processDeckSelection(), result: " + sr.result);
+		logger.finest("processDeckSelection(), result: " + sr.result);
 
 		int selected = Integer.parseInt(sr.result);
 		
@@ -588,7 +602,7 @@ public class HearthScannerManager {
 	}
 	
 	private void processArenaWins(HearthScanResult sr){
-		System.out.println("processArenaWins(), result: " + sr.result);
+		logger.finest("processArenaWins(), result: " + sr.result);
 
 		int wins = Integer.parseInt(sr.result);
 	
@@ -605,7 +619,7 @@ public class HearthScannerManager {
 	}
 	
 	private void processArenaLose(HearthScanResult sr){
-		System.out.println("processArenaLose(), result: " + sr.result);
+		logger.finest("processArenaLose(), result: " + sr.result);
 
 		int losses = Integer.parseInt(sr.result);
 		inGameMode = 0;
@@ -623,7 +637,7 @@ public class HearthScannerManager {
 	}
 	
 	private void processGameResult(HearthScanResult sr){
-		System.out.println("processGameResult(), result: " + sr.result);
+		logger.finest("processGameResult(), result: " + sr.result);
 
 		synchronized(scanResults){
 			sr.setExpiry(DELAY_GAME_RESULT);
@@ -805,7 +819,7 @@ public class HearthScannerManager {
 			}
 			
 			if(lastestExpiredResult > -1){
-				System.out.println( "[" + currentScene + "]" + "Expired result found: " + lastestExpiredResult);
+				logger.finest( "[" + currentScene + "]" + "Expired result found: " + lastestExpiredResult);
 				
 				//get a new iterator;
 				it = scanResults.iterator();
@@ -823,7 +837,7 @@ public class HearthScannerManager {
 				}
 				
 				if(latestResult > -1){
-					System.out.println("[" + currentScene + "]" + "Latest result found: " + latestResult);
+					logger.finest("[" + currentScene + "]" + "Latest result found: " + latestResult);
 				}
 			}
 		}
@@ -837,7 +851,7 @@ public class HearthScannerManager {
 		
 		//if both latest and expired result are found
 		if(latestResult > -1 && lastestExpiredResult > -1){
-			System.out.println("[" + currentScene + "]" + "(latestResult > -1 && lastestExpiredResult > -1)");
+			logger.finest("[" + currentScene + "]" + "(latestResult > -1 && lastestExpiredResult > -1)");
 			
 			//if latest is greater than the expired
 			//since we're comparing them in relatively short time frame
@@ -847,12 +861,12 @@ public class HearthScannerManager {
 				//we will use the latest result
 				confirmedResult = latestResult;
 				
-				System.out.println("[" + currentScene + "]" + "(latestResult >= lastestExpiredResult)");
+				logger.finest("[" + currentScene + "]" + "(latestResult >= lastestExpiredResult)");
 			}
 		}
 		
 		if(confirmedResult > - 1){
-			System.out.println("[" + currentScene + "]" + "confirmedResult: " + confirmedResult);
+			logger.finest("[" + currentScene + "]" + "confirmedResult: " + confirmedResult);
 		}
 
 		
@@ -861,7 +875,7 @@ public class HearthScannerManager {
 	
 	private void processCoin(HearthScanResult sr){
 		boolean found = false;
-		System.out.println("processCoin(), result: " + sr.result);
+		logger.finest("processCoin(), result: " + sr.result);
 		inGameMode = 1;
 		int coin = -1;
 
@@ -881,7 +895,7 @@ public class HearthScannerManager {
 		if(found && (coin != goFirst)){
 			
 			if(coin == 1){
-				System.out.println("Found coin, go first");
+				logger.info("Found coin, go first");
 				addNotification(
 					new HearthReaderNotification( 
 							uiLang.t("Coin detected"), 
@@ -889,7 +903,7 @@ public class HearthScannerManager {
 					)
 				);
 			} else if( coin == 0){
-				System.out.println("Found coin, go second");
+				logger.info("Found coin, go second");
 				addNotification(
 					new HearthReaderNotification( 
 						uiLang.t("Coin detected"), 
@@ -906,7 +920,7 @@ public class HearthScannerManager {
 	}
 
 	private void processHero(HearthScanResult sr){
-		System.out.println("processHero(), scene: " + sr.scene +", hero: " + sr.result);
+		logger.finest("processHero(), scene: " + sr.scene +", hero: " + sr.result);
 
 		int detectedHero = heroesList.getHeroId(sr.result);
 		
@@ -914,7 +928,7 @@ public class HearthScannerManager {
 			myHero = detectedHero;
 			arenaHero = detectedHero;
 			isDirty = true;
-			System.out.println("Found my hero: " + sr.result);
+			logger.info("Found my hero: " + sr.result);
 		} else if(sr.scene.equals("bottomHero") || sr.scene.equals("topHero")){
 			synchronized(scanResults){
 				sr.setExpiry(DELAY_GAME_HEROES);
@@ -927,7 +941,7 @@ public class HearthScannerManager {
 		boolean found = false;
 		int detectedMode = -1;
 
-		System.out.println("processGameMode() result: " + sr.result);
+		logger.finest("processGameMode() result: " + sr.result);
 		
 		switch(sr.result.toLowerCase()){
 			case "arena":
@@ -980,7 +994,7 @@ public class HearthScannerManager {
 			gameMode = detectedMode;
 			gameJustEnded = false;
 
-			System.out.println("Mode detected: " + newMode + ", previous mode: " + oldMode);
+			logger.info("Mode detected: " + newMode + ", previous mode: " + oldMode);
 			
 			addNotification(
 				new HearthReaderNotification( 
@@ -1007,8 +1021,8 @@ public class HearthScannerManager {
 	
 	private void concludeGame(){
 		
-		System.out.println("System.currentTimeMillis() - gameStartedTime = " + (System.currentTimeMillis() - gameStartedTime) );
-		System.out.println("...." + ((int) Math.round((System.currentTimeMillis() - gameStartedTime)/1000f)));
+		// System.out.println("System.currentTimeMillis() - gameStartedTime = " + (System.currentTimeMillis() - gameStartedTime) );
+		// System.out.println("...." + ((int) Math.round((System.currentTimeMillis() - gameStartedTime)/1000f)));
 		
 		int totalTime = (int) Math.round((System.currentTimeMillis() - gameStartedTime)/1000f);
 		HearthDecks decks = HearthDecks.getInstance();
@@ -1020,7 +1034,6 @@ public class HearthScannerManager {
 		}
 		
 		if(gameResult == 1){
-			System.out.println("Found Victory");
 			addNotification(
 				new HearthReaderNotification(
 						uiLang.t("Game Result"), 
@@ -1028,7 +1041,6 @@ public class HearthScannerManager {
 				)
 			);
 		} else if(gameResult == 0) {
-			System.out.println("Found Defeat");
 			addNotification(
 				new HearthReaderNotification(
 						uiLang.t("Game Result"), 
@@ -1036,7 +1048,6 @@ public class HearthScannerManager {
 				)
 			);
 		} else {
-			System.out.println("Found Unknown game result");
 			addNotification(
 				new HearthReaderNotification(
 						uiLang.t("Game Result"), 
@@ -1045,7 +1056,7 @@ public class HearthScannerManager {
 			);
 		}
 		
-		System.out.println("Saving match result...");
+		logger.info("Saving match result...");
 		try {
 			if(selectedDeck > -1 && selectedDeck < decks.list.length){
 				deckName = decks.list[selectedDeck];
@@ -1053,8 +1064,9 @@ public class HearthScannerManager {
 			tracker.saveMatchResult(gameMode, myHero, oppHero, goFirst, gameResult, gameStartedTime, totalTime, false, deckName);
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
-		System.out.println("Done saving match result...");
+		logger.info("Done saving match result...");
 		
 		gameJustEnded = true;
 		resetGameStatus();
@@ -1076,11 +1088,14 @@ public class HearthScannerManager {
 	}
 
 	private void concludeArena(){
-		System.out.println("Saving arena result...");
+		logger.info("Saving arena result...");
 		try {
 			tracker.saveArenaResult(arenaHero, arenaWins, arenaLosses, System.currentTimeMillis(), false);
-		} catch (SQLException e) { e.printStackTrace(); }
-		System.out.println("Done saving arena result...");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			logger.severe(e.getMessage());
+		}
+		logger.info("Done saving arena result...");
 		isDirty = true;
 		this.resetArenaStatus();
 	}
@@ -1095,6 +1110,8 @@ public class HearthScannerManager {
 	private void flushScanResults(String scene){
 		Iterator<HearthScanResult> it = scanResults.iterator();
 		
+		logger.finest("Start flushScanResults(): " + scene);
+		
 		while(it.hasNext()){
 			HearthScanResult sr = it.next();
 			
@@ -1102,6 +1119,8 @@ public class HearthScannerManager {
 				it.remove();
 			}
 		}
+		
+		logger.finest("Done flushScanResults(): " + scene);
 	}
 	
 	private String sanitizeGameLang(String gLang){
@@ -1126,17 +1145,23 @@ public class HearthScannerManager {
 	public void setGameLang(String lang){
 		gameLang = lang;
 		reInitScannerSettings = true;
+		
+		logger.info("Setting gameLang to " + lang);
 	}
 	
 	public void setAutoGameRes(boolean flag){
 		autoDetectGameRes = flag;
 		reInitScannerSettings = true;
+		
+		logger.info("Setting autoDetectGameRes to " + autoDetectGameRes);
 	}
 	
 	public void setGameRes(int w, int h){
 		gameResX = w;
 		gameResY = h;
 		reInitScannerSettings = true;
+		
+		logger.info("Setting game resolution to " + w + ", " + h);
 	}
 
 	public synchronized void addNotification(HearthReaderNotification note){
@@ -1147,10 +1172,12 @@ public class HearthScannerManager {
 	
 	public void setInterval(int interval){
 		timeslot = interval;
+		logger.info("Setting timeslot to " + timeslot);
 	}
 	
 	public void setAlwaysScan(boolean flag){
 		alwaysScan = flag;
+		logger.info("Setting alwaysScan to " + flag);
 	}
 	
 	public void setAutoPing(boolean flag){
@@ -1168,6 +1195,7 @@ public class HearthScannerManager {
 	public void pause(){
 		totalTimeSpentCapturing = 0;
 		totalFramesCounter = 0;
+		logger.info("pause: HearthScannerManager()" );
 	}
 	
 	public void forcePing(){
@@ -1177,7 +1205,7 @@ public class HearthScannerManager {
 	public void dispose(){
 		String path = String.format(HearthFilesNameManager.scannerSettingFileDefault, gameLang);
 		config.save(scannerSettings, path);
-		System.out.println("Shutting down the scanner!");
+		logger.info("Shutting down the scanner!");
 		scanner.dispose();
 	}
 	
