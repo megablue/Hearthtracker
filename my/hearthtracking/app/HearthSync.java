@@ -369,7 +369,7 @@ public class HearthSync {
 				ar[index].win			= rs.getInt("win");
 				ar[index].starttime		= rs.getLong("starttime");
 				ar[index].totaltime		= rs.getInt("totaltime");
-				ar[index].mode			= HearthHelper.gameModeToString(rs.getInt("mode")).toLowerCase();
+				ar[index].mode			= HearthGameMode.gameModeToString(rs.getInt("mode")).toLowerCase();
 				ar[index].deleted		= rs.getInt("deleted");
 				ar[index].modified		= rs.getInt("modified");
 				ar[index].lastmodified	= rs.getLong("lastmodified");

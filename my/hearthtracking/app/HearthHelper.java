@@ -379,50 +379,6 @@ public class HearthHelper {
 		return "Unknown";
 	}
 	
-	public static String gameModeToString(int mode){
-		switch(mode){
-			case HearthScannerManager.ARENAMODE:
-				return "Arena";
-	
-			case HearthScannerManager.RANKEDMODE:
-				return "Ranked";
-		
-			case HearthScannerManager.UNRANKEDMODE:
-				return "Unranked";
-			
-			case HearthScannerManager.PRACTICEMODE:
-				return"Practice";
-				
-			case HearthScannerManager.CHALLENGEMODE:
-				return "Challenge";
-		}
-		
-		return "Unknown mode";
-	}
-	
-	public static String gameModeToStringLabel(int mode){
-		HearthLanguageManager uiLang = HearthLanguageManager.getInstance();
-		
-		switch(mode){
-			case HearthScannerManager.ARENAMODE:
-				return uiLang.t("Arena");
-	
-			case HearthScannerManager.RANKEDMODE:
-				return uiLang.t("Ranked");
-		
-			case HearthScannerManager.UNRANKEDMODE:
-				return uiLang.t("Unranked");
-			
-			case HearthScannerManager.PRACTICEMODE:
-				return uiLang.t("Practice");
-				
-			case HearthScannerManager.CHALLENGEMODE:
-				return uiLang.t("Challenge");
-		}
-		
-		return uiLang.t("Unknown mode");
-	}
-
 	public static String formatNumber(String format, Float number){
 		return new DecimalFormat("0.00").format(number);
 	}

@@ -1277,10 +1277,10 @@ public class HearthUI {
 		for(int i = 0; i < txtDecks.length; i++){
 			String deckName = decks.list[i];
 			try {
-				float ranked = tracker.getWinRateByDeck(HearthScannerManager.RANKEDMODE, deckName);
-				float unranked = tracker.getWinRateByDeck(HearthScannerManager.UNRANKEDMODE, deckName);
-				float challenge = tracker.getWinRateByDeck(HearthScannerManager.CHALLENGEMODE, deckName);
-				float practice = tracker.getWinRateByDeck(HearthScannerManager.PRACTICEMODE, deckName);
+				float ranked = tracker.getWinRateByDeck(HearthGameMode.RANKEDMODE, deckName);
+				float unranked = tracker.getWinRateByDeck(HearthGameMode.UNRANKEDMODE, deckName);
+				float challenge = tracker.getWinRateByDeck(HearthGameMode.CHALLENGEMODE, deckName);
+				float practice = tracker.getWinRateByDeck(HearthGameMode.PRACTICEMODE, deckName);
 				
 				String rankedS = ranked > -1 ? new DecimalFormat("0.00").format(ranked) + "%" : "-\t";
 				String unrankedS = unranked > -1 ? new DecimalFormat("0.00").format(unranked) + "%" : "-";
@@ -1327,7 +1327,7 @@ public class HearthUI {
 				tableItem.setData("id", rs.getInt("ID"));
 				tableItem.setImage(0, heroImgs[rs.getInt("MYHEROID")+1]);
 				tableItem.setImage(1, heroImgs[rs.getInt("OPPHEROID")+1]);
-				tableItem.setText(2, HearthHelper.gameModeToStringLabel(rs.getInt("MODE")));
+				tableItem.setText(2, HearthGameMode.gameModeToStringLabel(rs.getInt("MODE")));
 				tableItem.setText(3, result);
 				tableItem.setText(4, (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.DAY_OF_MONTH) + "/" + cal.get(Calendar.YEAR));
 				
@@ -1529,13 +1529,13 @@ public class HearthUI {
 								cbMatchesEditGameMode.select(0);
 							}
 							
-							if(win == HearthScannerManager.GAME_RESULT_VICTORY){
+							if(win == HearthMatch.GAME_RESULT_VICTORY){
 								cbMatchesEditResult.select(0);
-							}else if (win == HearthScannerManager.GAME_RESULT_DEFEAT){
+							}else if (win == HearthMatch.GAME_RESULT_DEFEAT){
 								cbMatchesEditResult.select(1);
-							}else if (win == HearthScannerManager.GAME_RESULT_DRAW){
+							}else if (win == HearthMatch.GAME_RESULT_DRAW){
 								cbMatchesEditResult.select(2);
-							} else if (win == HearthScannerManager.GAME_RESULT_UNKNOWN){
+							} else if (win == HearthMatch.GAME_RESULT_UNKNOWN){
 								cbMatchesEditResult.select(3);
 							}
 							
@@ -1571,7 +1571,7 @@ public class HearthUI {
 				int myheroid = cbMatchesEditAs.getSelectionIndex() - 1;
 				int oppheroid = cbMatchesEditVs.getSelectionIndex() - 1;
 				int goes = -1;
-				int result = HearthScannerManager.GAME_RESULT_UNKNOWN;
+				int result = HearthMatch.GAME_RESULT_UNKNOWN;
 				int totaltime = spMatchesEditMinute.getSelection() * 60;
 				String deckName = cbMatchesEditDeck.getText();
 				
@@ -1580,13 +1580,13 @@ public class HearthUI {
 				}
 				
 				if(cbMatchesEditResult.getSelectionIndex() == 0){
-					result = HearthScannerManager.GAME_RESULT_VICTORY;
+					result = HearthMatch.GAME_RESULT_VICTORY;
 				} else if(cbMatchesEditResult.getSelectionIndex() == 1){
-					result = HearthScannerManager.GAME_RESULT_DEFEAT;
+					result = HearthMatch.GAME_RESULT_DEFEAT;
 				} else if(cbMatchesEditResult.getSelectionIndex() == 2){
-					result = HearthScannerManager.GAME_RESULT_DRAW;
+					result = HearthMatch.GAME_RESULT_DRAW;
 				} else {
-					result = HearthScannerManager.GAME_RESULT_UNKNOWN;
+					result = HearthMatch.GAME_RESULT_UNKNOWN;
 				}
 				
 				if(cbMatchesEditGoes.getSelectionIndex() == 0){
@@ -1715,13 +1715,13 @@ public class HearthUI {
 				int totaltime = spMatchesEditMinute.getSelection() * 60;
 				
 				if(cbMatchesEditResult.getSelectionIndex() == 0){
-					result = HearthScannerManager.GAME_RESULT_VICTORY;
+					result = HearthMatch.GAME_RESULT_VICTORY;
 				} else if(cbMatchesEditResult.getSelectionIndex() == 1){
-					result = HearthScannerManager.GAME_RESULT_VICTORY;
+					result = HearthMatch.GAME_RESULT_VICTORY;
 				} else if(cbMatchesEditResult.getSelectionIndex() == 2){
-					result = HearthScannerManager.GAME_RESULT_DRAW;
+					result = HearthMatch.GAME_RESULT_DRAW;
 				} else if(cbMatchesEditResult.getSelectionIndex() == 3){
-					result = HearthScannerManager.GAME_RESULT_UNKNOWN;
+					result = HearthMatch.GAME_RESULT_UNKNOWN;
 				}
 
 				Calendar cal = Calendar.getInstance();
@@ -2352,29 +2352,29 @@ public class HearthUI {
 		return scaled;
 	}
 	
-	private int getMode(){
+	private int getGameModeFromUI(){
 		int mode = cmbStatsMode.getSelectionIndex();
 		
 		switch(mode){
 			case 0:
-				return HearthScannerManager.ARENAMODE;
+				return HearthGameMode.ARENAMODE;
 			case 1:
-				return HearthScannerManager.RANKEDMODE;
+				return HearthGameMode.RANKEDMODE;
 			case 2:
-				return HearthScannerManager.UNRANKEDMODE;
+				return HearthGameMode.UNRANKEDMODE;
 			case 3:
-				return HearthScannerManager.CHALLENGEMODE;
+				return HearthGameMode.CHALLENGEMODE;
 			case 4:
-				return HearthScannerManager.PRACTICEMODE;
+				return HearthGameMode.PRACTICEMODE;
 		}
 		
-		return HearthScannerManager.UNKNOWNMODE;
+		return HearthGameMode.UNKNOWNMODE;
 	}
 	
 	private void fillOverviewTable(){
 		int selected = table.getSelectionIndex();
 		table.removeAll();
-		int mode = this.getMode();
+		int mode = this.getGameModeFromUI();
 		
 		for(int i = 0; i < heroesList.getTotal() + 1; i++){
 			float sevenplus = 0, overall = 0;

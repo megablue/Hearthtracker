@@ -16,19 +16,6 @@ import my.hearthtracking.app.HearthScannerSettings.Scanbox;
 public class HearthScannerManager {
 	private HearthLogger logger = HearthLogger.getInstance();
 	
-	public static final int UNKNOWNMODE = -1;
-	public static final int MENUMODE = 0;
-	public static final int ARENAMODE = 1;
-	public static final int RANKEDMODE = 2;
-	public static final int UNRANKEDMODE = 3;
-	public static final int CHALLENGEMODE = 4;
-	public static final int PRACTICEMODE = 5;
-	
-	public static final int GAME_RESULT_DRAW 	= -2;
-	public static final int GAME_RESULT_UNKNOWN = -1;
-	public static final int GAME_RESULT_DEFEAT 	= 0;
-	public static final int GAME_RESULT_VICTORY = 1;
-
 	public static final int ARENA_MAX_WINS = 12;
 	public static final int ARENA_MAX_LOSSES = 3;
 	
@@ -88,7 +75,7 @@ public class HearthScannerManager {
 	private int gameResult = -1;
 	private int goFirst = -1;
 
-	private int gameMode = UNKNOWNMODE;
+	private int gameMode = HearthGameMode.UNKNOWNMODE;
 
 	private boolean gameJustEnded = false;
 	private int inGameMode = -1;
@@ -164,22 +151,22 @@ public class HearthScannerManager {
 		
 		//use default resolution if failed to detect
 		if(resolution[0] == 0 || resolution[1] == 0){
-			logger.severe("Failed to detect HS resolution: " + resolution[0] + ", " + resolution[1]);
+			logger.finest("Failed to detect HS resolution: " + resolution[0] + ", " + resolution[1]);
 			resolution[0] = gameResX;
 			resolution[1] = gameResY;
-			logger.severe("Resort to " + resolution[0] + ", " + resolution[1]);
+			logger.finest("Resort to " + resolution[0] + ", " + resolution[1]);
 		}
 
 		//workaround
 		if(resolution[0] < 1024 && resolution[1] < 768){
-			logger.severe("Weird resolution change detected.");
-			logger.severe("Old resolution: " + oldGameResX + "x" + oldGameResY);
-			logger.severe("New resolution: " + resolution[0] + "x" + resolution[1]);
+			logger.finest("Weird resolution change detected.");
+			logger.finest("Old resolution: " + oldGameResX + "x" + oldGameResY);
+			logger.finest("New resolution: " + resolution[0] + "x" + resolution[1]);
 
 			resolution[0] = oldGameResX;
 			resolution[1] = oldGameResY;
 
-			logger.severe("Resort to " + resolution[0] + ", " + resolution[1]);
+			logger.finest("Resort to " + resolution[0] + ", " + resolution[1]);
 
 			return resolution;
 		}
@@ -658,7 +645,7 @@ public class HearthScannerManager {
 		boolean topDefeated 	= false;
 		boolean bottomDefeated 	= false;
 		
-		int detectedGameResult = GAME_RESULT_UNKNOWN;
+		int detectedGameResult = HearthMatch.GAME_RESULT_UNKNOWN;
 		
 		synchronized(scanResults){
 			Iterator <HearthScanResult>it = scanResults.iterator();
@@ -714,6 +701,8 @@ public class HearthScannerManager {
 				myHero = bottomHero;
 				//update the game started time
 				gameStartedTime = System.currentTimeMillis();
+				
+				logger.info("Hero (bottom) detected: " + heroesList.getHeroName(bottomHero));
 			}
 			
 			if(topHeroDetected && oppHero != topHero){
@@ -721,6 +710,8 @@ public class HearthScannerManager {
 				oppHero = topHero;
 				//update the game started time
 				gameStartedTime = System.currentTimeMillis();
+				
+				logger.info("Hero (top) detected: " + heroesList.getHeroName(topHero));
 			}
 			
 			inGameMode = 1;
@@ -730,14 +721,16 @@ public class HearthScannerManager {
 		else if(!gameJustEnded && gameResultDetected){
 			
 			if(topDefeated && bottomDefeated){
-				detectedGameResult = GAME_RESULT_DRAW;
+				detectedGameResult = HearthMatch.GAME_RESULT_DRAW;
 			} else if(topDefeated){
-				detectedGameResult = GAME_RESULT_VICTORY;
+				detectedGameResult = HearthMatch.GAME_RESULT_VICTORY;
 			} else if(bottomDefeated){
-				detectedGameResult = GAME_RESULT_DEFEAT;
+				detectedGameResult = HearthMatch.GAME_RESULT_DEFEAT;
 			}
 
 			if(detectedGameResult != gameResult){
+				logger.info("Game result: " + HearthMatch.gameResultToString(detectedGameResult));
+				
 				gameResult = detectedGameResult;
 				isDirty = true;
 				concludeGame();
@@ -846,7 +839,7 @@ public class HearthScannerManager {
 		//if we cant find any non-expiry result
 		if(lastestExpiredResult > -1 && latestResult == -1){
 			confirmedResult = lastestExpiredResult;
-			System.out.println("[" + currentScene + "]" +"(lastestExpiredResult > -1 && latestResult == -1)");
+			logger.finest("[" + currentScene + "]" +"(lastestExpiredResult > -1 && latestResult == -1)");
 		}
 		
 		//if both latest and expired result are found
@@ -928,7 +921,7 @@ public class HearthScannerManager {
 			myHero = detectedHero;
 			arenaHero = detectedHero;
 			isDirty = true;
-			logger.info("Found my hero: " + sr.result);
+			logger.info("Found arena hero: " + sr.result);
 		} else if(sr.scene.equals("bottomHero") || sr.scene.equals("topHero")){
 			synchronized(scanResults){
 				sr.setExpiry(DELAY_GAME_HEROES);
@@ -945,46 +938,46 @@ public class HearthScannerManager {
 		
 		switch(sr.result.toLowerCase()){
 			case "arena":
-				if(isGameModeDiff(ARENAMODE)){
-					detectedMode = ARENAMODE;
+				if(isGameModeDiff(HearthGameMode.ARENAMODE)){
+					detectedMode = HearthGameMode.ARENAMODE;
 					found = true;
 				}
 			break;
 
 			case "ranked":
-				if(isGameModeDiff(RANKEDMODE)){
-					detectedMode = RANKEDMODE;
+				if(isGameModeDiff(HearthGameMode.RANKEDMODE)){
+					detectedMode = HearthGameMode.RANKEDMODE;
 					found = true;
 				}
 			break;
 
 			case "unranked":
-				if(isGameModeDiff(UNRANKEDMODE)){
-					detectedMode = UNRANKEDMODE;
+				if(isGameModeDiff(HearthGameMode.UNRANKEDMODE)){
+					detectedMode = HearthGameMode.UNRANKEDMODE;
 					found = true;
 				}
 			break;
 
 			case "practice":
-				if(isGameModeDiff(PRACTICEMODE)){
-					detectedMode = PRACTICEMODE;
+				if(isGameModeDiff(HearthGameMode.PRACTICEMODE)){
+					detectedMode = HearthGameMode.PRACTICEMODE;
 					found = true;
 				}
 			break;
 
 			case "challenge":
-				if(isGameModeDiff(CHALLENGEMODE)){
-					detectedMode = CHALLENGEMODE;
+				if(isGameModeDiff(HearthGameMode.CHALLENGEMODE)){
+					detectedMode = HearthGameMode.CHALLENGEMODE;
 					found = true;
 				}
 			break;
 		}
 
 		if(found){
-			String oldMode = HearthHelper.gameModeToString(gameMode);
-			String newMode = HearthHelper.gameModeToString(detectedMode);
+			String oldMode = HearthGameMode.gameModeToString(gameMode);
+			String newMode = HearthGameMode.gameModeToString(detectedMode);
 			
-			if(gameMode == ARENAMODE && detectedMode != ARENAMODE){
+			if(gameMode == HearthGameMode.ARENAMODE && detectedMode != HearthGameMode.ARENAMODE){
 				flushScanResults("arenaWins");
 				flushScanResults("arenaLose");
 			}
@@ -1079,12 +1072,13 @@ public class HearthScannerManager {
 		gameResult 		= -1;
 		goFirst 		= -1;
 		inGameMode 		= -1;
-		gameMode		= UNKNOWNMODE;
+		gameMode		= HearthGameMode.UNKNOWNMODE;
 		gameStartedTime = System.currentTimeMillis();
 		
 		flushScanResults("topHero");
 		flushScanResults("bottomHero");
 		flushScanResults("gameResult");
+		scanner.resetFrames();
 	}
 
 	private void concludeArena(){
@@ -1104,7 +1098,7 @@ public class HearthScannerManager {
 		this.arenaWins		= -1;
 		this.arenaLosses 	= -1;
 		this.arenaHero 		= -1;
-		this.gameMode 		= UNKNOWNMODE;
+		this.gameMode 		= HearthGameMode.UNKNOWNMODE;
 	}
 	
 	private void flushScanResults(String scene){
@@ -1247,14 +1241,14 @@ public class HearthScannerManager {
 		String output = "";
 
 		try {
-			arenaWins = 	tracker.getTotalWins(HearthScannerManager.ARENAMODE);
-			arenaLosses = 	tracker.getTotalLosses(HearthScannerManager.ARENAMODE);
+			arenaWins = 	tracker.getTotalWins(HearthGameMode.ARENAMODE);
+			arenaLosses = 	tracker.getTotalLosses(HearthGameMode.ARENAMODE);
 			arenaWinrate =  (arenaWins + arenaLosses) > 0 ? (float) arenaWins /  (arenaWins + arenaLosses) * 100: -1;
-			rankedWins = 	tracker.getTotalWins(HearthScannerManager.RANKEDMODE);
-			rankedLosses = 	tracker.getTotalLosses(HearthScannerManager.RANKEDMODE);
+			rankedWins = 	tracker.getTotalWins(HearthGameMode.RANKEDMODE);
+			rankedLosses = 	tracker.getTotalLosses(HearthGameMode.RANKEDMODE);
 			rankedWinrate =  (rankedWins + rankedLosses) > 0 ? (float) rankedWins / (rankedWins + rankedLosses) * 100 : -1;
-			unrankedWins = 	tracker.getTotalWins(HearthScannerManager.UNRANKEDMODE);
-			unrankedLosses = 	tracker.getTotalLosses(HearthScannerManager.UNRANKEDMODE);
+			unrankedWins = 	tracker.getTotalWins(HearthGameMode.UNRANKEDMODE);
+			unrankedLosses = 	tracker.getTotalLosses(HearthGameMode.UNRANKEDMODE);
 			unrankedWinrate =  (unrankedWins + unrankedLosses) > 0 ? (float) unrankedWins / (unrankedWins + unrankedLosses) * 100 : -1;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1336,29 +1330,30 @@ public class HearthScannerManager {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logger.severe(e.getMessage());
 		}
 		
 		return output;
 	}
 
 	public boolean isArenaMode(){
-		return gameMode == ARENAMODE ? true : false;
+		return gameMode == HearthGameMode.ARENAMODE ? true : false;
 	}
 	
 	public boolean isRankedMode(){
-		return gameMode == RANKEDMODE ? true : false;
+		return gameMode == HearthGameMode.RANKEDMODE ? true : false;
 	}
 	
 	public boolean isUnrankedMode(){
-		return gameMode == UNRANKEDMODE ? true : false;
+		return gameMode == HearthGameMode.UNRANKEDMODE ? true : false;
 	}
 	
 	public boolean isChallengeMode(){
-		return gameMode == CHALLENGEMODE ? true : false;
+		return gameMode == HearthGameMode.CHALLENGEMODE ? true : false;
 	}
 	
 	public boolean isPracticeMode(){
-		return gameMode == PRACTICEMODE ? true : false;
+		return gameMode == HearthGameMode.PRACTICEMODE ? true : false;
 	}
 
 	public boolean isGoFirst(){

@@ -84,6 +84,7 @@ public class HearthScanner{
 		this.scale = scale;
 		scanboxHashes.clear();
 		resetFrames();
+		resetScanboxHashes();
 		_init();
 		startScan();
 	}
@@ -197,11 +198,12 @@ public class HearthScanner{
 	}
 	
 	public void resetFrames(){
-		
 		synchronized(gameScreens){
 			gameScreens.clear();
 		}
-		
+	}
+	
+	public void resetScanboxHashes(){
 		scanboxHashes.clear();
 	}
 	
@@ -439,17 +441,6 @@ public class HearthScanner{
 
 			//convert distance to score
 			float score = pHash.getPHashScore(targetHash, distance);
-
-			if(score >= 0.7){
-				logger.info(
-					"Thread [" + threadId + "] "
-					+ sb.scene + " "
-					+ sb.imgfile 
-					+ "-" + key 
-					+ ", score: " 
-					+ HearthHelper.formatNumber("0.00", score)
-				);
-			}
 
 			//if the score greater or equals the minimum threshold
 			if(score >= PHASH_MIN_SCORE){	
