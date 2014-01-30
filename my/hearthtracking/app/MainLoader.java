@@ -26,7 +26,7 @@ public class MainLoader {
 	public static HearthULangsList uiLangsList;
 	public static HearthDatabase dbSetting;
 	
-	public static HearthDB db;
+	public static HearthDB db = new HearthDB();
 	public static HearthScannerManager scannerManager;
 	private static Thread scannerManagerThread;
 	
@@ -210,7 +210,10 @@ public class MainLoader {
 		if(dbSetting == null){
 			dbSetting = new HearthDatabase();
 			config.save(dbSetting, HearthFilesNameManager.dbFile);
+			System.out.append("dbSetting: " + dbSetting.serverSelected);
 		}
+		
+		System.out.append("dbSetting: " + dbSetting.serverSelected);
 	
 		lang = HearthLanguageManager.getInstance();
 		lang.loadLang(setting.uiLang);
@@ -221,7 +224,6 @@ public class MainLoader {
 	}
 	
 	private static void startScannerManager(){
-		db = new HearthDB();
 		scannerManager = new HearthScannerManager(db, setting.scanInterval, setting.gameLang, setting.gameWidth, setting.gameHeight, setting.autoPing, setting.alwaysScan);
 
 		Runnable runnable = new Runnable() {

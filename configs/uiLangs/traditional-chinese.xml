@@ -41,6 +41,14 @@
       <string>後手</string>
     </entry>
     <entry>
+      <string>No Coin</string>
+      <string>先手</string>
+    </entry>
+    <entry>
+      <string>Coin</string>
+      <string>後手</string>
+    </entry>
+    <entry>
       <string>Ranked</string>
       <string>天梯</string>
     </entry>

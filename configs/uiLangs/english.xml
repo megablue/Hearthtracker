@@ -5,28 +5,12 @@
       <string>Sync timeout. Will retry later!</string>
     </entry>
     <entry>
-      <string>Stopped scanning!</string>
-      <string>Stopped scanning!</string>
-    </entry>
-    <entry>
       <string>Unknown</string>
       <string>Unknown</string>
     </entry>
     <entry>
       <string>It really means a lot to me. Your support is greatly appreciated!</string>
       <string>It really means a lot to me. Your support is greatly appreciated!</string>
-    </entry>
-    <entry>
-      <string>Your version:</string>
-      <string>Your version:</string>
-    </entry>
-    <entry>
-      <string>Released on:</string>
-      <string>Released on:</string>
-    </entry>
-    <entry>
-      <string>Arena score</string>
-      <string>Arena score</string>
     </entry>
     <entry>
       <string>Ranked mode detected</string>
@@ -39,10 +23,6 @@
     <entry>
       <string>Arena mode (played as)</string>
       <string>Arena mode (played as)</string>
-    </entry>
-    <entry>
-      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
-      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
     </entry>
     <entry>
       <string>Fast</string>
@@ -61,28 +41,12 @@
       <string>Unranked : %s</string>
     </entry>
     <entry>
-      <string>Coin detected</string>
-      <string>Coin detected</string>
-    </entry>
-    <entry>
       <string>Last Match -&gt; Lost</string>
       <string>Last Match -&gt; Lost</string>
     </entry>
     <entry>
-      <string>Draw</string>
-      <string>Draw</string>
-    </entry>
-    <entry>
       <string>Asia</string>
       <string>Asia</string>
-    </entry>
-    <entry>
-      <string>%s vs %s, %s</string>
-      <string>%s vs %s, %s</string>
-    </entry>
-    <entry>
-      <string>Hero Detected</string>
-      <string>Hero Detected</string>
     </entry>
     <entry>
       <string>User Interface Language</string>
@@ -97,14 +61,6 @@
       <string>Result</string>
     </entry>
     <entry>
-      <string>Scanning again!</string>
-      <string>Scanning again!</string>
-    </entry>
-    <entry>
-      <string>Experimental build %s</string>
-      <string>Experimental build %s</string>
-    </entry>
-    <entry>
       <string>&amp;Confirm</string>
       <string>&amp;Confirm</string>
     </entry>
@@ -113,24 +69,24 @@
       <string>Paladin</string>
     </entry>
     <entry>
-      <string>EU</string>
-      <string>EU</string>
+      <string>go second</string>
+      <string>go second</string>
     </entry>
     <entry>
-      <string>go second</string>
-      <string>go second</string>
+      <string>EU</string>
+      <string>EU</string>
     </entry>
     <entry>
       <string>Slow</string>
       <string>Slow</string>
     </entry>
     <entry>
-      <string>Mode</string>
-      <string>Mode</string>
+      <string>Deck #%d</string>
+      <string>Deck #%d</string>
     </entry>
     <entry>
-      <string>Deck #%d</string>
-      <string>Deck #%d</string>
+      <string>Mode</string>
+      <string>Mode</string>
     </entry>
     <entry>
       <string>Visualize scanned areas after Hearthstone being out of sight for more than 1 min.</string>
@@ -145,8 +101,8 @@
       <string>Batte.net server</string>
     </entry>
     <entry>
-      <string>Game Result</string>
-      <string>Game Result</string>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
     </entry>
     <entry>
       <string>Win</string>
@@ -169,10 +125,6 @@
       <string>&amp;Save</string>
     </entry>
     <entry>
-      <string>Playing as %s</string>
-      <string>Playing as %s</string>
-    </entry>
-    <entry>
       <string>Unranked mode (played as)</string>
       <string>Unranked mode (played as)</string>
     </entry>
@@ -185,10 +137,6 @@
       <string>NA</string>
     </entry>
     <entry>
-      <string>You go first!</string>
-      <string>You go first!</string>
-    </entry>
-    <entry>
       <string>Override Offsets (Multi monitors dirty fix)</string>
       <string>Override Offsets (Multi monitors dirty fix)</string>
     </entry>
@@ -197,48 +145,36 @@
       <string>If you think HearthTracker helped you. Please consider donating a few bucks so that I can get better web servers for the upcoming Web Sync feature and keep the developing on it!</string>
     </entry>
     <entry>
-      <string>Last Match -&gt; went second</string>
-      <string>Last Match -&gt; went second</string>
-    </entry>
-    <entry>
       <string>Diagnotic Tool</string>
       <string>Diagnotic Tool</string>
     </entry>
     <entry>
-      <string>Intermediate</string>
-      <string>Intermediate</string>
-    </entry>
-    <entry>
-      <string>Web Sync</string>
-      <string>Web Sync</string>
+      <string>Last Match -&gt; went second</string>
+      <string>Last Match -&gt; went second</string>
     </entry>
     <entry>
       <string>vs</string>
       <string>vs</string>
     </entry>
     <entry>
-      <string>Practice</string>
-      <string>Practice</string>
+      <string>Web Sync</string>
+      <string>Web Sync</string>
     </entry>
     <entry>
-      <string>%s vs %s, Defeat!</string>
-      <string>%s vs %s, Defeat!</string>
+      <string>Intermediate</string>
+      <string>Intermediate</string>
+    </entry>
+    <entry>
+      <string>Practice</string>
+      <string>Practice</string>
     </entry>
     <entry>
       <string>No, I refuse to help!</string>
       <string>No, I refuse to help!</string>
     </entry>
     <entry>
-      <string>%f weeks ago</string>
-      <string>%f weeks ago</string>
-    </entry>
-    <entry>
       <string>X offset</string>
       <string>X offset</string>
-    </entry>
-    <entry>
-      <string>Latest version:</string>
-      <string>Latest version:</string>
     </entry>
     <entry>
       <string>&amp;Preferences</string>
@@ -251,10 +187,6 @@
     <entry>
       <string>moments ago</string>
       <string>moments ago</string>
-    </entry>
-    <entry>
-      <string>%s vs %s</string>
-      <string>%s vs %s</string>
     </entry>
     <entry>
       <string>Vs</string>
@@ -285,10 +217,6 @@
       <string>Advanced</string>
     </entry>
     <entry>
-      <string>Practice mode detected</string>
-      <string>Practice mode detected</string>
-    </entry>
-    <entry>
       <string>Congrats! HearthTracker had tracked %s games for you.</string>
       <string>Congrats! HearthTracker had tracked %s games for you.</string>
     </entry>
@@ -309,24 +237,12 @@
       <string>Arena</string>
     </entry>
     <entry>
-      <string>one minute ago</string>
-      <string>one minute ago</string>
-    </entry>
-    <entry>
       <string>Diagnostics</string>
       <string>Diagnostics</string>
     </entry>
     <entry>
-      <string>You go second!</string>
-      <string>You go second!</string>
-    </entry>
-    <entry>
       <string>Challenge</string>
       <string>Challenge</string>
-    </entry>
-    <entry>
-      <string>%d - %d as %s</string>
-      <string>%d - %d as %s</string>
     </entry>
     <entry>
       <string>%sHow to use the Decks Manager%s</string>
@@ -335,14 +251,6 @@
     <entry>
       <string>Total Runs</string>
       <string>Total Runs</string>
-    </entry>
-    <entry>
-      <string>Hearthstone is minimized</string>
-      <string>Hearthstone is minimized</string>
-    </entry>
-    <entry>
-      <string>Your hero is %s</string>
-      <string>Your hero is %s</string>
     </entry>
     <entry>
       <string>Unranked</string>
@@ -365,10 +273,6 @@
       <string>E&amp;xit</string>
     </entry>
     <entry>
-      <string>Last Match -&gt; Draw</string>
-      <string>Last Match -&gt; Draw</string>
-    </entry>
-    <entry>
       <string>Druid</string>
       <string>Druid</string>
     </entry>
@@ -377,20 +281,8 @@
       <string>Really Fast</string>
     </entry>
     <entry>
-      <string>C&amp;onfirm</string>
-      <string>C&amp;onfirm</string>
-    </entry>
-    <entry>
       <string>&amp;Tools</string>
       <string>&amp;Tools</string>
-    </entry>
-    <entry>
-      <string>%.2f weeks ago</string>
-      <string>%.2f weeks ago</string>
-    </entry>
-    <entry>
-      <string>Unranked mode detected</string>
-      <string>Unranked mode detected</string>
     </entry>
     <entry>
       <string>Last Match -&gt; Won</string>
@@ -409,10 +301,6 @@
       <string>Game mode: %s</string>
     </entry>
     <entry>
-      <string>Deck win rate</string>
-      <string>Deck win rate</string>
-    </entry>
-    <entry>
       <string>I am sincerely hope that you like it! I&apos;ve spent countless hours to develope it. </string>
       <string>I am sincerely hope that you like it! I&apos;ve spent countless hours to develope it. </string>
     </entry>
@@ -421,36 +309,20 @@
       <string>Show us the love!</string>
     </entry>
     <entry>
-      <string>Go First</string>
-      <string>Go First</string>
-    </entry>
-    <entry>
       <string>C: </string>
       <string>C: </string>
     </entry>
     <entry>
-      <string>Arena mode (against)</string>
-      <string>Arena mode (against)</string>
+      <string>Go First</string>
+      <string>Go First</string>
     </entry>
     <entry>
       <string>Game Resolution (if auto detect failed)</string>
       <string>Game Resolution (if auto detect failed)</string>
     </entry>
     <entry>
-      <string>Opponent hero is %s</string>
-      <string>Opponent hero is %s</string>
-    </entry>
-    <entry>
-      <string>Please select the server you played on for your existing arena and matches records. The server field for existing records can not be altered after this.</string>
-      <string>Please select the server you played on for your existing arena and matches records. The server field for existing records can not be altered after this.</string>
-    </entry>
-    <entry>
       <string>About</string>
       <string>About</string>
-    </entry>
-    <entry>
-      <string>%sGet update%s</string>
-      <string>%sGet update%s</string>
     </entry>
     <entry>
       <string>Mage</string>
@@ -461,20 +333,8 @@
       <string>A&amp;bout</string>
     </entry>
     <entry>
-      <string>Arena mode detected</string>
-      <string>Arena mode detected</string>
-    </entry>
-    <entry>
-      <string>%s vs %s, Victory!</string>
-      <string>%s vs %s, Victory!</string>
-    </entry>
-    <entry>
       <string>Last scanned sub-area</string>
       <string>Last scanned sub-area</string>
-    </entry>
-    <entry>
-      <string>Challenge mode (against)</string>
-      <string>Challenge mode (against)</string>
     </entry>
     <entry>
       <string>Unknown mode</string>
@@ -485,10 +345,6 @@
       <string>Last seen</string>
     </entry>
     <entry>
-      <string>Live Arena status</string>
-      <string>Live Arena status</string>
-    </entry>
-    <entry>
       <string>Y offset</string>
       <string>Y offset</string>
     </entry>
@@ -497,16 +353,8 @@
       <string>Played</string>
     </entry>
     <entry>
-      <string>No Coin</string>
-      <string>No Coin</string>
-    </entry>
-    <entry>
       <string>Visualize scanned area</string>
       <string>Visualize scanned area</string>
-    </entry>
-    <entry>
-      <string>HearthTracker Update Notification!</string>
-      <string>HearthTracker Update Notification!</string>
     </entry>
     <entry>
       <string>Game Language</string>
@@ -519,10 +367,6 @@
     <entry>
       <string>go first</string>
       <string>go first</string>
-    </entry>
-    <entry>
-      <string>Ranked mode (against)</string>
-      <string>Ranked mode (against)</string>
     </entry>
     <entry>
       <string>Arena: %s</string>
@@ -557,10 +401,6 @@
       <string>Copyright © 2014 megablue</string>
     </entry>
     <entry>
-      <string>%s vs %s, Unknown result!</string>
-      <string>%s vs %s, Unknown result!</string>
-    </entry>
-    <entry>
       <string>Game Mode</string>
       <string>Game Mode</string>
     </entry>
@@ -585,10 +425,6 @@
       <string>Shaman</string>
     </entry>
     <entry>
-      <string>Live match status</string>
-      <string>Live match status</string>
-    </entry>
-    <entry>
       <string>Slot #6</string>
       <string>Slot #6</string>
     </entry>
@@ -599,14 +435,6 @@
     <entry>
       <string>Slot #5</string>
       <string>Slot #5</string>
-    </entry>
-    <entry>
-      <string>Match detected</string>
-      <string>Match detected</string>
-    </entry>
-    <entry>
-      <string>HearthTracker Upgrade Confirmation</string>
-      <string>HearthTracker Upgrade Confirmation</string>
     </entry>
     <entry>
       <string>Slot #4</string>
@@ -653,14 +481,6 @@
       <string>Warrior</string>
     </entry>
     <entry>
-      <string>HS minimized</string>
-      <string>HS minimized</string>
-    </entry>
-    <entry>
-      <string>No coin</string>
-      <string>No coin</string>
-    </entry>
-    <entry>
       <string>minutes</string>
       <string>minutes</string>
     </entry>
@@ -673,20 +493,8 @@
       <string>Hunter</string>
     </entry>
     <entry>
-      <string>Score: %s</string>
-      <string>Score: %s</string>
-    </entry>
-    <entry>
-      <string>Unranked mode (against)</string>
-      <string>Unranked mode (against)</string>
-    </entry>
-    <entry>
       <string>%s vs %s, %s, %s</string>
       <string>%s vs %s, %s, %s</string>
-    </entry>
-    <entry>
-      <string>as</string>
-      <string>as</string>
     </entry>
     <entry>
       <string>Ranked: %s</string>
@@ -697,10 +505,6 @@
       <string>7+ %%</string>
     </entry>
     <entry>
-      <string>%d minutes ago</string>
-      <string>%d minutes ago</string>
-    </entry>
-    <entry>
       <string>&amp;Matches</string>
       <string>&amp;Matches</string>
     </entry>
@@ -709,20 +513,8 @@
       <string>%s+ Games Tracked!</string>
     </entry>
     <entry>
-      <string>HS restored</string>
-      <string>HS restored</string>
-    </entry>
-    <entry>
       <string>Win %%</string>
       <string>Win %%</string>
-    </entry>
-    <entry>
-      <string>Challenge mode detected</string>
-      <string>Challenge mode detected</string>
-    </entry>
-    <entry>
-      <string>Log Level</string>
-      <string>Log Level</string>
     </entry>
     <entry>
       <string>&amp;Arena</string>
@@ -743,14 +535,6 @@
     <entry>
       <string>Stats</string>
       <string>Stats</string>
-    </entry>
-    <entry>
-      <string>Coin</string>
-      <string>Coin</string>
-    </entry>
-    <entry>
-      <string>Practice mode (against)</string>
-      <string>Practice mode (against)</string>
     </entry>
     <entry>
       <string>Sideboard</string>

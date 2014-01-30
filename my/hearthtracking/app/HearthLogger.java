@@ -40,6 +40,8 @@ public class HearthLogger {
         FileHandler fh;
         
         try {
+        	HearthHelper.createFolder(HearthHelper.extractFolderPath(logfile));
+        	
             // This block configure the logger with handler and formatter  
             fh = new FileHandler(logfile, limit, rotate, true);
             logger.addHandler(fh);  

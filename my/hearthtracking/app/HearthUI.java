@@ -168,6 +168,7 @@ public class HearthUI {
 	private Combo cmbStatsMode;
 	private Combo cmbStatsCoin;
 	private Combo cmbStatsLimit;
+	private CCombo cmbLogLevel;
 
 	public HearthUI(HearthScannerManager s, HearthDB t){
 		hearthScanner = s;
@@ -1031,38 +1032,14 @@ public class HearthUI {
 		lblNewLabel_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblNewLabel_1.setText(lang.t("Log Level"));
 		
-		CCombo cmbLogLevel = new CCombo(composite_10, SWT.BORDER | SWT.READ_ONLY);
-		cmbLogLevel.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				int index = ((CCombo) arg0.widget).getSelectionIndex();
-				
-				switch(index){
-					case 0:
-						setting.logLevel = Level.INFO.getName();
-						logger.setLogLevel(Level.INFO);
-					break;
-					
-					case 1:
-						setting.logLevel = Level.FINE.getName();
-						logger.setLogLevel(Level.FINE);
-					break;
-					
-					case 2:
-						setting.logLevel = Level.FINEST.getName();
-						logger.setLogLevel(Level.FINEST);
-					break;
-				}
-				
-				savePreferences();
-			}
-		});
+		cmbLogLevel = new CCombo(composite_10, SWT.BORDER | SWT.READ_ONLY);
 		GridData gd_cmbLogLevel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 5, 1);
 		gd_cmbLogLevel.widthHint = 357;
 		cmbLogLevel.setLayoutData(gd_cmbLogLevel);
 		cmbLogLevel.setVisibleItemCount(13);
 		cmbLogLevel.setItems(new String[] {"Info", "Extended", "Debug"});
 		cmbLogLevel.setEditable(false);
+		
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
 		new Label(composite_10, SWT.NONE);
@@ -1316,6 +1293,47 @@ public class HearthUI {
 		fillArenaTable();
 		setupModeSelection();
 		initDecksManager();
+		initLogLevel();
+	}
+	
+	private void initLogLevel(){
+		cmbLogLevel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int index = ((CCombo) arg0.widget).getSelectionIndex();
+				
+				switch(index){
+					case 0:
+						setting.logLevel = Level.INFO.getName();
+						logger.setLogLevel(Level.INFO);
+					break;
+					
+					case 1:
+						setting.logLevel = Level.FINE.getName();
+						logger.setLogLevel(Level.FINE);
+					break;
+					
+					case 2:
+						setting.logLevel = Level.FINEST.getName();
+						logger.setLogLevel(Level.FINEST);
+					break;
+				}
+				
+				savePreferences();
+			}
+		});
+		
+		switch(setting.logLevel){
+			case "FINEST":
+				cmbLogLevel.select(2);
+		
+			case "FINE":
+				cmbLogLevel.select(1);
+		
+			case "INFO":
+			default:
+				cmbLogLevel.select(0);
+		}
 	}
 	
 	private void initDecksManager(){
