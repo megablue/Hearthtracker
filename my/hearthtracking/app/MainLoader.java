@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 public class MainLoader {
-	public static int[] version = {1, 1, 9};
+	public static int[] version = {1, 2, 1};
 	public static int experimental = 0;
 	private final static int syncInterval =  1 * 60 * 1000;
 

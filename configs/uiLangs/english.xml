@@ -13,6 +13,10 @@
       <string>It really means a lot to me. Your support is greatly appreciated!</string>
     </entry>
     <entry>
+      <string>Arena score</string>
+      <string>Arena score</string>
+    </entry>
+    <entry>
       <string>Ranked mode detected</string>
       <string>Ranked mode detected</string>
     </entry>
@@ -23,6 +27,10 @@
     <entry>
       <string>Arena mode (played as)</string>
       <string>Arena mode (played as)</string>
+    </entry>
+    <entry>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
+      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
     </entry>
     <entry>
       <string>Fast</string>
@@ -43,6 +51,10 @@
     <entry>
       <string>Last Match -&gt; Lost</string>
       <string>Last Match -&gt; Lost</string>
+    </entry>
+    <entry>
+      <string>Draw</string>
+      <string>Draw</string>
     </entry>
     <entry>
       <string>Asia</string>
@@ -101,10 +113,6 @@
       <string>Batte.net server</string>
     </entry>
     <entry>
-      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
-      <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
-    </entry>
-    <entry>
       <string>Win</string>
       <string>Win</string>
     </entry>
@@ -123,6 +131,10 @@
     <entry>
       <string>&amp;Save</string>
       <string>&amp;Save</string>
+    </entry>
+    <entry>
+      <string>Playing as %s</string>
+      <string>Playing as %s</string>
     </entry>
     <entry>
       <string>Unranked mode (played as)</string>
@@ -245,6 +257,10 @@
       <string>Challenge</string>
     </entry>
     <entry>
+      <string>%d - %d as %s</string>
+      <string>%d - %d as %s</string>
+    </entry>
+    <entry>
       <string>%sHow to use the Decks Manager%s</string>
       <string>%sHow to use the Decks Manager%s</string>
     </entry>
@@ -271,6 +287,10 @@
     <entry>
       <string>E&amp;xit</string>
       <string>E&amp;xit</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; Draw</string>
+      <string>Last Match -&gt; Draw</string>
     </entry>
     <entry>
       <string>Druid</string>
@@ -333,6 +353,10 @@
       <string>A&amp;bout</string>
     </entry>
     <entry>
+      <string>Arena mode detected</string>
+      <string>Arena mode detected</string>
+    </entry>
+    <entry>
       <string>Last scanned sub-area</string>
       <string>Last scanned sub-area</string>
     </entry>
@@ -345,12 +369,20 @@
       <string>Last seen</string>
     </entry>
     <entry>
+      <string>Live Arena status</string>
+      <string>Live Arena status</string>
+    </entry>
+    <entry>
       <string>Y offset</string>
       <string>Y offset</string>
     </entry>
     <entry>
       <string>Played</string>
       <string>Played</string>
+    </entry>
+    <entry>
+      <string>No Coin</string>
+      <string>No Coin</string>
     </entry>
     <entry>
       <string>Visualize scanned area</string>
@@ -493,6 +525,10 @@
       <string>Hunter</string>
     </entry>
     <entry>
+      <string>Score: %s</string>
+      <string>Score: %s</string>
+    </entry>
+    <entry>
       <string>%s vs %s, %s, %s</string>
       <string>%s vs %s, %s, %s</string>
     </entry>
@@ -521,6 +557,10 @@
       <string>&amp;Arena</string>
     </entry>
     <entry>
+      <string>Log Level</string>
+      <string>Log Level</string>
+    </entry>
+    <entry>
       <string>Visualize now</string>
       <string>Visualize now</string>
     </entry>
@@ -535,6 +575,10 @@
     <entry>
       <string>Stats</string>
       <string>Stats</string>
+    </entry>
+    <entry>
+      <string>Coin</string>
+      <string>Coin</string>
     </entry>
     <entry>
       <string>Sideboard</string>

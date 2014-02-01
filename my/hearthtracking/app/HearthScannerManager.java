@@ -755,30 +755,37 @@ public class HearthScannerManager {
 
 		//if the latest wins is different or last announcement time expired
 		if( winsUpdated || lossesUpdated || (annoucementExpired && arenaWins != -1 && arenaLosses != -1)  ){
-						
-			if(confirmedWins > -1 && confirmedLosses > -1){
-				String hero = heroesList.getHeroLabel(arenaHero);
-				
-				addNotification(
-					new HearthReaderNotification(
-						uiLang.t("Arena score"), 
-						uiLang.t("%d - %d as %s", confirmedWins, confirmedLosses, hero)
-					)
-				);
-			}
 
 			lastArenaScoreReport = System.currentTimeMillis();
 			
 			if(winsUpdated || lossesUpdated){
 				isDirty = true;
 				
-				arenaWins = confirmedWins;
-				arenaLosses = confirmedLosses;
+				if(confirmedWins > -1){
+					arenaWins = confirmedWins;
+				}
+				
+				if(confirmedLosses > -1){
+					arenaLosses = confirmedLosses;
+				}
 				
 				//if we reached the end of an arena session
-				if(arenaWins == ARENA_MAX_WINS || arenaLosses == ARENA_MAX_LOSSES){
+				if( (arenaWins == ARENA_MAX_WINS) ||
+					(arenaWins > -1 && arenaLosses == ARENA_MAX_LOSSES)
+				){
 					concludeArena();
 				}
+			}
+			
+			if( (confirmedWins > -1 && confirmedLosses > -1) || arenaLosses == ARENA_MAX_LOSSES){
+				String hero = heroesList.getHeroLabel(arenaHero);
+				
+				addNotification(
+					new HearthReaderNotification(
+						uiLang.t("Arena score"), 
+						uiLang.t("%d - %d as %s", arenaWins, arenaLosses, hero)
+					)
+				);
 			}
 		}
 	}
@@ -977,6 +984,12 @@ public class HearthScannerManager {
 			String oldMode = HearthGameMode.gameModeToString(gameMode);
 			String newMode = HearthGameMode.gameModeToString(detectedMode);
 			
+			if(gameMode == HearthGameMode.UNKNOWNMODE){
+				flushScanResults("topHero");
+				flushScanResults("bottomHero");
+				flushScanResults("gameResult");
+			}
+			
 			if(gameMode == HearthGameMode.ARENAMODE && detectedMode != HearthGameMode.ARENAMODE){
 				flushScanResults("arenaWins");
 				flushScanResults("arenaLose");
@@ -1095,12 +1108,14 @@ public class HearthScannerManager {
 	}
 
 	private void resetArenaStatus(){
-		this.arenaWins		= -1;
-		this.arenaLosses 	= -1;
-		this.arenaHero 		= -1;
-		this.gameMode 		= HearthGameMode.UNKNOWNMODE;
+//		this.arenaWins		= -1;
+//		this.arenaLosses 	= -1;
+//		this.arenaHero 		= -1;
+//		this.gameMode 		= HearthGameMode.UNKNOWNMODE;
+		flushScanResults("arenaLose");
+		flushScanResults("arenaWins");
 	}
-	
+
 	private void flushScanResults(String scene){
 		Iterator<HearthScanResult> it = scanResults.iterator();
 		
