@@ -1829,7 +1829,7 @@ public class HearthUI {
 				if(cbMatchesEditResult.getSelectionIndex() == 0){
 					result = HearthMatch.GAME_RESULT_VICTORY;
 				} else if(cbMatchesEditResult.getSelectionIndex() == 1){
-					result = HearthMatch.GAME_RESULT_VICTORY;
+					result = HearthMatch.GAME_RESULT_DEFEAT;
 				} else if(cbMatchesEditResult.getSelectionIndex() == 2){
 					result = HearthMatch.GAME_RESULT_DRAW;
 				} else if(cbMatchesEditResult.getSelectionIndex() == 3){
