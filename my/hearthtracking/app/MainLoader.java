@@ -39,7 +39,14 @@ public class MainLoader {
 	private static HearthUI theUI = null;
 
 	public static void main(String[] args) {
-		startup();
+		
+		try{
+			startup();
+		} catch (Exception e) {
+			logger.severe(e.getMessage());
+			System.exit(1);
+		}
+		
 	}
 	
 	@SuppressWarnings("unused")
