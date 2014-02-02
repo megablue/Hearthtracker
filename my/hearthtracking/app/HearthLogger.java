@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -64,6 +65,9 @@ public class HearthLogger {
 		if(loglevel != null){
 			Level level = Level.parse(loglevel);
 			logger.setLevel(level);
+	        ConsoleHandler handler = new ConsoleHandler();
+	        handler.setLevel(level);
+	        logger.addHandler(handler);
 		} else {
 			logger.setLevel(Level.INFO);
 		}	

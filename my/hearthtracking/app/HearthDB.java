@@ -564,7 +564,7 @@ public class HearthDB {
 		}
 	}
 	
-	public int getTotalRunsByHero(int gameMode, int statsMode, int coinMode, int heroId, int limit) throws SQLException{
+	public int getTotalRunsByHero(int gameMode, int statsMode, int coinMode, int myheroid, int oppheroid, int limit) throws SQLException{
 		ResultSet rs;
 		int total = 0;
 		
@@ -579,22 +579,22 @@ public class HearthDB {
 		String limitSql = "";
 		
 		if(limit > -1){
-			if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
+			if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS && coinMode == HearthMatch.GAME_BOTH_COIN){
 				limitSql = " ORDER BY timecaptured DESC LIMIT " + limit;
 			} else {
 				limitSql = " ORDER BY startTime DESC LIMIT " + limit;
 			}
 		}
 
-		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
-			rs = stat.executeQuery("select WINS from ARENARESULTS WHERE heroid = " + heroId + " AND DELETED=0 " + limitSql);
+		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS && coinMode == HearthMatch.GAME_BOTH_COIN){
+			rs = stat.executeQuery("select WINS from ARENARESULTS WHERE heroid = " + myheroid + " AND DELETED=0 " + limitSql);
 			
 			while(rs.next()){
 				total += 1;
 			}
-		} else if(gameMode != HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS) {
+		} else if(statsMode == STATS_PLAYED_AS) {
 			
-			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid = " + heroId 
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid = " + myheroid 
 					+ " AND (MODE=" + gameMode + ") AND DELETED=0 " + coinSql + limitSql);
 			
 			while(rs.next()){
@@ -602,7 +602,8 @@ public class HearthDB {
 			}
 		}else if(statsMode == STATS_PLAYED_AGAINST) {
 			
-			rs = stat.executeQuery("select WIN as TOTAL from MATCHES WHERE oppHeroId = " + heroId 
+			rs = stat.executeQuery("select WIN as TOTAL from MATCHES WHERE myheroid = " + myheroid
+					+ " AND oppHeroId=" + oppheroid
 					+ " AND (MODE=" + gameMode + ") AND DELETED=0 " + coinSql + limitSql);
 			
 			while(rs.next()){
@@ -613,7 +614,7 @@ public class HearthDB {
 		return total;
 	}
 	
-	public float getWinRateByHero(int gameMode, int statsMode, int coinMode, int heroId, int limit) throws SQLException{
+	public float getWinRateByHero(int gameMode, int statsMode, int coinMode, int myheroid, int oppheroid, int limit) throws SQLException{
 		ResultSet rs;
 		int wins = 0;
 		int losses = 0;
@@ -631,24 +632,12 @@ public class HearthDB {
 		String limitSql = "";
 		
 		if(limit > -1){
-			if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
-				limitSql = " ORDER BY timecaptured DESC LIMIT " + limit;
-			} else {
-				limitSql = " ORDER BY startTime DESC LIMIT " + limit;
-			}
+			limitSql = " ORDER BY startTime DESC LIMIT " + limit;
 		}
 		
-		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
-			rs = stat.executeQuery("select wins,losses from ARENARESULTS where heroId = " + heroId + " AND DELETED=0 " + limitSql);
+		if(statsMode == STATS_PLAYED_AS) {
 			
-			while(rs.next()){
-				found = true;
-				wins += rs.getInt("WINS");
-				losses += rs.getInt("LOSSES");
-			}
-		} else if(gameMode != HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS) {
-			
-			rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + heroId + " AND MODE=" + gameMode + " AND DELETED=0 " + coinSql + limitSql);
+			rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + myheroid + " AND MODE=" + gameMode + " AND DELETED=0 " + coinSql + limitSql);
 			
 			while(rs.next()){
 				found = true;
@@ -661,7 +650,7 @@ public class HearthDB {
 			}
 		}else if(statsMode == STATS_PLAYED_AGAINST) {
 			
-			rs = stat.executeQuery("select win FROM MATCHES where oppheroid = " + heroId + " AND MODE=" + gameMode + " AND DELETED=0 " + coinSql + limitSql);
+			rs = stat.executeQuery("select win FROM MATCHES where MYHEROID = " + myheroid + " AND oppheroid = " + oppheroid + " AND MODE=" + gameMode + " AND DELETED=0 " + coinSql + limitSql);
 			
 			while(rs.next()){
 				found = true;
@@ -800,7 +789,7 @@ public class HearthDB {
 		return total;
 	}
 	
-	public int getTotalWinsByHero(int gameMode, int statsMode, int coinMode, int heroId, int limit) throws SQLException{
+	public int getTotalWinsByHero(int gameMode, int statsMode, int coinMode, int myhero, int opphero, int limit) throws SQLException{
 		ResultSet rs;
 		int total = 0;
 		
@@ -815,21 +804,12 @@ public class HearthDB {
 		String limitSql = "";
 		
 		if(limit > -1){
-			if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
-				limitSql = " ORDER BY timecaptured DESC LIMIT " + limit;
-			} else {
-				limitSql = " ORDER BY startTime DESC LIMIT " + limit;
-			}
+			limitSql = " ORDER BY startTime DESC LIMIT " + limit;
 		}
 		
-		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
-			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED = 0 " +limitSql);
-			while(rs.next()){
-				total += rs.getInt("WINS");
-			}
-		} else if(gameMode != HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS) {
+		if(statsMode == STATS_PLAYED_AS) {
 			
-			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + gameMode + " AND DELETED = 0" + coinSql +limitSql);
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + myhero + " AND mode=" + gameMode + " AND DELETED = 0" + coinSql +limitSql);
 			
 			while(rs.next()){
 				total += rs.getInt("WIN") == HearthMatch.GAME_RESULT_VICTORY ? rs.getInt("WIN") : 0;
@@ -837,7 +817,7 @@ public class HearthDB {
 
 		} else if(statsMode == STATS_PLAYED_AGAINST) {
 			
-			rs = stat.executeQuery("select WIN,startTime from MATCHES WHERE oppheroid=" + heroId + " AND mode=" + gameMode + " AND DELETED = 0" + coinSql +limitSql);
+			rs = stat.executeQuery("select WIN,startTime from MATCHES WHERE  myheroid=" + myhero + " AND oppheroid=" + opphero + " AND mode=" + gameMode + " AND DELETED = 0" + coinSql +limitSql);
 			
 			while(rs.next()){
 				total += rs.getInt("WIN") == HearthMatch.GAME_RESULT_VICTORY ? rs.getInt("WIN") : 0;
@@ -847,7 +827,7 @@ public class HearthDB {
 		return total;
 	}
 	
-	public int getTotalLossesByHero(int gameMode, int statsMode, int coinMode, int heroId, int limit) throws SQLException{
+	public int getTotalLossesByHero(int gameMode, int statsMode, int coinMode, int myheroid, int oppheroid, int limit) throws SQLException{
 		ResultSet rs;
 		int total = 0;
 		
@@ -862,28 +842,18 @@ public class HearthDB {
 		String limitSql = "";
 		
 		if(limit > -1){
-			if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
-				limitSql = " ORDER BY timecaptured DESC LIMIT " + limit;
-			} else {
-				limitSql = " ORDER BY startTime DESC LIMIT " + limit;
-			}
+			limitSql = " ORDER BY startTime DESC LIMIT " + limit;
 		}
 
-		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
-			rs = stat.executeQuery("select wins,losses from ARENARESULTS WHERE heroid=" + heroId + " AND DELETED=0 " + limitSql);
-			
-			while(rs.next()){
-				total += rs.getInt("LOSSES");
-			}
-		} else if(gameMode != HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS) {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + heroId + " AND mode=" + gameMode + " AND DELETED=0 " + coinSql + limitSql);
+		if(statsMode == STATS_PLAYED_AS) {
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + myheroid + " AND mode=" + gameMode + " AND DELETED=0 " + coinSql + limitSql);
 			int result = HearthMatch.GAME_RESULT_UNKNOWN;
 			while(rs.next()){
 				result = rs.getInt("WIN");
 				total += (result == HearthMatch.GAME_RESULT_DRAW || result == HearthMatch.GAME_RESULT_DEFEAT) ? 1 : 0;
 			}
 		} else if(statsMode == STATS_PLAYED_AGAINST) {
-			rs = stat.executeQuery("select WIN from MATCHES WHERE oppheroid=" + heroId + " AND mode=" + gameMode + " AND DELETED=0 " + coinSql + limitSql);
+			rs = stat.executeQuery("select WIN from MATCHES WHERE myheroid=" + myheroid + " AND oppheroid=" + oppheroid + " AND mode=" + gameMode + " AND DELETED=0 " + coinSql + limitSql);
 			int result = HearthMatch.GAME_RESULT_UNKNOWN;
 			
 			while(rs.next()){

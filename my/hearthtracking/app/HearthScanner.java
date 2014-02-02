@@ -409,7 +409,6 @@ public class HearthScanner{
 		}
 	}
 	
-	@SuppressWarnings("static-access")
 	public void scan(int threadId, BufferedImage screen, List<Scanbox> scanBoxes, Hashtable<String, String> roiHashes, Hashtable<String, BufferedImage> roiSnaps){
 		
 		if(MAX_THREADS > 1){
@@ -444,7 +443,7 @@ public class HearthScanner{
 
 			//if the score greater or equals the minimum threshold
 			if(score >= PHASH_MIN_SCORE){	
-				logger.fine("Thread [" + threadId + "] " + "Possible match at " + scale(sb.xOffset) 
+				logger.fine("Thread [" + threadId + "] " + " Possible match, " + sb.imgfile + ", at " + scale(sb.xOffset) 
 					+ ", " + scale(sb.yOffset) 
 					+ " with score of " + HearthHelper.formatNumber("0.00", score)
 				);
@@ -473,7 +472,7 @@ public class HearthScanner{
 				
 				//if found we will compare colors as well
 				if(found && sb.matchColor){
-					float colorScore = pHash.getRGBScore(targetHash, regionHash);
+					float colorScore = HearthImagePHash.getRGBScore(targetHash, regionHash);
 					
 					logger.fine("Thread [" + threadId + "] " + "Color score: " + HearthHelper.formatNumber("0.00", colorScore));
 					

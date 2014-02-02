@@ -10,7 +10,7 @@ public class HearthGenerator {
 
 	public static void main(String[] args) {
 		HearthScannerSettings settings = new HearthScannerSettings();
-		String targetScene = "bottomHero";
+		String targetScene = "arenaWins";
 		
 		for(Scanbox sb : settings.list){
 			
@@ -34,10 +34,15 @@ public class HearthGenerator {
 		
 		System.out.println("File: " + file);
 		
-		BufferedImage gameScreen = HearthHelper.loadImage(new File(file));
-		BufferedImage viewport = HearthHelper.cropImage(gameScreen, 240, 0, 1440, 1080);
-		BufferedImage targetRegion = HearthHelper.cropImage(viewport, sb.xOffset, sb.yOffset, sb.width, sb.height);
-		HearthHelper.bufferedImageToFile(targetRegion, "./cache/" + sb.imgfile);
+		try{
+			BufferedImage gameScreen = HearthHelper.loadImage(new File(file));
+			BufferedImage viewport = HearthHelper.cropImage(gameScreen, 240, 0, 1440, 1080);
+			BufferedImage targetRegion = HearthHelper.cropImage(viewport, sb.xOffset, sb.yOffset, sb.width, sb.height);
+			HearthHelper.bufferedImageToFile(targetRegion, "./cache/" + sb.imgfile);
+		} catch (Throwable e){
+			
+		}
+
 	}
 	
 	@SuppressWarnings("unused")

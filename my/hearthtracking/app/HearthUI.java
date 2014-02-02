@@ -496,13 +496,8 @@ public class HearthUI {
 		cmbStatsGameMode.select(0);
 		
 		cmbStatsMode = new Combo(grpStats, SWT.READ_ONLY);
+		cmbStatsMode.setToolTipText(lang.t("Your selected hero againsts others"));
 		fd_cmbStatsGameMode.right = new FormAttachment(100, -266);
-		cmbStatsMode.setItems(
-			new String[] { 
-					lang.t("As"),
-					lang.t("Vs")
-					}
-		);
 		FormData fd_cmbStatsMode = new FormData();
 		fd_cmbStatsMode.left = new FormAttachment(cmbStatsGameMode, 6);
 		fd_cmbStatsMode.top = new FormAttachment(cmbStatsGameMode, 0, SWT.TOP);
@@ -510,23 +505,25 @@ public class HearthUI {
 		cmbStatsMode.select(0);
 		
 		cmbStatsCoin = new Combo(grpStats, SWT.READ_ONLY);
-		fd_cmbStatsMode.right = new FormAttachment(100, -217);
-		cmbStatsCoin.setItems(
-			new String[] {
-				"",
-				lang.t("Coin"),
-				lang.t("No Coin")
-			}
-		);
+		fd_cmbStatsMode.right = new FormAttachment(100, -178);
 		FormData fd_cmbStatsCoin = new FormData();
-		fd_cmbStatsCoin.top = new FormAttachment(cmbStatsGameMode, 0, SWT.TOP);
 		fd_cmbStatsCoin.left = new FormAttachment(cmbStatsMode, 6);
-		fd_cmbStatsCoin.right = new FormAttachment(100, -136);
-		cmbStatsCoin.setLayoutData(fd_cmbStatsCoin);
+		fd_cmbStatsCoin.top = new FormAttachment(cmbStatsGameMode, 0, SWT.TOP);
+		
+        cmbStatsCoin.setItems(
+                new String[] {
+                    "",
+                    lang.t("Coin"),
+                    lang.t("No Coin")
+                }
+            );
+        cmbStatsCoin.setLayoutData(fd_cmbStatsCoin);
 		cmbStatsCoin.select(0);
 		
 		cmbStatsLimit = new Combo(grpStats, SWT.READ_ONLY);
-		cmbStatsLimit.setItems(new String[] {"", "10", "50", "100", "200", "300", "400", "500", "750", "1000"});
+		cmbStatsLimit.setToolTipText(lang.t("Most recent # of runs."));
+		fd_cmbStatsCoin.right = new FormAttachment(100, -100);
+		cmbStatsLimit.setItems(new String[] {"", "10", "25", "50", "75", "100", "200", "300", "400", "500", "750", "1000"});
 		FormData fd_cmbStatsLimit = new FormData();
 		fd_cmbStatsLimit.top = new FormAttachment(cmbStatsGameMode, 0, SWT.TOP);
 		fd_cmbStatsLimit.left = new FormAttachment(cmbStatsCoin, 6);
@@ -1294,6 +1291,20 @@ public class HearthUI {
 		setupModeSelection();
 		initDecksManager();
 		initLogLevel();
+		populateOverviewFilters();
+	}
+	
+	private void populateOverviewFilters(){
+		String[] items = new String[heroesList.getTotal() + 1];
+		
+		items[0] = lang.t("As");
+		
+		for(int i = 1; i < items.length; i++){
+			items[i] = heroesList.getHeroLabel(i-1);
+		}
+		
+		cmbStatsMode.setItems(items);
+		cmbStatsMode.select(0);
 	}
 	
 	private void initLogLevel(){
@@ -1301,6 +1312,8 @@ public class HearthUI {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				int index = ((CCombo) arg0.widget).getSelectionIndex();
+				
+				System.out.println("index:" + index);
 				
 				switch(index){
 					case 0:
@@ -1326,9 +1339,11 @@ public class HearthUI {
 		switch(setting.logLevel){
 			case "FINEST":
 				cmbLogLevel.select(2);
+			break;
 		
 			case "FINE":
 				cmbLogLevel.select(1);
+			break;
 		
 			case "INFO":
 			default:
@@ -2487,14 +2502,19 @@ public class HearthUI {
 	}
 	
 	private int getStatModeFromUI(){		
-		switch(cmbStatsMode.getSelectionIndex()){			
-			case 1:
-			return HearthDB.STATS_PLAYED_AGAINST;
-			
-			default:
+		switch(cmbStatsMode.getSelectionIndex()){
+			case -1:
 			case 0:
 			return HearthDB.STATS_PLAYED_AS;
+		
+			default:
+			case 1:
+			return HearthDB.STATS_PLAYED_AGAINST;
 		}
+	}
+	
+	private int getHeroModeFromUI(){
+		return cmbStatsMode.getSelectionIndex() - 1;
 	}
 	
 	
@@ -2528,38 +2548,49 @@ public class HearthUI {
 		int statsMode = getStatModeFromUI();
 		int coinMode = getStatCoinModeFromUI();
 		int limit = getStatsLimitFromUI();
+		int hero = getHeroModeFromUI();
 		
-//		System.out.println(
-//				"mode: " + getGameModeFromUI() + ", " +
-//				"statsMode: " + getStatModeFromUI() + ", " +
-//				"coinMode: " + getStatCoinModeFromUI()
-//		);
+		System.out.println(
+				"mode: " + getGameModeFromUI() + ", " +
+				"statsMode: " + getStatModeFromUI() + ", " +
+				"hero: " + getHeroModeFromUI() + ", " +
+				"coinMode: " + getStatCoinModeFromUI()
+		);
 		
-		for(int i = 0; i < heroesList.getTotal() + 1; i++){
-			float sevenplus = 0, overall = 0;
+		for(int i = 0; i < heroesList.getTotal(); i++){
+			float sevenplus = -1, overall = 0;
 			int wins = 0;
 			int losses = 0;
 			int totalrun = 0;
 			Image heroImg;
-			int heroId = i < heroesList.getTotal() ? i : -1;
+			int myHeroId = hero > -1 ? hero : i;
+			int oppHero  = i;
 			
 			try {
-				wins = tracker.getTotalWinsByHero(mode, statsMode, coinMode, heroId, limit);
-				losses = tracker.getTotalLossesByHero(mode, statsMode, coinMode, heroId, limit);
-				overall = tracker.getWinRateByHero(mode, statsMode, coinMode, heroId, limit);
-				sevenplus = tracker.getWinRateByHeroSpecial(mode, statsMode, coinMode, heroId, limit);
-				totalrun = tracker.getTotalRunsByHero(mode, statsMode, coinMode, heroId, limit);
+				wins = tracker.getTotalWinsByHero(mode, statsMode, coinMode, myHeroId, oppHero, limit);
+				losses = tracker.getTotalLossesByHero(mode, statsMode, coinMode, myHeroId, oppHero, limit);
+				overall = tracker.getWinRateByHero(mode, statsMode, coinMode, myHeroId, oppHero, limit);
+				
+				if(hero > -1){
+					sevenplus = tracker.getWinRateByHeroSpecial(mode, statsMode, coinMode, myHeroId, limit);
+				}
+				
+				totalrun = tracker.getTotalRunsByHero(mode, statsMode, coinMode, myHeroId, oppHero, limit);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 			
-			if(heroId == -1 && !(overall > -1)){
+			if(myHeroId == -1 && !(overall > -1)){
 				continue;
 			}
 			
 			TableItem tableItem_1 = new TableItem(table, SWT.NONE);
 			
-			tableItem_1.setImage(0, heroImgs[heroId+1]);
+			if(hero > -1){
+				tableItem_1.setImage(0, heroImgs[oppHero+1]);
+			}else{
+				tableItem_1.setImage(0, heroImgs[i+1]);
+			}
 			
 			tableItem_1.setText(1,   wins + "");
 			tableItem_1.setText(2,   losses + "");
@@ -2576,8 +2607,11 @@ public class HearthUI {
 				tableItem_1.setText(4,  "-");
 			}
 			
-			tableItem_1.setText(5,  totalrun + "");
-			
+			if(totalrun > -1){
+				tableItem_1.setText(5,  totalrun + "");
+			} else{
+				tableItem_1.setText(5,  "-");
+			}
 		}
 		
 		if(selected > -1){

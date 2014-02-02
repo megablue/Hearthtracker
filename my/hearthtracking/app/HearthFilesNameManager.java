@@ -42,7 +42,7 @@ public class HearthFilesNameManager {
 	//scanner related files
 	static String scanTargetFileOverrideByLang		= workingDir 	+ imagesPath 	+ "%s" + File.separator + "%s";
 	static String scanTargetFileDefault				= workingDir 	+ imagesPath 	+ "%s";
-	static String scannerSettingFileDefault			= workingDir + configsPath + "gameLangs" + File.separator + "%s.xml"; 
+	static String scannerSettingFileDefault			= workingDir + configsPath + "gameLangs" + File.separator + "default.xml"; 
 
 	static String scannerSettingFileOverrideByRes	= workingDir + configsPath 
 													+ "gameLangs" 

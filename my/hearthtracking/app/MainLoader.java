@@ -210,11 +210,8 @@ public class MainLoader {
 		if(dbSetting == null){
 			dbSetting = new HearthDatabase();
 			config.save(dbSetting, HearthFilesNameManager.dbFile);
-			System.out.append("dbSetting: " + dbSetting.serverSelected);
 		}
 		
-		System.out.append("dbSetting: " + dbSetting.serverSelected);
-	
 		lang = HearthLanguageManager.getInstance();
 		lang.loadLang(setting.uiLang);
 		

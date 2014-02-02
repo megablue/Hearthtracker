@@ -90,7 +90,7 @@ public class HearthScannerSettings {
 		);
 		
 		list.add(
-			new Scanbox("arena-key-6.png",	"arenaWins",	"6", 347, 236, 100, 100).setScore(0.1f).matchColor(119, 119, 126)
+			new Scanbox("arena-key-6.png",	"arenaWins",	"6", 347, 236, 100, 100).setScore(0.1f).matchColor(119, 119, 126).resolveConflict()
 		);
 		
 		list.add(

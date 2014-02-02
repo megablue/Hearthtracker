@@ -5,6 +5,10 @@
       <string>Sync timeout. Will retry later!</string>
     </entry>
     <entry>
+      <string>Stopped scanning!</string>
+      <string>Stopped scanning!</string>
+    </entry>
+    <entry>
       <string>Unknown</string>
       <string>Unknown</string>
     </entry>
@@ -27,6 +31,10 @@
     <entry>
       <string>Arena mode (played as)</string>
       <string>Arena mode (played as)</string>
+    </entry>
+    <entry>
+      <string>Most recent # of runs.</string>
+      <string>Most recent # of runs.</string>
     </entry>
     <entry>
       <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
@@ -71,6 +79,10 @@
     <entry>
       <string>Result</string>
       <string>Result</string>
+    </entry>
+    <entry>
+      <string>Scanning again!</string>
+      <string>Scanning again!</string>
     </entry>
     <entry>
       <string>&amp;Confirm</string>
@@ -165,6 +177,10 @@
       <string>Last Match -&gt; went second</string>
     </entry>
     <entry>
+      <string>Your selected hero againsts others</string>
+      <string>Your selected hero againsts others</string>
+    </entry>
+    <entry>
       <string>vs</string>
       <string>vs</string>
     </entry>
@@ -227,6 +243,10 @@
     <entry>
       <string>Advanced</string>
       <string>Advanced</string>
+    </entry>
+    <entry>
+      <string>Practice mode detected</string>
+      <string>Practice mode detected</string>
     </entry>
     <entry>
       <string>Congrats! HearthTracker had tracked %s games for you.</string>
@@ -303,6 +323,10 @@
     <entry>
       <string>&amp;Tools</string>
       <string>&amp;Tools</string>
+    </entry>
+    <entry>
+      <string>Unranked mode detected</string>
+      <string>Unranked mode detected</string>
     </entry>
     <entry>
       <string>Last Match -&gt; Won</string>
@@ -513,6 +537,10 @@
       <string>Warrior</string>
     </entry>
     <entry>
+      <string>HS minimized</string>
+      <string>HS minimized</string>
+    </entry>
+    <entry>
       <string>minutes</string>
       <string>minutes</string>
     </entry>
@@ -547,6 +575,10 @@
     <entry>
       <string>%s+ Games Tracked!</string>
       <string>%s+ Games Tracked!</string>
+    </entry>
+    <entry>
+      <string>HS restored</string>
+      <string>HS restored</string>
     </entry>
     <entry>
       <string>Win %%</string>
