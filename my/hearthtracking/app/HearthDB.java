@@ -688,7 +688,7 @@ public class HearthDB {
 			}
 		}
 		
-		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS){
+		if(gameMode == HearthGameMode.ARENAMODE && statsMode == STATS_PLAYED_AS && coinMode == HearthMatch.GAME_BOTH_COIN){
 			rs = stat.executeQuery("select wins from ARENARESULTS where heroId = " + heroId + " AND DELETED=0 " + limitSql);
 			
 			while(rs.next()){

@@ -2571,7 +2571,7 @@ public class HearthUI {
 				losses = tracker.getTotalLossesByHero(mode, statsMode, coinMode, myHeroId, oppHero, limit);
 				overall = tracker.getWinRateByHero(mode, statsMode, coinMode, myHeroId, oppHero, limit);
 				
-				if(hero > -1){
+				if(hero < 0){
 					sevenplus = tracker.getWinRateByHeroSpecial(mode, statsMode, coinMode, myHeroId, limit);
 				}
 				
