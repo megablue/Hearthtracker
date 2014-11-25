@@ -1,6 +1,8 @@
 package my.hearthtracking.app;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
+
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,6 +34,8 @@ public class HearthUpdateUI {
 		);
 		shlHearthtrackerUpdateNotification.setSize(388, 228);
 		shlHearthtrackerUpdateNotification.setImage(new Image( display, HearthFilesNameManager.logo128 ));
+		
+		setCenter(display, shlHearthtrackerUpdateNotification);
 		
 		Link link = new Link(shlHearthtrackerUpdateNotification, SWT.NONE);
 		link.addSelectionListener(new SelectionAdapter() {
@@ -89,5 +93,17 @@ public class HearthUpdateUI {
 				display.sleep();
 			}
 		}
+	}
+	
+	public boolean setCenter(Display display, Shell shell){
+		Rectangle shellBounds = shell.getBounds();	
+		java.awt.Point centerPoint = HearthHelper.getCenter(display, shellBounds);
+		
+		if(centerPoint!=null){
+			shell.setLocation (centerPoint.x, centerPoint.y);
+			return true;
+		}
+		
+		return false;
 	}
 }

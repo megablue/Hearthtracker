@@ -1,6 +1,8 @@
 package my.hearthtracking.app;
 
 public class HearthDecks {
+	private static HearthDecks instance = null;
+
 	public String[] list = { 
 			"Awesome Deck #1", 
 			"Awesome Deck #2", 
@@ -12,6 +14,24 @@ public class HearthDecks {
 			"Awesome Deck #8", 
 			"Awesome Deck #9", 
 	};
+
+	public HearthDecks() {
+		if(instance == null){
+			instance = this;
+		}
+	}
+
+	public static void setInstance(HearthDecks instance){
+		HearthDecks.instance = instance;
+	}
+
+	public static HearthDecks getInstance() {
+		if(instance == null){
+			instance = new HearthDecks();
+		}
+		
+		return instance;
+	}
 	
 	public void rearrange(){
 		String [] newList = new String[list.length];

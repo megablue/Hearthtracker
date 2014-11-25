@@ -49,6 +49,10 @@
       <string>上一场 -&gt; 我败</string>
     </entry>
     <entry>
+      <string>Draw</string>
+      <string>Draw</string>
+    </entry>
+    <entry>
       <string>Asia</string>
       <string>亚洲</string>
     </entry>
@@ -281,6 +285,10 @@
       <string>退出(&amp;X)</string>
     </entry>
     <entry>
+      <string>Last Match -&gt; Draw</string>
+      <string>Last Match -&gt; Draw</string>
+    </entry>
+    <entry>
       <string>Really Fast</string>
       <string>超高速</string>
     </entry>
@@ -311,6 +319,10 @@
     <entry>
       <string>General</string>
       <string>一般设置</string>
+    </entry>
+    <entry>
+      <string>Deck win rate</string>
+      <string>Deck win rate</string>
     </entry>
     <entry>
       <string>Game mode: %s</string>
@@ -371,6 +383,10 @@
     <entry>
       <string>Played</string>
       <string>玩了</string>
+    </entry>
+    <entry>
+      <string>No Coin</string>
+      <string>先手</string>
     </entry>
     <entry>
       <string>Visualize scanned area</string>
@@ -537,6 +553,10 @@
       <string>胜率</string>
     </entry>
     <entry>
+      <string>Log Level</string>
+      <string>Log Level</string>
+    </entry>
+    <entry>
       <string>&amp;Arena</string>
       <string>竞技模式(&amp;A)</string>
     </entry>
@@ -555,6 +575,10 @@
     <entry>
       <string>Stats</string>
       <string>统计</string>
+    </entry>
+    <entry>
+      <string>Coin</string>
+      <string>后手</string>
     </entry>
     <entry>
       <string>Sideboard</string>

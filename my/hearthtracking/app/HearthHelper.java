@@ -1,7 +1,13 @@
 package my.hearthtracking.app;
 
 import java.awt.Image;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -11,19 +17,16 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
 import java.util.Date;
-import java.util.Calendar;
-import java.util.logging.FileHandler;  
-import java.util.logging.Logger;  
-import java.util.logging.SimpleFormatter;
-import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
 
-import my.hearthtracking.app.HearthWin32Helper.GetWindowRectException;
-import my.hearthtracking.app.HearthWin32Helper.WindowNotFoundException;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Monitor;
 
 public class HearthHelper {
+	private static HearthLogger logger = HearthLogger.getInstance();
 
 	public static boolean isDevelopmentEnvironment() {
 	    boolean isEclipse = true;
@@ -31,6 +34,35 @@ public class HearthHelper {
 	        isEclipse = false;
 	    }
 	    return isEclipse;
+	}
+	
+	public static org.eclipse.swt.graphics.Rectangle getMonitorBounds(Display display, int x, int y){
+		Monitor[] monitors = display.getMonitors();
+		org.eclipse.swt.graphics.Rectangle screeenBounds = null;
+		
+		for(Monitor mon : monitors){
+			screeenBounds = mon.getBounds();
+			if(x >= screeenBounds.x && x <= screeenBounds.x+screeenBounds.width
+				&& y >= screeenBounds.y && y <= screeenBounds.y+screeenBounds.height ){
+				break;
+			}
+		}
+		
+		return screeenBounds;
+	}
+	
+	public static Point getCenter(Display display, org.eclipse.swt.graphics.Rectangle shellBounds){
+		Point mousePoints = MouseInfo.getPointerInfo().getLocation();
+		org.eclipse.swt.graphics.Rectangle screeenBounds = getMonitorBounds(display, mousePoints.x, mousePoints.y);
+		Point ret = null;
+
+		if(screeenBounds != null){
+			int x = screeenBounds.x + (screeenBounds.width - shellBounds.width) / 2;
+			int y = screeenBounds.y + (screeenBounds.height - shellBounds.height) / 2;
+			ret = new Point(x, y);
+		}
+		
+		return ret;
 	}
 	
 	static String readFile(String path)  throws IOException {
@@ -48,20 +80,7 @@ public class HearthHelper {
 		
 		return null;
 	}
-	
-	public static BufferedImage resizeImage(File imgFile, float scaleFactor){
-		BufferedImage sourceImage = loadImage(imgFile);
 		
-		int resizedWidth = (int) (sourceImage.getWidth() * scaleFactor);  
-		Image thumbnail = sourceImage.getScaledInstance(resizedWidth, -1, Image.SCALE_SMOOTH);
-		BufferedImage bufferedThumbnail = new BufferedImage(thumbnail.getWidth(null),
-		                                                    thumbnail.getHeight(null),
-		                                                    BufferedImage.TYPE_INT_RGB);
-		bufferedThumbnail.getGraphics().drawImage(thumbnail, 0, 0, null);
-		
-		return bufferedThumbnail;
-	}
-	
 	public static void applyMaskImage(BufferedImage src, int x, int y, int w, int h){
 
 		if(x < 0){
@@ -103,6 +122,39 @@ public class HearthHelper {
 		return false;
 	}
 	
+	static BufferedImage cloneImage(BufferedImage bi) {
+		 ColorModel cm = bi.getColorModel();
+		 boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+		 WritableRaster raster = bi.copyData(null);
+		 return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+	}
+	
+	public static BufferedImage resizeImage(File imgFile, float scaleFactor){
+		BufferedImage sourceImage = loadImage(imgFile);
+		return resizeImage(sourceImage, scaleFactor);
+	}
+	
+	public static BufferedImage resizeImage(BufferedImage sourceImage, float scaleFactor){
+		int resizedWidth = (int) Math.round(sourceImage.getWidth() * scaleFactor);  
+		Image thumbnail = sourceImage.getScaledInstance(resizedWidth, -1, Image.SCALE_SMOOTH);
+		BufferedImage bufferedThumbnail = new BufferedImage(thumbnail.getWidth(null),
+		                                                    thumbnail.getHeight(null),
+		                                                    BufferedImage.TYPE_INT_RGB);
+		bufferedThumbnail.getGraphics().drawImage(thumbnail, 0, 0, null);
+		
+		return bufferedThumbnail;
+	}
+
+		public static BufferedImage resizeImage(BufferedImage sourceImage, int width, int height){
+		Image thumbnail = sourceImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		BufferedImage bufferedThumbnail = new BufferedImage(thumbnail.getWidth(null),
+		                                                    thumbnail.getHeight(null),
+		                                                    BufferedImage.TYPE_INT_RGB);
+		bufferedThumbnail.getGraphics().drawImage(thumbnail, 0, 0, null);
+		
+		return bufferedThumbnail;
+	}
+	
 	public static BufferedImage resizeImage(File imgFile, float scaleFactor, File outputFile){
 		BufferedImage resizedBuffer = resizeImage(imgFile, scaleFactor);
 		try {
@@ -113,6 +165,13 @@ public class HearthHelper {
 		}
 		return null;
 	}
+	
+	private static ColorConvertOp colorConvert = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+
+	public static BufferedImage imageToGrayscale(BufferedImage img) {
+        colorConvert.filter(img, img);
+        return img;
+    }
 	
 	public static String getArchFilename(String prefix) 
 	{ 
@@ -187,13 +246,17 @@ public class HearthHelper {
 
 		// if the directory does not exist, create it
 		if (!theDir.exists()) {
-			System.out.println("creating directory: " + folder);
 			boolean result = theDir.mkdir();  
 		
-			if(result) {    
-				System.out.println("DIR created");  
+			if(!result) {    
+				logger.severe("Failed to create folder: " + folder);
 			}
 		}
+	}
+	
+	public static String extractFolderPath(String path)
+	{
+		return path.substring(0,path.lastIndexOf(File.separator));
 	}
 	
 	public static boolean fileExists(String file)
@@ -206,6 +269,14 @@ public class HearthHelper {
 		
 		return false;
 	}
+	
+	public static int getHearthstoneHandle(){
+		if(!getOSName().equals("win")){
+			return 0;
+		}
+		
+		return HearthWin32Helper.findWindow("UnityWndClass", "Hearthstone");
+	}
 
 	public static int[] getHearthstonePosition(){
 		int[] pos = {0,0,0,0};
@@ -215,7 +286,7 @@ public class HearthHelper {
 		}
 		
 		try {			
-			int[] rect = HearthWin32Helper.getRect("Hearthstone", "UnityWndClass");
+			int[] rect = HearthWin32Helper.getRect("UnityWndClass", "Hearthstone");
 			
 			pos[0] = rect[0];
 			pos[1] = rect[1];
@@ -227,49 +298,35 @@ public class HearthHelper {
 		
 		return pos;
 	}
-	
+		
 	public static boolean isHSDetected(){
 		if(!getOSName().equals("win")){
 			return true;
 		}
 		
-		try {
-			try {
-				HearthWin32Helper.getRect("Hearthstone", "UnityWndClass");
-			} catch (GetWindowRectException e) {
-				System.out.println(e.getMessage());
-			}
-		} catch (WindowNotFoundException e) {
-			return false;
+		if(getHearthstoneHandle() != 0){
+			return true;
 		}
-
-		return true;
+		
+		return false;
 	}
 	
-	public static Logger getLogger(Level loglevel){
-        Logger logger = Logger.getLogger("HearthTrackerLog");  
-        FileHandler fh;
-        int limit = 1000000; 
-        int rotate = 10;
-        Calendar cal = Calendar.getInstance();
-        
-        String fileName = cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DATE) + "-" + cal.get(Calendar.YEAR);
-        String logfile = String.format(HearthFilesNameManager.logFile, fileName);
-        
-        try {
-            // This block configure the logger with handler and formatter  
-            fh = new FileHandler(logfile, limit, rotate, true);
-            logger.addHandler(fh);  
-            logger.setLevel(loglevel);  
-            SimpleFormatter formatter = new SimpleFormatter();  
-            fh.setFormatter(formatter);     
-        } catch (SecurityException e) {  
-            e.printStackTrace();  
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }
-        
-        return logger;
+	public static boolean isHearthstoneMinimized(){
+		if(!getOSName().equals("win")){
+			return false;
+		}
+		
+		int handle = getHearthstoneHandle();
+		boolean result = HearthWin32Helper.isWindowMinimized(handle);
+		
+		//always return false if handle not found
+		//this is to make sure we don't need additional check
+		//when we do "forced" scanning
+		if(handle == 0){
+			return false;
+		}
+		
+		return result;
 	}
 	
 	public static void openLink(String link){
@@ -296,17 +353,21 @@ public class HearthHelper {
 	    } else if (diff < 120) {
 	      return uiLang.t("one minute ago");
 	    } else if (diff < 3600) {
-	      return uiLang.t("%d minutes ago", diff / 60);
+	      return uiLang.t("%d minutes ago", (int)(diff / 60));
 	    } else if (diff < 7200) {
 	      return uiLang.t("one hour ago");
 	    } else if (diff < 86400) {
-	      return uiLang.t("%d hours ago", diff / 3600);
+	      return uiLang.t("%.1f hours ago", diff / 3600);
 	    } else if (dayDiff == 1) {
 	      return uiLang.t("yesterday");
 	    } else if (dayDiff < 7) {
-	      return uiLang.t("%d days ago", dayDiff);
+	      return uiLang.t("%.2f days ago", dayDiff);
 	    } else {
-	      return uiLang.t("%d weeks ago", Math.ceil(dayDiff / 7));
+	      return uiLang.t("%.2f weeks ago", Math.ceil(dayDiff / 7));
 	    }
 	 }
+		
+	public static String formatNumber(String format, Float number){
+		return new DecimalFormat("0.00").format(number);
+	}
 }

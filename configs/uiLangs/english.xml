@@ -5,6 +5,10 @@
       <string>Sync timeout. Will retry later!</string>
     </entry>
     <entry>
+      <string>Stopped scanning!</string>
+      <string>Stopped scanning!</string>
+    </entry>
+    <entry>
       <string>Unknown</string>
       <string>Unknown</string>
     </entry>
@@ -17,16 +21,20 @@
       <string>Arena score</string>
     </entry>
     <entry>
-      <string>Ranked mode (played as)</string>
-      <string>Ranked mode (played as)</string>
-    </entry>
-    <entry>
       <string>Ranked mode detected</string>
       <string>Ranked mode detected</string>
     </entry>
     <entry>
+      <string>Ranked mode (played as)</string>
+      <string>Ranked mode (played as)</string>
+    </entry>
+    <entry>
       <string>Arena mode (played as)</string>
       <string>Arena mode (played as)</string>
+    </entry>
+    <entry>
+      <string>Most recent # of runs.</string>
+      <string>Most recent # of runs.</string>
     </entry>
     <entry>
       <string>Automated Stats Tracking for Hearthstone enthusiasts!</string>
@@ -49,24 +57,16 @@
       <string>Unranked : %s</string>
     </entry>
     <entry>
-      <string>Coin detected</string>
-      <string>Coin detected</string>
-    </entry>
-    <entry>
       <string>Last Match -&gt; Lost</string>
       <string>Last Match -&gt; Lost</string>
     </entry>
     <entry>
-      <string>Asia</string>
-      <string>Asia</string>
+      <string>Draw</string>
+      <string>Draw</string>
     </entry>
     <entry>
-      <string>%s vs %s, %s</string>
-      <string>%s vs %s, %s</string>
-    </entry>
-    <entry>
-      <string>Hero Detected</string>
-      <string>Hero Detected</string>
+      <string>Asia</string>
+      <string>Asia</string>
     </entry>
     <entry>
       <string>User Interface Language</string>
@@ -79,6 +79,10 @@
     <entry>
       <string>Result</string>
       <string>Result</string>
+    </entry>
+    <entry>
+      <string>Scanning again!</string>
+      <string>Scanning again!</string>
     </entry>
     <entry>
       <string>&amp;Confirm</string>
@@ -113,16 +117,12 @@
       <string>Visualize scanned areas after Hearthstone being out of sight for more than 1 min.</string>
     </entry>
     <entry>
-      <string>Batte.net server</string>
-      <string>Batte.net server</string>
-    </entry>
-    <entry>
       <string>R: </string>
       <string>R: </string>
     </entry>
     <entry>
-      <string>Game Result</string>
-      <string>Game Result</string>
+      <string>Batte.net server</string>
+      <string>Batte.net server</string>
     </entry>
     <entry>
       <string>Win</string>
@@ -141,20 +141,20 @@
       <string>Losses</string>
     </entry>
     <entry>
-      <string>Playing as %s</string>
-      <string>Playing as %s</string>
-    </entry>
-    <entry>
       <string>&amp;Save</string>
       <string>&amp;Save</string>
     </entry>
     <entry>
-      <string>&amp;New</string>
-      <string>&amp;New</string>
+      <string>Playing as %s</string>
+      <string>Playing as %s</string>
     </entry>
     <entry>
       <string>Unranked mode (played as)</string>
       <string>Unranked mode (played as)</string>
+    </entry>
+    <entry>
+      <string>&amp;New</string>
+      <string>&amp;New</string>
     </entry>
     <entry>
       <string>NA</string>
@@ -169,32 +169,32 @@
       <string>If you think HearthTracker helped you. Please consider donating a few bucks so that I can get better web servers for the upcoming Web Sync feature and keep the developing on it!</string>
     </entry>
     <entry>
-      <string>Last Match -&gt; went second</string>
-      <string>Last Match -&gt; went second</string>
-    </entry>
-    <entry>
       <string>Diagnotic Tool</string>
       <string>Diagnotic Tool</string>
     </entry>
     <entry>
-      <string>Intermediate</string>
-      <string>Intermediate</string>
+      <string>Last Match -&gt; went second</string>
+      <string>Last Match -&gt; went second</string>
     </entry>
     <entry>
-      <string>Web Sync</string>
-      <string>Web Sync</string>
+      <string>Your selected hero againsts others</string>
+      <string>Your selected hero againsts others</string>
     </entry>
     <entry>
       <string>vs</string>
       <string>vs</string>
     </entry>
     <entry>
-      <string>Practice</string>
-      <string>Practice</string>
+      <string>Web Sync</string>
+      <string>Web Sync</string>
     </entry>
     <entry>
-      <string>%s vs %s, Defeat!</string>
-      <string>%s vs %s, Defeat!</string>
+      <string>Intermediate</string>
+      <string>Intermediate</string>
+    </entry>
+    <entry>
+      <string>Practice</string>
+      <string>Practice</string>
     </entry>
     <entry>
       <string>No, I refuse to help!</string>
@@ -269,16 +269,8 @@
       <string>Arena</string>
     </entry>
     <entry>
-      <string>one minute ago</string>
-      <string>one minute ago</string>
-    </entry>
-    <entry>
       <string>Diagnostics</string>
       <string>Diagnostics</string>
-    </entry>
-    <entry>
-      <string>You go second!</string>
-      <string>You go second!</string>
     </entry>
     <entry>
       <string>Challenge</string>
@@ -295,10 +287,6 @@
     <entry>
       <string>Total Runs</string>
       <string>Total Runs</string>
-    </entry>
-    <entry>
-      <string>Your hero is %s</string>
-      <string>Your hero is %s</string>
     </entry>
     <entry>
       <string>Unranked</string>
@@ -319,6 +307,10 @@
     <entry>
       <string>E&amp;xit</string>
       <string>E&amp;xit</string>
+    </entry>
+    <entry>
+      <string>Last Match -&gt; Draw</string>
+      <string>Last Match -&gt; Draw</string>
     </entry>
     <entry>
       <string>Druid</string>
@@ -349,10 +341,6 @@
       <string>General</string>
     </entry>
     <entry>
-      <string>Deck win rate</string>
-      <string>Deck win rate</string>
-    </entry>
-    <entry>
       <string>Game mode: %s</string>
       <string>Game mode: %s</string>
     </entry>
@@ -375,10 +363,6 @@
     <entry>
       <string>Game Resolution (if auto detect failed)</string>
       <string>Game Resolution (if auto detect failed)</string>
-    </entry>
-    <entry>
-      <string>Opponent hero is %s</string>
-      <string>Opponent hero is %s</string>
     </entry>
     <entry>
       <string>About</string>
@@ -421,6 +405,10 @@
       <string>Played</string>
     </entry>
     <entry>
+      <string>No Coin</string>
+      <string>No Coin</string>
+    </entry>
+    <entry>
       <string>Visualize scanned area</string>
       <string>Visualize scanned area</string>
     </entry>
@@ -453,80 +441,72 @@
       <string>U: </string>
     </entry>
     <entry>
-      <string>Scan Speed</string>
-      <string>Scan Speed</string>
+      <string>Scanner</string>
+      <string>Scanner</string>
     </entry>
     <entry>
       <string>Practice mode (played as)</string>
       <string>Practice mode (played as)</string>
     </entry>
     <entry>
-      <string>Scanner</string>
-      <string>Scanner</string>
+      <string>Scan Speed</string>
+      <string>Scan Speed</string>
     </entry>
     <entry>
       <string>Copyright © 2014 megablue</string>
       <string>Copyright © 2014 megablue</string>
     </entry>
     <entry>
-      <string>%s vs %s, Unknown result!</string>
-      <string>%s vs %s, Unknown result!</string>
-    </entry>
-    <entry>
-      <string>As</string>
-      <string>As</string>
+      <string>Game Mode</string>
+      <string>Game Mode</string>
     </entry>
     <entry>
       <string>Slot #9</string>
       <string>Slot #9</string>
     </entry>
     <entry>
-      <string>Game Mode</string>
-      <string>Game Mode</string>
+      <string>As</string>
+      <string>As</string>
     </entry>
     <entry>
       <string>Slot #8</string>
       <string>Slot #8</string>
     </entry>
     <entry>
-      <string>Live match status</string>
-      <string>Live match status</string>
+      <string>Slot #7</string>
+      <string>Slot #7</string>
     </entry>
     <entry>
       <string>Shaman</string>
       <string>Shaman</string>
     </entry>
     <entry>
-      <string>Slot #7</string>
-      <string>Slot #7</string>
+      <string>Slot #6</string>
+      <string>Slot #6</string>
     </entry>
     <entry>
       <string>Forced Scanning</string>
       <string>Forced Scanning</string>
     </entry>
     <entry>
-      <string>Slot #6</string>
-      <string>Slot #6</string>
-    </entry>
-    <entry>
       <string>Slot #5</string>
       <string>Slot #5</string>
-    </entry>
-    <entry>
-      <string>Yes, I want to donate!</string>
-      <string>Yes, I want to donate!</string>
     </entry>
     <entry>
       <string>Slot #4</string>
       <string>Slot #4</string>
     </entry>
     <entry>
-      <string>%sHearthTracker Web Sync Key%s</string>
-      <string>%sHearthTracker Web Sync Key%s</string>
+      <string>Yes, I want to donate!</string>
+      <string>Yes, I want to donate!</string>
     </entry>
     <entry>
       <string>Slot #3</string>
       <string>Slot #3</string>
+    </entry>
+    <entry>
+      <string>%sHearthTracker Web Sync Key%s</string>
+      <string>%sHearthTracker Web Sync Key%s</string>
     </entry>
     <entry>
       <string>Slot #2</string>
@@ -545,32 +525,36 @@
       <string>Ranked : %s</string>
     </entry>
     <entry>
-      <string>De&amp;cks</string>
-      <string>De&amp;cks</string>
+      <string>Warlock</string>
+      <string>Warlock</string>
     </entry>
     <entry>
-      <string>Warlock</string>
-      <string>Warlock</string>
+      <string>De&amp;cks</string>
+      <string>De&amp;cks</string>
     </entry>
     <entry>
       <string>Warrior</string>
       <string>Warrior</string>
     </entry>
     <entry>
-      <string>Score: %s</string>
-      <string>Score: %s</string>
+      <string>HS minimized</string>
+      <string>HS minimized</string>
     </entry>
     <entry>
-      <string>Hunter</string>
-      <string>Hunter</string>
+      <string>minutes</string>
+      <string>minutes</string>
     </entry>
     <entry>
       <string>Your support means a lot to me. Thank you for even hovering over the donate button!</string>
       <string>Your support means a lot to me. Thank you for even hovering over the donate button!</string>
     </entry>
     <entry>
-      <string>minutes</string>
-      <string>minutes</string>
+      <string>Hunter</string>
+      <string>Hunter</string>
+    </entry>
+    <entry>
+      <string>Score: %s</string>
+      <string>Score: %s</string>
     </entry>
     <entry>
       <string>%s vs %s, %s, %s</string>
@@ -579,10 +563,6 @@
     <entry>
       <string>Ranked: %s</string>
       <string>Ranked: %s</string>
-    </entry>
-    <entry>
-      <string>%d minutes ago</string>
-      <string>%d minutes ago</string>
     </entry>
     <entry>
       <string>7+ %%</string>
@@ -597,40 +577,48 @@
       <string>%s+ Games Tracked!</string>
     </entry>
     <entry>
-      <string>Win %%</string>
-      <string>Win %%</string>
+      <string>HS restored</string>
+      <string>HS restored</string>
     </entry>
     <entry>
-      <string>Challenge mode detected</string>
-      <string>Challenge mode detected</string>
+      <string>Win %%</string>
+      <string>Win %%</string>
     </entry>
     <entry>
       <string>&amp;Arena</string>
       <string>&amp;Arena</string>
     </entry>
     <entry>
-      <string>Visualize now</string>
-      <string>Visualize now</string>
+      <string>Log Level</string>
+      <string>Log Level</string>
     </entry>
     <entry>
-      <string>Stats</string>
-      <string>Stats</string>
-    </entry>
-    <entry>
-      <string>Trim Empty &amp;Slots </string>
-      <string>Trim Empty &amp;Slots </string>
+      <string>Visualize now</string>
+      <string>Visualize now</string>
     </entry>
     <entry>
       <string>Latest Arena: </string>
       <string>Latest Arena: </string>
     </entry>
     <entry>
-      <string>CN</string>
-      <string>CN</string>
+      <string>Trim Empty &amp;Slots </string>
+      <string>Trim Empty &amp;Slots </string>
+    </entry>
+    <entry>
+      <string>Stats</string>
+      <string>Stats</string>
+    </entry>
+    <entry>
+      <string>Coin</string>
+      <string>Coin</string>
     </entry>
     <entry>
       <string>Sideboard</string>
       <string>Sideboard</string>
+    </entry>
+    <entry>
+      <string>CN</string>
+      <string>CN</string>
     </entry>
     <entry>
       <string>Last Match -&gt; went first</string>

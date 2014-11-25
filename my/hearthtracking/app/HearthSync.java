@@ -18,7 +18,7 @@ public class HearthSync {
 	private static final int BATCH_SIZE = 50;
 	private static HearthConfigurator config = new HearthConfigurator();
 	private String secretKey = "";
-	private HearthTracker tracker;
+	private HearthDB tracker;
 	private static String API_VERSION = "v0";
 	private String baseURL = HearthHelper.isDevelopmentEnvironment() 
 			? "http://192.168.0.104:3000/api/" + API_VERSION + "/" 
@@ -62,7 +62,7 @@ public class HearthSync {
 	}
 	
 	public HearthSync() {
-		tracker = new HearthTracker();
+		tracker = new HearthDB();
 		nonce = generateNonce();
 
 		syncLog = (HearthSyncLog) config.load(HearthFilesNameManager.syncFile);
@@ -365,11 +365,11 @@ public class HearthSync {
 				ar[index].cid 			= rs.getInt("id");
 				ar[index].myhero 		= heroesList.getHeroName(rs.getInt("myheroid"));
 				ar[index].opphero		= heroesList.getHeroName(rs.getInt("oppheroid"));
-				ar[index].goes			= HearthScanner.goesFirstToString(rs.getInt("goesfirst"));
+				ar[index].goes			= HearthMatch.coinToString(rs.getInt("goesfirst"));
 				ar[index].win			= rs.getInt("win");
 				ar[index].starttime		= rs.getLong("starttime");
 				ar[index].totaltime		= rs.getInt("totaltime");
-				ar[index].mode			= HearthScanner.gameModeToString(rs.getInt("mode")).toLowerCase();
+				ar[index].mode			= HearthGameMode.gameModeToString(rs.getInt("mode")).toLowerCase();
 				ar[index].deleted		= rs.getInt("deleted");
 				ar[index].modified		= rs.getInt("modified");
 				ar[index].lastmodified	= rs.getLong("lastmodified");

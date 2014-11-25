@@ -1,7 +1,9 @@
 package my.hearthtracking.app;
 
+import java.util.logging.Level;
+
 public class HearthSetting {
-	int scanInterval = 500;
+	int scanInterval = 250;
 	int gameWidth = 1920;
 	int gameHeight = 1080;
 	String gameLang = "enUS";
@@ -17,8 +19,15 @@ public class HearthSetting {
 	boolean popup = true;
 	String uiLang = "english";
 	
+	boolean lastKnown = false;
+	int lastKnownX = 0, lastKnownY = 0, lastKnownWidth = 0, lastKnownHeight = 0;
+	
+	String logLevel = Level.INFO.getName();
+	
 	public boolean upgrade(){
-		return upgrade1() || upgrade2() || upgrade3() || upgrade4();
+		int before = settingVer;
+		boolean upgraded = upgrade1() && upgrade2() && upgrade3() && upgrade4() && upgrade5();
+		return upgraded && settingVer != before;
 	}
 	
 	private boolean upgrade1(){
@@ -27,6 +36,8 @@ public class HearthSetting {
 		if(settingVer == 0){
 			autoRes = true;
 			settingVer = 1;
+			upgraded = true;
+		}else if( settingVer >=1){
 			upgraded = true;
 		}
 	
@@ -40,6 +51,8 @@ public class HearthSetting {
 			alwaysScan = false;
 			settingVer = 2;
 			upgraded = true;
+		}else if( settingVer >=2 ){
+			upgraded = true;
 		}
 	
 		return upgraded;
@@ -47,10 +60,12 @@ public class HearthSetting {
 	
 	private boolean upgrade3(){
 		boolean upgraded = false;
-		
+			
 		if(settingVer == 2){
 			popup = true;
 			settingVer = 3;
+			upgraded = true;
+		} else if( settingVer >=3 ){
 			upgraded = true;
 		}
 	
@@ -63,6 +78,24 @@ public class HearthSetting {
 		if(settingVer == 3){
 			uiLang = "english";
 			settingVer = 4;
+			upgraded = true;
+		}if( settingVer >=4 ){
+			upgraded = true;
+		}
+	
+		return upgraded;
+	}
+	
+	private boolean upgrade5(){
+		boolean upgraded = false;
+		
+		if(settingVer == 4){
+			scanInterval = 100;
+			logLevel = Level.INFO.getName();
+			settingVer = 5;
+			upgraded = true;
+			System.out.println("upgraded!");
+		}if( settingVer >=5 ){
 			upgraded = true;
 		}
 	
